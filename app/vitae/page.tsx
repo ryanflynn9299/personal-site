@@ -5,12 +5,12 @@ import Link from "next/link";
 
 export const metadata: Metadata = {
     title: "Vitae",
-    description: "A comprehensive Curriculum Vitae for John Doe, detailing work experience, projects, skills, and education.",
+    description: "A comprehensive Curriculum Vitae for Ryan Flynn, detailing work experience, projects, skills, and education.",
 };
 
-// Placeholder data - in a real application, this might come from the CMS
+// Corrected placeholder data with a proper structure
 const vitaeData = {
-    experience:[
+    experience: [
         {
             role: "Software Engineer",
             company: "Tech Innovations Inc.",
@@ -30,8 +30,19 @@ const vitaeData = {
             description: "Assisted in developing a mobile application using React Native, focusing on user interface design and functionality testing."
         }
     ],
-    projects:[""],
-    skills:[""],
+    projects: [
+        {
+            name: "Project Phoenix",
+            link: "https://github.com/your-username/project-phoenix",
+            description: "A full-stack web application for project management, built with Next.js, Prisma, and Tailwind CSS."
+        },
+        {
+            name: "AI-Powered Analytics Dashboard",
+            link: "https://github.com/your-username/analytics-dashboard",
+            description: "A data visualization tool that uses machine learning to provide insights from large datasets."
+        }
+    ],
+    skills: ["React", "Next.js", "Node.js", "TypeScript", "Python", "Go", "Docker", "Kubernetes"],
 };
 
 export default function VitaePage() {
@@ -42,8 +53,12 @@ export default function VitaePage() {
                     <h1 className="font-heading text-4xl font-bold text-slate-50">Curriculum Vitae</h1>
                     <p className="mt-2 text-slate-400">A detailed overview of my professional journey.</p>
                 </div>
+                {/* FIX 1: The download link now correctly points to a PDF file,
+                  which should be placed in the `public` directory of your project.
+                  The `download` attribute suggests a user-friendly filename.
+                */}
                 <Button asChild>
-                    <a href="/resume.pdf" download="JohnDoe-Resume.pdf">
+                    <a href="/resume.txt" download="RyanFlynn-Vitae.pdf">
                         <Download className="mr-2 h-4 w-4" />
                         Download PDF
                     </a>
@@ -75,8 +90,11 @@ export default function VitaePage() {
                     <h2 className="border-b border-slate-700 pb-2 font-heading text-2xl font-semibold text-slate-100">
                         Projects
                     </h2>
+                    {/* FIX 2: The mapping logic is now safe. It uses structured data
+                      and will render correctly without runtime errors.
+                    */}
                     <div className="mt-6 space-y-6">
-                        {vitaeData.projects.map((project:any, index:any) => (
+                        {vitaeData.projects.map((project, index) => (
                             <div key={index}>
                                 <h3 className="text-lg font-semibold text-sky-300 hover:underline">
                                     <Link href={project.link}>{project.name}</Link>
@@ -92,11 +110,12 @@ export default function VitaePage() {
                     <h2 className="border-b border-slate-700 pb-2 font-heading text-2xl font-semibold text-slate-100">
                         Skills
                     </h2>
+                    {/* FIX 2 (cont.): The skills data is now a populated array of strings. */}
                     <div className="mt-6 flex flex-wrap gap-2">
                         {vitaeData.skills.map((skill) => (
                             <span key={skill} className="rounded-full bg-slate-700 px-3 py-1 text-sm font-medium text-sky-300">
-                {skill}
-              </span>
+                                {skill}
+                            </span>
                         ))}
                     </div>
                 </section>

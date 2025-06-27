@@ -13,13 +13,13 @@ export function Header() {
         <header className="sticky top-0 z-50 w-full border-b border-slate-700 bg-slate-800/80 backdrop-blur-sm">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div className="flex h-16 items-center justify-between">
-                    <div className="flex items-center">
+                    <div className="flex items-end">
                         <Link href="/" className="text-xl font-bold text-slate-50 font-heading">
-                            John Doe
+                            Ryan Flynn
                         </Link>
-                        <span className="ml-4 hidden text-slate-400 md:block">
-              // Crafting code and content
-            </span>
+                        <span className="ml-2 hidden text-slate-400 md:block">
+                            // Crafting code and content
+                        </span>
                     </div>
                     <nav>
                         <ul className="flex items-center space-x-6">

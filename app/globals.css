@@ -1,26 +1,39 @@
-@import "tailwindcss";
+/* src/app/globals.css */
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* These are the essential Tailwind directives. They instruct the Tailwind
+  engine to inject its base styles, component classes, and utility classes.
+  They MUST be at the top of the file.
+*/
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+/*
+  This is the correct way to apply base layer styles and define global
+  CSS variables in a Tailwind project.
+*/
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    /* Define CSS variables for our color palette from the design document.
+      This is optional but can be useful for accessing colors in places
+      where utility classes are difficult to use (e.g., JS, some component libraries).
+    */
+    --color-background: 239 68% 68%; /* hsl(203 89% 53%) - A placeholder, we will use classes */
+    --color-foreground: 222 47% 11%; /* hsl(215 28% 17%) - A placeholder, we will use classes */
   }
-}
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  /* The body tag is the best place to set default text color and background color.
+    However, the idiomatic Next.js + Tailwind approach is to do this via classes
+    on the <html> or <body> tag in layout.tsx, which we will do in the next step.
+    
+    We can set the default font-family here using the CSS variables that
+    will be provided by the `next/font` instances in the layout file.
+  */
+  body {
+    font-family: var(--font-sans), sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading), sans-serif;
+  }
 }

@@ -3,7 +3,7 @@ import Image from "next/image";
 
 export const metadata: Metadata = {
     title: "About Me",
-    description: "Learn more about John Doe's passions, interests, and professional journey.",
+    description: "Learn more about Ryan Flynn's passions, interests, and professional journey.",
 };
 
 export default function AboutPage() {

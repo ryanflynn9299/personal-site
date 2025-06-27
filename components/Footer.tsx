@@ -33,7 +33,7 @@ export function Footer() {
             <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
                 <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
                     <div className="md:col-span-1">
-                        <h3 className="text-lg font-semibold font-heading text-slate-50">John Doe</h3>
+                        <h3 className="text-lg font-semibold font-heading text-slate-50">Ryan Flynn</h3>
                         <p className="mt-2 text-sm text-slate-400">
                             A personal site for showcasing projects, sharing thoughts, and documenting my journey in software development.
                         </p>
@@ -54,8 +54,8 @@ export function Footer() {
                         <div>
                             <h4 className="text-sm font-semibold uppercase tracking-wider text-slate-400">Legal</h4>
                             <ul className="mt-4 space-y-2">
-                                <li><Link href="#" className="text-base text-slate-300 hover:text-sky-300">Privacy Policy</Link></li>
-                                <li><Link href="#" className="text-base text-slate-300 hover:text-sky-300">Terms of Service</Link></li>
+                                <li><Link key={"Privacy"} href="#" className="text-base text-slate-300 hover:text-sky-300">Privacy Policy</Link></li>
+                                <li><Link key={"ToS"} href="#" className="text-base text-slate-300 hover:text-sky-300">Terms of Service</Link></li>
                             </ul>
                         </div>
                         <div>
@@ -74,7 +74,7 @@ export function Footer() {
                     </div>
                 </div>
                 <div className="mt-8 border-t border-slate-700 pt-8 text-center text-sm text-slate-500">
-                    <p>&copy; {new Date().getFullYear()} John Doe. All rights reserved.</p>
+                    <p>&copy; {new Date().getFullYear()} Ryan Flynn. All rights reserved.</p>
                 </div>
             </div>
         </footer>

@@ -1,5 +1,10 @@
 import { Button } from "@/components/ui/Button";
 import Link from "next/link";
+import {FeaturedProjects} from "@/components/home/FeaturedProjects";
+import {TechStack} from "@/components/home/TechStack";
+import {FinalCTA} from "@/components/home/FinalCTA";
+import {AboutMe1} from "@/components/home/AboutMe1";
+import {AboutMe2} from "@/components/home/AboutMe2";
 
 export default function HomePage() {
   return (
@@ -23,9 +28,14 @@ export default function HomePage() {
         </section>
 
         {/* About Me Snippet */}
-        <section className="py-16 md:py-24 border-t border-slate-800">
-          {/*... Brief "About Me" snippet content... */}
-        </section>
+        {/*<section className="py-16 md:py-24 border-t border-slate-800">*/}
+        {/*  /!*... Brief "About Me" snippet content... *!/*/}
+        {/*</section>*/}
+          <AboutMe2 />
+
+          <FeaturedProjects />
+
+          <TechStack />
 
         {/* Latest Blog Posts Placeholder */}
         <section className="py-16 md:py-24 border-t border-slate-800">
@@ -42,6 +52,8 @@ export default function HomePage() {
             </p>
           </div>
         </section>
+
+        <FinalCTA />
       </div>
   );
 }
