@@ -20,7 +20,7 @@ export default function AboutPage() {
                     <div className="md:w-1/2">
                         <h2 className="font-heading text-2xl font-semibold text-slate-100">My Philosophy</h2>
                         <p className="mt-4 text-slate-300">
-                            I believe in the power of technology to solve real-world problems. My approach to software development is rooted in craftsmanship, continuous learning, and a deep commitment to user-centric design. I strive to write code that is not only functional but also clean, maintainable, and elegant.
+                            I believe in the power of technology to solve real-world problems. My approach to software development is rooted in craftsmanship, continuous learning, and a deep commitment to user-centric design. I strive to write code that is not only functional but also clean, maintainable, and elegant. A lifelong learning zealot, I struggle to satiate my desire to learn every software tool out there.
                         </p>
                     </div>
                     <div className="md:w-1/2">
@@ -39,7 +39,7 @@ export default function AboutPage() {
                     <div className="md:w-1/2">
                         <h2 className="font-heading text-2xl font-semibold text-slate-100">Interests & Hobbies</h2>
                         <p className="mt-4 text-slate-300">
-                            When I'm not at my keyboard, you can find me exploring the great outdoors, hiking through mountain trails, or experimenting with landscape photography. I'm also an avid reader of science fiction and a lifelong learner, always picking up new skills, from playing the guitar to learning a new language.
+                            When I'm not at my keyboard, you can find me exploring the great outdoors, shredding the ski slopes, or finding new eats around New England. I'm endlessly curious about the world and love to travel the world, from Canada and California to Chile and Antarctica.
                         </p>
                     </div>
                     <div className="md:w-1/2">

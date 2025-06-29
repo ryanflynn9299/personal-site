@@ -4,12 +4,12 @@ import { Github, Linkedin, Twitter } from "lucide-react";
 const socialLinks = [
     {
         name: 'GitHub',
-        href: 'https://github.com', // Replace with actual URL
+        href: 'https://github.com/ryanflynn9299', // Replace with actual URL
         icon: Github,
     },
     {
         name: 'LinkedIn',
-        href: 'https://linkedin.com/in/', // Replace with actual URL
+        href: 'https://www.linkedin.com/in/ryan-flynn04/', // Replace with actual URL
         icon: Linkedin,
     },
     {
@@ -19,12 +19,13 @@ const socialLinks = [
     },
 ];
 const footerNav = [
-    { name: 'About', href: '/about' },
-    { name: 'Blog', href: '/blog' },
-    { name: 'Contact', href: '/contact' },
+    { name: 'About', href: '/about', is_active: true },
+    { name: 'Blog', href: '/blog', is_active: true },
+    { name: 'Vitae', href: '/vitae', is_active: true },
+    { name: 'Contact', href: '/contact', is_active: true },
     // Example for future extensibility
-    { name: 'Talks', href: '/talks' },
-    { name: 'Privacy Policy', href: '/privacy' },
+    { name: 'Talks', href: '/talks', is_active: false },
+    { name: 'Privacy Policy', href: '/privacy', is_active: false },
 ];
 
 export function Footer() {
@@ -42,10 +43,10 @@ export function Footer() {
                         <div>
                             <h4 className="text-sm font-semibold uppercase tracking-wider text-slate-400">Navigate</h4>
                             <ul className="mt-4 space-y-2">
-                                {footerNav.map((item:any) => (
+                                {footerNav.filter((item:any) => item.is_active).map((item:any) => (
                                     <li key={item.href}>
                                         <Link href={item.href} className="text-base text-slate-300 hover:text-sky-300">
-                                            {item.label}
+                                            {item.name}
                                         </Link>
                                     </li>
                                 ))}
@@ -62,9 +63,9 @@ export function Footer() {
                             <h4 className="text-sm font-semibold uppercase tracking-wider text-slate-400">Connect</h4>
                             <ul className="mt-4 flex space-x-4">
                                 {socialLinks.map((link:any) => (
-                                    <li key={link.label}>
+                                    <li key={link.name}>
                                         <a href={link.href} className="text-slate-400 hover:text-sky-300">
-                                            <span className="sr-only">{link.label}</span>
+                                            <span className="sr-only">{link.name}</span>
                                             <link.icon className="h-6 w-6" />
                                         </a>
                                     </li>

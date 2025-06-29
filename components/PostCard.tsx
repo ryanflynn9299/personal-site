@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Calendar, Tag } from "lucide-react";
+import { Calendar } from "lucide-react";
 import {Post} from "@/types";
 
 interface PostCardProps {
@@ -14,9 +14,9 @@ export function PostCard({ post }: PostCardProps) {
         day: "numeric",
     });
 
-    const imageUrl = post.feature_image
-        ? `${process.env.NEXT_PUBLIC_DIRECTUS_URL}/assets/${post.feature_image.id}`
-        : null;
+    // const imageUrl = post.feature_image
+    //     ? `${process.env.NEXT_PUBLIC_DIRECTUS_URL}/assets/${post.feature_image}`
+    //     : null;
 
     // @ts-ignore
     return (
@@ -24,12 +24,11 @@ export function PostCard({ post }: PostCardProps) {
             href={`/blog/${post.slug}`}
             className="group flex flex-col overflow-hidden rounded-lg border border-slate-700 bg-slate-800 transition-all hover:border-sky-400 hover:shadow-lg hover:shadow-sky-900/20"
         >
-            {imageUrl && (
+            {post.feature_image && (
                 <div className="relative h-48 w-full overflow-hidden">
                     <Image
-                        src={imageUrl}
-                        alt="TODO: {post.feature_image?.title |
-                            | post.title}"
+                        src={post.feature_image}
+                        alt="Alt text"
                         fill
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         className="object-cover transition-transform duration-300 group-hover:scale-105"

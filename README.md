@@ -43,7 +43,7 @@ personal-site3/
 ├── package.json          # Dependencies & scripts
 ├── tailwind.config.ts    # Tailwind customization
 ├── tsconfig.json         # TypeScript configuration
-└── next.config.mjs        # Next.js configuration
+└── next.config.ts        # Next.js configuration
 ```
 
 ### Key Files Explained

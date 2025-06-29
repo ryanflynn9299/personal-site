@@ -11,7 +11,7 @@ const mockPosts: Post[] = [
         slug: "first-blog-post",
         publish_date: "2025-06-23T12:00:00Z",
         summary: "A deep dive into the initial setup of this portfolio and blog, covering Next.js, TypeScript, and the power of a well-defined project structure.",
-        feature_image: "https://images.unsplash.com/photo-1555066931-4365d1469c9b?q=80&w=2070&auto=format&fit=crop", // Example image
+        feature_image: "https://placehold.co/600x400/0f172a/7dd3fc", // Example image
         html: "", // HTML content is not needed for the card view
         tags: ["Next.js", "TypeScript", "WebDev"],
         author: {
@@ -40,7 +40,7 @@ const mockPosts: Post[] = [
         slug: "art-of-tailwind-css",
         publish_date: "2025-06-18T15:30:00Z",
         summary: "Why utility-first CSS is more than just a trend. We'll explore how Tailwind helps in building consistent, scalable, and beautiful user interfaces.",
-        feature_image: "https://images.unsplash.com/photo-1517694712202-1428bc383897?q=80&w=2070&auto=format&fit=crop", // Example image
+        feature_image: "https://placehold.co/600x400/0f172a/7dd3fc", // Example image
         html: "",
         tags: ["UI", "CSS", "Design"],
         status: "published",

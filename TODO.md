@@ -2,6 +2,13 @@
 
 ## Immediate/Next Items
 *High priority items to tackle soon*
+- [ ] Make featured projects a carousel
+- [ ] support tags on projects in vitae
+- [ ] figure out scalability for blog
+- [] add a blog post
+- [] add search for blogs
+- [] placeholder images
+- 
 
 ### Bug Fixes & Critical Issues
 - [ ] Fix TypeScript error in `readItems` call for posts collection
@@ -53,7 +60,6 @@
 - [ ] Create about page with detailed bio
 - [ ] Add resume/CV download functionality
 - [ ] Implement contact form
-- [ ] Add testimonials section
 
 ## General Features to Add
 *Nice-to-have features for enhanced functionality*
@@ -97,7 +103,6 @@
 - [ ] Create backup strategy for content
 
 ### Documentation
-- [ ] Document component usage patterns
 - [ ] Create style guide for consistent design
 - [ ] Write deployment instructions
 - [ ] Document Directus schema and relationships
@@ -107,8 +112,6 @@
 - [ ] Try implementing a design system
 - [ ] Experiment with animations (Framer Motion)
 - [ ] Add PWA capabilities
-- [ ] Test different CMS options
-- [ ] Explore headless e-commerce integration
 
 ### Content Ideas
 - [ ] Write about the tech stack choices

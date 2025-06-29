@@ -13,36 +13,36 @@ const vitaeData = {
     experience: [
         {
             role: "Software Engineer",
-            company: "Tech Innovations Inc.",
-            period: "Jan 2020 - Present",
-            description: "Developing scalable web applications using React and Node.js. Leading a team of 5 developers to enhance product features and improve user experience."
-        },
-        {
-            role: "Frontend Developer",
-            company: "Creative Solutions Ltd.",
-            period: "Jun 2018 - Dec 2019",
-            description: "Worked on responsive web design projects, implementing UI components with Vue.js and ensuring cross-browser compatibility."
+            company: "UKG, Inc",
+            period: "June 2022 - Present",
+            description: "Developing scalable web applications using Java and Spring. Split central functionality from monolith to microservice."
         },
         {
             role: "Intern Software Developer",
-            company: "Startup Hub",
-            period: "Jan 2018 - May 2018",
-            description: "Assisted in developing a mobile application using React Native, focusing on user interface design and functionality testing."
+            company: "UKG, Inc",
+            period: "Jun 2021 - Sept 2021",
+            description: "Assisted in developing the backend of mid-market workforce management solution using Java and SQL, focusing on covering edge cases, end to end testing and error handling."
+        },
+        {
+            role: "IT Support Specialist",
+            company: "California Polytechnic State University, San Luis Obispo",
+            period: "Feb 2019 - Jun 2022",
+            description: "Supported students, staff, and professors with tech support. Coordinated SLA teams to resolve issues efficiently. Operated university phone lines"
         }
     ],
     projects: [
         {
-            name: "Project Phoenix",
+            name: "URL Shortener in Golang",
             link: "https://github.com/your-username/project-phoenix",
-            description: "A full-stack web application for project management, built with Next.js, Prisma, and Tailwind CSS."
+            description: "A full-stack, production-ready Bit.ly clone. Includes a fully-featured REST API, custom user authentication, and a sleek UI built with React."
         },
         {
-            name: "AI-Powered Analytics Dashboard",
+            name: "Machine Learning Pipeline for Trading and Backtesting",
             link: "https://github.com/your-username/analytics-dashboard",
-            description: "A data visualization tool that uses machine learning to provide insights from large datasets."
+            description: "Proof-of-concept project featuring an LSTM model trained on market data with a custom backtesting engine for signals. Features a live data pipeline and hot-swappable strategy implementations."
         }
     ],
-    skills: ["React", "Next.js", "Node.js", "TypeScript", "Python", "Go", "Docker", "Kubernetes"],
+    skills: ["Java", "Python", "SQL", "Microservices", "Git", "React", "Next.js", "Kotlin", "Go", "Docker", "Kubernetes"],
 };
 
 export default function VitaePage() {

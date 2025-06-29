@@ -22,8 +22,8 @@ export function AboutMe2() {
                         >
                             <Image
                                 // Replace with a professional-looking photo of yourself
-                                src=""
-                                alt="A professional headshot of John Doe"
+                                src="/"
+                                alt="Placeholder: A professional headshot"
                                 width={500}
                                 height={500}
                                 className="rounded-lg object-cover shadow-2xl shadow-slate-950/50"

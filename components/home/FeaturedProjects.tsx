@@ -10,7 +10,7 @@ const projects = [
     {
         title: 'Project Alpha',
         description: 'A full-stack web application for real-time data visualization, built with Next.js, TypeScript, and a GraphQL backend.',
-        imageUrl: '', // Replace with your project screenshot
+        imageUrl: '/', // Replace with your project screenshot
         tags: ['Next.js', 'TypeScript', 'GraphQL', 'PostgreSQL'],
         liveUrl: '#',
         githubUrl: '#',
@@ -18,7 +18,7 @@ const projects = [
     {
         title: 'Project Beta',
         description: 'A mobile-first progressive web app for collaborative task management, featuring offline support and push notifications.',
-        imageUrl: '', // Replace with your project screenshot
+        imageUrl: '/', // Replace with your project screenshot
         tags: ['React', 'PWA', 'Firebase', 'Node.js'],
         liveUrl: '#',
         githubUrl: '#',
