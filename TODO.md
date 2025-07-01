@@ -8,7 +8,7 @@
 - [] add a blog post
 - [] add search for blogs
 - [] placeholder images
-- 
+- [] fix slug in metadata
 
 ### Bug Fixes & Critical Issues
 - [ ] Fix TypeScript error in `readItems` call for posts collection

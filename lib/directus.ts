@@ -32,12 +32,12 @@ export async function getPublishedPosts(): Promise<Post[]> {
         // 1. Provide the <DirectusPost> generic to readItems.
         //    This tells TypeScript the exact shape of the items being returned.
         const posts = await directus.request(
-            readItems('posts', {
-                fields: ['id', 'title', 'status', 'slug', 'publication_date', 'feature_image', 'tags', 'content'],
+            readItems('blogs', {
+                fields: ['id', 'title', 'summary', 'author', 'status', 'slug', 'publication_date', 'feature_image', 'blog_tags', 'content'],
                 filter: {
                     status: { _eq: 'published' },
                 },
-                sort: ['-publish_date'],
+                sort: ['-publication_date'],
             })
         );
 
@@ -50,6 +50,7 @@ export async function getPublishedPosts(): Promise<Post[]> {
         return posts.map(post => ({
             id: post.id,
             title: post.title,
+            summary: post.summary || '', // Fallback to empty string if not present
             status: post.status,
             author: {first_name: post.author.first_name, last_name: post.author.last_name}, // Assuming author is always present
             slug: post.slug,
@@ -58,7 +59,7 @@ export async function getPublishedPosts(): Promise<Post[]> {
             // feature_image: getAssetURL(post.feature_image.id),
             feature_image: post.feature_image,
             // Ensure tags are always an array of strings
-            tags: post.tags || [],
+            tags: post.blog_tags || [],
             // Renaming 'body' to 'html' for the frontend type
             content: post.content,
         }));
@@ -71,37 +72,6 @@ export async function getPublishedPosts(): Promise<Post[]> {
     }
 }
 
-// You can add other functions like getPostBySlug here following the same pattern.
-// // Define your custom schema
-// interface Schema {
-//     posts: Post;
-// }
-//
-// const directus = createDirectus<Schema>(process.env.NEXT_PUBLIC_DIRECTUS_URL!).with(rest());
-//
-// // Function to fetch all published posts
-// export async function getPublishedPosts(): Promise<ReadItemOutput<unknown, 'posts', {
-//     readonly fields: readonly ["id", "title", "slug", "publish_date", "summary", "feature_image.id", "feature_image.title"];
-//     readonly filter: { readonly status: { readonly _eq: "published" } };
-//     readonly sort: readonly ["-publish_date"]
-// }>[] | null> {
-//     try {
-//         const posts = await directus.request(
-//             readItems('posts', {
-//                 fields: ['id', 'title', 'slug', 'publish_date', 'summary', 'feature_image.id', 'feature_image.title'],
-//                 filter: {
-//                     status: { _eq: 'published' },
-//                 },
-//                 sort: ['-publish_date'],
-//             })
-//         );
-//         return posts;
-//     } catch (error) {
-//         console.error("Directus API Error (getPublishedPosts):", error);
-//         return null;
-//     }
-// }
-//
 /**
  * Fetches a single, published post from Directus by its unique slug.
  *
@@ -125,7 +95,7 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
         // Use readItems with a limit of 1. This is the standard way to fetch
         // an item by a secondary unique key (like a slug).
         const posts = await directus.request(
-            readItems('posts', {
+            readItems('blogs', {
                 // We use a logical AND to ensure both conditions are met.
                 filter: {
                     _and: [
@@ -136,7 +106,7 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
                 // We only need the first result that matches.
                 limit: 1,
                 // Specify all fields needed for the full 'Post' type.
-                fields: ['id', 'title', 'slug', 'publish_date', 'summary', 'feature_image', 'tags', 'body'],
+                fields: ['id', 'title', 'summary', 'author', 'slug', 'publication_date', 'status', 'feature_image', 'blog_tags', 'content'],
             })
         );
 
@@ -154,16 +124,17 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
         return {
             id: rawPost.id,
             title: rawPost.title,
+            summary: rawPost.summary || '', // Fallback to empty string if not present
             status: 'published', // We know it's published due to our filter
             slug: rawPost.slug,
             author: {
                 first_name: rawPost.author?.first_name || '', // Fallback to empty string if not present
                 last_name: rawPost.author?.last_name || '',   // Fallback to empty string if not present
             },
-            publish_date: rawPost.publish_date,
+            publish_date: rawPost.publication_date,
             // feature_image: getAssetURL(rawPost.feature_image), // Use the helper
             feature_image: rawPost.feature_image,
-            tags: rawPost.tags || [],
+            tags: rawPost.blog_tags || [],
             content: rawPost.content,
         };
 

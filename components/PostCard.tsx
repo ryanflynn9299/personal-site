@@ -39,7 +39,7 @@ export function PostCard({ post }: PostCardProps) {
                 <h2 className="font-heading text-xl font-semibold text-slate-50 transition-colors group-hover:text-sky-300">
                     {post.title}
                 </h2>
-                {/*<p className="mt-3 flex-grow text-slate-300">{post.summary}</p>*/}
+                <p className="mt-3 flex-grow text-slate-300">{post.summary}</p>
                 <div className="mt-4 flex items-center text-sm text-slate-400">
                     <Calendar className="mr-2 h-4 w-4" />
                     <time dateTime={post.publish_date}>{formattedDate}</time>

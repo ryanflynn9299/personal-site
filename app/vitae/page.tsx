@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     description: "A comprehensive Curriculum Vitae for Ryan Flynn, detailing work experience, projects, skills, and education.",
 };
 
-// Corrected placeholder data with a proper structure
+// Corrected [slug] data with a proper structure
 const vitaeData = {
     experience: [
         {

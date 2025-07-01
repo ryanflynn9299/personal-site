@@ -18,8 +18,8 @@
       This is optional but can be useful for accessing colors in places
       where utility classes are difficult to use (e.g., JS, some component libraries).
     */
-    --color-background: 239 68% 68%; /* hsl(203 89% 53%) - A placeholder, we will use classes */
-    --color-foreground: 222 47% 11%; /* hsl(215 28% 17%) - A placeholder, we will use classes */
+    --color-background: 239 68% 68%; /* hsl(203 89% 53%) - A [slug], we will use classes */
+    --color-foreground: 222 47% 11%; /* hsl(215 28% 17%) - A [slug], we will use classes */
   }
 
   /* The body tag is the best place to set default text color and background color.

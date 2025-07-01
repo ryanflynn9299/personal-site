@@ -3,6 +3,7 @@ export interface Post {
     id: string;
     status: 'published' | 'draft' | 'archived';
     title: string;
+    summary: string;
     author: { first_name: string; last_name: string };
     slug: string;
     publish_date: string;
