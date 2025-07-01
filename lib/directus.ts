@@ -2,7 +2,7 @@ import {createDirectus, readItems, rest} from '@directus/sdk';
 import {Post} from '@/types'; // Import both types
 
 // Initialize the Directus client (assuming this already exists)
-const directusUrl = process.env.DIRECTUS_URL;
+const directusUrl = (!process.env.DEV_MODE) ? process.env.DIRECTUS_URL : process.env.DEV_DIRECTUS_URL;
 if (!directusUrl) {
     throw new Error("DIRECTUS_URL is not set in environment variables.");
 }
@@ -33,7 +33,7 @@ export async function getPublishedPosts(): Promise<Post[]> {
         //    This tells TypeScript the exact shape of the items being returned.
         const posts = await directus.request(
             readItems('posts', {
-                fields: ['id', 'title', 'status', 'slug', 'publish_date', 'summary', 'feature_image', 'tags', 'body'],
+                fields: ['id', 'title', 'status', 'slug', 'publication_date', 'feature_image', 'tags', 'content'],
                 filter: {
                     status: { _eq: 'published' },
                 },
@@ -53,14 +53,14 @@ export async function getPublishedPosts(): Promise<Post[]> {
             status: post.status,
             author: {first_name: post.author.first_name, last_name: post.author.last_name}, // Assuming author is always present
             slug: post.slug,
-            publish_date: post.publish_date,
-            summary: post.summary,
+            publish_date: post.publication_date,
             // Use the helper to get the full image URL
-            feature_image: getAssetURL(post.feature_image),
+            // feature_image: getAssetURL(post.feature_image.id),
+            feature_image: post.feature_image,
             // Ensure tags are always an array of strings
             tags: post.tags || [],
             // Renaming 'body' to 'html' for the frontend type
-            html: post.body,
+            content: post.content,
         }));
 
     } catch (error) {
@@ -161,10 +161,10 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
                 last_name: rawPost.author?.last_name || '',   // Fallback to empty string if not present
             },
             publish_date: rawPost.publish_date,
-            summary: rawPost.summary,
-            feature_image: getAssetURL(rawPost.feature_image), // Use the helper
+            // feature_image: getAssetURL(rawPost.feature_image), // Use the helper
+            feature_image: rawPost.feature_image,
             tags: rawPost.tags || [],
-            html: rawPost.body,
+            content: rawPost.content,
         };
 
     } catch (error) {

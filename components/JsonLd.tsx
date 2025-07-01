@@ -18,7 +18,7 @@ export function JsonLd({ post }: JsonLdProps) {
         '@context': 'https://schema.org',
         '@type': 'BlogPosting',
         headline: post.title,
-        description: post.summary,
+        description: post.title,
         datePublished: post.publish_date,
         author: {
             '@type': 'Person',

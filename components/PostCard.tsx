@@ -27,7 +27,7 @@ export function PostCard({ post }: PostCardProps) {
             {post.feature_image && (
                 <div className="relative h-48 w-full overflow-hidden">
                     <Image
-                        src={post.feature_image}
+                        src={post.feature_image.filename}
                         alt="Alt text"
                         fill
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -39,7 +39,7 @@ export function PostCard({ post }: PostCardProps) {
                 <h2 className="font-heading text-xl font-semibold text-slate-50 transition-colors group-hover:text-sky-300">
                     {post.title}
                 </h2>
-                <p className="mt-3 flex-grow text-slate-300">{post.summary}</p>
+                {/*<p className="mt-3 flex-grow text-slate-300">{post.summary}</p>*/}
                 <div className="mt-4 flex items-center text-sm text-slate-400">
                     <Calendar className="mr-2 h-4 w-4" />
                     <time dateTime={post.publish_date}>{formattedDate}</time>

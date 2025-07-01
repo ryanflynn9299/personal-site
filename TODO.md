@@ -16,6 +16,7 @@
 - [ ] Test blog post rendering with actual content
 - [ ] Ensure responsive design works on mobile devices
 - [ ] Fix any console errors in development
+- [] consider removing dangerouslyallowsvgs from next.config.ts
 
 ### Content & Setup
 - [ ] Add actual blog posts to Directus CMS

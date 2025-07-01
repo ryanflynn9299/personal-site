@@ -10,9 +10,9 @@ const mockPosts: Post[] = [
         status: "published",
         slug: "first-blog-post",
         publish_date: "2025-06-23T12:00:00Z",
-        summary: "A deep dive into the initial setup of this portfolio and blog, covering Next.js, TypeScript, and the power of a well-defined project structure.",
-        feature_image: "https://placehold.co/600x400/0f172a/7dd3fc", // Example image
-        html: "", // HTML content is not needed for the card view
+        // summary: "A deep dive into the initial setup of this portfolio and blog, covering Next.js, TypeScript, and the power of a well-defined project structure.",
+        feature_image: {id: 0, filename:"https://placehold.co/600x400/0f172a/7dd3fc"}, // Example image
+        content: "", // HTML content is not needed for the card view
         tags: ["Next.js", "TypeScript", "WebDev"],
         author: {
             first_name: "",
@@ -24,9 +24,9 @@ const mockPosts: Post[] = [
         title: "Exploring Headless CMS Options for a Personal Site",
         slug: "headless-cms-options",
         publish_date: "2025-06-20T10:00:00Z",
-        summary: "Comparing Strapi and Directus for self-hosting. An analysis of features, performance, and ease of use for developers.",
+        // summary: "Comparing Strapi and Directus for self-hosting. An analysis of features, performance, and ease of use for developers.",
         feature_image: null, // Example of a post without a feature image
-        html: "",
+        content: "",
         tags: ["CMS", "Self-Hosting", "Architecture"],
         status: "published",
         author: {
@@ -39,9 +39,9 @@ const mockPosts: Post[] = [
         title: "The Art of Professional UI: A Look at Tailwind CSS",
         slug: "art-of-tailwind-css",
         publish_date: "2025-06-18T15:30:00Z",
-        summary: "Why utility-first CSS is more than just a trend. We'll explore how Tailwind helps in building consistent, scalable, and beautiful user interfaces.",
-        feature_image: "https://placehold.co/600x400/0f172a/7dd3fc", // Example image
-        html: "",
+        // summary: "Why utility-first CSS is more than just a trend. We'll explore how Tailwind helps in building consistent, scalable, and beautiful user interfaces.",
+        feature_image: {id: 2, filename:"https://placehold.co/600x400/0f172a/7dd3fc"}, // Example image
+        content: "",
         tags: ["UI", "CSS", "Design"],
         status: "published",
         author: {
@@ -60,8 +60,8 @@ export const metadata: Metadata = {
 export const revalidate = 3600;
 
 export default async function BlogIndexPage() {
-    // const posts = await getPublishedPosts();
-    const posts = mockPosts; // Use mock data for now
+    const posts = await getPublishedPosts();
+    //const posts = mockPosts; // Use mock data for now
 
     return (
         <div className="container mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">

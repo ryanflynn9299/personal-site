@@ -21,14 +21,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
     return {
         title: post.title,
-        description: post.summary,
+        // description: post.summary,
         openGraph: {
             title: post.title,
-            description: post.summary,
+            // description: post.summary,
             type: 'article',
             publishedTime: post.publish_date,
             authors: [`${post.author.first_name} ${post.author.last_name}`],
-            images: [{ url: post.feature_image ? post.feature_image : "" }],
+            images: [{ url: post.feature_image ? post.feature_image.filename : "" }],
         }
     };
 }
