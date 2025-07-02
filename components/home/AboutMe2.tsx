@@ -8,7 +8,7 @@ import Image from 'next/image';
 {/* About Me Snippet - Option 2: Split-Layout with Image */}
 export function AboutMe2() {
     return (
-        <section className="py-16 md:py-24 border-t border-slate-800">
+        <section className="py-8 md:py-24 border-t border-slate-800">
             <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div className="grid grid-cols-1 items-center gap-12 md:grid-cols-2 md:gap-16">
 
@@ -22,7 +22,7 @@ export function AboutMe2() {
                         >
                             <Image
                                 // Replace with a professional-looking photo of yourself
-                                src="/"
+                                src="/globe.svg"
                                 alt="Placeholder: A professional headshot"
                                 width={500}
                                 height={500}

@@ -9,6 +9,8 @@
 - [] add search for blogs
 - [] placeholder images
 - [] fix slug in metadata
+- [] pare down this list
+- [] add 3 blog posts to home screen
 
 ### Bug Fixes & Critical Issues
 - [ ] Fix TypeScript error in `readItems` call for posts collection
@@ -29,7 +31,7 @@
 - [ ] Implement blog post detail pages
 - [ ] Add navigation between blog posts (prev/next)
 - [ ] Create proper 404 page for missing blog posts
-- [ ] Add loading states for API calls
+- [ ] Add loading states/screens for API calls
 - [ ] Implement proper error boundaries
 
 ## Future Items
@@ -127,6 +129,10 @@
 - [ ] Clean up unused dependencies
 - [ ] Refactor repetitive code patterns
 - [ ] Update to latest framework versions
+
+### Ideas
+- [] Implement hidden sections revealed by URL manipulation or sessions for gemini links and other organizational nonsense
+- 
 
 ---
 
