@@ -7,8 +7,9 @@ const techCategories = [
     {
         name: "Languages & Frameworks",
         icon: Code,
-        items: ["TypeScript", "React", "Next.js", "Node.js", "Python", "Go"],
-        className: "md:col-span-2 md:row-span-2"
+        items: ["Python", "Java", "Kotlin", "Spring", "PostgreSQL", "TypeScript", "React", "Next.js", "Node.js",
+            "HTML", "CSS", "Go", "SQL"],
+        className: "md:col-span-1 md:row-span-2"
     },
     {
         name: "Databases",
@@ -19,13 +20,13 @@ const techCategories = [
     {
         name: "Cloud & DevOps",
         icon: Cloud,
-        items: ["Docker", "AWS", "Nginx", "Vercel"],
+        items: ["Docker", "GCP", "Nginx", "Vercel", "Kubernetes"],
         className: "md:col-span-1"
     },
     {
         name: "Tooling",
         icon: Cog,
-        items: ["Git", "Directus (CMS)", "Tailwind CSS", "Framer Motion"],
+        items: ["git", "Directus (CMS)", "Tailwind CSS", "Framer Motion", "pandas", "REST"],
         className: "md:col-span-2"
     }
 ];
@@ -59,7 +60,7 @@ export function TechStack() {
                     </p>
                 </div>
                 <motion.div
-                    className="mt-16 grid grid-cols-1 gap-8 md:grid-cols-3"
+                    className="mt-16 grid grid-cols-1 gap-8 md:grid-cols-3 [perspective:1000px]"
                     variants={sectionVariants}
                     initial="hidden"
                     whileInView="visible"
@@ -68,7 +69,7 @@ export function TechStack() {
                     {techCategories.map((category) => (
                         <motion.div
                             key={category.name}
-                            className={`rounded-lg border border-slate-700 bg-slate-800 p-6 ${category.className}`}
+                            className={`rounded-lg border border-slate-700 bg-slate-800 p-6 transition-all duration-300 hover:scale-105 hover:[transform:rotateX(10deg)_rotateY(-10deg)] ${category.className}`}
                             variants={itemVariants}
                         >
                             <div className="flex items-center gap-4">

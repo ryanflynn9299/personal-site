@@ -1,12 +1,3 @@
-// interface Post {
-//     title: string;
-//     slug: string;
-//     publish_date: string;
-//     summary: string;
-//     feature_image?: { id: string };
-//     author: { first_name: string; last_name: string };
-// }
-
 import {Post} from "@/types";
 
 interface JsonLdProps {

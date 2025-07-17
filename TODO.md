@@ -5,32 +5,33 @@
 - [ ] Make featured projects a carousel
 - [ ] support tags on projects in vitae
 - [ ] figure out scalability for blog
-- [] add a blog post
-- [] add search for blogs
-- [] placeholder images
-- [] fix slug in metadata
-- [] pare down this list
-- [] add 3 blog posts to home screen
+- [x] add a blog post
+- [ ] placeholder images
+- [ ] fix slug in metadata
+- [ ] pare down this list
 
 ### Bug Fixes & Critical Issues
 - [ ] Fix TypeScript error in `readItems` call for posts collection
 - [ ] Verify all Directus API calls handle errors properly
-- [ ] Test blog post rendering with actual content
+- [X] Test blog post rendering with actual content
+- [ ] Fix missing author from directus call
 - [ ] Ensure responsive design works on mobile devices
 - [ ] Fix any console errors in development
-- [] consider removing dangerouslyallowsvgs from next.config.ts
+- [ ] consider removing dangerouslyallowsvgs from next.config.ts
 
 ### Content & Setup
-- [ ] Add actual blog posts to Directus CMS
-- [ ] Write and publish first blog post
+- [x] Add actual blog posts to Directus CMS
+- [x] Write and publish first blog post
 - [ ] Add professional headshot/profile image
 - [ ] Update site metadata (title, description, favicon)
 - [ ] Set up production environment variables
+- [ ] add 3 blog posts to home screen
 
 ### Core Functionality
 - [ ] Implement blog post detail pages
 - [ ] Add navigation between blog posts (prev/next)
-- [ ] Create proper 404 page for missing blog posts
+- [ ] add search for blogs
+- [x] Create proper 404 page for missing blog posts
 - [ ] Add loading states/screens for API calls
 - [ ] Implement proper error boundaries
 
@@ -48,7 +49,7 @@
 - [ ] Add dark/light theme toggle
 - [ ] Implement smooth scrolling navigation
 - [ ] Add reading time estimates for blog posts
-- [ ] Create breadcrumb navigation
+- [ ] Create breadcrumb navigation (?)
 - [ ] Add "Back to top" button for long pages
 
 ### Performance & SEO
@@ -61,8 +62,9 @@
 ### Portfolio Features
 - [ ] Add projects/work showcase section
 - [ ] Create about page with detailed bio
-- [ ] Add resume/CV download functionality
-- [ ] Implement contact form
+- [X] Add resume/CV download functionality
+- [ ] Attach real Resume
+- [X] Implement contact form
 
 ## General Features to Add
 *Nice-to-have features for enhanced functionality*
@@ -75,17 +77,17 @@
 - [ ] Build contact form with email notifications
 
 ### Content Features
-- [ ] Add code syntax highlighting for technical posts
+- [ ] Add code syntax highlighting for technical posts - terminal theme
 - [ ] Implement table of contents for long posts
 - [ ] Add related posts suggestions
 - [ ] Create post series/collections
-- [ ] Add author bio section for posts
+- [ ] Add author bio section for posts - and popup card for author bio
 
 ### Advanced Functionality
 - [ ] Implement full-text search across all content
-- [ ] Add RSS feed generation
-- [ ] Create admin dashboard for quick edits
-- [ ] Add content scheduling functionality
+- [ ] Add RSS feed generation - ?
+- [ ] Create admin dashboard for quick edits - ?
+- [ ] Add content scheduling functionality - ?
 - [ ] Implement A/B testing for different layouts
 
 ### Integrations
@@ -93,7 +95,7 @@
 - [ ] Add LinkedIn integration
 - [ ] Implement Twitter/X card previews
 - [ ] Connect with email marketing service
-- [ ] Add calendar booking integration
+- [ ] Add calendar booking integration - maybe calendly?
 
 ## Miscellaneous
 *Random tasks and ideas that don't fit elsewhere*
@@ -104,6 +106,7 @@
 - [ ] Add code formatting with Prettier
 - [ ] Set up error monitoring (Sentry)
 - [ ] Create backup strategy for content
+- [ ] clean up code and comments
 
 ### Documentation
 - [ ] Create style guide for consistent design
@@ -114,7 +117,7 @@
 ### Ideas & Experiments
 - [ ] Try implementing a design system
 - [ ] Experiment with animations (Framer Motion)
-- [ ] Add PWA capabilities
+- [ ] Add PWA capabilities - ?
 
 ### Content Ideas
 - [ ] Write about the tech stack choices

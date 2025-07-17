@@ -21,7 +21,7 @@ export function FinalCTA() {
                     I'm always open to discussing new projects, creative ideas, or opportunities to be part of an ambitious vision.
                 </p>
                 <div className="mt-8">
-                    <Button asChild size="lg">
+                    <Button asChild size="lg" >
                         <Link href="/contact">Get in Touch</Link>
                     </Button>
                 </div>

@@ -26,14 +26,12 @@ export const metadata: Metadata = {
     description: "The personal portfolio and blog of Ryan Flynn, a passionate software engineer.",
 };
 
-export default function RootLayout({
-                                       children,
-                                   }: Readonly<{
+export default function RootLayout({ children }: Readonly<{
     children: React.ReactNode;
 }>) {
     return (
         <html lang="en" className={`${fontHeading.variable} ${fontSans.variable}`}>
-        <body className="bg-slate-900 text-slate-200 antialiased">
+        <body className="text-slate-200 antialiased">
         <div className="flex min-h-screen flex-col">
             <Header />
             <main className="flex-grow">{children}</main>

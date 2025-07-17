@@ -30,6 +30,7 @@ const cardVariants = {
     visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
 };
 
+// Home page projects section method 1: a Grid of Featured Projects
 export function FeaturedProjects() {
     return (
         <section className="py-16 md:py-24 border-t border-slate-800">

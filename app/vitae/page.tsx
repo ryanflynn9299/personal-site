@@ -60,7 +60,7 @@ export default function VitaePage() {
                 <Button asChild>
                     <a href="/resume.txt" download="RyanFlynn-Vitae.pdf">
                         <Download className="mr-2 h-4 w-4" />
-                        Download PDF
+                        Download My Resume
                     </a>
                 </Button>
             </div>

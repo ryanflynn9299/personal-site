@@ -11,58 +11,58 @@ import { Button } from '@/components/ui/Button';
 // Define your projects array here or import it
 const projects = [
     {
-        title: 'Project Alpha',
-        description: 'A full-stack web application for real-time data visualization, built with Next.js, TypeScript, and a GraphQL backend.',
+        title: 'Shaw.ty URL Shortener',
+        description: 'A full-stack, production-ready Bit.ly clone application implemented as a proof of concept, built with Golang to handle millions of requests a second without collisions.',
         imageUrl: 'https://placehold.co/1200x800/',
-        tags: ['Next.js', 'TypeScript', 'GraphQL', 'PostgreSQL'],
+        tags: ['Golang', 'REST API', 'PostgreSQL', 'Bun ORM', 'JWT', 'Argon2 Hashing'],
         liveUrl: '#',
         githubUrl: '#',
     },
     {
-        title: 'Project Beta',
-        description: 'A mobile-first progressive web app for collaborative task management, featuring offline support and push notifications.',
+        title: 'C Shell',
+        description: 'A fully featured Shell program written in C, supporting piping, redirection, and common commands. Built as a project for my Systems Programming class at Cal Poly.',
         imageUrl: 'https://placehold.co/1200x800/',
-        tags: ['React', 'PWA', 'Firebase', 'Node.js'],
+        tags: ['C', 'concurrency', 'Linux', 'Bash'],
         liveUrl: '#',
         githubUrl: '#',
     },
     {
-        title: 'Project Gamma',
-        description: 'An open-source design system component library published to NPM, focusing on accessibility and developer experience.',
+        title: 'Resume Builder',
+        description: 'A small python program that aggregates configured skills and projects into a custom, templated Resume in PDF format. Built to automate the tedious process of resume customization.',
         imageUrl: 'https://placehold.co/1200x800/',
-        tags: ['React', 'Storybook', 'TypeScript', 'NPM'],
+        tags: ['Python', 'NLP', 'MongoDB', 'File Generation'],
         liveUrl: '#',
         githubUrl: '#',
     },
     {
-        title: 'Project Omnicron',
-        description: 'An open-source design system component library published to NPM, focusing on accessibility and developer experience.',
+        title: 'Naive Stock ML Pipeline',
+        description: 'Trained a very simple XGBoost Model on 1-minute OHLCV data with custom trading strategies to generate signals as a proof of concept project.',
         imageUrl: 'https://placehold.co/1200x800/',
-        tags: ['React', 'Storybook', 'TypeScript', 'NPM'],
+        tags: ['Python', 'Sklearn', 'AI/ML', 'Finance', 'Data Science'],
         liveUrl: '#',
         githubUrl: '#',
     },
     {
-        title: 'Project Omega',
-        description: 'An open-source design system component library published to NPM, focusing on accessibility and developer experience.',
+        title: 'Job Description Parser',
+        description: 'A NLP-powered job description parser that extracts key skills and requirements from job postings to help tailor resumes and applications for many domains. Built with Python and NLP libraries.',
         imageUrl: 'https://placehold.co/1200x800/',
-        tags: ['React', 'Storybook', 'TypeScript', 'NPM'],
+        tags: ['Python', 'Webscraping', 'NLP', 'JSON', 'BS4'],
         liveUrl: '#',
         githubUrl: '#',
     },
     {
-        title: 'Project Gamma',
-        description: 'An open-source design system component library published to NPM, focusing on accessibility and developer experience.',
+        title: 'Personal Website',
+        description: 'An LLM-guided dive into the realm of Javascript and web development. Leveraged AI to decide tech stack, to learn CSS and solve unfamiliar problems.',
         imageUrl: 'https://placehold.co/1200x800/',
-        tags: ['React', 'Storybook', 'TypeScript', 'NPM'],
+        tags: ['React', 'TypeScript', 'Tailwind', 'NPM', 'Directus CMS', 'Next.js', 'Docker'],
         liveUrl: '#',
         githubUrl: '#',
     },
     {
-        title: 'Project Gamma',
-        description: 'An open-source design system component library published to NPM, focusing on accessibility and developer experience.',
+        title: 'Zillow Scraper',
+        description: 'A python script that accepts a town or zip code and produces a report with metrics I use for evaluating properties.',
         imageUrl: 'https://placehold.co/1200x800/',
-        tags: ['React', 'Storybook', 'TypeScript', 'NPM'],
+        tags: ['Python', 'HTML', 'Webscraping', 'APIs', 'BS4'],
         liveUrl: '#',
         githubUrl: '#',
     },
@@ -71,6 +71,7 @@ const projects = [
 // Carousel options
 const OPTIONS: EmblaOptionsType = { loop: true };
 
+// Home page projects section method 2: a Carousel of Featured Projects
 export function ProjectCarousel() {
     const [emblaRef, emblaApi] = useEmblaCarousel(OPTIONS);
     const [prevBtnDisabled, setPrevBtnDisabled] = useState(true);
@@ -96,7 +97,7 @@ export function ProjectCarousel() {
     }, [emblaApi, onSelect]);
 
     return (
-        <div className="relative">
+        <div className="relative group">
             <div className="py-8">
                 <h2 className="font-heading text-3xl font-bold text-slate-50 sm:text-4xl text-center">
                     Featured Projects
@@ -109,7 +110,7 @@ export function ProjectCarousel() {
                 <div className="flex">
                     {projects.map((project, index) => (
                         <div className="flex-grow-0 flex-shrink-0 basis-full md:basis-1/2 lg:basis-1/3 p-4" key={index}>
-                            <div className="group relative flex h-full flex-col overflow-hidden rounded-lg border border-slate-700 bg-slate-800">
+                            <div className="card-hover group relative flex h-full flex-col overflow-hidden rounded-lg border border-slate-700 bg-slate-800 transition-all duration-300 hover:border-slate-500 hover:shadow-2xl hover:shadow-sky-900/50">
                                 <div className="relative h-64 w-full overflow-hidden">
                                     <Image
                                         src={project.imageUrl}
@@ -147,7 +148,7 @@ export function ProjectCarousel() {
             </div>
 
             {/* Navigation Buttons */}
-            <div className="absolute top-1/2 -translate-y-1/2 flex justify-between w-full px-0 lg:-px-8">
+            <div className="absolute top-1/2 -translate-y-1 flex justify-between w-full px-6 lg:-px-8  opacity0 pointer-events-none group-hover:pointer-events-auto group-hover:opacity-100 transition-opacity duration-300">
                 <Button onClick={scrollPrev} variant="ghost" size="icon" className="h-12 w-12 rounded-full bg-slate-800/50 hover:bg-slate-700" disabled={prevBtnDisabled}>
                     <ArrowLeft className="h-6 w-6" />
                 </Button>
