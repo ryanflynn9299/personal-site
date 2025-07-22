@@ -7,66 +7,8 @@ import useEmblaCarousel from 'embla-carousel-react';
 import { EmblaOptionsType } from 'embla-carousel';
 import { Github, ArrowUpRight, ArrowLeft, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
+import {projects} from "@/data/projects";
 
-// Define your projects array here or import it
-const projects = [
-    {
-        title: 'Shaw.ty URL Shortener',
-        description: 'A full-stack, production-ready Bit.ly clone application implemented as a proof of concept, built with Golang to handle millions of requests a second without collisions.',
-        imageUrl: 'https://placehold.co/1200x800/',
-        tags: ['Golang', 'REST API', 'PostgreSQL', 'Bun ORM', 'JWT', 'Argon2 Hashing'],
-        liveUrl: '#',
-        githubUrl: '#',
-    },
-    {
-        title: 'C Shell',
-        description: 'A fully featured Shell program written in C, supporting piping, redirection, and common commands. Built as a project for my Systems Programming class at Cal Poly.',
-        imageUrl: 'https://placehold.co/1200x800/',
-        tags: ['C', 'concurrency', 'Linux', 'Bash'],
-        liveUrl: '#',
-        githubUrl: '#',
-    },
-    {
-        title: 'Resume Builder',
-        description: 'A small python program that aggregates configured skills and projects into a custom, templated Resume in PDF format. Built to automate the tedious process of resume customization.',
-        imageUrl: 'https://placehold.co/1200x800/',
-        tags: ['Python', 'NLP', 'MongoDB', 'File Generation'],
-        liveUrl: '#',
-        githubUrl: '#',
-    },
-    {
-        title: 'Naive Stock ML Pipeline',
-        description: 'Trained a very simple XGBoost Model on 1-minute OHLCV data with custom trading strategies to generate signals as a proof of concept project.',
-        imageUrl: 'https://placehold.co/1200x800/',
-        tags: ['Python', 'Sklearn', 'AI/ML', 'Finance', 'Data Science'],
-        liveUrl: '#',
-        githubUrl: '#',
-    },
-    {
-        title: 'Job Description Parser',
-        description: 'A NLP-powered job description parser that extracts key skills and requirements from job postings to help tailor resumes and applications for many domains. Built with Python and NLP libraries.',
-        imageUrl: 'https://placehold.co/1200x800/',
-        tags: ['Python', 'Webscraping', 'NLP', 'JSON', 'BS4'],
-        liveUrl: '#',
-        githubUrl: '#',
-    },
-    {
-        title: 'Personal Website',
-        description: 'An LLM-guided dive into the realm of Javascript and web development. Leveraged AI to decide tech stack, to learn CSS and solve unfamiliar problems.',
-        imageUrl: 'https://placehold.co/1200x800/',
-        tags: ['React', 'TypeScript', 'Tailwind', 'NPM', 'Directus CMS', 'Next.js', 'Docker'],
-        liveUrl: '#',
-        githubUrl: '#',
-    },
-    {
-        title: 'Zillow Scraper',
-        description: 'A python script that accepts a town or zip code and produces a report with metrics I use for evaluating properties.',
-        imageUrl: 'https://placehold.co/1200x800/',
-        tags: ['Python', 'HTML', 'Webscraping', 'APIs', 'BS4'],
-        liveUrl: '#',
-        githubUrl: '#',
-    },
-];
 
 // Carousel options
 const OPTIONS: EmblaOptionsType = { loop: true };

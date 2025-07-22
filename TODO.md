@@ -75,6 +75,14 @@
 - [ ] Create interactive project demos
 - [ ] Add social media integration
 - [ ] Build contact form with email notifications
+- star border from react bits
+- magic bento react bits
+- tilted card react bits
+- animate navibar
+- spotlight card react bits?
+- dark veil or aurora react bits
+- dot grid background
+- decrypted text react bits
 
 ### Content Features
 - [ ] Add code syntax highlighting for technical posts - terminal theme

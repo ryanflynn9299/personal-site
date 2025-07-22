@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 
 type AnimationType = 'decode' | 'stagger-words' | 'cascade-letters';
 
@@ -24,7 +24,7 @@ export function AnimatedText({ text, animationType = 'stagger-words', className 
                 transition: { staggerChildren: 0.12, delayChildren: 0.04 * i },
             }),
         };
-        const child = {
+        const child: Variants = {
             visible: {
                 opacity: 1,
                 y: 0,

@@ -1,4 +1,5 @@
-import {TechStack} from "@/components/home/TechStack";
+import {TechStack3} from "@/components/home/TechStack3";
+
 import {FinalCTA} from "@/components/home/FinalCTA";
 import {AboutMe2} from "@/components/home/AboutMe2";
 import {ProjectCarousel} from "@/components/home/ProjectCarousel";
@@ -7,6 +8,9 @@ import {HeroSection} from "@/components/home/HeroSection";
 /* Unused swappable components */
 import {AboutMe1} from "@/components/home/AboutMe1";
 import {FeaturedProjects} from "@/components/home/FeaturedProjects";
+import {TechStack} from "@/components/home/TechStack";
+import {TechStack2} from "@/components/home/TechStack2";
+import {BentoGrid} from "@/components/ui/MagicBento3";
 
 export default function HomePage() {
     return (
@@ -24,7 +28,8 @@ export default function HomePage() {
             {/*<FeaturedProjects />*/}
 
             {/* TechStack: A grid of my skills and tooling */}
-            <TechStack />
+            {/*<TechStack2 />*/}
+            <TechStack3 />
 
             {/* Latest Blog Posts Placeholder - contains 3-5 blog posts either latest or highly rated */}
             <section className="py-20 md:py-28 border-t border-slate-800">
@@ -38,7 +43,8 @@ export default function HomePage() {
                     <div className="mt-12">
                         {/* Placeholder for fetching and displaying latest 3 blog posts */}
                         <p className="text-center text-slate-500">
-                            [Under Construction: Latest blog posts will be dynamically loaded here. Check back soon!]
+                            <strong>[ 🚧 Under Construction: Latest blog posts will be <br /> dynamically loaded here. Check
+                                back soon! ]</strong>
                         </p>
                     </div>
                 </div>
