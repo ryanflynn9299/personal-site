@@ -13,6 +13,18 @@ import {projects} from "@/data/projects";
 // Carousel options
 const OPTIONS: EmblaOptionsType = { loop: true };
 
+function getRandomImageUrl() {
+    const images = [
+        "/images/random/data-password-security-lock-free-image.jpeg.webp",
+        "/images/random/istockphoto-1209504194-612x612.jpg",
+        "/images/random/istockphoto-1352367851-612x612.jpg",
+        "/images/random/old-alarm-clocks-analog-time-retro-free-stock-photo.jpg.webp",
+        "/images/random/picjumbo-premium-futuristic-3d-backgrounds-18.jpeg.webp"
+    ]
+
+    return images[Math.floor(Math.random() * images.length)];
+}
+
 // Home page projects section method 2: a Carousel of Featured Projects
 export function ProjectCarousel() {
     const [emblaRef, emblaApi] = useEmblaCarousel(OPTIONS);
@@ -55,7 +67,8 @@ export function ProjectCarousel() {
                             <div className="card-hover group relative flex h-full flex-col overflow-hidden rounded-lg border border-slate-700 bg-slate-800 transition-all duration-300 hover:border-slate-500 hover:shadow-2xl hover:shadow-sky-900/50">
                                 <div className="relative h-64 w-full overflow-hidden">
                                     <Image
-                                        src={project.imageUrl}
+                                        // src={project.imageUrl}
+                                        src={getRandomImageUrl()}
                                         alt={project.title}
                                         fill
                                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"

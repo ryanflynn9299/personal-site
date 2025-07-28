@@ -100,3 +100,48 @@
 @keyframes shimmer {
   100% { transform: translateX(100%); }
 }
+
+/* === CMDK Command Palette Styling === */
+[cmdk-dialog-overlay] {
+  @apply fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-sm;
+  /*@apply fixed inset-0 z-50 bg-black/75 backdrop-blur-lg;*/
+}
+
+[cmdk-dialog] {
+  @apply fixed top-[40%] left-1/2 w-full max-w-2xl -translate-x-1/2 -translate-y-1/2 rounded-xl border border-slate-700 bg-slate-800 shadow-2xl shadow-black/50;
+}
+
+[cmdk-input] {
+  @apply w-full border-b border-slate-700 bg-transparent p-4 text-lg text-slate-200 placeholder:text-slate-500 focus:outline-none;
+}
+
+[cmdk-list] {
+  @apply h-[min(300px,calc(100vh-200px))] max-h-[400px] overflow-y-auto overflow-x-hidden p-2;
+}
+
+[cmdk-group-heading] {
+  @apply select-none px-2 py-1.5 font-mono text-xs text-slate-500;
+}
+
+[cmdk-item] {
+  @apply flex cursor-pointer select-none items-start rounded-md p-3 transition-colors;
+  content-visibility: auto; /* Performance optimization for long lists */
+}
+
+[cmdk-item][aria-selected='true'] {
+  @apply bg-slate-700;
+}
+
+[cmdk-item] + [cmdk-item] {
+  @apply mt-1;
+}
+
+[cmdk-empty] {
+  @apply select-none p-4 text-center text-sm text-slate-400;
+}
+
+.content-blur {
+  @apply transition-all duration-300;
+  filter: blur(2px) brightness(50%) saturate(80%);
+  transform: scale(0.99);
+}

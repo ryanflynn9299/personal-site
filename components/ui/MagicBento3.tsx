@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 import { BentoCard } from './BentoCard';
-import {techCategories} from "@/components/data/data";
+import {techCategories} from "@/data/skills";
 
 type Skill = { name: string; description: string; };
 type SelectedCard = {

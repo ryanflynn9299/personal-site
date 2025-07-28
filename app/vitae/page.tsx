@@ -58,7 +58,7 @@ export default function VitaePage() {
                   The `download` attribute suggests a user-friendly filename.
                 */}
                 <Button asChild>
-                    <a href="/resume.txt" download="RyanFlynn-Vitae.pdf">
+                    <a href="/resume.txt" download="RyanFlynn-Resume.pdf">
                         <Download className="mr-2 h-4 w-4" />
                         Download My Resume
                     </a>

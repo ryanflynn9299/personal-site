@@ -1,20 +1,26 @@
-# Personal Site 3 - TODO List
+# Personal Site - TODO List
 
 ## Immediate/Next Items
 *High priority items to tackle soon*
-- [ ] Make featured projects a carousel
-- [ ] support tags on projects in vitae
+
+### Do ASAP as Possible
+- [x] Make featured projects a carousel
+- [ ] support skills tags on projects in vitae
 - [ ] figure out scalability for blog
 - [x] add a blog post
-- [ ] placeholder images
-- [ ] fix slug in metadata
-- [ ] pare down this list
+- [ ] placeholder images -- TODO
+- [ ] fix slug in metadata -- TODO
+- [x] pare down this list
+- [ ] update about page with more content -- TODO
+- [ ] update vitae information -- TODO
+- [ ] attach real resume
 
 ### Bug Fixes & Critical Issues
-- [ ] Fix TypeScript error in `readItems` call for posts collection
-- [ ] Verify all Directus API calls handle errors properly
+- [x] Fix TypeScript error in `readItems` call for posts collection
+- UNABLE_TO_GET_ISSUER_CERT_LOCALLY
+- [ ] Verify all Directus API calls handle errors properly -- TODO
 - [X] Test blog post rendering with actual content
-- [ ] Fix missing author from directus call
+- [ ] Fix missing author from directus call -- TODO
 - [ ] Ensure responsive design works on mobile devices
 - [ ] Fix any console errors in development
 - [ ] consider removing dangerouslyallowsvgs from next.config.ts
@@ -22,25 +28,34 @@
 ### Content & Setup
 - [x] Add actual blog posts to Directus CMS
 - [x] Write and publish first blog post
-- [ ] Add professional headshot/profile image
-- [ ] Update site metadata (title, description, favicon)
-- [ ] Set up production environment variables
-- [ ] add 3 blog posts to home screen
+- [ ] Add professional headshot/profile imagem -- TODO
+- [ ] Update site metadata (title, description, favicon) -- TODO
+- [ ] Set up production environment variables -- TODO
+- [x] add 3 blog posts to home screen
 
 ### Core Functionality
-- [ ] Implement blog post detail pages
+- [x] Implement blog post detail pages
 - [ ] Add navigation between blog posts (prev/next)
-- [ ] add search for blogs
+- [ ] add search for blogs -- TODO
 - [x] Create proper 404 page for missing blog posts
-- [ ] Add loading states/screens for API calls
-- [ ] Implement proper error boundaries
+- [ ] Add loading states/screens for API calls -- TODO
+- [ ] Implement proper error boundaries -- TODO
+
+### Development & Maintenance
+- [ ] Create deployment pipeline (CI/CD) -- TODO
+- [ ] Add code formatting with Prettier -- TODO
+- [ ] Set up error monitoring (Sentry) -- TODO
+- [ ] Create backup strategy for content
+- [ ] clean up code and comments -- TODO
+- [ ] finish up sitemap and robots.ts -- TODO
+- [ ] clean up files and directories -- TODO
 
 ## Future Items
 *Medium priority items for later development*
 
 ### Content Management
 - [ ] Add blog post categories/tags system
-- [ ] Implement blog post search functionality
+- [ ] Implement blog post search functionality -- TODO
 - [ ] Add pagination for blog listing page
 - [ ] Create draft preview functionality
 - [ ] Add blog post excerpt/summary display
@@ -61,10 +76,17 @@
 
 ### Portfolio Features
 - [ ] Add projects/work showcase section
-- [ ] Create about page with detailed bio
+- [ ] Create about page with detailed bio -- TODO
 - [X] Add resume/CV download functionality
-- [ ] Attach real Resume
 - [X] Implement contact form
+
+### Development and Maintenance
+- [ ] Review and optimize bundle size
+- [ ] Audit accessibility compliance
+- [ ] Clean up unused dependencies
+- [ ] Refactor repetitive code patterns
+- [ ] Update to latest framework versions
+- [ ] Set up automated testing (Jest/Cypress)
 
 ## General Features to Add
 *Nice-to-have features for enhanced functionality*
@@ -74,7 +96,7 @@
 - [ ] Implement newsletter signup
 - [ ] Create interactive project demos
 - [ ] Add social media integration
-- [ ] Build contact form with email notifications
+- [ ] Build contact form with email notifications (Add contact api call)
 - star border from react bits
 - magic bento react bits
 - tilted card react bits
@@ -108,24 +130,11 @@
 ## Miscellaneous
 *Random tasks and ideas that don't fit elsewhere*
 
-### Development & Maintenance
-- [ ] Set up automated testing (Jest/Cypress)
-- [ ] Create deployment pipeline (CI/CD)
-- [ ] Add code formatting with Prettier
-- [ ] Set up error monitoring (Sentry)
-- [ ] Create backup strategy for content
-- [ ] clean up code and comments
-
 ### Documentation
 - [ ] Create style guide for consistent design
-- [ ] Write deployment instructions
+- [ ] Write deployment instructions - TODO
 - [ ] Document Directus schema and relationships
 - [ ] Create troubleshooting guide
-
-### Ideas & Experiments
-- [ ] Try implementing a design system
-- [ ] Experiment with animations (Framer Motion)
-- [ ] Add PWA capabilities - ?
 
 ### Content Ideas
 - [ ] Write about the tech stack choices
@@ -133,13 +142,6 @@
 - [ ] Document lessons learned from projects
 - [ ] Share productivity tips and tools
 - [ ] Write about career journey and experiences
-
-### Technical Debt
-- [ ] Review and optimize bundle size
-- [ ] Audit accessibility compliance
-- [ ] Clean up unused dependencies
-- [ ] Refactor repetitive code patterns
-- [ ] Update to latest framework versions
 
 ### Ideas
 - [] Implement hidden sections revealed by URL manipulation or sessions for gemini links and other organizational nonsense

@@ -3,6 +3,7 @@
 import MagicBento2 from "@/components/ui/MagicBento2";
 import {BentoGrid} from "@/components/ui/MagicBento3";
 
+// Modified Magic Bento component with personal info
 export function TechStack3() {
     return (
         <section className="py-16 md:py-24 my-8 border-t border-slate-800 bg-slate-950">

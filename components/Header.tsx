@@ -13,11 +13,11 @@ export function Header() {
         <header className="sticky top-0 z-50 w-full border-b border-slate-700 bg-slate-800/80 backdrop-blur-sm">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div className="flex h-16 items-center justify-between">
-                    <div className="flex items-end">
+                    <div className="flex items-baseline">
                         <Link href="/" className="text-xl font-bold text-slate-50 font-heading">
                             Ryan Flynn
                         </Link>
-                        <span className="ml-2 hidden text-slate-400 md:block">
+                        <span className="text-sm ml-2 hidden text-slate-400 md:inline-block">
                             // Crafting code and content
                         </span>
                     </div>

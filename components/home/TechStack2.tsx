@@ -2,6 +2,7 @@
 
 import MagicBento2 from "@/components/ui/MagicBento2";
 
+// Using Reactbits component (no personal details yet)
 export function TechStack2() {
     return (
         <section className="py-16 md:py-24 my-8 border-t border-slate-800 bg-slate-950">

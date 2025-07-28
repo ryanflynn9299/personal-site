@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/Button';
 // Metadata can still be exported from a Client Component
 const metadata: Metadata = {
     title: 'Contact',
-    description: 'Get in touch with John Doe to discuss projects, collaborations, or opportunities.',
+    description: 'Get in touch with Ryan Flynn to discuss projects, collaborations, or opportunities.',
 };
 
 type SubmissionStatus = 'idle' | 'submitting' | 'success' | 'error';
@@ -72,17 +72,17 @@ export default function ContactPage() {
                     </div>
                     <div className="space-y-4">
                         <a
-                            href="mailto:your-email@example.com" // Replace with your actual email
+                            href="mailto:ryan.flyn001@gmail.com"
                             className="group flex items-center gap-4 rounded-lg bg-slate-800 p-4 transition-colors hover:bg-slate-700"
                         >
                             <Mail className="h-8 w-8 text-sky-300" />
                             <div>
                                 <h3 className="font-semibold text-slate-100 group-hover:text-sky-300">Email</h3>
-                                <p className="text-sm text-slate-400">your-email@example.com</p>
+                                <p className="text-sm text-slate-400">ryan.flynn001@gmail.com</p>
                             </div>
                         </a>
                         <a
-                            href="https://www.linkedin.com/in/your-profile" // Replace with your LinkedIn profile
+                            href="https://www.linkedin.com/in/ryan-flynn04/"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="group flex items-center gap-4 rounded-lg bg-slate-800 p-4 transition-colors hover:bg-slate-700"

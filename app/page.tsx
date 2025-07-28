@@ -11,6 +11,10 @@ import {FeaturedProjects} from "@/components/home/FeaturedProjects";
 import {TechStack} from "@/components/home/TechStack";
 import {TechStack2} from "@/components/home/TechStack2";
 import {BentoGrid} from "@/components/ui/MagicBento3";
+import {BlogHighlight} from "@/components/home/BlogHighlight";
+import {BlogHighlight4} from "@/components/home/BlogHighlight4";
+// import {EditorialBlogHighlight3} from "@/components/home/editorial-blog";
+
 
 export default function HomePage() {
     return (
@@ -32,23 +36,24 @@ export default function HomePage() {
             <TechStack3 />
 
             {/* Latest Blog Posts Placeholder - contains 3-5 blog posts either latest or highly rated */}
-            <section className="py-20 md:py-28 border-t border-slate-800">
-                <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                    <h2 className="text-center font-heading text-3xl font-bold text-slate-50">
-                        From the Blog
-                    </h2>
-                    <p className="text-center mt-4 text-slate-400">
-                        Latest articles and thoughts on technology and development.
-                    </p>
-                    <div className="mt-12">
-                        {/* Placeholder for fetching and displaying latest 3 blog posts */}
-                        <p className="text-center text-slate-500">
-                            <strong>[ 🚧 Under Construction: Latest blog posts will be <br /> dynamically loaded here. Check
-                                back soon! ]</strong>
-                        </p>
-                    </div>
-                </div>
-            </section>
+            {/*<section className="py-20 md:py-28 border-t border-slate-800">*/}
+            {/*    <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">*/}
+            {/*        <h2 className="text-center font-heading text-3xl font-bold text-slate-50">*/}
+            {/*            From the Blog*/}
+            {/*        </h2>*/}
+            {/*        <p className="text-center mt-4 text-slate-400">*/}
+            {/*            Latest articles and thoughts on technology and development.*/}
+            {/*        </p>*/}
+            {/*        <div className="mt-12">*/}
+            {/*            /!* Placeholder for fetching and displaying latest 3 blog posts *!/*/}
+            {/*            <p className="text-center text-slate-500">*/}
+            {/*                <strong>[ 🚧 Under Construction: Latest blog posts will be <br /> dynamically loaded here. Check*/}
+            {/*                    back soon! ]</strong>*/}
+            {/*            </p>*/}
+            {/*        </div>*/}
+            {/*    </div>*/}
+            {/*</section>*/}
+            <BlogHighlight4 />
 
             {/* A call to connect at the bottom of the home page */}
             <FinalCTA />
