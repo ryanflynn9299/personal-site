@@ -8,9 +8,14 @@ const navItems = [
     { name: 'Contact', href: '/contact' },
 ];
 
+// The text next to my name in the header
+const epithet = "// Building Scalable Systems";
+// const epithet2 = "// Crafting Code and Content";
+// const epithet3 = "// Java • Python • PostgreSQL ";
+
 export function Header() {
     return (
-        <header className="sticky top-0 z-50 w-full border-b border-slate-700 bg-slate-800/80 backdrop-blur-sm">
+        <header className="sticky top-0 z-50 w-full border-b border-slate-700 bg-slate-800/80 backdrop-blur-sm shadow-md shadow-black/20">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div className="flex h-16 items-center justify-between">
                     <div className="flex items-baseline">
@@ -18,7 +23,7 @@ export function Header() {
                             Ryan Flynn
                         </Link>
                         <span className="text-sm ml-2 hidden text-slate-400 md:inline-block">
-                            // Crafting code and content
+                            {epithet}
                         </span>
                     </div>
                     <nav>

@@ -87,6 +87,7 @@
 - [ ] Refactor repetitive code patterns
 - [ ] Update to latest framework versions
 - [ ] Set up automated testing (Jest/Cypress)
+- [ ] Stylize toasts to space theme
 
 ## General Features to Add
 *Nice-to-have features for enhanced functionality*
@@ -135,6 +136,10 @@
 - [ ] Write deployment instructions - TODO
 - [ ] Document Directus schema and relationships
 - [ ] Create troubleshooting guide
+- [ ] Add to README:
+  - Toasts and error handling
+  - Animations
+  - Download resume
 
 ### Content Ideas
 - [ ] Write about the tech stack choices

@@ -22,7 +22,7 @@ export function AboutMe2() {
                         >
                             <Image
                                 // Replace with a professional-looking photo of yourself
-                                src="/globe.svg"
+                                src="/images/6858504.png"
                                 alt="Placeholder: A professional headshot"
                                 width={500}
                                 height={500}

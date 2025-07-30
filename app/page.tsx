@@ -4,6 +4,7 @@ import {FinalCTA} from "@/components/home/FinalCTA";
 import {AboutMe2} from "@/components/home/AboutMe2";
 import {ProjectCarousel} from "@/components/home/ProjectCarousel";
 import {HeroSection} from "@/components/home/HeroSection";
+import {BlogHighlight4} from "@/components/home/BlogHighlight4";
 
 /* Unused swappable components */
 import {AboutMe1} from "@/components/home/AboutMe1";
@@ -12,8 +13,8 @@ import {TechStack} from "@/components/home/TechStack";
 import {TechStack2} from "@/components/home/TechStack2";
 import {BentoGrid} from "@/components/ui/MagicBento3";
 import {BlogHighlight} from "@/components/home/BlogHighlight";
-import {BlogHighlight4} from "@/components/home/BlogHighlight4";
 // import {EditorialBlogHighlight3} from "@/components/home/editorial-blog";
+
 
 
 export default function HomePage() {

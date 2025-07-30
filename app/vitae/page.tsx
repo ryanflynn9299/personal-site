@@ -2,32 +2,46 @@ import type { Metadata } from "next";
 import { Button } from "@/components/ui/Button";
 import { Download } from "lucide-react";
 import Link from "next/link";
+import {djb2Hash} from "next/dist/shared/lib/hash";
 
 export const metadata: Metadata = {
     title: "Vitae",
     description: "A comprehensive Curriculum Vitae for Ryan Flynn, detailing work experience, projects, skills, and education.",
 };
 
-// Corrected [slug] data with a proper structure
 const vitaeData = {
     experience: [
         {
             role: "Software Engineer",
             company: "UKG, Inc",
             period: "June 2022 - Present",
-            description: "Developing scalable web applications using Java and Spring. Split central functionality from monolith to microservice."
+            description: [
+                "Migrated and refactored 400k line core application out of monolithic product into a more microservice-oriented structure, reducing application build times by 37%.",
+                "Accelerated customer go-to-live by developing critical features and resolving key bugs, enhancing application performance for large-scale enterprise clients with unique data requirements.",
+                "Unit tested (TDD) and end-to-end (E2E) tested all source code changes, leveraged SonarQube and Blackduck for linting and SOC2 compliance",
+                "Interviewed candidates for entry and intern level roles, conducting 10-15 interviews a month, ensuring hiring teams had high quality analysis of technical skills to make informed hiring decisions.",
+            ]
         },
         {
             role: "Intern Software Developer",
             company: "UKG, Inc",
             period: "Jun 2021 - Sept 2021",
-            description: "Assisted in developing the backend of mid-market workforce management solution using Java and SQL, focusing on covering edge cases, end to end testing and error handling."
+            description: [
+                "Set up complex development environment on local machine, then updated setup documentation to reflect new changes, improving onboarding for future interns.",
+                "Enhanced internal support tool by developing new features from the ground up, resulting in more efficient database issue-resolution for support staff.",
+                "Improved usability by redesigning UI components and refining backend algorithms of the Worforce Ready product.",
+                "Used git, gradle, Jenkins, MS SQL Server daily in an Agile environment."
+            ]
         },
         {
             role: "IT Support Specialist",
             company: "California Polytechnic State University, San Luis Obispo",
             period: "Feb 2019 - Jun 2022",
-            description: "Supported students, staff, and professors with tech support. Coordinated SLA teams to resolve issues efficiently. Operated university phone lines"
+            description: [
+                "Provide in-person tech support to enable smooth roll-out and operation of University applications and\n" +
+                "services, troubleshoot hardware and software issues for students and staff.",
+                "Trained coworkers in the roll-out of Jira Service Desk and implementation of virtual screenings for University ID printing during the COVID-19 pandemic.",
+            ]
         }
     ],
     projects: [
@@ -45,6 +59,18 @@ const vitaeData = {
     skills: ["Java", "Python", "SQL", "Microservices", "Git", "React", "Next.js", "Kotlin", "Go", "Docker", "Kubernetes"],
 };
 
+// Bullet point colors
+const colorPalette = [
+    { ring: 'ring-sky-500', bg: 'bg-sky-500' },       // A cool blue gas giant
+    { ring: 'ring-rose-500', bg: 'bg-rose-500' },     // A terrestrial red planet
+    { ring: 'ring-amber-400', bg: 'bg-amber-400' },   // A sandy, golden world
+    { ring: 'ring-teal-400', bg: 'bg-teal-400' },     // An oceanic, green-blue planet
+    { ring: 'ring-indigo-400', bg: 'bg-indigo-400' }, // A deep violet nebula
+    { ring: 'ring-lime-400', bg: 'bg-lime-400' },     // An acidic, gaseous planet
+    { ring: 'ring-fuchsia-500', bg: 'bg-fuchsia-500' },// An exotic, vibrant star
+    { ring: 'ring-emerald-500', bg: 'bg-emerald-500' } // A lush, temperate world
+];
+
 export default function VitaePage() {
     return (
         <div className="container mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
@@ -58,7 +84,7 @@ export default function VitaePage() {
                   The `download` attribute suggests a user-friendly filename.
                 */}
                 <Button asChild>
-                    <a href="/resume.txt" download="RyanFlynn-Resume.pdf">
+                    <a href="/Ryan_Flynn_Resume2025.pdf" download="RyanFlynn-Resume.pdf">
                         <Download className="mr-2 h-4 w-4" />
                         Download My Resume
                     </a>
@@ -79,7 +105,48 @@ export default function VitaePage() {
                                     <p className="text-sm text-slate-400">{job.period}</p>
                                 </div>
                                 <p className="text-md font-medium text-slate-200">{job.company}</p>
-                                <p className="mt-2 text-slate-300">{job.description}</p>
+                                <ul className="mt-4 space-y-2">
+                                    {job.description.map((item, itemIndex) => {
+                                        // Mix up the colors of the bullet points sufficiently
+                                        const colors = colorPalette[((8 - index) + itemIndex + 1) % colorPalette.length];
+                                        const isLastItem = itemIndex === job.description.length - 1;
+
+                                        return (
+                                            <li key={itemIndex} className="relative flex gap-x-4 items-start">
+
+                                                {/* Vertical Line element. */}
+                                                {/* It is only rendered if it's NOT the last item in the list. */}
+                                                {!isLastItem && (
+                                                    <div className="absolute left-2 h-full top-4 bottom-0 w-px bg-slate-700"/>
+                                                )}
+
+                                                {/* Dot: appears on top of the line due to DOM order. */}
+                                                <div
+                                                    className="relative mt-2 flex h-4 w-4 flex-none items-center justify-center">
+                                                    <div
+                                                        className={`absolute h-full w-full rounded-full bg-slate-800 ring-1 ${colors.ring}`}/>
+                                                    <div className={`relative h-1.5 w-1.5 rounded-full ${colors.bg}`}/>
+                                                </div>
+
+                                                {/* Text Content: Add padding-bottom to ensure there's space for the line to draw into. */}
+                                                <p className={`flex-auto text-slate-300 ${!isLastItem ? 'pb-4' : ''}`}>
+                                                    {item}
+                                                </p>
+                                            </li>
+                                        );
+                                    })}
+                                </ul>
+                                {/** Fallback implementation: use > or // as simple text bullet points **/}
+                                {/*<ul className="mt-2 space-y-1.5 text-slate-300">*/}
+                                {/*    {job.description.map((item, itemIndex) => (*/}
+                                {/*        <li key={itemIndex} className="flex gap-x-2">*/}
+                                {/*            <span className="font-mono text-slate-500">{">"}</span>*/}
+                                {/*            <span>{item}</span>*/}
+                                {/*        </li>*/}
+                                {/*    ))}*/}
+                                {/*</ul>*/}
+                                {/** Non-list implementation: **/}
+                                {/*<p className="mt-2 text-slate-300">{job.description}</p>*/}
                             </div>
                         ))}
                     </div>

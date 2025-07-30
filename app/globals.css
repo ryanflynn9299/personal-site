@@ -38,6 +38,10 @@
   }
 }
 
+.timeline-item:last-child .timeline-line {
+  display: none;
+}
+
 /* === Starfield Background Animation for 404 Page === */
 @keyframes move-stars {
   from { background-position: 0 0; }

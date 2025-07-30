@@ -4,6 +4,7 @@ import "./globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import React from "react";
+import { ToastProvider } from '@/context/ToastContext';
 
 // Font configuration according to our design document
 const fontHeading = Montserrat({
@@ -32,11 +33,13 @@ export default function RootLayout({ children }: Readonly<{
     return (
         <html lang="en" className={`${fontHeading.variable} ${fontSans.variable}`}>
         <body className="text-slate-200 antialiased">
-        <div className="flex min-h-screen flex-col">
-            <Header />
-            <main className="flex-grow">{children}</main>
-            <Footer />
-        </div>
+            <ToastProvider>
+                <div className="flex min-h-screen flex-col">
+                    <Header />
+                    <main className="flex-grow">{children}</main>
+                    <Footer />
+                </div>
+            </ToastProvider>
         </body>
         </html>
     );

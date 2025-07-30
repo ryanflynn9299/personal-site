@@ -12,15 +12,15 @@ import {projects} from "@/data/projects";
 
 // Carousel options
 const OPTIONS: EmblaOptionsType = { loop: true };
+const images = [
+    "/images/random/data-password-security-lock-free-image.jpeg.webp",
+    "/images/random/istockphoto-1209504194-612x612.jpg",
+    "/images/random/istockphoto-1352367851-612x612.jpg",
+    "/images/random/old-alarm-clocks-analog-time-retro-free-stock-photo.jpg.webp",
+    "/images/random/picjumbo-premium-futuristic-3d-backgrounds-18.jpeg.webp"
+]
 
 function getRandomImageUrl() {
-    const images = [
-        "/images/random/data-password-security-lock-free-image.jpeg.webp",
-        "/images/random/istockphoto-1209504194-612x612.jpg",
-        "/images/random/istockphoto-1352367851-612x612.jpg",
-        "/images/random/old-alarm-clocks-analog-time-retro-free-stock-photo.jpg.webp",
-        "/images/random/picjumbo-premium-futuristic-3d-backgrounds-18.jpeg.webp"
-    ]
 
     return images[Math.floor(Math.random() * images.length)];
 }
@@ -68,7 +68,7 @@ export function ProjectCarousel() {
                                 <div className="relative h-64 w-full overflow-hidden">
                                     <Image
                                         // src={project.imageUrl}
-                                        src={getRandomImageUrl()}
+                                        src={images[index % images.length]}
                                         alt={project.title}
                                         fill
                                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
