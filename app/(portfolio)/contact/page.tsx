@@ -35,6 +35,7 @@ export default function ContactPage() {
         // In a real application, you would make an API call here.
         // e.g., await fetch('/api/contact', { method: 'POST', body: JSON.stringify(formData) });
         // For this frontend-only implementation, we'll simulate the network delay.
+        // TODO: Replace this with actual API call logic.
         await new Promise(resolve => setTimeout(resolve, 1500));
 
         // Simulate a successful outcome

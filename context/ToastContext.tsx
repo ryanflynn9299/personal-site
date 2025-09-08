@@ -54,9 +54,7 @@ export function useToast() {
 // --- The Toaster Renderer ---
 function Toaster({ toasts }: { toasts: ToastProps[] }) {
     return (
-        <div
-            className="fixed bottom-0 right-4 z-[100] p-4 sm:bottom-4 sm:right-4"
-        >
+        <div className="fixed bottom-0 right-4 z-[100] p-4 sm:bottom-4 sm:right-4 max-h-[50vh]">
             <div className="flex-col w-full max-w-sm">
                 <AnimatePresence>
                     {toasts.map((toast) => (

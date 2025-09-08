@@ -67,8 +67,8 @@ export function ProjectCarousel() {
                             <div className="card-hover group relative flex h-full flex-col overflow-hidden rounded-lg border border-slate-700 bg-slate-800 transition-all duration-300 hover:border-slate-500 hover:shadow-2xl hover:shadow-sky-900/50">
                                 <div className="relative h-64 w-full overflow-hidden">
                                     <Image
-                                        // src={project.imageUrl}
-                                        src={images[index % images.length]}
+                                        src={project.imageUrl}
+                                        // src={images[index % images.length]}
                                         alt={project.title}
                                         fill
                                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"

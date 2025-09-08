@@ -67,7 +67,7 @@ function PostCard({ post, isFeatured }: { post: any; isFeatured: boolean }) {
 
     return (
         <Link
-            href={`/blog/${post.slug}`}
+            href={`/app/(portfolio)/blog/${post.slug}`}
             className="group relative block h-full overflow-hidden rounded-lg border border-slate-700 bg-slate-800 transition-all duration-300 hover:border-sky-300/50 hover:shadow-2xl hover:shadow-sky-900/50"
         >
             {/* Subtle animated grid background on hover */}

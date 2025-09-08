@@ -36,6 +36,7 @@ export function AboutMe2() {
                         <h2 className="font-heading text-3xl font-bold text-slate-50 sm:text-4xl">
                             Driven by Curiosity and Craft
                         </h2>
+                        {/* TODO: revise this text */}
                         <p className="mt-6 text-lg text-slate-300 leading-relaxed">
                             I'm a software engineer who thrives on turning complex problems into elegant, user-centric solutions. With a foundation in modern web technologies and a deep appreciation for clean code, I focus on building applications that are both powerful and delightful to use.
                         </p>

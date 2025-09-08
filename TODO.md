@@ -4,23 +4,25 @@
 *High priority items to tackle soon*
 
 ### Do ASAP as Possible
+- [ ] Fix missing author from directus call -- TODO
+- [ ] Add professional headshot/profile imagem -- TODO
+- [ ] Make sure no ENV variables are hardcoded in the codebase -- TODO
 - [x] Make featured projects a carousel
-- [ ] support skills tags on projects in vitae
+- [x] support skills tags on projects in vitae
 - [ ] figure out scalability for blog
 - [x] add a blog post
-- [ ] placeholder images -- TODO
+- [x] placeholder images
 - [ ] fix slug in metadata -- TODO
 - [x] pare down this list
-- [ ] update about page with more content -- TODO
-- [ ] update vitae information -- TODO
-- [ ] attach real resume
+- [x] update about page with more content
+- [x] update vitae information
+- [x] attach real resume
 
 ### Bug Fixes & Critical Issues
 - [x] Fix TypeScript error in `readItems` call for posts collection
 - UNABLE_TO_GET_ISSUER_CERT_LOCALLY
 - [ ] Verify all Directus API calls handle errors properly -- TODO
 - [X] Test blog post rendering with actual content
-- [ ] Fix missing author from directus call -- TODO
 - [ ] Ensure responsive design works on mobile devices
 - [ ] Fix any console errors in development
 - [ ] consider removing dangerouslyallowsvgs from next.config.ts
@@ -28,15 +30,15 @@
 ### Content & Setup
 - [x] Add actual blog posts to Directus CMS
 - [x] Write and publish first blog post
-- [ ] Add professional headshot/profile imagem -- TODO
 - [ ] Update site metadata (title, description, favicon) -- TODO
 - [ ] Set up production environment variables -- TODO
 - [x] add 3 blog posts to home screen
+- [ ] support markdown blogs
 
 ### Core Functionality
 - [x] Implement blog post detail pages
 - [ ] Add navigation between blog posts (prev/next)
-- [ ] add search for blogs -- TODO
+- [x] add search for blogs
 - [x] Create proper 404 page for missing blog posts
 - [ ] Add loading states/screens for API calls -- TODO
 - [ ] Implement proper error boundaries -- TODO
@@ -55,7 +57,7 @@
 
 ### Content Management
 - [ ] Add blog post categories/tags system
-- [ ] Implement blog post search functionality -- TODO
+- [x] Implement blog post search functionality
 - [ ] Add pagination for blog listing page
 - [ ] Create draft preview functionality
 - [ ] Add blog post excerpt/summary display
@@ -66,6 +68,7 @@
 - [ ] Add reading time estimates for blog posts
 - [ ] Create breadcrumb navigation (?)
 - [ ] Add "Back to top" button for long pages
+- [ ] Improve toasts styling and limit
 
 ### Performance & SEO
 - [ ] Optimize images with Next.js Image component

@@ -2,61 +2,11 @@ import type { Metadata } from "next";
 import { Button } from "@/components/ui/Button";
 import { Download } from "lucide-react";
 import Link from "next/link";
-import {djb2Hash} from "next/dist/shared/lib/hash";
+import { vitaeData } from "@/data/work_experience";
 
 export const metadata: Metadata = {
     title: "Vitae",
     description: "A comprehensive Curriculum Vitae for Ryan Flynn, detailing work experience, projects, skills, and education.",
-};
-
-const vitaeData = {
-    experience: [
-        {
-            role: "Software Engineer",
-            company: "UKG, Inc",
-            period: "June 2022 - Present",
-            description: [
-                "Migrated and refactored 400k line core application out of monolithic product into a more microservice-oriented structure, reducing application build times by 37%.",
-                "Accelerated customer go-to-live by developing critical features and resolving key bugs, enhancing application performance for large-scale enterprise clients with unique data requirements.",
-                "Unit tested (TDD) and end-to-end (E2E) tested all source code changes, leveraged SonarQube and Blackduck for linting and SOC2 compliance",
-                "Interviewed candidates for entry and intern level roles, conducting 10-15 interviews a month, ensuring hiring teams had high quality analysis of technical skills to make informed hiring decisions.",
-            ]
-        },
-        {
-            role: "Intern Software Developer",
-            company: "UKG, Inc",
-            period: "Jun 2021 - Sept 2021",
-            description: [
-                "Set up complex development environment on local machine, then updated setup documentation to reflect new changes, improving onboarding for future interns.",
-                "Enhanced internal support tool by developing new features from the ground up, resulting in more efficient database issue-resolution for support staff.",
-                "Improved usability by redesigning UI components and refining backend algorithms of the Worforce Ready product.",
-                "Used git, gradle, Jenkins, MS SQL Server daily in an Agile environment."
-            ]
-        },
-        {
-            role: "IT Support Specialist",
-            company: "California Polytechnic State University, San Luis Obispo",
-            period: "Feb 2019 - Jun 2022",
-            description: [
-                "Provide in-person tech support to enable smooth roll-out and operation of University applications and\n" +
-                "services, troubleshoot hardware and software issues for students and staff.",
-                "Trained coworkers in the roll-out of Jira Service Desk and implementation of virtual screenings for University ID printing during the COVID-19 pandemic.",
-            ]
-        }
-    ],
-    projects: [
-        {
-            name: "URL Shortener in Golang",
-            link: "https://github.com/your-username/project-phoenix",
-            description: "A full-stack, production-ready Bit.ly clone. Includes a fully-featured REST API, custom user authentication, and a sleek UI built with React."
-        },
-        {
-            name: "Machine Learning Pipeline for Trading and Backtesting",
-            link: "https://github.com/your-username/analytics-dashboard",
-            description: "Proof-of-concept project featuring an LSTM model trained on market data with a custom backtesting engine for signals. Features a live data pipeline and hot-swappable strategy implementations."
-        }
-    ],
-    skills: ["Java", "Python", "SQL", "Microservices", "Git", "React", "Next.js", "Kotlin", "Go", "Docker", "Kubernetes"],
 };
 
 // Bullet point colors
@@ -98,7 +48,7 @@ export default function VitaePage() {
                         Work Experience
                     </h2>
                     <div className="mt-6 space-y-8">
-                        {vitaeData.experience.map((job, index) => (
+                        {vitaeData.experience.map((job: any, index: number) => (
                             <div key={index}>
                                 <div className="flex justify-between items-baseline">
                                     <h3 className="text-lg font-semibold text-sky-300">{job.role}</h3>
@@ -106,7 +56,7 @@ export default function VitaePage() {
                                 </div>
                                 <p className="text-md font-medium text-slate-200">{job.company}</p>
                                 <ul className="mt-4 space-y-2">
-                                    {job.description.map((item, itemIndex) => {
+                                    {job.description.map((item: any, itemIndex: number) => {
                                         // Mix up the colors of the bullet points sufficiently
                                         const colors = colorPalette[((8 - index) + itemIndex + 1) % colorPalette.length];
                                         const isLastItem = itemIndex === job.description.length - 1;
@@ -161,7 +111,7 @@ export default function VitaePage() {
                       and will render correctly without runtime errors.
                     */}
                     <div className="mt-6 space-y-6">
-                        {vitaeData.projects.map((project, index) => (
+                        {vitaeData.projects.map((project: any, index: number) => (
                             <div key={index}>
                                 <h3 className="text-lg font-semibold text-sky-300 hover:underline">
                                     <Link href={project.link}>{project.name}</Link>
@@ -179,7 +129,7 @@ export default function VitaePage() {
                     </h2>
                     {/* FIX 2 (cont.): The skills data is now a populated array of strings. */}
                     <div className="mt-6 flex flex-wrap gap-2">
-                        {vitaeData.skills.map((skill) => (
+                        {vitaeData.skills.map((skill: any) => (
                             <span key={skill} className="rounded-full bg-slate-700 px-3 py-1 text-sm font-medium text-sky-300">
                                 {skill}
                             </span>

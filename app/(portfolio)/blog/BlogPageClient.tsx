@@ -65,7 +65,7 @@ export function BlogPageClient({ posts }: BlogPageClientProps) {
                         <Command.Empty>No results found.</Command.Empty>
                         <Command.Group heading="Articles">
                             {posts.map((post) => (
-                                <Link href={`/blog/${post.slug}`} key={post.id} passHref>
+                                <Link href={`/app/(portfolio)/blog/${post.slug}`} key={post.id} passHref>
                                     <Command.Item onSelect={() => setOpen(false)}>
                                         <FileText className="mr-3 h-5 w-5 text-slate-400"/>
                                         <div className="flex flex-col">

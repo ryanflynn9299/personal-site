@@ -21,7 +21,7 @@ export function PostCard({ post }: PostCardProps) {
     // @ts-ignore
     return (
         <Link
-            href={`/blog/${post.slug}`}
+            href={`/app/(portfolio)/blog/${post.slug}`}
             className="group flex flex-col overflow-hidden rounded-lg border border-slate-700 bg-slate-800 transition-all hover:border-sky-400 hover:shadow-lg hover:shadow-sky-900/20"
         >
             {post.feature_image && (

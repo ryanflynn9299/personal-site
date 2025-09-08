@@ -34,7 +34,7 @@ This is a **Next.js 14** personal portfolio website built with **TypeScript** an
 personal-site3/
 ├── app/                    # Next.js App Router (v13+)
 │   ├── layout.tsx         # Root layout (wraps all pages)
-│   ├── page.tsx           # Homepage (/)
+│   ├── layout.tsx           # Homepage (/)
 │   ├── globals.css        # Global styles
 │   └── [folders]/         # Each folder = route
 ├── components/            # Reusable React components
@@ -97,8 +97,8 @@ npm run start
     - Colors defined in `tailwind.config.ts`
 
 2. **New Pages**: Create folders in `app/`
-    - `app/about/page.tsx` → `/about` URL
-    - `app/blog/[slug]/page.tsx` → `/blog/any-slug` URL
+    - `app/about/layout.tsx` → `/about` URL
+    - `app/blog/[slug]/layout.tsx` → `/blog/any-slug` URL
 
 3. **Components**: Create in `components/`
     - Export as `export function ComponentName() {}`

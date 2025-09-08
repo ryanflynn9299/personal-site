@@ -55,7 +55,7 @@ function PostCard({ post }: { post: any }) {
 
     return (
         <Link
-            href={`/blog/${post.slug}`}
+            href={`/app/(portfolio)/blog/${post.slug}`}
             // The `group` class enables the hover effects on child elements.
             className="group relative block overflow-hidden rounded-lg border border-slate-700 bg-slate-800 p-6
                  transition-colors duration-300 hover:bg-slate-700/50"
