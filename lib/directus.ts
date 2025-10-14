@@ -67,8 +67,8 @@ export async function getPublishedPosts(): Promise<{ status: 'success' | 'error'
         }))};
 
     } catch (error) {
-        // console.error("Failed to fetch published posts from Directus.");
-        log.error({ error }, `Failed to fetch published posts from Directus.`);
+        console.info("Failed to fetch published posts from Directus.");
+        // log.error({ error }, `Failed to fetch published posts from Directus.`);
         // In a real application, you might want to throw the error
         // or return an empty array to prevent the page from crashing.
         return { status: 'error', posts: [] };
