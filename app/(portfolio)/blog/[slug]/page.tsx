@@ -5,8 +5,13 @@ import Image from "next/image";
 import { JsonLd } from "@/components/JsonLd";
 import {Post} from "@/types";
 
+type Props = {
+    params: { slug: string };
+    searchParams: { [key: string]: string | string[] | undefined };
+};
+
 // Generate dynamic metadata for each post
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const post: Post | null = await getPostBySlug(params.slug);
 
     if (!post) {
@@ -38,7 +43,7 @@ export async function generateStaticParams() {
     }));
 }
 
-export default async function BlogPostPage({ params }: { params: { slug: string } }) {
+export default async function BlogPostPage({ params }: Props) {
     const post = await getPostBySlug(params.slug);
 
     if (!post) {
