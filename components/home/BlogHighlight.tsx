@@ -6,9 +6,8 @@ import { ArrowRight } from 'lucide-react';
 // Simple list of recent blog posts
 export async function BlogHighlight() {
     // Fetch all posts and take only the latest three for the homepage.
-    const allPosts = await getPublishedPosts();
-    const latestPosts = allPosts.slice(0, 3);
-
+    const { status, posts } = await getPublishedPosts();
+    const latestPosts = posts.slice(0, 4);
     // Separate the most recent post from the other two.
     const mainPost = latestPosts[0];
     const secondaryPosts = latestPosts.slice(1);

@@ -7,7 +7,7 @@ import {Post} from "@/types";
 
 type Props = {
     params: Promise<{ slug: string }>;
-    searchParams: { [key: string]: string | string[] | undefined };
+    searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
 // Generate dynamic metadata for each post
@@ -44,7 +44,7 @@ export async function generateStaticParams() {
 }
 
 export default async function BlogPostPage({ params }: Props) {
-    const post = await getPostBySlug(params.slug);
+    const post = await getPostBySlug((await params).slug);
 
     if (!post) {
         notFound();
