@@ -6,13 +6,13 @@ import { JsonLd } from "@/components/JsonLd";
 import {Post} from "@/types";
 
 type Props = {
-    params: { slug: string };
+    params: Promise<{ slug: string }>;
     searchParams: { [key: string]: string | string[] | undefined };
 };
 
 // Generate dynamic metadata for each post
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-    const post: Post | null = await getPostBySlug(params.slug);
+    const post: Post | null = await getPostBySlug((await params).slug);
 
     if (!post) {
         return {
