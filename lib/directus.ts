@@ -1,10 +1,12 @@
 import {createDirectus, readItems, rest} from '@directus/sdk';
 import {Post} from '@/types'; // Import both types
+import log from './logger';
 
 // Initialize the Directus client (assuming this already exists)
-const directusUrl = (!process.env.DEV_MODE) ? process.env.DIRECTUS_URL : process.env.DEV_DIRECTUS_URL;
+// TODO: Make this robust to misconfigured envs
+const directusUrl = (!process.env.IS_DEV_MODE) ? process.env.DIRECTUS_URL : process.env.DEV_DIRECTUS_URL;
 if (!directusUrl) {
-    throw new Error("DIRECTUS_URL is not set in environment variables.");
+    throw new Error("DIRECTUS_URL is not set in environment variables. Check that environment variables are set properly.");
 }
 export const directus = createDirectus(directusUrl).with(rest());
 
@@ -25,9 +27,9 @@ function getAssetURL(fileId: string | null | undefined): string | null {
  * It rigorously types the response and transforms it into the clean,
  * frontend-facing 'Post' type.
  *
- * @returns {Promise<Post[]>} A promise that resolves to an array of published posts.
+ * @returns {Promise<{ status: 'success' | 'error', posts: Post[] }>} A promise that resolves to an array of published posts.
  */
-export async function getPublishedPosts(): Promise<Post[]> {
+export async function getPublishedPosts(): Promise<{ status: 'success' | 'error', posts: Post[] }> {
     try {
         // 1. Provide the <DirectusPost> generic to readItems.
         //    This tells TypeScript the exact shape of the items being returned.
@@ -43,11 +45,11 @@ export async function getPublishedPosts(): Promise<Post[]> {
 
         // The 'posts' variable is now correctly typed as DirectusPost[]
         if (!posts || posts.length === 0) {
-            return [];
+            return { status: 'success', posts: [] };
         }
 
         // 2. Transform the raw Directus data into the clean frontend 'Post' type.
-        return posts.map(post => ({
+        return { status: 'success', posts: posts.map(post => ({
             id: post.id,
             title: post.title,
             summary: post.summary || '', // Fallback to empty string if not present
@@ -62,13 +64,14 @@ export async function getPublishedPosts(): Promise<Post[]> {
             tags: post.blog_tags || [],
             // Renaming 'body' to 'html' for the frontend type
             content: post.content,
-        }));
+        }))};
 
     } catch (error) {
-        console.error("Failed to fetch published posts from Directus:", error);
+        // console.error("Failed to fetch published posts from Directus.");
+        log.error({ error }, `Failed to fetch published posts from Directus.`);
         // In a real application, you might want to throw the error
         // or return an empty array to prevent the page from crashing.
-        return [];
+        return { status: 'error', posts: [] };
     }
 }
 
@@ -139,7 +142,9 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
         };
 
     } catch (error) {
-        console.error(`Failed to fetch post with slug "${slug}":`, error);
+        // console.error(`Failed to fetch post with slug "${slug}":`, error);
+        log.error({ slug, error }, `Failed to fetch post.`);
+        
         // Return null on any unexpected error to prevent the page from crashing.
         return null;
     }

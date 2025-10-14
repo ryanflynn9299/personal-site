@@ -5,12 +5,8 @@ import Image from "next/image";
 import { JsonLd } from "@/components/JsonLd";
 import {Post} from "@/types";
 
-type Props = {
-    params: { slug: string };
-};
-
 // Generate dynamic metadata for each post
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
     const post: Post | null = await getPostBySlug(params.slug);
 
     if (!post) {
@@ -35,13 +31,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 // Generate static paths for all published posts at build time
 export async function generateStaticParams() {
-    const posts = await getPublishedPosts();
+    const postResponse = await getPublishedPosts();
+    const posts = postResponse['posts']
     return posts.map((post) => ({
         slug: post.slug,
     }));
 }
 
-export default async function BlogPostPage({ params }: Props) {
+export default async function BlogPostPage({ params }: { params: { slug: string } }) {
     const post = await getPostBySlug(params.slug);
 
     if (!post) {

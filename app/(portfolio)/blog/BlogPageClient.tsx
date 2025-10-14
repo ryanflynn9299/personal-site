@@ -10,12 +10,14 @@ import { PostCard } from '@/components/PostCard';
 import { SearchButton } from '@/components/ui/SearchButton';
 import { FileText } from 'lucide-react';
 import { Dialog } from 'radix-ui';
+import { ServiceUnavailable } from '@/components/ui/ServiceUnavailable';
 
 interface BlogPageClientProps {
+    status: 'success' | 'error';
     posts: Post[];
 }
 
-export function BlogPageClient({ posts }: BlogPageClientProps) {
+export function BlogPageClient({ posts, status }: BlogPageClientProps) {
     const [open, setOpen] = useState(false);
 
     useEffect(() => {
@@ -28,6 +30,28 @@ export function BlogPageClient({ posts }: BlogPageClientProps) {
         document.addEventListener('keydown', down);
         return () => document.removeEventListener('keydown', down);
     }, []);
+
+    // Select what to render in the component
+    const renderContent = () => {
+        // If there's an error, show the service unavailable message
+        if (status === 'error') {
+          return <ServiceUnavailable />;
+        }
+    
+        // If successful but no posts, show the "no posts" message
+        if (posts.length === 0) {
+          return <p className="mt-12 text-center text-slate-400">No posts found. Check back soon!</p>;
+        }
+    
+        // If successful and there are posts, render the grid
+        return (
+          <div className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            {posts.map((post) => (
+              <PostCard key={post.id} post={post} />
+            ))}
+          </div>
+        );
+      };
 
     return (
         // Use a React Fragment to wrap the page content and dialog
@@ -45,7 +69,7 @@ export function BlogPageClient({ posts }: BlogPageClientProps) {
                         <SearchButton onClick={() => setOpen(true)}/>
                     </div>
 
-                    {posts && posts.length > 0 ? (
+                    {/* {posts && posts.length > 0 ? (
                         <div className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
                             {posts.map((post) => (
                                 <PostCard key={post.id} post={post}/>
@@ -53,7 +77,9 @@ export function BlogPageClient({ posts }: BlogPageClientProps) {
                         </div>
                     ) : (
                         <p className="mt-12 text-center text-slate-400">No posts found. Check back soon!</p>
-                    )}
+                    )} */}
+                    {/* Render the content based on our new logic */}
+                    {renderContent()}
                 </div>
             </div>
 

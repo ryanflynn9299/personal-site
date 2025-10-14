@@ -2,15 +2,15 @@ import Link from 'next/link';
 import { getPublishedPosts } from '@/lib/directus';
 import { ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { ServiceUnavailable } from '../ui/ServiceUnavailable';
 
 // 2x2 Horizontal Grid of Recent Blog Posts
 export async function BlogHighlight4() {
     // Fetch all posts and take only the latest four for the 2x2 grid.
-    const allPosts = await getPublishedPosts();
-    const latestPosts = allPosts.slice(0, 4);
+    const { status, posts } = await getPublishedPosts();
+    const latestPosts = posts.slice(0, 4);
 
     return (
-        // UPDATED: Using the default site background for a calmer, integrated feel.
         <section className="py-20 md:py-28 border-t border-slate-800">
             <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div className="text-center">
@@ -24,10 +24,26 @@ export async function BlogHighlight4() {
                 </div>
 
                 {/* The 2x2 Grid Layout */}
-                <div className="mt-16 grid grid-cols-1 gap-8 md:grid-cols-2 lg:max-w-7xl lg:mx-auto">
-                    {latestPosts.map((post) => (
-                        <PostCard key={post.id} post={post} />
-                    ))}
+                {/* --- NEW: Conditional Rendering Logic --- */}
+                <div className="mt-16">
+                    {status === 'error' ? (
+                        // If the service is down, render the error component
+                        <div className="lg:max-w-5xl lg:mx-auto">
+                           <ServiceUnavailable />
+                        </div>
+                    ) : latestPosts.length > 0 ? (
+                        // If successful and posts exist, render the grid
+                        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:max-w-5xl lg:mx-auto">
+                            {latestPosts.map((post) => (
+                                <PostCard key={post.id} post={post} />
+                            ))}
+                        </div>
+                    ) : (
+                        // If successful but no posts, render a "no content" message
+                        <p className="text-center text-slate-400">
+                            No recent articles found. Check back soon!
+                        </p>
+                    )}
                 </div>
 
                 {/* The Call to Action */}

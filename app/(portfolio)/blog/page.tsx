@@ -12,7 +12,7 @@ export const revalidate = 3600;
 
 
 export default async function BlogIndexPage() {
-    const posts = await getPublishedPosts();
+    const postsResponse = await getPublishedPosts();
 
-    return <BlogPageClient posts={posts} />;
+    return <BlogPageClient posts={postsResponse.posts} status={postsResponse.status} />;
 }
