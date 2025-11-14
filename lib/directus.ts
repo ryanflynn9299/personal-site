@@ -4,23 +4,47 @@ import log from './logger';
 
 // Initialize the Directus client (assuming this already exists)
 // TODO: Make this robust to misconfigured envs
-const directusUrl = (!process.env.IS_DEV_MODE) ? process.env.DIRECTUS_URL : process.env.DEV_DIRECTUS_URL;
-if (!directusUrl) {
-    throw new Error("DIRECTUS_URL is not set in environment variables. Check that environment variables are set properly.");
-}
-export const directus = createDirectus(directusUrl).with(rest());
+/**
+ * Determines the correct Directus URL based on the runtime environment.
+ */
+const getDirectusUrl = (): string => {
+  // Check if we are on the server-side (e.g., SSR, API Routes, getStaticProps).
+  if (typeof window === 'undefined') {
+    if (!process.env.DIRECTUS_URL_SERVER_SIDE) {
+      throw new Error("SERVER-SIDE: DIRECTUS_URL_SERVER_SIDE environment variable is not set.");
+    }
+    return process.env.DIRECTUS_URL_SERVER_SIDE;
+  }
 
+  // We are on the client (browser). This MUST be a NEXT_PUBLIC_ variable.
+  if (!process.env.NEXT_PUBLIC_DIRECTUS_URL) {
+    throw new Error("CLIENT-SIDE: NEXT_PUBLIC_DIRECTUS_URL environment variable is not set.");
+  }
+  return process.env.NEXT_PUBLIC_DIRECTUS_URL;
+};
 
 /**
- * A helper function to get the full asset URL from a Directus file ID.
+ * A helper function to get the full public asset URL from a Directus file ID.
+ * This should *always* use the public URL, as asset URLs are used by the client.
  * @param fileId - The ID of the file in Directus.
  * @returns The full URL to the asset, or null if fileId is null/undefined.
  */
 function getAssetURL(fileId: string | null | undefined): string | null {
     if (!fileId) return null;
-    return `${directusUrl}/assets/${fileId}`;
+    // Use the public URL directly. Ensure this var is set.
+    const publicUrl = process.env.NEXT_PUBLIC_DIRECTUS_URL;
+    if (!publicUrl) {
+      console.error("Cannot create asset URL: NEXT_PUBLIC_DIRECTUS_URL is not set.");
+      return null;
+    }
+    return `${publicUrl}/assets/${fileId}`;
 }
 
+// Create the Directus client instance.
+// This module will be loaded *separately* by the server and the client.
+// - On the server, getDirectusUrl() will return the internal URL.
+// - On the client, getDirectusUrl() will return the public URL.
+export const directus = createDirectus(getDirectusUrl()).with(rest());
 
 /**
  * Fetches all posts from Directus that are marked as 'published'.
