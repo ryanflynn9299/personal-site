@@ -70,6 +70,50 @@ personal-site3/
 - **Node.js** installed (JavaScript runtime)
 - **npm** (package manager, comes with Node.js)
 
+#### Upgrading Node.js and npm (Homebrew)
+
+**Check current versions:**
+```bash
+node --version
+npm --version
+```
+
+**Upgrade to latest versions:**
+```bash
+# Update Homebrew first
+brew update
+
+# Upgrade Node.js to latest version
+brew upgrade node
+
+# Update npm to latest version
+npm install -g npm@latest
+
+# Verify installations
+node -v
+npm -v
+```
+
+**Install specific versions:**
+```bash
+# Install specific Node.js version (e.g., Node.js 20 LTS)
+brew install node@20
+
+# Or use nvm (Node Version Manager) for more control
+brew install nvm
+nvm install 20
+nvm use 20
+
+# Install specific npm version
+npm install -g npm@10.8.1
+```
+
+**Recommended versions for this project:**
+- **Node.js**: 18.17+ (LTS recommended: 20.x or 22.x)
+- **npm**: 9.8+ (comes with Node.js, can be upgraded separately)
+
+**Note**: This project uses Next.js 15, which requires Node.js 18.17 or later. For best compatibility, use Node.js 20 LTS or later.
+
 ### Daily Development Commands
 
 ```bash

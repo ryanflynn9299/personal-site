@@ -27,6 +27,7 @@
 # misc
 .DS_Store
 *.pem
+/.idea/
 
 # debug
 npm-debug.log*
@@ -35,7 +36,7 @@ yarn-error.log*
 .pnpm-debug.log*
 
 # env files (can opt-in for committing if needed)
-.env*
+.env
 
 # vercel
 .vercel
