@@ -5,18 +5,16 @@
 #   - ps-frontend:  Next.js frontend application.
 #   - ps-directus:  Directus (backend CMS) application.
 #   - ps-database:  PostgreSQL database for Directus.
+#   - ps-matomo:    Matomo analytics application.
+#   - ps-matomo-db: MariaDB database for Matomo.
 #
 # Usage:
-#   - Ensure you have a .env file in this directory with all required
-#     variables (e.g., ${DB_USER}, ${DIRECTUS_KEY}, etc.).
-#   - Ensure your 'backend-net' network is created:
-#     docker network create backend-net
-#   - Ensure your external Nginx Proxy Manager (which is also
-#     on 'backend-net') is configured to route traffic to:
-#     - http://ps-frontend:3000 (for the frontend)
-#     - http://ps-directus:8055 (for the Directus API/app)
-#   - To initialize from a backup, place a .sql file in ./init-db
-#     BEFORE the first 'docker compose up'.
+#   - Ensure your .env file is updated with new Matomo DB variables.
+#   - Ensure 'backend-net' is created: docker network create backend-net
+#   - Configure NPM to route traffic to:
+#     - http://ps-frontend:3000 (Frontend)
+#     - http://ps-directus:8055 (Directus)
+#     - http://ps-matomo:80 (Matomo)
 #   - Run: docker compose up -d
 # ==============================================================================
 version: '3.9'
@@ -102,6 +100,7 @@ services:
         timeout: 10s
         retries: 5      # <-- INCREASED from 3
         start_period: 30s # <-- INCREASED from 10s
+
   # 3. Database Service (PostgreSQL)
   ps-database:
     image: postgres:15-alpine # Using lightweight alpine image
@@ -170,6 +169,56 @@ services:
       retries: 3
       start_period: 10s
 
+  # 5. Analytics Service (Matomo App)
+  ps-matomo:
+    image: matomo:latest
+    container_name: ps-matomo
+    restart: unless-stopped
+    expose:
+      - "80" # Matomo runs on port 80 internally
+    volumes:
+      - matomo-app-data:/var/www/html
+    environment:
+      - MATOMO_DATABASE_ADAPTER=mysql
+      - MATOMO_DATABASE_HOST=ps-matomo-db
+      - MATOMO_DATABASE_DBNAME=matomo
+      - MATOMO_DATABASE_USERNAME=matomo
+      - MATOMO_DATABASE_PASSWORD=${MATOMO_DB_PASSWORD}
+    networks:
+      - backend-net
+    depends_on:
+      ps-matomo-db:
+        condition: service_healthy
+    logging: *default-logging
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://127.0.0.1:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
+  # 6. Analytics Database (MariaDB for Matomo)
+  ps-matomo-db:
+    image: mariadb:10
+    container_name: ps-matomo-db
+    restart: unless-stopped
+    volumes:
+      - matomo-db-data:/var/lib/mysql
+    environment:
+      - MYSQL_DATABASE=matomo
+      - MYSQL_USER=matomo
+      - MYSQL_PASSWORD=${MATOMO_DB_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${MATOMO_DB_ROOT_PASSWORD}
+    networks:
+      - backend-net
+    logging: *default-logging
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MATOMO_DB_ROOT_PASSWORD}"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
 # Define the network used by all services
 networks:
   backend-net:
@@ -180,4 +229,8 @@ volumes:
   db-data:
     name: ps-db-data # Give the volume an explicit name
   sync-flags:
-    name: ps-sync-flags # Persistent flags for sync service pause/resume state
+    name: ps-sync-flags # Persistent flags for sync service pause/resume stat
+  matomo-db-data:
+    name: ps-matomo-db-data
+  matomo-app-data:
+    name: ps-matomo-app-data
