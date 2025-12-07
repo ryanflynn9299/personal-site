@@ -62,16 +62,19 @@ openssl rand -hex 32  # For SYNC_ADMIN_TOKEN (use different value!)
 ### 2. Start the Service
 
 **Start independently (recommended for maintenance):**
+
 ```bash
 docker compose up -d ps-sync
 ```
 
 **Start with main stack:**
+
 ```bash
 docker compose up -d
 ```
 
 **Check status:**
+
 ```bash
 docker compose ps ps-sync
 docker compose logs -f ps-sync
@@ -82,6 +85,7 @@ docker compose logs -f ps-sync
 ### Pause Sync Service
 
 **Method 1: Create pause flag file**
+
 ```bash
 # SSH into server
 docker exec ps-sync touch /app/flags/.sync-paused
@@ -89,11 +93,13 @@ echo "Database migration in progress" | docker exec -i ps-sync tee /app/flags/.s
 ```
 
 **Method 2: Stop the service**
+
 ```bash
 docker compose stop ps-sync
 ```
 
 **Method 3: Via API (webhook mode only)**
+
 ```bash
 curl -X POST http://your-server:8080/pause \
   -H "Authorization: Bearer $SYNC_ADMIN_TOKEN" \
@@ -104,16 +110,19 @@ curl -X POST http://your-server:8080/pause \
 ### Resume Sync Service
 
 **Method 1: Remove pause flag**
+
 ```bash
 docker exec ps-sync rm /app/flags/.sync-paused
 ```
 
 **Method 2: Start the service**
+
 ```bash
 docker compose start ps-sync
 ```
 
 **Method 3: Via API (webhook mode only)**
+
 ```bash
 curl -X POST http://your-server:8080/resume \
   -H "Authorization: Bearer $SYNC_ADMIN_TOKEN"
@@ -122,21 +131,25 @@ curl -X POST http://your-server:8080/resume \
 ### Check Sync Status
 
 **View logs:**
+
 ```bash
 docker compose logs -f ps-sync
 ```
 
 **Check if paused:**
+
 ```bash
 docker exec ps-sync test -f /app/flags/.sync-paused && echo "PAUSED" || echo "ACTIVE"
 ```
 
 **View sync log:**
+
 ```bash
 docker exec ps-sync cat /app/flags/sync.log
 ```
 
 **Check health (webhook mode):**
+
 ```bash
 curl http://your-server:8080/health
 ```
@@ -210,11 +223,13 @@ curl http://your-server:8080/health
 ### Before Maintenance
 
 1. **Pause sync service:**
+
    ```bash
    docker exec ps-sync sh -c 'echo "Maintenance: $(date)" > /app/flags/.sync-paused'
    ```
 
 2. **Verify it's paused:**
+
    ```bash
    docker compose logs ps-sync | tail -5
    # Should see: "Sync is PAUSED: Maintenance: ..."
@@ -234,11 +249,13 @@ curl http://your-server:8080/health
 ### After Maintenance
 
 1. **Resume sync service:**
+
    ```bash
    docker exec ps-sync rm /app/flags/.sync-paused
    ```
 
 2. **Restart main stack:**
+
    ```bash
    docker compose up -d
    ```
@@ -265,6 +282,7 @@ POLL_INTERVAL=60   # 1 minute (not recommended, too frequent)
 ### Repository Path
 
 The service mounts the current directory (`.`) to `/app/repo` in the container. This means:
+
 - Code is synced directly to your project directory
 - The service has read/write access to pull code
 - No separate clone needed
@@ -272,6 +290,7 @@ The service mounts the current directory (`.`) to `/app/repo` in the container. 
 ### Persistent State
 
 The `sync-flags` volume persists:
+
 - Pause flag (`.sync-paused`)
 - Sync logs (`sync.log`)
 - Rebuild notification (`.rebuild-needed`)
@@ -283,16 +302,19 @@ This means pause state survives container restarts.
 ### Sync Not Working
 
 1. **Check service is running:**
+
    ```bash
    docker compose ps ps-sync
    ```
 
 2. **Check logs:**
+
    ```bash
    docker compose logs ps-sync
    ```
 
 3. **Verify environment variables:**
+
    ```bash
    docker exec ps-sync env | grep -E "GITHUB_REPO|SYNC_MODE"
    ```
@@ -305,6 +327,7 @@ This means pause state survives container restarts.
 ### Code Not Pulling
 
 1. **Verify GitHub repo is accessible:**
+
    ```bash
    docker exec ps-sync curl -s "https://api.github.com/repos/$GITHUB_REPO/commits/main" | head -20
    ```
@@ -322,6 +345,7 @@ This means pause state survives container restarts.
 ### Service Keeps Restarting
 
 1. **Check logs for errors:**
+
    ```bash
    docker compose logs ps-sync
    ```
@@ -348,4 +372,3 @@ This means pause state survives container restarts.
 - **Webhook Mode**: Requires secret verification, should be behind authentication
 - **Pause Flag**: Anyone with Docker exec access can pause/resume (consider access controls)
 - **Admin Token**: Use strong, random token for webhook mode API endpoints
-

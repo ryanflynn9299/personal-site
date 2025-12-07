@@ -1,9 +1,11 @@
 # Personal Site - TODO List
 
 ## Immediate/Next Items
-*High priority items to tackle soon*
+
+_High priority items to tackle soon_
 
 ### Do ASAP as Possible
+
 - [ ] Fix missing author from directus call -- TODO
 - [ ] Add professional headshot/profile imagem -- TODO
 - [ ] Make sure no ENV variables are hardcoded in the codebase -- TODO
@@ -19,15 +21,17 @@
 - [x] attach real resume
 
 ### Bug Fixes & Critical Issues
+
 - [x] Fix TypeScript error in `readItems` call for posts collection
 - UNABLE_TO_GET_ISSUER_CERT_LOCALLY
 - [ ] Verify all Directus API calls handle errors properly -- TODO
-- [X] Test blog post rendering with actual content
+- [x] Test blog post rendering with actual content
 - [ ] Ensure responsive design works on mobile devices
 - [ ] Fix any console errors in development
 - [ ] consider removing dangerouslyallowsvgs from next.config.ts
 
 ### Content & Setup
+
 - [x] Add actual blog posts to Directus CMS
 - [x] Write and publish first blog post
 - [ ] Update site metadata (title, description, favicon) -- TODO
@@ -36,6 +40,7 @@
 - [ ] support markdown blogs
 
 ### Core Functionality
+
 - [x] Implement blog post detail pages
 - [ ] Add navigation between blog posts (prev/next)
 - [x] add search for blogs
@@ -44,6 +49,7 @@
 - [ ] Implement proper error boundaries -- TODO
 
 ### Development & Maintenance
+
 - [ ] Create deployment pipeline (CI/CD) -- TODO
 - [ ] Add code formatting with Prettier -- TODO
 - [ ] Set up error monitoring (Sentry) -- TODO
@@ -53,9 +59,11 @@
 - [ ] clean up files and directories -- TODO
 
 ## Future Items
-*Medium priority items for later development*
+
+_Medium priority items for later development_
 
 ### Content Management
+
 - [ ] Add blog post categories/tags system
 - [x] Implement blog post search functionality
 - [ ] Add pagination for blog listing page
@@ -63,6 +71,7 @@
 - [ ] Add blog post excerpt/summary display
 
 ### User Experience
+
 - [ ] Add dark/light theme toggle
 - [ ] Implement smooth scrolling navigation
 - [ ] Add reading time estimates for blog posts
@@ -71,6 +80,7 @@
 - [ ] Improve toasts styling and limit
 
 ### Performance & SEO
+
 - [ ] Optimize images with Next.js Image component
 - [ ] Add proper meta tags for social sharing
 - [ ] Implement structured data for blog posts
@@ -78,12 +88,14 @@
 - [ ] Set up Google Analytics or similar
 
 ### Portfolio Features
+
 - [ ] Add projects/work showcase section
 - [ ] Create about page with detailed bio -- TODO
-- [X] Add resume/CV download functionality
-- [X] Implement contact form
+- [x] Add resume/CV download functionality
+- [x] Implement contact form
 
 ### Development and Maintenance
+
 - [ ] Review and optimize bundle size
 - [ ] Audit accessibility compliance
 - [ ] Clean up unused dependencies
@@ -93,9 +105,11 @@
 - [ ] Stylize toasts to space theme
 
 ## General Features to Add
-*Nice-to-have features for enhanced functionality*
+
+_Nice-to-have features for enhanced functionality_
 
 ### Interactive Elements
+
 - [ ] Add comment system for blog posts
 - [ ] Implement newsletter signup
 - [ ] Create interactive project demos
@@ -111,6 +125,7 @@
 - decrypted text react bits
 
 ### Content Features
+
 - [ ] Add code syntax highlighting for technical posts - terminal theme
 - [ ] Implement table of contents for long posts
 - [ ] Add related posts suggestions
@@ -118,6 +133,7 @@
 - [ ] Add author bio section for posts - and popup card for author bio
 
 ### Advanced Functionality
+
 - [ ] Implement full-text search across all content
 - [ ] Add RSS feed generation - ?
 - [ ] Create admin dashboard for quick edits - ?
@@ -125,6 +141,7 @@
 - [ ] Implement A/B testing for different layouts
 
 ### Integrations
+
 - [ ] Connect with GitHub API for project data
 - [ ] Add LinkedIn integration
 - [ ] Implement Twitter/X card previews
@@ -132,9 +149,11 @@
 - [ ] Add calendar booking integration - maybe calendly?
 
 ## Miscellaneous
-*Random tasks and ideas that don't fit elsewhere*
+
+_Random tasks and ideas that don't fit elsewhere_
 
 ### Documentation
+
 - [ ] Create style guide for consistent design
 - [ ] Write deployment instructions - TODO
 - [ ] Document Directus schema and relationships
@@ -145,6 +164,7 @@
   - Download resume
 
 ### Content Ideas
+
 - [ ] Write about the tech stack choices
 - [ ] Create tutorial series on web development
 - [ ] Document lessons learned from projects
@@ -152,12 +172,12 @@
 - [ ] Write about career journey and experiences
 
 ### Ideas
-- [] Implement hidden sections revealed by URL manipulation or sessions for gemini links and other organizational nonsense
-- 
 
----
+- [] Implement hidden sections revealed by URL manipulation or sessions for gemini links and other organizational nonsense
+- ***
 
 ## Notes
+
 - Use `- [x]` to mark completed items
 - Move completed items to a separate "Done" section if list gets long
 - Review and prioritize monthly

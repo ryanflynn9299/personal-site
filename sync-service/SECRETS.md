@@ -17,6 +17,7 @@ openssl rand -hex 32
 ```
 
 **Example output:**
+
 ```
 a1b2c3d4e5f6789012345678901234567890abcdef1234567890abcdef123456
 ```
@@ -29,6 +30,7 @@ openssl rand -hex 32
 ```
 
 **Example output:**
+
 ```
 9876543210fedcba0987654321fedcba0987654321fedcba0987654321fedcba
 ```
@@ -74,6 +76,7 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 ## Method 5: Online Generator (Less Secure)
 
 If you don't have command-line access, you can use:
+
 - https://randomkeygen.com/ (use "CodeIgniter Encryption Keys" - 256-bit)
 - https://www.lastpass.com/features/password-generator (set to 64 characters, hex)
 
@@ -98,6 +101,7 @@ echo "✅ Add these to your .env file"
 ```
 
 Make it executable and run:
+
 ```bash
 chmod +x generate-secrets.sh
 ./generate-secrets.sh
@@ -116,25 +120,30 @@ SYNC_ADMIN_TOKEN=9876543210fedcba0987654321fedcba0987654321fedcba0987654321fedcb
 ## Security Best Practices
 
 ### 1. **Length and Entropy**
+
 - Use at least 32 bytes (64 hex characters) for strong security
 - The examples above generate 256-bit secrets, which is cryptographically secure
 
 ### 2. **Uniqueness**
+
 - **Never reuse secrets** - generate a unique value for each secret
 - Use different secrets for different environments (dev/staging/prod)
 
 ### 3. **Storage**
+
 - ✅ Store in `.env` file (already in `.gitignore`)
 - ✅ Use environment variables in production
 - ❌ Never commit secrets to git
 - ❌ Don't share secrets in chat/email
 
 ### 4. **Rotation**
+
 - Rotate secrets periodically (every 6-12 months)
 - Rotate immediately if you suspect a compromise
 - When rotating, update both `.env` and GitHub webhook settings simultaneously
 
 ### 5. **Access Control**
+
 - Limit who can view `.env` file
 - Use file permissions: `chmod 600 .env`
 - Consider using a secrets manager for production (HashiCorp Vault, AWS Secrets Manager, etc.)
@@ -156,6 +165,7 @@ GitHub will use this secret to sign all webhook payloads, and your server will v
 After setting up, verify secrets are working:
 
 ### Test Webhook Secret (webhook mode)
+
 ```bash
 # Check if webhook server is running
 curl http://localhost:8080/health
@@ -168,6 +178,7 @@ curl -X POST http://localhost:8080/webhook/deploy \
 ```
 
 ### Test Admin Token (webhook mode)
+
 ```bash
 # Test pause endpoint
 curl -X POST http://localhost:8080/pause \
@@ -184,7 +195,7 @@ curl -X POST http://localhost:8080/pause \
 
 1. **Check format**: Ensure no extra spaces/newlines
 2. **Check length**: Should be 64 hex characters (32 bytes)
-3. **Verify in container**: 
+3. **Verify in container**:
    ```bash
    docker exec ps-sync env | grep -E "WEBHOOK_SECRET|SYNC_ADMIN_TOKEN"
    ```
@@ -220,4 +231,3 @@ SYNC_ADMIN_TOKEN=9876543210fedcba0987654321fedcba0987654321fedcba0987654321fedcb
 - You can set them anyway for future use
 - Secrets are only used when `SYNC_MODE=webhook`
 - In polling mode, the service only makes outbound API calls (no secrets needed)
-

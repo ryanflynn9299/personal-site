@@ -1,6 +1,7 @@
 # Features of this site
 
 ## Page structure
+
 - home page
 - about page
 - vitae page
@@ -9,6 +10,7 @@
 - contact page
 
 ## Core Features
+
 - Uses React, Tailwind and Next.js
 - Uses Directus as a headless CMS
 - Includes docker compose file
@@ -16,6 +18,7 @@
 - Includes a resume
 
 ## UI Components
+
 - Hero section
 - Project carousel
 - Tech stack bento box
@@ -29,6 +32,7 @@
 - Animated 404 page
 
 ## UI Features and Animations
+
 - Project card underglow
 - carousel button materialize
 - tech stack bento box render-in

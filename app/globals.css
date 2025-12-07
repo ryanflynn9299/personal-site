@@ -33,7 +33,12 @@
     background-image: radial-gradient(ellipse at top, #1e293b, #0f172a);
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-family: var(--font-heading), sans-serif;
   }
 }
@@ -44,8 +49,12 @@
 
 /* === Starfield Background Animation for 404 Page === */
 @keyframes move-stars {
-  from { background-position: 0 0; }
-  to { background-position: -10000px 5000px; }
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: -10000px 5000px;
+  }
 }
 
 .stars {
@@ -61,34 +70,37 @@
 }
 
 .stars-1 {
-  background-image: radial-gradient(1px 1px at 20px 30px, #e2e8f0, rgba(0, 0, 0, 0)),
-  radial-gradient(1px 1px at 40px 70px, #f8fafc, rgba(0, 0, 0, 0)),
-  radial-gradient(1px 1px at 50px 160px, #e2e8f0, rgba(0, 0, 0, 0)),
-  radial-gradient(1px 1px at 90px 40px, #94a3b8, rgba(0, 0, 0, 0)),
-  radial-gradient(2px 2px at 130px 80px, #f8fafc, rgba(0, 0, 0, 0)),
-  radial-gradient(1px 1px at 160px 120px, #94a3b8, rgba(0, 0, 0, 0));
+  background-image:
+    radial-gradient(1px 1px at 20px 30px, #e2e8f0, rgba(0, 0, 0, 0)),
+    radial-gradient(1px 1px at 40px 70px, #f8fafc, rgba(0, 0, 0, 0)),
+    radial-gradient(1px 1px at 50px 160px, #e2e8f0, rgba(0, 0, 0, 0)),
+    radial-gradient(1px 1px at 90px 40px, #94a3b8, rgba(0, 0, 0, 0)),
+    radial-gradient(2px 2px at 130px 80px, #f8fafc, rgba(0, 0, 0, 0)),
+    radial-gradient(1px 1px at 160px 120px, #94a3b8, rgba(0, 0, 0, 0));
   background-repeat: repeat;
   background-size: 200px 200px;
   animation: move-stars 200s linear infinite;
 }
 
 .stars-2 {
-  background-image: radial-gradient(1px 1px at 10px 90px, #e2e8f0, rgba(0, 0, 0, 0)),
-  radial-gradient(2px 2px at 30px 110px, #f8fafc, rgba(0, 0, 0, 0)),
-  radial-gradient(2px 2px at 80px 20px, #e2e8f0, rgba(0, 0, 0, 0)),
-  radial-gradient(1px 1px at 120px 140px, #94a3b8, rgba(0, 0, 0, 0)),
-  radial-gradient(1px 1px at 150px 190px, #f8fafc, rgba(0, 0, 0, 0)),
-  radial-gradient(2px 2px at 180px 60px, #94a3b8, rgba(0, 0, 0, 0));
+  background-image:
+    radial-gradient(1px 1px at 10px 90px, #e2e8f0, rgba(0, 0, 0, 0)),
+    radial-gradient(2px 2px at 30px 110px, #f8fafc, rgba(0, 0, 0, 0)),
+    radial-gradient(2px 2px at 80px 20px, #e2e8f0, rgba(0, 0, 0, 0)),
+    radial-gradient(1px 1px at 120px 140px, #94a3b8, rgba(0, 0, 0, 0)),
+    radial-gradient(1px 1px at 150px 190px, #f8fafc, rgba(0, 0, 0, 0)),
+    radial-gradient(2px 2px at 180px 60px, #94a3b8, rgba(0, 0, 0, 0));
   background-repeat: repeat;
   background-size: 300px 300px;
   animation: move-stars 150s linear infinite;
 }
 
 .stars-3 {
-  background-image: radial-gradient(2px 2px at 50px 50px, #f8fafc, rgba(0, 0, 0, 0)),
-  radial-gradient(3px 3px at 100px 100px, #f8fafc, rgba(0, 0, 0, 0)),
-  radial-gradient(2px 2px at 200px 150px, #e2e8f0, rgba(0, 0, 0, 0)),
-  radial-gradient(1px 1px at 250px 90px, #94a3b8, rgba(0, 0, 0, 0));
+  background-image:
+    radial-gradient(2px 2px at 50px 50px, #f8fafc, rgba(0, 0, 0, 0)),
+    radial-gradient(3px 3px at 100px 100px, #f8fafc, rgba(0, 0, 0, 0)),
+    radial-gradient(2px 2px at 200px 150px, #e2e8f0, rgba(0, 0, 0, 0)),
+    radial-gradient(1px 1px at 250px 90px, #94a3b8, rgba(0, 0, 0, 0));
   background-repeat: repeat;
   background-size: 400px 400px;
   animation: move-stars 100s linear infinite;
@@ -97,12 +109,18 @@
 
 /* Custom animations for various effects throughout the site */
 @keyframes slow-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes shimmer {
-  100% { transform: translateX(100%); }
+  100% {
+    transform: translateX(100%);
+  }
 }
 
 /* === CMDK Command Palette Styling === */
@@ -132,7 +150,7 @@
   content-visibility: auto; /* Performance optimization for long lists */
 }
 
-[cmdk-item][aria-selected='true'] {
+[cmdk-item][aria-selected="true"] {
   @apply bg-slate-700;
 }
 

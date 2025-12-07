@@ -1,4 +1,4 @@
-import { WifiOff } from 'lucide-react';
+import { WifiOff } from "lucide-react";
 
 export function ServiceUnavailable() {
   return (
@@ -8,7 +8,8 @@ export function ServiceUnavailable() {
         Content Service Unavailable
       </h3>
       <p className="mt-2 text-slate-400">
-        There was a problem connecting to the content service. Please try again later.
+        There was a problem connecting to the content service. Please try again
+        later.
       </p>
     </div>
   );

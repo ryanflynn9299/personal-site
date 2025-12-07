@@ -1,18 +1,20 @@
 import type { Metadata } from "next";
 import { getPublishedPosts } from "@/lib/directus";
-import {BlogPageClient} from "@/app/(portfolio)/blog/BlogPageClient";
+import { BlogPageClient } from "@/app/(portfolio)/blog/BlogPageClient";
 
 export const metadata: Metadata = {
-    title: "Blog",
-    description: "A collection of articles and thoughts on software development, technology, and more.",
+  title: "Blog",
+  description:
+    "A collection of articles and thoughts on software development, technology, and more.",
 };
 
 // Revalidate the page every hour to fetch new posts
 export const revalidate = 3600;
 
-
 export default async function BlogIndexPage() {
-    const postsResponse = await getPublishedPosts();
+  const postsResponse = await getPublishedPosts();
 
-    return <BlogPageClient posts={postsResponse.posts} status={postsResponse.status} />;
+  return (
+    <BlogPageClient posts={postsResponse.posts} status={postsResponse.status} />
+  );
 }
