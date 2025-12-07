@@ -1,50 +1,46 @@
-"use client"; // Client component to handle state and user interaction.
+"use client";
 
-import { useState, type FormEvent, type ChangeEvent } from "react";
+import { useActionState } from "react";
+import { useFormStatus } from "react-dom";
 import { motion } from "framer-motion";
 import {
   Mail,
   Linkedin,
-  Send,
   Loader,
   CheckCircle,
   AlertTriangle,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
+import { submitContactForm, type FormState } from "@/app/actions/contact";
 
-type SubmissionStatus = "idle" | "submitting" | "success" | "error";
+const initialState: FormState = { success: false };
+
+/**
+ * Submit button component that uses useFormStatus to track form state
+ * This is a React 19 pattern that automatically tracks form submission status
+ * useFormStatus must be used within a form element
+ */
+function SubmitButton() {
+  const { pending } = useFormStatus();
+
+  return (
+    <Button type="submit" disabled={pending}>
+      {pending && <Loader className="mr-2 h-4 w-4 animate-spin" />}
+      {pending ? "Sending..." : "Send Message"}
+    </Button>
+  );
+}
 
 export function ContactPageClient() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    message: "",
-  });
-  const [status, setStatus] = useState<SubmissionStatus>("idle");
-
-  const handleInputChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setStatus("submitting");
-
-    // --- Backend Abstraction ---
-    // In a real application, you would make an API call here.
-    // e.g., await fetch('/api/contact', { method: 'POST', body: JSON.stringify(formData) });
-    // For this frontend-only implementation, we'll simulate the network delay.
-    // TODO: Replace this with actual API call logic.
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-
-    // Simulate a successful outcome
-    setStatus("success");
-    // To test the error state, you could uncomment the following line:
-    // setStatus('error');
-  };
+  // React 19: useActionState for form state management
+  // The action receives (prevState, formData) as parameters
+  // useFormStatus in SubmitButton automatically tracks pending state
+  const [state, formAction] = useActionState<FormState, FormData>(
+    async (prevState: FormState, formData: FormData) => {
+      return await submitContactForm(formData);
+    },
+    initialState
+  );
 
   return (
     <motion.div
@@ -58,7 +54,7 @@ export function ContactPageClient() {
           Get In Touch
         </h1>
         <p className="mx-auto mt-4 max-w-2xl text-lg text-slate-300">
-          Have a project in mind, a question, or just want to connect? I'd love
+          Have a project in mind, a question, or just want to connect? I&apos;d love
           to hear from you.
         </p>
       </header>
@@ -114,18 +110,18 @@ export function ContactPageClient() {
           <h2 className="font-heading text-2xl font-semibold text-slate-100">
             Send a Message
           </h2>
-          {status === "success" ? (
+          {state.success ? (
             <div className="mt-4 flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-green-500 bg-slate-800 p-12 text-center">
               <CheckCircle className="h-12 w-12 text-green-500" />
               <h3 className="mt-4 font-semibold text-slate-50">
                 Message Sent Successfully!
               </h3>
               <p className="mt-2 text-slate-400">
-                Thank you for reaching out. I'll get back to you shortly.
+                {state.message || "Thank you for reaching out. I'll get back to you shortly."}
               </p>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="mt-4 space-y-4">
+            <form action={formAction} className="mt-4 space-y-4">
               <div>
                 <label htmlFor="name" className="sr-only">
                   Name
@@ -136,8 +132,6 @@ export function ContactPageClient() {
                   id="name"
                   required
                   placeholder="Your Name"
-                  value={formData.name}
-                  onChange={handleInputChange}
                   className="w-full rounded-md border-slate-600 bg-slate-700 px-4 py-2 text-slate-200 ring-offset-slate-900 transition-colors focus:border-sky-300 focus:ring-2 focus:ring-sky-300"
                 />
               </div>
@@ -151,8 +145,6 @@ export function ContactPageClient() {
                   id="email"
                   required
                   placeholder="Your Email"
-                  value={formData.email}
-                  onChange={handleInputChange}
                   className="w-full rounded-md border-slate-600 bg-slate-700 px-4 py-2 text-slate-200 ring-offset-slate-900 transition-colors focus:border-sky-300 focus:ring-2 focus:ring-sky-300"
                 />
               </div>
@@ -166,26 +158,19 @@ export function ContactPageClient() {
                   required
                   rows={5}
                   placeholder="Your Message"
-                  value={formData.message}
-                  onChange={handleInputChange}
                   className="w-full rounded-md border-slate-600 bg-slate-700 px-4 py-2 text-slate-200 ring-offset-slate-900 transition-colors focus:border-sky-300 focus:ring-2 focus:ring-sky-300"
                 />
               </div>
               <div className="flex items-center justify-between">
                 <div className="text-sm">
-                  {status === "error" && (
+                  {state.error && (
                     <p className="flex items-center gap-2 text-red-400">
                       <AlertTriangle className="h-4 w-4" />
-                      Something went wrong. Please try again.
+                      {state.error}
                     </p>
                   )}
                 </div>
-                <Button type="submit" disabled={status === "submitting"}>
-                  {status === "submitting" && (
-                    <Loader className="mr-2 h-4 w-4 animate-spin" />
-                  )}
-                  {status === "submitting" ? "Sending..." : "Send Message"}
-                </Button>
+                <SubmitButton />
               </div>
             </form>
           )}

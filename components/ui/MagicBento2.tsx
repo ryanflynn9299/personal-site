@@ -3,6 +3,7 @@ import React, {
   useEffect,
   useState,
   useCallback,
+  useSyncExternalStore,
   FC,
   ReactNode,
   CSSProperties,
@@ -38,7 +39,7 @@ interface ParticleCardProps {
 }
 
 interface GlobalSpotlightProps {
-  gridRef: RefObject<HTMLDivElement>;
+  gridRef: RefObject<HTMLDivElement | null>;
   disableAnimations?: boolean;
   enabled?: boolean;
   spotlightRadius?: number;
@@ -47,7 +48,7 @@ interface GlobalSpotlightProps {
 
 interface BentoCardGridProps {
   children: ReactNode;
-  gridRef: RefObject<HTMLDivElement>;
+  gridRef: RefObject<HTMLDivElement | null>;
 }
 
 interface MagicBentoProps {
@@ -484,16 +485,25 @@ const BentoCardGrid: FC<BentoCardGridProps> = ({ children, gridRef }) => (
   </div>
 );
 
+/**
+ * React 19: Uses useSyncExternalStore for better performance and SSR compatibility
+ * This hook subscribes to window resize events and efficiently tracks mobile state
+ * Benefits over useState + useEffect:
+ * - Better performance (avoids unnecessary re-renders)
+ * - SSR-safe (provides server-side snapshot)
+ * - Prevents hydration mismatches
+ */
 const useMobileDetection = (): boolean => {
-  const [isMobile, setIsMobile] = useState(false);
-  useEffect(() => {
-    const checkMobile = () =>
-      setIsMobile(window.innerWidth <= MOBILE_BREAKPOINT);
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
-  return isMobile;
+  return useSyncExternalStore(
+    (subscribe) => {
+      // Subscribe to resize events
+      if (typeof window === "undefined") return () => {};
+      window.addEventListener("resize", subscribe);
+      return () => window.removeEventListener("resize", subscribe);
+    },
+    () => (typeof window !== "undefined" ? window.innerWidth <= MOBILE_BREAKPOINT : false), // Client-side snapshot
+    () => false // Server-side snapshot (default to desktop)
+  );
 };
 
 const MagicBento: FC<MagicBentoProps> = ({

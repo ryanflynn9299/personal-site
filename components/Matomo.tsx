@@ -150,3 +150,10 @@ export function trackBlogPostView(slug: string, title: string) {
   // Also track with title for better reporting
   trackMatomoEvent("Blog Post", "View with Title", title);
 }
+
+/**
+ * Track blog search queries
+ */
+export function trackBlogSearch(query: string, resultCount: number) {
+  trackMatomoEvent("Blog Search", "Query", query, resultCount);
+}

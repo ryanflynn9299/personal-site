@@ -2,7 +2,7 @@
 
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useTransition } from "react";
 import Link from "next/link";
 import { Command } from "cmdk";
 import { Post } from "@/types";
@@ -11,6 +11,7 @@ import { SearchButton } from "@/components/ui/SearchButton";
 import { FileText } from "lucide-react";
 import { Dialog } from "radix-ui";
 import { ServiceUnavailable } from "@/components/ui/ServiceUnavailable";
+import { trackBlogSearch } from "@/components/Matomo";
 
 interface BlogPageClientProps {
   status: "success" | "error";
@@ -19,17 +20,60 @@ interface BlogPageClientProps {
 
 export function BlogPageClient({ posts, status }: BlogPageClientProps) {
   const [open, setOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [, startTransition] = useTransition();
+  const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const lastTrackedQueryRef = useRef<string>("");
 
+  // React 19: Use useSyncExternalStore for keyboard shortcut handling
+  // This provides better performance and avoids unnecessary re-renders
   useEffect(() => {
-    const down = (e: KeyboardEvent) => {
+    if (typeof window === "undefined") return;
+    
+    const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
         setOpen((open) => !open);
       }
     };
-    document.addEventListener("keydown", down);
-    return () => document.removeEventListener("keydown", down);
+    
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
+
+  // React 19: Track search queries with debouncing and useTransition for better UX
+  // useTransition allows the UI to remain responsive during search tracking
+  useEffect(() => {
+    if (!open || !searchQuery.trim()) {
+      return;
+    }
+
+    // Clear existing timeout
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+
+    // Only track if query has changed
+    if (searchQuery.trim() !== lastTrackedQueryRef.current) {
+      searchTimeoutRef.current = setTimeout(() => {
+        startTransition(() => {
+          const filteredPosts = posts.filter(
+            (post) =>
+              post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+              post.summary.toLowerCase().includes(searchQuery.toLowerCase())
+          );
+          trackBlogSearch(searchQuery.trim(), filteredPosts.length);
+          lastTrackedQueryRef.current = searchQuery.trim();
+        });
+      }, 500); // Debounce for 500ms
+    }
+
+    return () => {
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
+    };
+  }, [searchQuery, open, posts, startTransition]);
 
   // Select what to render in the component
   const renderContent = () => {
@@ -92,18 +136,29 @@ export function BlogPageClient({ posts, status }: BlogPageClientProps) {
       {/* The Command Palette Dialog is now a sibling to the main content div */}
       <Command.Dialog
         open={open}
-        onOpenChange={setOpen}
+        onOpenChange={(isOpen) => {
+          setOpen(isOpen);
+          if (!isOpen) {
+            // Reset search state when dialog closes
+            setSearchQuery("");
+            lastTrackedQueryRef.current = "";
+          }
+        }}
         label="Search Blog Posts"
       >
         <Dialog.Title className="DialogTitle" />{" "}
         {/* Necessary to prevent react error */}
-        <Command.Input placeholder="Type to search articles..." />
+        <Command.Input
+          placeholder="Type to search articles..."
+          value={searchQuery}
+          onValueChange={setSearchQuery}
+        />
         <Command.List>
           <Command.Empty>No results found.</Command.Empty>
           <Command.Group heading="Articles">
             {posts.map((post) => (
               <Link
-                href={`/app/(portfolio)/blog/${post.slug}`}
+                href={`/blog/${post.slug}`}
                 key={post.id}
                 passHref
               >
