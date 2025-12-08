@@ -12,7 +12,7 @@ const nextConfig = {
   // Mark thread-stream as an external package for server components
   // This prevents Next.js from trying to bundle it, which causes worker thread errors
   // Works with both Turbopack and webpack
-  serverComponentsExternalPackages: ["thread-stream", "pino"],
+  serverExternalPackages: ["thread-stream", "pino"],
 
   images: {
     // 2. This is the corrected 'remotePatterns' syntax

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { ContactPageClient } from "./ContactPageClient";
+import { isEmailServiceConfigured } from "@/lib/email-service";
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -8,5 +9,8 @@ export const metadata: Metadata = {
 };
 
 export default function ContactPage() {
-  return <ContactPageClient />;
+  // Check email service availability on the server
+  const emailServiceAvailable = isEmailServiceConfigured();
+  
+  return <ContactPageClient emailServiceAvailable={emailServiceAvailable} />;
 }

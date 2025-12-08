@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState, useRef, useEffect } from "react";
 import { useFormStatus } from "react-dom";
 import { motion } from "framer-motion";
 import {
@@ -9,11 +9,19 @@ import {
   Loader,
   CheckCircle,
   AlertTriangle,
+  ArrowLeft,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { submitContactForm, type FormState } from "@/app/actions/contact";
+import { EmailStatusIndicatorWithStatus } from "@/components/ui/EmailStatusIndicator";
 
 const initialState: FormState = { success: false };
+
+interface SavedFormData {
+  name: string;
+  email: string;
+  message: string;
+}
 
 /**
  * Submit button component that uses useFormStatus to track form state
@@ -31,16 +39,57 @@ function SubmitButton() {
   );
 }
 
-export function ContactPageClient() {
+interface ContactPageClientProps {
+  /**
+   * Whether the email service is configured and available
+   */
+  emailServiceAvailable: boolean;
+}
+
+export function ContactPageClient({ emailServiceAvailable }: ContactPageClientProps) {
+  // Store form data to restore when "Go back" is clicked
+  const [savedFormData, setSavedFormData] = useState<SavedFormData | null>(null);
+  const [showForm, setShowForm] = useState(true);
+  const formRef = useRef<HTMLFormElement>(null);
+  const [formKey, setFormKey] = useState(0);
+  
   // React 19: useActionState for form state management
   // The action receives (prevState, formData) as parameters
   // useFormStatus in SubmitButton automatically tracks pending state
   const [state, formAction] = useActionState<FormState, FormData>(
     async (prevState: FormState, formData: FormData) => {
+      // Save form data before submission
+      const name = formData.get("name") as string;
+      const email = formData.get("email") as string;
+      const message = formData.get("message") as string;
+      setSavedFormData({ name, email, message });
+      setShowForm(false); // Hide form after submission
+      
       return await submitContactForm(formData);
     },
     initialState
   );
+
+  // Handle "Go back" button click
+  const handleGoBack = () => {
+    // Reset to show form again
+    setShowForm(true);
+    // Increment form key to force re-render
+    setFormKey((prev) => prev + 1);
+  };
+
+  // Restore form values when form is shown again
+  useEffect(() => {
+    if (showForm && savedFormData && formRef.current) {
+      const nameInput = formRef.current.querySelector<HTMLInputElement>("#name");
+      const emailInput = formRef.current.querySelector<HTMLInputElement>("#email");
+      const messageTextarea = formRef.current.querySelector<HTMLTextAreaElement>("#message");
+      
+      if (nameInput && savedFormData.name) nameInput.value = savedFormData.name;
+      if (emailInput && savedFormData.email) emailInput.value = savedFormData.email;
+      if (messageTextarea && savedFormData.message) messageTextarea.value = savedFormData.message;
+    }
+  }, [showForm, formKey, savedFormData]);
 
   return (
     <motion.div
@@ -107,21 +156,51 @@ export function ContactPageClient() {
 
         {/* Right Pane: Contact Form */}
         <div>
-          <h2 className="font-heading text-2xl font-semibold text-slate-100">
-            Send a Message
-          </h2>
-          {state.success ? (
-            <div className="mt-4 flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-green-500 bg-slate-800 p-12 text-center">
-              <CheckCircle className="h-12 w-12 text-green-500" />
-              <h3 className="mt-4 font-semibold text-slate-50">
-                Message Sent Successfully!
-              </h3>
-              <p className="mt-2 text-slate-400">
-                {state.message || "Thank you for reaching out. I'll get back to you shortly."}
-              </p>
-            </div>
+          <div className="flex items-center gap-2">
+            <h2 className="font-heading text-2xl font-semibold text-slate-100">
+              Send a Message
+            </h2>
+            <EmailStatusIndicatorWithStatus emailServiceAvailable={emailServiceAvailable} />
+          </div>
+          {!showForm && state.success ? (
+            state.emailSent ? (
+              // Email was sent successfully - green success UI
+              <div className="mt-4 flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-green-500 bg-slate-800 p-12 text-center">
+                <CheckCircle className="h-12 w-12 text-green-500" />
+                <h3 className="mt-4 font-semibold text-slate-50">
+                  Message Sent Successfully!
+                </h3>
+                <p className="mt-2 text-slate-400">
+                  {state.message || "Thank you for reaching out. I'll get back to you shortly."}
+                </p>
+              </div>
+            ) : (
+              // Email service unavailable - amber warning UI
+              <div className="mt-4 flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-amber-500 bg-slate-800 p-12 text-center">
+                <AlertTriangle className="h-12 w-12 text-amber-500" />
+                <h3 className="mt-4 font-semibold text-slate-50">
+                  Message Cannot Be Sent
+                </h3>
+                <p className="mt-2 max-w-md text-slate-400">
+                  {state.message || "Email service is currently unavailable. Your message cannot and will not be sent. No message has been saved or stored. Please use the direct email link above or try again later."}
+                </p>
+                <Button
+                  onClick={handleGoBack}
+                  className="mt-6"
+                  variant="outline"
+                >
+                  <ArrowLeft className="mr-2 h-4 w-4" />
+                  Go Back to Form
+                </Button>
+              </div>
+            )
           ) : (
-            <form action={formAction} className="mt-4 space-y-4">
+            <form
+              key={formKey}
+              ref={formRef}
+              action={formAction}
+              className="mt-4 space-y-4"
+            >
               <div>
                 <label htmlFor="name" className="sr-only">
                   Name

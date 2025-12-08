@@ -37,7 +37,7 @@ _High priority items to tackle soon_
 - [ ] Update site metadata (title, description, favicon) -- TODO
 - [x] Set up production environment variables -- TODO
 - [x] add 3 blog posts to home screen
-- [ ] support markdown blogs
+- [x] support markdown blogs
 
 ### Core Functionality
 
@@ -51,12 +51,12 @@ _High priority items to tackle soon_
 ### Development & Maintenance
 
 - [ ] Create deployment pipeline (CI/CD) -- TODO
-- [ ] Add code formatting with Prettier -- TODO
+- [x] Add code formatting with Prettier -- TODO
 - [ ] Set up error monitoring (Sentry) -- TODO
 - [ ] Create backup strategy for content
-- [ ] clean up code and comments -- TODO
+- [x] clean up code and comments -- TODO
 - [ ] finish up sitemap and robots.ts -- TODO
-- [ ] clean up files and directories -- TODO
+- [x] clean up files and directories -- TODO
 
 ## Future Items
 
@@ -72,7 +72,6 @@ _Medium priority items for later development_
 
 ### User Experience
 
-- [ ] Add dark/light theme toggle
 - [ ] Implement smooth scrolling navigation
 - [ ] Add reading time estimates for blog posts
 - [ ] Create breadcrumb navigation (?)
@@ -89,7 +88,6 @@ _Medium priority items for later development_
 
 ### Portfolio Features
 
-- [ ] Add projects/work showcase section
 - [ ] Create about page with detailed bio -- TODO
 - [x] Add resume/CV download functionality
 - [x] Implement contact form
@@ -98,9 +96,9 @@ _Medium priority items for later development_
 
 - [ ] Review and optimize bundle size
 - [ ] Audit accessibility compliance
-- [ ] Clean up unused dependencies
+- [x] Clean up unused dependencies
 - [ ] Refactor repetitive code patterns
-- [ ] Update to latest framework versions
+- [x] Update to latest framework versions
 - [ ] Set up automated testing (Jest/Cypress)
 - [ ] Stylize toasts to space theme
 
@@ -154,7 +152,7 @@ _Random tasks and ideas that don't fit elsewhere_
 
 ### Documentation
 
-- [ ] Create style guide for consistent design
+- [ ] Create UI style guide for consistent design
 - [ ] Write deployment instructions - TODO
 - [ ] Document Directus schema and relationships
 - [ ] Create troubleshooting guide
@@ -176,9 +174,3 @@ _Random tasks and ideas that don't fit elsewhere_
 - [] Implement hidden sections revealed by URL manipulation or sessions for gemini links and other organizational nonsense
 - ***
 
-## Notes
-
-- Use `- [x]` to mark completed items
-- Move completed items to a separate "Done" section if list gets long
-- Review and prioritize monthly
-- Add new items as they come up during development
