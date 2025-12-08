@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getPublishedPosts } from "@/lib/directus";
+import { getPublishedPosts, isDirectusConfigured } from "@/lib/directus";
 import { BlogPageClient } from "@/app/(portfolio)/blog/BlogPageClient";
 
 export const metadata: Metadata = {
@@ -12,6 +12,13 @@ export const metadata: Metadata = {
 export const revalidate = 3600;
 
 export default async function BlogIndexPage() {
+  // Check if Directus is configured before attempting to fetch
+  if (!isDirectusConfigured()) {
+    return (
+      <BlogPageClient posts={[]} status="error" />
+    );
+  }
+
   const postsResponse = await getPublishedPosts();
 
   return (

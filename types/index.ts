@@ -9,6 +9,11 @@ export interface Post {
   publish_date: string;
   feature_image: { id: number; filename: string } | null; // This will be a full URL
   content: string;
+  /**
+   * Optional content format. If not provided, will be auto-detected.
+   * Can be "markdown", "html", "plaintext", or "auto"
+   */
+  content_format?: "markdown" | "html" | "plaintext" | "auto";
   tags: string[];
 }
 

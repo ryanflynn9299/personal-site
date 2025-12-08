@@ -106,17 +106,17 @@ export function BlogPageClient({ posts, status }: BlogPageClientProps) {
     <>
       <div className={open ? "content-blur" : "transition-all duration-300"}>
         <div className="container mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-          <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
-            <div>
-              <h1 className="font-heading text-4xl font-bold text-slate-50">
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-row flex-nowrap items-center justify-between gap-4">
+              <h1 className="font-heading shrink-0 text-4xl font-bold text-slate-50">
                 Blog
               </h1>
-              <p className="mt-4 text-lg text-slate-300">
-                Welcome to my digital journal. Here I share my thoughts,
-                learnings, and explorations in the world of technology.
-              </p>
+              <SearchButton onClick={() => setOpen(true)} />
             </div>
-            <SearchButton onClick={() => setOpen(true)} />
+            <p className="text-lg text-slate-300">
+              Welcome to my digital journal. Here I share my thoughts,
+              learnings, and explorations in the world of technology.
+            </p>
           </div>
 
           {/* {posts && posts.length > 0 ? (

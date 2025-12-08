@@ -1,9 +1,11 @@
-import { getPostBySlug, getPublishedPosts } from "@/lib/directus";
+import { getPostBySlug, getPublishedPosts, isDirectusConfigured } from "@/lib/directus";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Image from "next/image";
 import { JsonLd } from "@/components/JsonLd";
 import { BlogPostTracker } from "@/components/BlogPostTracker";
+import { ServiceUnavailableWithDevMode } from "@/components/ui/DevModeIndicator";
+import { BlogContentRenderer } from "@/components/BlogContentRenderer";
 import { Post } from "@/types";
 
 type Props = {
@@ -13,6 +15,13 @@ type Props = {
 
 // Generate dynamic metadata for each post
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  if (!isDirectusConfigured()) {
+    return {
+      title: "Service Unavailable",
+      description: "Content service is not available",
+    };
+  }
+
   const post: Post | null = await getPostBySlug((await params).slug);
 
   if (!post) {
@@ -37,6 +46,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 // Generate static paths for all published posts at build time
 export async function generateStaticParams() {
+  if (!isDirectusConfigured()) {
+    return [];
+  }
+
   const postResponse = await getPublishedPosts();
   const posts = postResponse["posts"];
   return posts.map((post) => ({
@@ -45,6 +58,15 @@ export async function generateStaticParams() {
 }
 
 export default async function BlogPostPage({ params }: Props) {
+  // Check if Directus is configured
+  if (!isDirectusConfigured()) {
+    return (
+      <div className="container mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
+        <ServiceUnavailableWithDevMode />
+      </div>
+    );
+  }
+
   const post = await getPostBySlug((await params).slug);
 
   if (!post) {
@@ -95,9 +117,9 @@ export default async function BlogPostPage({ params }: Props) {
         )}
 
         {/* Note: A sticky TOC component would be added here, likely wrapping the main content */}
-        <div
-          className="prose prose-invert mx-auto mt-12 max-w-none prose-lg"
-          dangerouslySetInnerHTML={{ __html: post.content }}
+        <BlogContentRenderer
+          content={post.content}
+          format={post.content_format || "auto"}
         />
       </article>
     </>

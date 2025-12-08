@@ -1,5 +1,5 @@
 import { MetadataRoute } from "next";
-import { getPublishedPosts } from "@/lib/directus"; // We'll use our fetching function
+import { getPublishedPosts, isDirectusConfigured } from "@/lib/directus"; // We'll use our fetching function
 import { Post } from "@/types";
 
 /**

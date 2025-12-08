@@ -69,6 +69,23 @@
   background: transparent;
 }
 
+/* Mobile Menu Bubble Animation */
+@keyframes menuBubbleDeploy {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.menu-bubble-animation {
+  animation: menuBubbleDeploy 0.2s ease-out;
+  transform-origin: top right;
+}
+
 .stars-1 {
   background-image:
     radial-gradient(1px 1px at 20px 30px, #e2e8f0, rgba(0, 0, 0, 0)),

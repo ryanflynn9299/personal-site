@@ -6,6 +6,7 @@ import { Footer } from "@/components/Footer";
 import React from "react";
 import { ToastProvider } from "@/context/ToastContext";
 import { MatomoProvider } from "@/components/MatomoProvider";
+import { DevModeIndicator } from "@/components/ui/DevModeIndicator";
 
 // Font configuration according to our design document
 const fontHeading = Montserrat({
@@ -40,6 +41,7 @@ export default function RootLayout({
         <MatomoProvider />
         <ToastProvider>
           <div className="flex min-h-screen flex-col">
+            <DevModeIndicator />
             <Header />
             <main className="flex-grow">{children}</main>
             <Footer />

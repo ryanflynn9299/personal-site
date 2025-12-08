@@ -2,29 +2,52 @@ import { createDirectus, readItems, rest } from "@directus/sdk";
 import { Post } from "@/types"; // Import both types
 import log from "./logger";
 
-// Initialize the Directus client (assuming this already exists)
-// TODO: Make this robust to misconfigured envs
+/**
+ * Checks if Directus is configured and available.
+ * Returns true if both required environment variables are set with non-placeholder values.
+ * 
+ * In dev mode without .env file, these will be undefined or use placeholder values.
+ */
+export function isDirectusConfigured(): boolean {
+  const serverUrl = process.env.DIRECTUS_URL_SERVER_SIDE;
+  const publicUrl = process.env.NEXT_PUBLIC_DIRECTUS_URL;
+  
+  // Check if both URLs are set, not empty, and not placeholder values
+  const hasServerUrl = serverUrl && 
+                       serverUrl.trim() !== "" && 
+                       !serverUrl.includes("your-") && // Exclude placeholder text
+                       serverUrl !== "http://ps-directus:8055"; // Default from .env.example
+  
+  const hasPublicUrl = publicUrl && 
+                       publicUrl.trim() !== "" && 
+                       !publicUrl.includes("your-") && // Exclude placeholder text
+                       publicUrl !== "http://localhost:8055"; // Default from .env.example
+  
+  return !!(hasServerUrl && hasPublicUrl);
+}
+
 /**
  * Determines the correct Directus URL based on the runtime environment.
+ * Returns null if Directus is not configured (graceful degradation).
  */
-const getDirectusUrl = (): string => {
+const getDirectusUrl = (): string | null => {
   // Check if we are on the server-side (e.g., SSR, API Routes, getStaticProps).
   if (typeof window === "undefined") {
-    if (!process.env.DIRECTUS_URL_SERVER_SIDE) {
-      throw new Error(
-        "SERVER-SIDE: DIRECTUS_URL_SERVER_SIDE environment variable is not set."
-      );
+    const serverUrl = process.env.DIRECTUS_URL_SERVER_SIDE;
+    // Use default placeholder if not set (for dev mode)
+    if (!serverUrl || serverUrl === "http://ps-directus:8055") {
+      return null;
     }
-    return process.env.DIRECTUS_URL_SERVER_SIDE;
+    return serverUrl;
   }
 
   // We are on the client (browser). This MUST be a NEXT_PUBLIC_ variable.
-  if (!process.env.NEXT_PUBLIC_DIRECTUS_URL) {
-    throw new Error(
-      "CLIENT-SIDE: NEXT_PUBLIC_DIRECTUS_URL environment variable is not set."
-    );
+  const publicUrl = process.env.NEXT_PUBLIC_DIRECTUS_URL;
+  // Use default placeholder if not set (for dev mode)
+  if (!publicUrl || publicUrl === "http://localhost:8055") {
+    return null;
   }
-  return process.env.NEXT_PUBLIC_DIRECTUS_URL;
+  return publicUrl;
 };
 
 /**
@@ -46,11 +69,22 @@ function getAssetURL(fileId: string | null | undefined): string | null {
   return `${publicUrl}/assets/${fileId}`;
 }
 
-// Create the Directus client instance.
+// Create the Directus client instance only if configured.
 // This module will be loaded *separately* by the server and the client.
 // - On the server, getDirectusUrl() will return the internal URL.
 // - On the client, getDirectusUrl() will return the public URL.
-export const directus = createDirectus(getDirectusUrl()).with(rest());
+// If not configured, directus will be null and functions will return error status.
+let directus: any = null;
+
+try {
+  const url = getDirectusUrl();
+  if (url) {
+    directus = createDirectus(url).with(rest());
+  }
+} catch (error) {
+  // Directus not configured - will be handled gracefully by functions
+  directus = null;
+}
 
 /**
  * Fetches all posts from Directus that are marked as 'published'.
@@ -63,10 +97,16 @@ export async function getPublishedPosts(): Promise<{
   status: "success" | "error";
   posts: Post[];
 }> {
+  // Check if Directus is configured
+  if (!isDirectusConfigured() || !directus) {
+    return { status: "error", posts: [] };
+  }
+
   try {
     // 1. Provide the <DirectusPost> generic to readItems.
     //    This tells TypeScript the exact shape of the items being returned.
     const posts = await directus.request(
+      // @ts-ignore - Type inference fails when directus is conditionally initialized
       readItems("blogs", {
         fields: [
           "id",
@@ -95,7 +135,7 @@ export async function getPublishedPosts(): Promise<{
     // 2. Transform the raw Directus data into the clean frontend 'Post' type.
     return {
       status: "success",
-      posts: posts.map((post) => ({
+      posts: posts.map((post: any) => ({
         id: post.id,
         title: post.title,
         summary: post.summary || "", // Fallback to empty string if not present
@@ -143,10 +183,16 @@ export async function getPublishedPosts(): Promise<{
  * or null if the post is not found or not published.
  */
 export async function getPostBySlug(slug: string): Promise<Post | null> {
+  // Check if Directus is configured
+  if (!isDirectusConfigured() || !directus) {
+    return null;
+  }
+
   try {
     // Use readItems with a limit of 1. This is the standard way to fetch
     // an item by a secondary unique key (like a slug).
     const posts = await directus.request(
+      // @ts-ignore - Type inference fails when directus is conditionally initialized
       readItems("blogs", {
         // We use a logical AND to ensure both conditions are met.
         filter: {

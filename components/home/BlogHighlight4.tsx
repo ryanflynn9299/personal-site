@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { getPublishedPosts } from "@/lib/directus";
+import { getPublishedPosts, isDirectusConfigured } from "@/lib/directus";
 import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { ServiceUnavailable } from "../ui/ServiceUnavailable";
+import { ServiceUnavailableWithDevMode } from "@/components/ui/DevModeIndicator";
 
 // 2x2 Horizontal Grid of Recent Blog Posts
 export async function BlogHighlight4() {
@@ -27,10 +27,10 @@ export async function BlogHighlight4() {
         {/* The 2x2 Grid Layout */}
         {/* --- NEW: Conditional Rendering Logic --- */}
         <div className="mt-16">
-          {status === "error" ? (
-            // If the service is down, render the error component
+          {status === "error" || !isDirectusConfigured() ? (
+            // If the service is down or not configured, render the error component
             <div className="lg:max-w-5xl lg:mx-auto">
-              <ServiceUnavailable />
+              <ServiceUnavailableWithDevMode />
             </div>
           ) : latestPosts.length > 0 ? (
             // If successful and posts exist, render the grid
@@ -75,7 +75,7 @@ function PostCard({ post }: { post: any }) {
 
   return (
     <Link
-      href={`/app/(portfolio)/blog/${post.slug}`}
+      href={`/blog/${post.slug}`}
       // The `group` class enables the hover effects on child elements.
       className="group relative block overflow-hidden rounded-lg border border-slate-700 bg-slate-800 p-6
                  transition-colors duration-300 hover:bg-slate-700/50"

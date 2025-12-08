@@ -7,8 +7,8 @@ _High priority items to tackle soon_
 ### Do ASAP as Possible
 
 - [ ] Fix missing author from directus call -- TODO
-- [ ] Add professional headshot/profile imagem -- TODO
-- [ ] Make sure no ENV variables are hardcoded in the codebase -- TODO
+- [ ] Add professional headshot/profile images -- TODO
+- [x] Make sure no ENV variables are hardcoded in the codebase -- TODO
 - [x] Make featured projects a carousel
 - [x] support skills tags on projects in vitae
 - [ ] figure out scalability for blog
@@ -27,7 +27,7 @@ _High priority items to tackle soon_
 - [ ] Verify all Directus API calls handle errors properly -- TODO
 - [x] Test blog post rendering with actual content
 - [ ] Ensure responsive design works on mobile devices
-- [ ] Fix any console errors in development
+- [x] Fix any console errors in development
 - [ ] consider removing dangerouslyallowsvgs from next.config.ts
 
 ### Content & Setup
@@ -35,7 +35,7 @@ _High priority items to tackle soon_
 - [x] Add actual blog posts to Directus CMS
 - [x] Write and publish first blog post
 - [ ] Update site metadata (title, description, favicon) -- TODO
-- [ ] Set up production environment variables -- TODO
+- [x] Set up production environment variables -- TODO
 - [x] add 3 blog posts to home screen
 - [ ] support markdown blogs
 
