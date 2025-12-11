@@ -1,17 +1,9 @@
 "use client";
 
 import { motion, Variants } from "framer-motion";
+import type { AnimatedTextProps } from "@/types/components";
 
-type AnimationType = "decode" | "stagger-words" | "cascade-letters";
-
-interface AnimatedTextProps {
-  text: string;
-  animationType?: AnimationType;
-  className?: string;
-}
-
-// You can create a simple character set for the decode effect
-const chars = "!<>-_\\/[]{}—=+*^?#________";
+import { DECODE_CHARS } from "@/constants/animations";
 
 export function AnimatedText({
   text,

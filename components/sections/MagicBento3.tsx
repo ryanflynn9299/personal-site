@@ -3,14 +3,9 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
-import { BentoCard } from "./BentoCard";
+import { BentoCard } from "@/components/primitives/BentoCard";
 import { techCategories } from "@/data/skills";
-
-type Skill = { name: string; description: string };
-type SelectedCard = {
-  category: string;
-  skills: Skill[];
-};
+import type { SelectedCard } from "@/types/components";
 
 export function BentoGrid() {
   const [selectedCard, setSelectedCard] = useState<SelectedCard | null>(null);

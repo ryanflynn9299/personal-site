@@ -10,60 +10,21 @@ import React, {
   RefObject,
 } from "react";
 import { gsap } from "gsap";
+import type {
+  CardData,
+  ParticleCardProps,
+  GlobalSpotlightProps,
+  BentoCardGridProps,
+  MagicBentoProps,
+} from "@/types/components";
+import {
+  DEFAULT_PARTICLE_COUNT,
+  DEFAULT_SPOTLIGHT_RADIUS,
+  DEFAULT_GLOW_COLOR,
+  MOBILE_BREAKPOINT,
+} from "@/constants/ui";
+
 type Tween = gsap.core.Tween;
-
-// --- CONSTANTS ---
-const DEFAULT_PARTICLE_COUNT = 12;
-const DEFAULT_SPOTLIGHT_RADIUS = 300;
-const DEFAULT_GLOW_COLOR = "132, 0, 255";
-const MOBILE_BREAKPOINT = 768;
-
-// --- TYPES AND INTERFACES ---
-interface CardData {
-  color: string;
-  title: string;
-  description: string;
-  label: string;
-}
-
-interface ParticleCardProps {
-  children: ReactNode;
-  className?: string;
-  disableAnimations?: boolean;
-  style?: CSSProperties;
-  particleCount?: number;
-  glowColor?: string;
-  enableTilt?: boolean;
-  clickEffect?: boolean;
-  enableMagnetism?: boolean;
-}
-
-interface GlobalSpotlightProps {
-  gridRef: RefObject<HTMLDivElement | null>;
-  disableAnimations?: boolean;
-  enabled?: boolean;
-  spotlightRadius?: number;
-  glowColor?: string;
-}
-
-interface BentoCardGridProps {
-  children: ReactNode;
-  gridRef: RefObject<HTMLDivElement | null>;
-}
-
-interface MagicBentoProps {
-  textAutoHide?: boolean;
-  enableStars?: boolean;
-  enableSpotlight?: boolean;
-  enableBorderGlow?: boolean;
-  disableAnimations?: boolean;
-  spotlightRadius?: number;
-  particleCount?: number;
-  enableTilt?: boolean;
-  glowColor?: string;
-  clickEffect?: boolean;
-  enableMagnetism?: boolean;
-}
 
 // --- DATA ---
 const cardData: CardData[] = [

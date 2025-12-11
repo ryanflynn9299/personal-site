@@ -1,15 +1,6 @@
 import fs from "fs";
 import path from "path";
-
-export interface PolicyMetadata {
-  title: string;
-  lastUpdated: string;
-}
-
-export interface PolicyDocument {
-  metadata: PolicyMetadata;
-  content: string;
-}
+import type { PolicyMetadata, PolicyDocument } from "@/types/policies";
 
 /**
  * Parses frontmatter from a markdown file

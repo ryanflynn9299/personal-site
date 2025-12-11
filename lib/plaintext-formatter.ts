@@ -13,25 +13,7 @@
  * This is designed to be extensible for future formatting needs.
  */
 
-export interface PlaintextFormatOptions {
-  /**
-   * Whether to preserve line breaks as <br> tags
-   * @default true
-   */
-  preserveLineBreaks?: boolean;
-  
-  /**
-   * Whether to convert URLs to links
-   * @default true
-   */
-  linkifyUrls?: boolean;
-  
-  /**
-   * Custom bullet point characters
-   * @default ['-', '*', '•']
-   */
-  bulletChars?: string[];
-}
+import type { PlaintextFormatOptions } from "@/types/data";
 
 /**
  * Detects if a line is a bullet point

@@ -5,27 +5,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { Github, ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/primitives/Button";
-
-const projects = [
-  {
-    title: "Project Alpha",
-    description:
-      "A full-stack web application for real-time data visualization, built with Next.js, TypeScript, and a GraphQL backend.",
-    imageUrl: "/", // Replace with your project screenshot
-    tags: ["Next.js", "TypeScript", "GraphQL", "PostgreSQL"],
-    liveUrl: "#",
-    githubUrl: "#",
-  },
-  {
-    title: "Project Beta",
-    description:
-      "A mobile-first progressive web app for collaborative task management, featuring offline support and push notifications.",
-    imageUrl: "/", // Replace with your project screenshot
-    tags: ["React", "PWA", "Firebase", "Node.js"],
-    liveUrl: "#",
-    githubUrl: "#",
-  },
-];
+import { projects } from "@/data/projects";
 
 const cardVariants = {
   hidden: { opacity: 0, y: 50 },

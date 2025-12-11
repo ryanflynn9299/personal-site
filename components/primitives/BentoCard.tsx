@@ -1,17 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { LucideProps } from "lucide-react";
-import { ForwardRefExoticComponent } from "react";
-
-interface BentoCardProps {
-  name: string;
-  category: string;
-  Icon: ForwardRefExoticComponent<Omit<LucideProps, "ref">>;
-  description: string;
-  className?: string; // Add className to props
-  onClick: () => void;
-}
+import type { BentoCardProps } from "@/types/components";
 
 export function BentoCard({
   name,

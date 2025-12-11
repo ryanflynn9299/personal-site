@@ -12,16 +12,11 @@ import {
   ArrowLeft,
 } from "lucide-react";
 import { Button } from "@/components/primitives/Button";
-import { submitContactForm, type FormState } from "@/app/actions/contact";
+import { submitContactForm } from "@/app/actions/contact";
 import { EmailStatusIndicatorWithStatus } from "@/components/contact/EmailStatusIndicator";
+import type { FormState, SavedFormData, ContactPageClientProps } from "@/types";
 
 const initialState: FormState = { success: false };
-
-interface SavedFormData {
-  name: string;
-  email: string;
-  message: string;
-}
 
 /**
  * Submit button component that uses useFormStatus to track form state
@@ -37,13 +32,6 @@ function SubmitButton() {
       {pending ? "Sending..." : "Send Message"}
     </Button>
   );
-}
-
-interface ContactPageClientProps {
-  /**
-   * Whether the email service is configured and available
-   */
-  emailServiceAvailable: boolean;
 }
 
 export function ContactPageClient({ emailServiceAvailable }: ContactPageClientProps) {

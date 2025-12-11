@@ -1,3 +1,10 @@
+// Re-export all types for convenience
+export * from "./components";
+export * from "./forms";
+export * from "./animations";
+export * from "./policies";
+export * from "./data";
+
 // This is the clean, frontend-facing Post type (already exists)
 export interface Post {
   id: string;

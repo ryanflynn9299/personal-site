@@ -13,7 +13,7 @@ import {
   RocketIcon,
   ConstellationLineIcon,
 } from "@/components/common/SpaceMarkdownIcons";
-import { PolicyColorTheme } from "@/lib/policy-colors";
+import type { PolicyColorTheme } from "@/types/policies";
 
 interface PseudoMarkdownRendererProps {
   content: string;

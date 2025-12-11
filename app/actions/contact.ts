@@ -1,25 +1,7 @@
 "use server";
 
 import { isEmailServiceConfigured } from "@/lib/email-service";
-
-/**
- * Server Action for contact form submission
- * 
- * React 19 Server Actions provide:
- * - Type-safe form handling
- * - Automatic form state management
- * - Progressive enhancement (works without JavaScript)
- * - Secure server-side execution
- * 
- * In production, this would:
- * - Validate input data
- * - Send email via SMTP or email service
- * - Store submission in database
- * - Return success/error status
- */
-export type FormState =
-  | { success: false; error?: string; message?: never; emailSent?: never }
-  | { success: true; message: string; emailSent: boolean; error?: never };
+import type { FormState } from "@/types/forms";
 
 export async function submitContactForm(formData: FormData): Promise<FormState> {
   // Simulate processing delay

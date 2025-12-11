@@ -8,19 +8,13 @@ import { EmblaOptionsType } from "embla-carousel";
 import { Github, ArrowUpRight, ArrowLeft, ArrowRight } from "lucide-react";
 import { Button } from "@/components/primitives/Button";
 import { projects } from "@/data/projects";
+import { carouselImages } from "@/data/constants";
 
 // Carousel options
 const OPTIONS: EmblaOptionsType = { loop: true };
-const images = [
-  "/images/random/data-password-security-lock-free-image.jpeg.webp",
-  "/images/random/istockphoto-1209504194-612x612.jpg",
-  "/images/random/istockphoto-1352367851-612x612.jpg",
-  "/images/random/old-alarm-clocks-analog-time-retro-free-stock-photo.jpg.webp",
-  "/images/random/picjumbo-premium-futuristic-3d-backgrounds-18.jpeg.webp",
-];
 
 function getRandomImageUrl() {
-  return images[Math.floor(Math.random() * images.length)];
+  return carouselImages[Math.floor(Math.random() * carouselImages.length)];
 }
 
 // Home page projects section method 2: a Carousel of Featured Projects
