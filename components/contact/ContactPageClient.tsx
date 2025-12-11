@@ -11,9 +11,9 @@ import {
   AlertTriangle,
   ArrowLeft,
 } from "lucide-react";
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/primitives/Button";
 import { submitContactForm, type FormState } from "@/app/actions/contact";
-import { EmailStatusIndicatorWithStatus } from "@/components/ui/EmailStatusIndicator";
+import { EmailStatusIndicatorWithStatus } from "@/components/contact/EmailStatusIndicator";
 
 const initialState: FormState = { success: false };
 

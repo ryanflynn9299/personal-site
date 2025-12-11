@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/primitives/Button";
 import { Home, BookOpen } from "lucide-react";
 
 export default function NotFound() {

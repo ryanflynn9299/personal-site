@@ -184,3 +184,109 @@
   filter: blur(2px) brightness(50%) saturate(80%);
   transform: scale(0.99);
 }
+
+
+/* === Policy Document Page Option 2 Animations === */
+.policies-tab-active {
+  position: relative;
+  /* Glow intensity can be controlled via CSS variables */
+  --glow-intensity-min: 0.4;
+  --glow-intensity-max: 0.8;
+  --glow-blur-min: 8px;
+  --glow-blur-max: 16px;
+  /* Animation only affects border/glow, not background/text */
+  animation: tab-border-glow 2s ease-in-out infinite;
+}
+
+@keyframes tab-border-glow {
+  0%, 100% {
+    /* Only animate the box-shadow (border glow), keep opacity at 1 for text/background */
+    box-shadow: 
+      0 0 var(--glow-blur-min) currentColor, 
+      inset 0 0 var(--glow-blur-min) currentColor;
+  }
+  50% {
+    box-shadow: 
+      0 0 var(--glow-blur-max) currentColor, 
+      inset 0 0 calc(var(--glow-blur-max) * 0.75) currentColor;
+  }
+}
+
+.pseudo-markdown-editor {
+  transition: all 0.3s ease;
+}
+
+.pseudo-markdown-editor:hover {
+  border-color: rgba(148, 163, 184, 0.4); /* Use neutral slate color */
+}
+
+.space-icon-header {
+  animation: icon-float 3s ease-in-out infinite;
+}
+
+@keyframes icon-float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+}
+
+.space-icon-header svg {
+  /* Subtle glow effect that matches theme color */
+  filter: drop-shadow(0 0 4px currentColor);
+  animation: icon-pulse 2s ease-in-out infinite;
+}
+
+@keyframes icon-pulse {
+  0%, 100% {
+    opacity: 1;
+    filter: drop-shadow(0 0 4px currentColor);
+  }
+  50% {
+    opacity: 0.9;
+    filter: drop-shadow(0 0 8px currentColor);
+  }
+}
+
+.space-bullet-list li {
+  transition: all 0.2s ease;
+}
+
+.space-bullet-list li:hover {
+  transform: translateX(4px);
+}
+
+.space-bullet-list li svg {
+  /* Subtle glow effect for list icons */
+  filter: drop-shadow(0 0 2px currentColor);
+  animation: bullet-twinkle 2s ease-in-out infinite;
+}
+
+@keyframes bullet-twinkle {
+  0%, 100% {
+    opacity: 1;
+    filter: drop-shadow(0 0 2px currentColor);
+  }
+  50% {
+    opacity: 0.7;
+    filter: drop-shadow(0 0 4px currentColor);
+  }
+}
+
+/* Glow effect for link icons (rocket icons) */
+.pseudo-markdown-editor a svg {
+  filter: drop-shadow(0 0 2px currentColor);
+  transition: filter 0.2s ease;
+}
+
+.pseudo-markdown-editor a:hover svg {
+  filter: drop-shadow(0 0 6px currentColor);
+}
+
+.document-transition {
+  will-change: opacity, transform;
+}
+/* === END Policy Document Page Option 2 Animations === */
+

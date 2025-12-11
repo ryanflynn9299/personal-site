@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { getPublishedPosts, isDirectusConfigured } from "@/lib/directus";
-import { BlogPageClient } from "@/app/(portfolio)/blog/BlogPageClient";
+import { BlogPageClient } from "@/components/blog/BlogPageClient";
 
 export const metadata: Metadata = {
   title: "Blog",

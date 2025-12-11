@@ -1,5 +1,5 @@
 // Server Component - can use Client Components (BentoGrid) as children
-import { BentoGrid } from "@/components/ui/MagicBento3";
+import { BentoGrid } from "@/components/sections/MagicBento3";
 
 // Modified Magic Bento component with personal info
 export function TechStack3() {

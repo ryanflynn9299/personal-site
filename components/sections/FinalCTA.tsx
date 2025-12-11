@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/primitives/Button";
 
 export function FinalCTA() {
   return (

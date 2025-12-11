@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { JsonLd } from "@/components/JsonLd";
 import { BlogPostTracker } from "@/components/BlogPostTracker";
-import { ServiceUnavailableWithDevMode } from "@/components/ui/DevModeIndicator";
+import { ServiceUnavailableWithDevMode } from "@/components/common/DevModeIndicator";
 import { BlogContentRenderer } from "@/components/BlogContentRenderer";
 import { Post } from "@/types";
 

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { ContactPageClient } from "./ContactPageClient";
+import { ContactPageClient } from "@/components/contact/ContactPageClient";
 import { isEmailServiceConfigured } from "@/lib/email-service";
 
 export const metadata: Metadata = {

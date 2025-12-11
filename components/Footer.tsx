@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { Github, Linkedin, Twitter } from "lucide-react";
-import { useToast } from "@/context/ToastContext";
 
 const socialLinks = [
   {
@@ -32,27 +31,6 @@ const footerNav = [
 ];
 
 export function Footer() {
-  const { toast } = useToast();
-
-  const handlePrivacyPolicyClick = (
-    event: React.MouseEvent<HTMLAnchorElement>
-  ) => {
-    event.preventDefault(); // Prevents the link from adding a '#' to the URL
-    toast.info(
-      "🚧 Under Construction",
-      "Privacy Policy is not yet available. Please check back later!"
-    );
-  };
-
-  const handleTermsServiceClick = (
-    event: React.MouseEvent<HTMLAnchorElement>
-  ) => {
-    event.preventDefault(); // Prevents the link from adding a '#' to the URL
-    toast.info(
-      "⚠️ Under Construction",
-      "The Terms of Service is not yet available. Please check back later!"
-    );
-  };
 
   return (
     <footer className="border-t border-slate-700 bg-slate-800">
@@ -94,9 +72,7 @@ export function Footer() {
               <ul className="mt-4 space-y-2">
                 <li>
                   <Link
-                    key={"Privacy"}
-                    href="#"
-                    onClick={handlePrivacyPolicyClick}
+                    href="/policies?tab=privacy"
                     className="text-base text-slate-300 hover:text-sky-300"
                   >
                     Privacy Policy
@@ -104,9 +80,7 @@ export function Footer() {
                 </li>
                 <li>
                   <Link
-                    key={"ToS"}
-                    href="#"
-                    onClick={handleTermsServiceClick}
+                    href="/policies?tab=terms"
                     className="text-base text-slate-300 hover:text-sky-300"
                   >
                     Terms of Service

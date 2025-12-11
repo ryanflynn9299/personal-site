@@ -10,7 +10,7 @@ import { Post } from "@/types";
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // --- IMPORTANT ---
   // Replace this with your actual, public domain name.
-  const siteUrl = "https://www.your-professional-domain.com";
+  const siteUrl = "https://www.ryanflynn.org";
 
   // 1. Generate routes for static pages
   const staticRoutes = [

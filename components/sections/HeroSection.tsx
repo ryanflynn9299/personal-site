@@ -1,6 +1,6 @@
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/primitives/Button";
 import Link from "next/link";
-import { AnimatedText } from "@/components/ui/AnimatedText";
+import { AnimatedText } from "@/components/common/AnimatedText";
 
 export function HeroSection() {
   return (

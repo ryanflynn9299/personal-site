@@ -6,7 +6,7 @@ import { Footer } from "@/components/Footer";
 import React from "react";
 import { ToastProvider } from "@/context/ToastContext";
 import { MatomoProvider } from "@/components/MatomoProvider";
-import { DevModeIndicator } from "@/components/ui/DevModeIndicator";
+import { DevModeIndicator } from "@/components/common/DevModeIndicator";
 
 // Font configuration according to our design document
 const fontHeading = Montserrat({

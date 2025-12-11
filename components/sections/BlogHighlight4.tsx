@@ -2,7 +2,7 @@ import Link from "next/link";
 import { getPublishedPosts, isDirectusConfigured } from "@/lib/directus";
 import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { ServiceUnavailableWithDevMode } from "@/components/ui/DevModeIndicator";
+import { ServiceUnavailableWithDevMode } from "@/components/common/DevModeIndicator";
 
 // 2x2 Horizontal Grid of Recent Blog Posts
 export async function BlogHighlight4() {

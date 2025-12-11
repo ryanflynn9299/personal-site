@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/primitives/Button";
 import Link from "next/link";
 
 export function AboutMe1() {

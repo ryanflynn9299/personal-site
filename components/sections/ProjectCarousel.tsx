@@ -6,7 +6,7 @@ import Link from "next/link";
 import useEmblaCarousel from "embla-carousel-react";
 import { EmblaOptionsType } from "embla-carousel";
 import { Github, ArrowUpRight, ArrowLeft, ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/primitives/Button";
 import { projects } from "@/data/projects";
 
 // Carousel options

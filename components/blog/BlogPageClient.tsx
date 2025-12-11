@@ -7,10 +7,10 @@ import Link from "next/link";
 import { Command } from "cmdk";
 import { Post } from "@/types";
 import { PostCard } from "@/components/PostCard";
-import { SearchButton } from "@/components/ui/SearchButton";
+import { SearchButton } from "@/components/blog/SearchButton";
 import { FileText } from "lucide-react";
 import { Dialog } from "radix-ui";
-import { ServiceUnavailable } from "@/components/ui/ServiceUnavailable";
+import { ServiceUnavailable } from "@/components/common/ServiceUnavailable";
 import { trackBlogSearch } from "@/components/Matomo";
 
 interface BlogPageClientProps {
