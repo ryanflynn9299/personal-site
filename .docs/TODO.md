@@ -24,7 +24,7 @@ _High priority items to tackle soon_
 
 - [x] Fix TypeScript error in `readItems` call for posts collection
 - UNABLE_TO_GET_ISSUER_CERT_LOCALLY
-- [ ] Verify all Directus API calls handle errors properly -- TODO
+- [x] Verify all Directus API calls handle errors properly -- TODO
 - [x] Test blog post rendering with actual content
 - [ ] Ensure responsive design works on mobile devices
 - [x] Fix any console errors in development
@@ -46,7 +46,7 @@ _High priority items to tackle soon_
 - [x] add search for blogs
 - [x] Create proper 404 page for missing blog posts
 - [ ] Add loading states/screens for API calls -- TODO
-- [ ] Implement proper error boundaries -- TODO
+- [x] Implement proper error boundaries -- TODO
 
 ### Development & Maintenance
 
@@ -57,6 +57,7 @@ _High priority items to tackle soon_
 - [x] clean up code and comments -- TODO
 - [ ] finish up sitemap and robots.ts -- TODO
 - [x] clean up files and directories -- TODO
+- [ ] add tests
 
 ## Future Items
 

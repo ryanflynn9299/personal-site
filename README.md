@@ -1,204 +1,287 @@
-# Personal Site 3 - Technical Documentation
+# Personal Site - Technical Documentation
 
-## Core Architecture Overview
+A modern personal portfolio website built with Next.js, TypeScript, and Tailwind CSS, featuring a headless CMS integration for blog content management.
 
-This is a **Next.js 14** personal portfolio website built with **TypeScript** and **Tailwind CSS**, using **Directus** as a headless CMS for blog content management.
+## Technology Stack
 
-### Technology Stack & Why Each Matters
+### Core Framework
+- **Next.js 16.0.7** - React framework with App Router, server-side rendering, and file-based routing
+- **React 19.2.1** - UI library
+- **TypeScript 5** - Type-safe JavaScript
+- **Tailwind CSS 3.4.17** - Utility-first CSS framework
 
-**Next.js 14** - React framework that handles:
+### Content Management
+- **Directus SDK 16.1.0** - Headless CMS for blog content management
 
-- Server-side rendering (pages load faster)
-- File-based routing (folders = URL paths)
-- Built-in optimization for images, fonts, etc.
-- Production builds and deployment
+### UI & Animation Libraries
+- **Framer Motion 12.19.1** - Animation library for React
+- **GSAP 3.13.0** - Advanced animation library
+- **Radix UI** - Accessible component primitives
+- **Embla Carousel 8.6.0** - Carousel component library
+- **Lucide React** - Icon library
 
-**TypeScript** - JavaScript with type checking:
+### Content Processing
+- **React Markdown 10.1.0** - Markdown rendering
+- **Rehype** - HTML processing plugins (raw, sanitize)
+- **Remark GFM** - GitHub Flavored Markdown support
 
-- Catches errors before runtime
-- Better IDE support with autocomplete
-- All `.tsx` files are TypeScript React components
-- Configuration in `tsconfig.json`
+### Utilities
+- **Pino 10.0.0** - Structured logging
+- **Class Variance Authority** - Component variant management
+- **Tailwind Merge** - Merge Tailwind classes intelligently
 
-**Tailwind CSS** - Utility-first CSS framework:
+## Version Requirements
 
-- Classes like `bg-slate-900` instead of custom CSS
-- Configuration in `tailwind.config.ts`
-- No separate CSS files needed for styling
+### Runtime
+- **Node.js**: 18.17+ (Next.js 16 requires 18.17 or later; 20.x LTS recommended)
+- **npm**: 9.8+ (comes with Node.js)
 
-**Directus** - Headless CMS:
+### Build Tools
+- **Next.js**: 16.0.7
+- **TypeScript**: 5.x
+- **Turbopack**: Enabled by default (Next.js 16's new bundler)
 
-- Manages blog posts via admin interface
-- Provides REST API for fetching content
-- SDK handles API calls with type safety
-
-## Project Structure & File Organization
+## Project Structure
 
 ```
-personal-site3/
-├── app/                    # Next.js App Router (v13+)
-│   ├── layout.tsx         # Root layout (wraps all pages)
-│   ├── layout.tsx           # Homepage (/)
-│   ├── globals.css        # Global styles
-│   └── [folders]/         # Each folder = route
-├── components/            # Reusable React components
-├── lib/                   # Utility functions & API calls
-├── public/               # Static assets (images, etc.)
-├── package.json          # Dependencies & scripts
-├── tailwind.config.ts    # Tailwind customization
-├── tsconfig.json         # TypeScript configuration
-└── next.config.ts        # Next.js configuration
+personal-site/
+├── app/                          # Next.js App Router pages
+│   ├── (admin)/                  # Admin routes group
+│   │   └── dashboard/            # Admin dashboard
+│   ├── (portfolio)/              # Public portfolio routes group
+│   │   ├── about/                # About page
+│   │   ├── blog/                 # Blog listing and posts
+│   │   │   └── [slug]/           # Dynamic blog post pages
+│   │   ├── contact/              # Contact page
+│   │   ├── vitae/                # CV/resume page
+│   │   ├── policies/             # Policies page
+│   │   ├── privacy/              # Privacy policy
+│   │   ├── terms/                # Terms of service
+│   │   └── page.tsx              # Homepage
+│   ├── actions/                  # Server actions
+│   │   └── contact.ts            # Contact form handler
+│   ├── layout.tsx                # Root layout
+│   ├── globals.css               # Global styles
+│   ├── not-found.tsx             # 404 page
+│   ├── robots.ts                 # Robots.txt generator
+│   └── sitemap.ts                # Sitemap generator
+│
+├── components/                   # React components
+│   ├── about/                    # About page components
+│   ├── blog/                     # Blog components
+│   ├── contact/                  # Contact page components
+│   ├── common/                   # Shared components
+│   ├── primitives/               # Base UI components
+│   ├── sections/                 # Page sections
+│   ├── Header.tsx                # Site header
+│   ├── Footer.tsx                # Site footer
+│   └── [other components]        # Various feature components
+│
+├── lib/                          # Utility functions and services
+│   ├── directus.ts              # Directus CMS client
+│   ├── email-service.ts         # Email sending service
+│   ├── logger.ts                # Logging utility
+│   └── utils.ts                 # General utilities
+│
+├── data/                         # Static data files
+│   ├── about.ts                 # About page data
+│   ├── projects.ts              # Project data
+│   ├── skills.ts                # Skills data
+│   ├── work_experience.ts       # Work experience data
+│   └── policies/                # Policy markdown files
+│
+├── types/                        # TypeScript type definitions
+│   ├── animations.ts            # Animation types
+│   ├── components.ts            # Component types
+│   ├── data.ts                  # Data types
+│   └── index.ts                 # Type exports
+│
+├── constants/                    # Application constants
+│   ├── animations.ts            # Animation constants
+│   └── ui.ts                    # UI constants
+│
+├── context/                      # React contexts
+│   └── ToastContext.tsx         # Toast notification context
+│
+├── public/                       # Static assets
+│   ├── images/                  # Image assets
+│   └── [other static files]     # PDFs, SVGs, etc.
+│
+├── sync-service/                 # Content sync service
+│   ├── webhook-server.py        # Webhook server
+│   └── [sync scripts]           # Sync utilities
+│
+├── docker-compose.yml            # Docker Compose configuration
+├── Dockerfile                    # Docker build configuration
+├── next.config.ts                # Next.js configuration
+├── tailwind.config.ts            # Tailwind CSS configuration
+├── tsconfig.json                 # TypeScript configuration
+└── package.json                  # Dependencies and scripts
 ```
 
-### Key Files Explained
+## Common Commands
 
-**`app/layout.tsx`** - The wrapper for every page:
+### Development
+```bash
+# Install dependencies
+npm install
 
-- Loads fonts (Montserrat, Open Sans)
-- Sets up HTML structure
-- Includes Header and Footer components
-- Defines site metadata (title, description)
+# Start development server (with Turbopack)
+npm run dev
+# Runs at http://localhost:3000
 
-**`package.json`** - Project configuration:
+# Start development server (with Webpack - legacy)
+npm run build:webpack
+```
 
-- Lists all dependencies (libraries used)
-- Defines scripts (`npm run dev`, `npm run build`, etc.)
-- Version information
+### Code Quality
+```bash
+# Check code formatting (Prettier)
+npm run lint
 
-**`tailwind.config.ts`** - Styling configuration:
+# Fix formatting issues
+npm run lint:fix
+# or
+npm run format
 
-- Custom color palette (slate, sky colors)
-- Font family definitions
-- Responsive breakpoints
+# Check formatting without fixing
+npm run format:check
+
+# Run ESLint
+npm run eslint
+
+# Fix ESLint issues
+npm run eslint:fix
+
+# Type checking
+npm run type-check
+
+# Run all validation checks
+npm run validate
+```
+
+### Build & Production
+```bash
+# Build for production (with Turbopack)
+npm run build
+
+# Build for production (with Webpack - legacy)
+npm run build:webpack
+
+# Start production server
+npm run start
+
+# Analyze bundle size
+npm run analyze
+```
+
+### Maintenance
+```bash
+# Clean build artifacts and cache
+npm run clean
+```
+
+## Environment Setup
+
+### Required Environment Variables
+
+Create a `.env.local` file in the project root:
+
+```env
+# Directus CMS Configuration
+DIRECTUS_URL_SERVER_SIDE=http://ps-directus:8055  # Internal server-side URL
+NEXT_PUBLIC_DIRECTUS_URL=http://localhost:8055    # Public client-side URL
+
+# Email Service (if using contact form)
+# Add your email service configuration here
+```
+
+### Environment-Specific Notes
+
+- **Development**: Uses localhost URLs for Directus
+- **Docker**: Uses service names (e.g., `ps-directus`) for container-to-container communication
+- **Production**: Update URLs to your production Directus instance
+
+## Core Infrastructure
+
+### Directus CMS Integration
+
+The site uses Directus as a headless CMS for blog content:
+
+- **Location**: `lib/directus.ts`
+- **Functions**:
+  - `getPublishedPosts()` - Fetch all published blog posts
+  - `getPostBySlug(slug)` - Fetch a single post by slug
+  - `isDirectusConfigured()` - Check if Directus is configured
+
+**Blog Post Schema** (expected in Directus):
+- `id` (string)
+- `title` (string)
+- `slug` (string) - URL-friendly identifier
+- `summary` (string)
+- `content` (string) - HTML content
+- `publication_date` (date)
+- `status` ('published' | 'draft' | 'archived')
+- `feature_image` (file/image)
+- `author` (relation to users)
+- `blog_tags` (array)
+
+### Animation System
+
+The site uses multiple animation libraries:
+
+- **Framer Motion**: Page transitions and component animations
+- **GSAP**: Advanced timeline-based animations
+- **Animation Constants**: Defined in `constants/animations.ts`
+- **Animation Types**: Defined in `types/animations.ts`
+
+### Styling System
+
+- **Tailwind CSS**: Primary styling framework
+- **Custom Colors**: Slate and Sky color palettes (see `tailwind.config.ts`)
+- **Typography**: Montserrat (headings) and Open Sans (body)
+- **Typography Plugin**: `@tailwindcss/typography` for markdown content
+
+### Logging
+
+- **Pino**: Structured logging library
+- **Location**: `lib/logger.ts`
+- **Usage**: Server-side logging with structured JSON output
+
+### Component Architecture
+
+- **Primitives**: Base components in `components/primitives/`
+- **Sections**: Reusable page sections in `components/sections/`
+- **Feature Components**: Feature-specific components organized by domain
+- **Radix UI**: Accessible component primitives for complex UI elements
 
 ## Development Workflow
 
-### Prerequisites
-
-- **Node.js** installed (JavaScript runtime)
-- **npm** (package manager, comes with Node.js)
-
-#### Upgrading Node.js and npm (Homebrew)
-
-**Check current versions:**
-
-```bash
-node --version
-npm --version
-```
-
-**Upgrade to latest versions:**
-
-```bash
-# Update Homebrew first
-brew update
-
-# Upgrade Node.js to latest version
-brew upgrade node
-
-# Update npm to latest version
-npm install -g npm@latest
-
-# Verify installations
-node -v
-npm -v
-```
-
-**Install specific versions:**
-
-```bash
-# Install specific Node.js version (e.g., Node.js 20 LTS)
-brew install node@20
-
-# Or use nvm (Node Version Manager) for more control
-brew install nvm
-nvm install 20
-nvm use 20
-
-# Install specific npm version
-npm install -g npm@10.8.1
-```
-
-**Recommended versions for this project:**
-
-- **Node.js**: 18.17+ (LTS recommended: 20.x or 22.x)
-- **npm**: 9.8+ (comes with Node.js, can be upgraded separately)
-
-**Note**: This project uses Next.js 15, which requires Node.js 18.17 or later. For best compatibility, use Node.js 20 LTS or later.
-
-### Daily Development Commands
-
-```bash
-# Install dependencies (run once, or when package.json changes)
-npm install
-
-# Start development server (auto-reloads on changes)
-npm run dev
-# Site runs at http://localhost:3000
-
-# Check for code formatting (Prettier)
-npm run lint
-
-# Check for code quality issues (ESLint)
-npm run eslint
-
-# Build for production
-npm run build
-
-# Run production build locally
-npm run start
-```
-
 ### Making Changes
 
-1. **Styling**: Use Tailwind classes in JSX
-   - `className="bg-slate-900 text-white p-4"`
-   - Colors defined in `tailwind.config.ts`
+1. **New Pages**: Create folders in `app/` directory
+   - `app/new-page/page.tsx` → `/new-page` URL
+   - Use route groups `(folder)` for organization without affecting URLs
 
-2. **New Pages**: Create folders in `app/`
-   - `app/about/layout.tsx` → `/about` URL
-   - `app/blog/[slug]/layout.tsx` → `/blog/any-slug` URL
+2. **New Components**: Add to `components/` directory
+   - Export: `export function ComponentName() {}`
+   - Import: `import { ComponentName } from "@/components/ComponentName"`
 
-3. **Components**: Create in `components/`
-   - Export as `export function ComponentName() {}`
-   - Import as `import { ComponentName } from "@/components/ComponentName"`
+3. **Styling**: Use Tailwind utility classes
+   - Custom colors: `bg-slate-900`, `text-sky-400`
+   - Typography: `font-heading` (Montserrat), `font-sans` (Open Sans)
 
-4. **API Calls**: Add to `lib/` folder
-   - Use Directus SDK for CMS data
-   - Handle errors with try/catch
+4. **API/Data**: Add utilities to `lib/` directory
+   - Use Directus SDK for CMS operations
+   - Handle errors gracefully with try/catch
 
-## Content Management (Directus)
+### TypeScript Paths
 
-### Environment Setup
+The project uses path aliases:
+- `@/*` maps to project root
+- Example: `import { Post } from "@/types"`
 
-Create `.env.local` file:
-
-```
-NEXT_PUBLIC_DIRECTUS_URL=your-directus-instance-url
-```
-
-### Blog Post Structure
-
-Posts in Directus must have these fields:
-
-- `id` (string)
-- `status` ('published' | 'draft' | 'archived')
-- `title` (string)
-- `slug` (string) - URL-friendly version
-- `publish_date` (string)
-- `summary` (string)
-- `content` (string) - HTML content
-- `feature_image` (optional image)
-- `author` (relation to users)
-
-### API Functions
-
-Located in `lib/directus.ts`:
-
-- `getPublishedPosts()` - Fetch all published posts
-- `getPostBySlug(slug)` - Fetch single post by URL slug
-
-## Deployment & Production
+## Deployment
 
 ### Build Process
 
@@ -206,118 +289,116 @@ Located in `lib/directus.ts`:
 npm run build
 ```
 
-This creates `.next/` folder with optimized files.
+This creates an optimized `.next/` folder with:
+- Server-side rendered pages
+- Static assets
+- API routes
+- Standalone output (configured for Docker)
 
-### Environment Variables
+### Docker Deployment
 
-Production needs:
+The project includes Docker configuration:
+- `Dockerfile` - Production build
+- `docker-compose.yml` - Multi-container setup
+- Uses Next.js standalone output mode
 
-- `NEXT_PUBLIC_DIRECTUS_URL` - Your Directus instance URL
+### Production Considerations
 
-### Hosting Options
-
-- **Vercel** (recommended for Next.js)
-- **Netlify**
-- Any Node.js hosting service
-
-## Common Tasks & Solutions
-
-### Adding New Dependencies
-
-```bash
-npm install package-name
-# For TypeScript types:
-npm install @types/package-name --save-dev
-```
-
-### Styling Patterns
-
-- Dark theme: `bg-slate-900 text-slate-200`
-- Accent colors: `text-sky-400`, `bg-sky-600`
-- Typography: `font-heading` (Montserrat), `font-sans` (Open Sans)
-
-### TypeScript Errors
-
-- Missing types: Install `@types/package-name`
-- Import errors: Check file paths use `@/` prefix
-- API errors: Ensure Directus schema matches interface definitions
-
-### Performance Optimization
-
-- Images: Use Next.js `<Image>` component
-- Fonts: Already optimized with `next/font/google`
-- CSS: Tailwind purges unused styles automatically
+1. **Environment Variables**: Set all required variables in your hosting platform
+2. **Directus URL**: Update to production Directus instance URL
+3. **Image Domains**: Configured in `next.config.ts` under `images.remotePatterns`
+4. **Build Optimization**: Turbopack is used by default for faster builds
 
 ## Troubleshooting
 
-### Development Server Won't Start
+### Development Server Issues
 
-1. Delete `node_modules/` and `.next/`
-2. Run `npm install`
-3. Run `npm run dev`
+```bash
+# Clean and reinstall
+npm run clean
+rm -rf node_modules
+npm install
+npm run dev
+```
 
 ### Build Failures
 
-- Check TypeScript errors: `npm run type-check`
-- Check formatting: `npm run lint`
-- Check code quality: `npm run eslint`
-- Verify all imports are correct
-- Ensure environment variables are set
+1. Run validation: `npm run validate`
+2. Check TypeScript errors: `npm run type-check`
+3. Check formatting: `npm run lint`
+4. Check code quality: `npm run eslint`
+5. Verify environment variables are set
+
+### Directus Connection Issues
+
+- Verify environment variables are set correctly
+- Check Directus instance is running and accessible
+- Review `lib/directus.ts` for connection logic
+- Check server-side vs client-side URL configuration
 
 ### Styling Issues
 
-- Check Tailwind classes are spelled correctly
-- Verify custom colors in `tailwind.config.ts`
+- Verify Tailwind classes are spelled correctly
+- Check custom colors in `tailwind.config.ts`
 - Use browser dev tools to inspect applied styles
+- Ensure content paths in `tailwind.config.ts` include your files
 
-## Future Enhancement Areas
+## Maintenance Notes
 
-### Content
+### Updating Dependencies
 
-- Add more post fields (tags, categories)
-- Implement search functionality
-- Add pagination for blog posts
+```bash
+# Check for outdated packages
+npm outdated
 
-### Features
+# Update all dependencies
+npm update
 
-- Contact form
-- Newsletter signup
-- Social media integration
-- Comments system
+# Update specific package
+npm install package-name@latest
+```
 
-### Performance
+### Code Quality Before Committing
 
-- Image optimization
-- Caching strategies
-- SEO improvements
+The project includes a `prepare` script that reminds you to run validation:
+```bash
+npm run validate
+```
 
-### Technical
+This runs:
+- Type checking
+- Formatting checks
+- ESLint checks
 
-- Add testing framework
-- Implement CI/CD pipeline
-- Add analytics tracking
+### Content Updates
 
----
+- **Blog Posts**: Managed through Directus CMS admin interface
+- **Static Content**: Edit files in `data/` directory
+- **Policies**: Edit markdown files in `data/policies/`
+
+### Performance Monitoring
+
+- Use `npm run analyze` to check bundle sizes
+- Monitor build times (Turbopack should be faster)
+- Check Next.js build output for optimization suggestions
 
 ## Quick Reference
 
-**Start Development**: `npm run dev`
-**Build for Production**: `npm run build`
-**Component Path**: `@/components/ComponentName`
-**Styling**: Tailwind classes in `className`
-**CMS**: Directus at `process.env.NEXT_PUBLIC_DIRECTUS_URL`
-**Routes**: Folders in `app/` directory
+| Task | Command |
+|------|---------|
+| Start development | `npm run dev` |
+| Build for production | `npm run build` |
+| Run validation | `npm run validate` |
+| Fix formatting | `npm run format` |
+| Type check | `npm run type-check` |
+| Clean build artifacts | `npm run clean` |
 
-```
+**Key Paths**:
+- Components: `@/components/ComponentName`
+- Utilities: `@/lib/utilityName`
+- Types: `@/types`
+- Data: `@/data`
 
-
-This README is structured to give you the foundational knowledge first, then drill down into specifics. The hierarchical approach means you can quickly understand what technologies are involved and why, then dive into the practical details of development and deployment.
-
-The key insight here is that this is a modern React-based website where:
-- **Next.js** handles the framework and routing
-- **TypeScript** provides type safety
-- **Tailwind** handles all styling
-- **Directus** manages your blog content
-
-Everything is configured to work together, so you can focus on content and features rather than setup and configuration.
-```
+**Styling**: Tailwind classes in `className` prop
+**CMS**: Directus configured via environment variables
+**Routes**: File-based routing in `app/` directory
