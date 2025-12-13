@@ -6,4 +6,3 @@ export interface AnimationVariants {
   container: Variants;
   item: Variants;
 }
-

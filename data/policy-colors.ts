@@ -38,4 +38,3 @@ export const colorThemes: Record<string, PolicyColorTheme> = {
   // Future policies can use these colors:
   // rose-500, amber-400, teal-400, indigo-400, lime-400, fuchsia-500, emerald-500
 };
-

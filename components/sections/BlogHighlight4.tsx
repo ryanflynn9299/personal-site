@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { getPublishedPosts, isDirectusConfigured } from "@/lib/directus";
 import { ArrowRight } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { ServiceUnavailableWithDevMode } from "@/components/common/DevModeIndicator";
 
 // 2x2 Horizontal Grid of Recent Blog Posts
@@ -89,6 +88,7 @@ function PostCard({ post }: { post: any }) {
 
       <div className="relative z-10 flex h-full flex-col">
         {/* Metadata section with a high-tech, monospace font feel */}
+        {/* eslint-disable-next-line react/jsx-no-comment-textnodes */}
         <p className="font-mono text-xs text-slate-400">
           // TRANSMISSION DATE: {formattedDate}
         </p>

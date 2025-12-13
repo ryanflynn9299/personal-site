@@ -15,4 +15,3 @@ export const toastTypeClasses = {
   error: "border-red-500/50 bg-red-500/10 text-red-200",
   info: "border-sky-500/50 bg-sky-500/10 text-sky-200",
 };
-

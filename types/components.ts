@@ -1,8 +1,6 @@
 // Component prop types and interfaces
 
-import { VariantProps } from "class-variance-authority";
 import { ReactNode, CSSProperties, RefObject } from "react";
-import { Variants } from "framer-motion";
 import { ForwardRefExoticComponent } from "react";
 import { LucideProps } from "lucide-react";
 
@@ -100,4 +98,3 @@ export type SelectedCard = {
   category: string;
   skills: Skill[];
 };
-

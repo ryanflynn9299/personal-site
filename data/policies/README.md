@@ -62,13 +62,16 @@ Use headers to create document hierarchy:
 
 ```markdown
 # Main Title (H1)
+
 ## Section (H2)
+
 ### Subsection (H3)
 ```
 
 ### Lists
 
 **Unordered lists:**
+
 ```markdown
 - Item one
 - Item two
@@ -76,6 +79,7 @@ Use headers to create document hierarchy:
 ```
 
 **Ordered lists:**
+
 ```markdown
 1. First item
 2. Second item
@@ -85,7 +89,7 @@ Use headers to create document hierarchy:
 ### Text Formatting
 
 - **Bold**: `**bold text**` or `__bold text__`
-- *Italic*: `*italic text*` or `_italic text_`
+- _Italic_: `*italic text*` or `_italic text_`
 - `Inline code`: Use backticks
 
 ### Links
@@ -142,7 +146,7 @@ The space-themed UI automatically styles these markdown elements:
 ## Questions?
 
 If you have questions about:
+
 - **Markdown formatting**: Refer to [Markdown Guide](https://www.markdownguide.org/)
 - **Policy content**: Consult with legal counsel
 - **UI/UX**: The space-themed viewer handles all styling automatically
-

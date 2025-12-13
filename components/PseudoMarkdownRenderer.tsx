@@ -44,25 +44,27 @@ export function PseudoMarkdownRenderer({
         rehypePlugins={[rehypeRaw, rehypeSanitize]}
         components={{
           // Headers with space-themed icons
-          h1: ({ node, ...props }) => (
+          h1: ({ node: _node, ...props }) => (
             <h1 className="font-sans text-4xl font-bold mt-8 mb-4 text-slate-50 flex items-center gap-3 space-icon-header">
-              <SatelliteIcon className={`w-8 h-8 ${theme.icon} flex-shrink-0`} />
+              <SatelliteIcon
+                className={`w-8 h-8 ${theme.icon} flex-shrink-0`}
+              />
               <span {...props} />
             </h1>
           ),
-          h2: ({ node, ...props }) => (
+          h2: ({ node: _node, ...props }) => (
             <h2 className="font-sans text-3xl font-bold mt-6 mb-3 text-slate-50 flex items-center gap-3 space-icon-header">
               <PlanetIcon className={`w-6 h-6 ${theme.icon} flex-shrink-0`} />
               <span {...props} />
             </h2>
           ),
-          h3: ({ node, ...props }) => (
+          h3: ({ node: _node, ...props }) => (
             <h3 className="font-sans text-2xl font-bold mt-4 mb-2 text-slate-50 flex items-center gap-2 space-icon-header">
               <StarIcon className={`w-5 h-5 ${theme.icon} flex-shrink-0`} />
               <span {...props} />
             </h3>
           ),
-          h4: ({ node, ...props }) => (
+          h4: ({ node: _node, ...props }) => (
             <h4 className="font-sans text-xl font-bold mt-4 mb-2 text-slate-50 flex items-center gap-2 space-icon-header">
               <StarIcon className={`w-4 h-4 ${theme.icon} flex-shrink-0`} />
               <span {...props} />
@@ -70,16 +72,25 @@ export function PseudoMarkdownRenderer({
           ),
 
           // Paragraphs
-          p: ({ node, ...props }) => (
-            <p className="mb-4 text-slate-300 leading-relaxed font-sans" {...props} />
+          p: ({ node: _node, ...props }) => (
+            <p
+              className="mb-4 text-slate-300 leading-relaxed font-sans"
+              {...props}
+            />
           ),
 
           // Lists with space-themed bullets
-          ul: ({ node, ...props }) => (
-            <ul className="space-bullet-list list-none space-y-2 my-4 text-slate-300" {...props} />
+          ul: ({ node: _node, ...props }) => (
+            <ul
+              className="space-bullet-list list-none space-y-2 my-4 text-slate-300"
+              {...props}
+            />
           ),
-          ol: ({ node, ...props }) => (
-            <ol className="list-none space-y-2 my-4 text-slate-300" {...props} />
+          ol: ({ node: _node, ...props }) => (
+            <ol
+              className="list-none space-y-2 my-4 text-slate-300"
+              {...props}
+            />
           ),
           li: ({ node, ...props }: any) => {
             // Check if parent is ordered list by examining the node structure
@@ -99,7 +110,7 @@ export function PseudoMarkdownRenderer({
           },
 
           // Blockquotes with space-themed border
-          blockquote: ({ node, ...props }) => (
+          blockquote: ({ node: _node, ...props }) => (
             <blockquote
               className={`border-l-4 ${theme.blockquoteBorder} pl-4 my-4 italic text-slate-400 bg-slate-800/30 py-2 rounded-r font-sans`}
               {...props}
@@ -107,11 +118,11 @@ export function PseudoMarkdownRenderer({
           ),
 
           // Code blocks with terminal window aesthetic
-          code: ({ node, inline, ...props }: any) =>
+          code: ({ node: _node, inline, ...props }: any) =>
             inline ? (
               <code
                 className={`bg-slate-800 px-1.5 py-0.5 rounded text-sm font-mono border ${theme.codeBorder}`}
-                style={{ color: 'inherit' }}
+                style={{ color: "inherit" }}
                 {...props}
               />
             ) : (
@@ -127,12 +138,12 @@ export function PseudoMarkdownRenderer({
                 />
               </div>
             ),
-          pre: ({ node, ...props }) => (
+          pre: ({ node: _node, ...props }) => (
             <pre className="my-4" {...props} />
           ),
 
           // Links with rocket icon
-          a: ({ node, ...props }: any) => (
+          a: ({ node: _node, ...props }: any) => (
             <a
               className={`${theme.link} ${theme.linkHover} underline inline-flex items-center gap-1 transition-all hover:gap-2 group`}
               style={{
@@ -149,12 +160,14 @@ export function PseudoMarkdownRenderer({
               {...props}
             >
               <span>{props.children}</span>
-              <RocketIcon className={`w-3 h-3 ${theme.icon} opacity-0 group-hover:opacity-100 transition-opacity`} />
+              <RocketIcon
+                className={`w-3 h-3 ${theme.icon} opacity-0 group-hover:opacity-100 transition-opacity`}
+              />
             </a>
           ),
 
           // Images
-          img: ({ node, ...props }: any) => (
+          img: ({ node: _node, ...props }: any) => (
             <img
               className="rounded-lg my-4 max-w-full h-auto border border-slate-700"
               alt={props.alt || ""}
@@ -163,25 +176,30 @@ export function PseudoMarkdownRenderer({
           ),
 
           // Horizontal rules with constellation line
-          hr: ({ node, ...props }) => (
+          hr: ({ node: _node, ..._props }) => (
             <div className="my-8 flex items-center justify-center">
-              <ConstellationLineIcon className={`w-full max-w-md h-1 ${theme.constellation}`} />
+              <ConstellationLineIcon
+                className={`w-full max-w-md h-1 ${theme.constellation}`}
+              />
             </div>
           ),
 
           // Tables
-          table: ({ node, ...props }) => (
+          table: ({ node: _node, ...props }) => (
             <div className="overflow-x-auto my-4">
-              <table className="min-w-full border-collapse border border-slate-600" {...props} />
+              <table
+                className="min-w-full border-collapse border border-slate-600"
+                {...props}
+              />
             </div>
           ),
-          th: ({ node, ...props }) => (
+          th: ({ node: _node, ...props }) => (
             <th
               className="border border-slate-600 px-4 py-2 bg-slate-700 font-bold text-left text-slate-50 font-sans"
               {...props}
             />
           ),
-          td: ({ node, ...props }) => (
+          td: ({ node: _node, ...props }) => (
             <td
               className="border border-slate-600 px-4 py-2 text-slate-300 font-sans"
               {...props}
@@ -189,12 +207,12 @@ export function PseudoMarkdownRenderer({
           ),
 
           // Strong (bold) with subtle glow
-          strong: ({ node, ...props }) => (
+          strong: ({ node: _node, ...props }) => (
             <strong className="font-bold text-slate-100 font-sans" {...props} />
           ),
 
           // Emphasis (italic)
-          em: ({ node, ...props }) => (
+          em: ({ node: _node, ...props }) => (
             <em className="italic text-slate-300 font-sans" {...props} />
           ),
         }}
@@ -204,4 +222,3 @@ export function PseudoMarkdownRenderer({
     </div>
   );
 }
-

@@ -185,7 +185,6 @@
   transform: scale(0.99);
 }
 
-
 /* === Policy Document Page Option 2 Animations === */
 .policies-tab-active {
   position: relative;
@@ -199,15 +198,16 @@
 }
 
 @keyframes tab-border-glow {
-  0%, 100% {
+  0%,
+  100% {
     /* Only animate the box-shadow (border glow), keep opacity at 1 for text/background */
-    box-shadow: 
-      0 0 var(--glow-blur-min) currentColor, 
+    box-shadow:
+      0 0 var(--glow-blur-min) currentColor,
       inset 0 0 var(--glow-blur-min) currentColor;
   }
   50% {
-    box-shadow: 
-      0 0 var(--glow-blur-max) currentColor, 
+    box-shadow:
+      0 0 var(--glow-blur-max) currentColor,
       inset 0 0 calc(var(--glow-blur-max) * 0.75) currentColor;
   }
 }
@@ -225,7 +225,8 @@
 }
 
 @keyframes icon-float {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
   }
   50% {
@@ -240,7 +241,8 @@
 }
 
 @keyframes icon-pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
     filter: drop-shadow(0 0 4px currentColor);
   }
@@ -265,7 +267,8 @@
 }
 
 @keyframes bullet-twinkle {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
     filter: drop-shadow(0 0 2px currentColor);
   }
@@ -289,4 +292,3 @@
   will-change: opacity, transform;
 }
 /* === END Policy Document Page Option 2 Animations === */
-

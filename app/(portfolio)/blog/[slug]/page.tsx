@@ -1,4 +1,8 @@
-import { getPostBySlug, getPublishedPosts, isDirectusConfigured } from "@/lib/directus";
+import {
+  getPostBySlug,
+  getPublishedPosts,
+  isDirectusConfigured,
+} from "@/lib/directus";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Image from "next/image";

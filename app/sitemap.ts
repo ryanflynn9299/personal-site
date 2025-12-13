@@ -1,6 +1,4 @@
 import { MetadataRoute } from "next";
-import { getPublishedPosts, isDirectusConfigured } from "@/lib/directus"; // We'll use our fetching function
-import { Post } from "@/types";
 
 /**
  * Generates the sitemap.xml file for the website.

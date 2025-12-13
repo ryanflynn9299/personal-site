@@ -1,13 +1,10 @@
 import React, {
   useRef,
   useEffect,
-  useState,
   useCallback,
   useSyncExternalStore,
   FC,
-  ReactNode,
   CSSProperties,
-  RefObject,
 } from "react";
 import { gsap } from "gsap";
 import type {
@@ -462,7 +459,10 @@ const useMobileDetection = (): boolean => {
       window.addEventListener("resize", subscribe);
       return () => window.removeEventListener("resize", subscribe);
     },
-    () => (typeof window !== "undefined" ? window.innerWidth <= MOBILE_BREAKPOINT : false), // Client-side snapshot
+    () =>
+      typeof window !== "undefined"
+        ? window.innerWidth <= MOBILE_BREAKPOINT
+        : false, // Client-side snapshot
     () => false // Server-side snapshot (default to desktop)
   );
 };

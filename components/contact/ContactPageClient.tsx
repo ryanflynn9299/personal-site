@@ -34,13 +34,17 @@ function SubmitButton() {
   );
 }
 
-export function ContactPageClient({ emailServiceAvailable }: ContactPageClientProps) {
+export function ContactPageClient({
+  emailServiceAvailable,
+}: ContactPageClientProps) {
   // Store form data to restore when "Go back" is clicked
-  const [savedFormData, setSavedFormData] = useState<SavedFormData | null>(null);
+  const [savedFormData, setSavedFormData] = useState<SavedFormData | null>(
+    null
+  );
   const [showForm, setShowForm] = useState(true);
   const formRef = useRef<HTMLFormElement>(null);
   const [formKey, setFormKey] = useState(0);
-  
+
   // React 19: useActionState for form state management
   // The action receives (prevState, formData) as parameters
   // useFormStatus in SubmitButton automatically tracks pending state
@@ -51,9 +55,16 @@ export function ContactPageClient({ emailServiceAvailable }: ContactPageClientPr
       const email = formData.get("email") as string;
       const message = formData.get("message") as string;
       setSavedFormData({ name, email, message });
-      setShowForm(false); // Hide form after submission
-      
-      return await submitContactForm(formData);
+
+      const result = await submitContactForm(formData);
+
+      // Only hide form if submission was successful (even if email wasn't sent)
+      // Keep form visible if there's an error so user can see and fix it
+      if (result.success) {
+        setShowForm(false);
+      }
+
+      return result;
     },
     initialState
   );
@@ -69,13 +80,18 @@ export function ContactPageClient({ emailServiceAvailable }: ContactPageClientPr
   // Restore form values when form is shown again
   useEffect(() => {
     if (showForm && savedFormData && formRef.current) {
-      const nameInput = formRef.current.querySelector<HTMLInputElement>("#name");
-      const emailInput = formRef.current.querySelector<HTMLInputElement>("#email");
-      const messageTextarea = formRef.current.querySelector<HTMLTextAreaElement>("#message");
-      
+      const nameInput =
+        formRef.current.querySelector<HTMLInputElement>("#name");
+      const emailInput =
+        formRef.current.querySelector<HTMLInputElement>("#email");
+      const messageTextarea =
+        formRef.current.querySelector<HTMLTextAreaElement>("#message");
+
       if (nameInput && savedFormData.name) nameInput.value = savedFormData.name;
-      if (emailInput && savedFormData.email) emailInput.value = savedFormData.email;
-      if (messageTextarea && savedFormData.message) messageTextarea.value = savedFormData.message;
+      if (emailInput && savedFormData.email)
+        emailInput.value = savedFormData.email;
+      if (messageTextarea && savedFormData.message)
+        messageTextarea.value = savedFormData.message;
     }
   }, [showForm, formKey, savedFormData]);
 
@@ -91,8 +107,8 @@ export function ContactPageClient({ emailServiceAvailable }: ContactPageClientPr
           Get In Touch
         </h1>
         <p className="mx-auto mt-4 max-w-2xl text-lg text-slate-300">
-          Have a project in mind, a question, or just want to connect? I&apos;d love
-          to hear from you.
+          Have a project in mind, a question, or just want to connect? I&apos;d
+          love to hear from you.
         </p>
       </header>
 
@@ -148,7 +164,9 @@ export function ContactPageClient({ emailServiceAvailable }: ContactPageClientPr
             <h2 className="font-heading text-2xl font-semibold text-slate-100">
               Send a Message
             </h2>
-            <EmailStatusIndicatorWithStatus emailServiceAvailable={emailServiceAvailable} />
+            <EmailStatusIndicatorWithStatus
+              emailServiceAvailable={emailServiceAvailable}
+            />
           </div>
           {!showForm && state.success ? (
             state.emailSent ? (
@@ -159,7 +177,8 @@ export function ContactPageClient({ emailServiceAvailable }: ContactPageClientPr
                   Message Sent Successfully!
                 </h3>
                 <p className="mt-2 text-slate-400">
-                  {state.message || "Thank you for reaching out. I'll get back to you shortly."}
+                  {state.message ||
+                    "Thank you for reaching out. I'll get back to you shortly."}
                 </p>
               </div>
             ) : (
@@ -170,7 +189,8 @@ export function ContactPageClient({ emailServiceAvailable }: ContactPageClientPr
                   Message Cannot Be Sent
                 </h3>
                 <p className="mt-2 max-w-md text-slate-400">
-                  {state.message || "Email service is currently unavailable. Your message cannot and will not be sent. No message has been saved or stored. Please use the direct email link above or try again later."}
+                  {state.message ||
+                    "Email service is currently unavailable. Your message cannot and will not be sent. No message has been saved or stored. Please use the direct email link above or try again later."}
                 </p>
                 <Button
                   onClick={handleGoBack}

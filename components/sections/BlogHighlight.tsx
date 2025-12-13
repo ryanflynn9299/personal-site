@@ -2,11 +2,12 @@ import Link from "next/link";
 import Image from "next/image";
 import { getPublishedPosts } from "@/lib/directus";
 import { ArrowRight } from "lucide-react";
+import { getBlogPostUrl } from "@/lib/utils";
 
 // Simple list of recent blog posts
 export async function BlogHighlight() {
   // Fetch all posts and take only the latest three for the homepage.
-  const { status, posts } = await getPublishedPosts();
+  const { posts } = await getPublishedPosts();
   const latestPosts = posts.slice(0, 4);
   // Separate the most recent post from the other two.
   const mainPost = latestPosts[0];
@@ -68,7 +69,7 @@ function PostCard({ post, isFeatured }: { post: any; isFeatured: boolean }) {
 
   return (
     <Link
-      href={`/app/(portfolio)/blog/${post.slug}`}
+      href={getBlogPostUrl(post.slug)}
       className="group relative block h-full overflow-hidden rounded-lg border border-slate-700 bg-slate-800 transition-all duration-300 hover:border-sky-300/50 hover:shadow-2xl hover:shadow-sky-900/50"
     >
       {/* Subtle animated grid background on hover */}

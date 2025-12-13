@@ -29,14 +29,14 @@ export function BlogPageClient({ posts, status }: BlogPageClientProps) {
   // This provides better performance and avoids unnecessary re-renders
   useEffect(() => {
     if (typeof window === "undefined") return;
-    
+
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
         setOpen((open) => !open);
       }
     };
-    
+
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
@@ -157,11 +157,7 @@ export function BlogPageClient({ posts, status }: BlogPageClientProps) {
           <Command.Empty>No results found.</Command.Empty>
           <Command.Group heading="Articles">
             {posts.map((post) => (
-              <Link
-                href={`/blog/${post.slug}`}
-                key={post.id}
-                passHref
-              >
+              <Link href={`/blog/${post.slug}`} key={post.id} passHref>
                 <Command.Item onSelect={() => setOpen(false)}>
                   <FileText className="mr-3 h-5 w-5 text-slate-400" />
                   <div className="flex flex-col">

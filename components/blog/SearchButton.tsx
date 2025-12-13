@@ -15,6 +15,7 @@ export function SearchButton({ onClick }: SearchButtonProps) {
     >
       <Search className="h-4 w-4" />
       <div className="overflow-hidden transition-all duration-300 ease-in-out group-hover:max-w-[100px] max-w-0">
+        {/* eslint-disable-next-line react/jsx-no-comment-textnodes */}
         <span className="whitespace-nowrap pr-2 font-mono text-sm">
           // Search
         </span>

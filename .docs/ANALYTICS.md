@@ -18,6 +18,7 @@ Matomo is integrated into the Next.js application via client-side JavaScript tra
 ### Implementation Overview
 
 The tracking implementation uses Matomo's JavaScript API (`_paq`). The `Matomo` component:
+
 1. Loads the Matomo tracking script dynamically
 2. Configures the tracker URL and site ID from environment variables
 3. Automatically tracks page views on route changes
@@ -134,6 +135,7 @@ Both services are on the `backend-net` network and start automatically with `doc
 ### Analytics Not Working
 
 1. **Check environment variables are set:**
+
    ```bash
    echo $NEXT_PUBLIC_MATOMO_URL
    echo $NEXT_PUBLIC_MATOMO_SITE_ID
@@ -164,6 +166,7 @@ Both services are on the `backend-net` network and start automatically with `doc
 ### Development Mode
 
 In development, if Matomo is not configured, you'll see a console warning:
+
 ```
 Matomo analytics not configured. Set NEXT_PUBLIC_MATOMO_URL and NEXT_PUBLIC_MATOMO_SITE_ID
 ```
@@ -182,4 +185,3 @@ This is expected and won't affect functionality. Analytics will work once enviro
 
 - [Matomo Documentation](https://matomo.org/docs/)
 - [Matomo JavaScript Tracking Guide](https://developer.matomo.org/guides/tracking-javascript-guide)
-

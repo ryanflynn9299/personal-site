@@ -9,4 +9,3 @@ export interface SavedFormData {
   email: string;
   message: string;
 }
-

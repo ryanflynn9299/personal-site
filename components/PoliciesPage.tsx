@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
 import { PseudoMarkdownRenderer } from "@/components/PseudoMarkdownRenderer";
@@ -26,7 +26,7 @@ export function PoliciesPage({ policies, initialTab }: PoliciesPageProps) {
   const searchParams = useSearchParams();
   const contentRef = useRef<HTMLDivElement>(null);
   const tabRefs = useRef<Map<string, HTMLButtonElement>>(new Map());
-  
+
   // Determine initial active policy
   const getInitialPolicyId = () => {
     if (initialTab) return initialTab;
@@ -43,22 +43,25 @@ export function PoliciesPage({ policies, initialTab }: PoliciesPageProps) {
 
   const [activePolicyId, setActivePolicyId] = useState(getInitialPolicyId);
 
-  const activePolicy = policies.find((p) => p.id === activePolicyId) || policies[0];
-  
+  const activePolicy =
+    policies.find((p) => p.id === activePolicyId) || policies[0];
+
   // Get theme colors based on the ACTIVE policy, not individual tabs
-  const activeTheme = activePolicy ? getPolicyColorTheme(activePolicy.id) : getPolicyColorTheme("privacy-policy");
+  const activeTheme = activePolicy
+    ? getPolicyColorTheme(activePolicy.id)
+    : getPolicyColorTheme("privacy-policy");
 
   // Update URL when tab changes
   const handleTabChange = (policyId: string) => {
     setActivePolicyId(policyId);
-    
+
     // Map policy ID to tab param
     const tabMapping: Record<string, string> = {
       "privacy-policy": "privacy",
       "terms-of-service": "terms",
     };
     const tabParam = tabMapping[policyId];
-    
+
     if (tabParam) {
       router.push(`/policies?tab=${tabParam}`, { scroll: false });
     } else {
@@ -80,7 +83,7 @@ export function PoliciesPage({ policies, initialTab }: PoliciesPageProps) {
   // Keyboard navigation for tabs
   const handleKeyDown = (e: React.KeyboardEvent, currentIndex: number) => {
     let newIndex = currentIndex;
-    
+
     if (e.key === "ArrowDown" || e.key === "ArrowRight") {
       e.preventDefault();
       newIndex = (currentIndex + 1) % policies.length;
@@ -122,18 +125,18 @@ export function PoliciesPage({ policies, initialTab }: PoliciesPageProps) {
               <h2 className="font-heading text-xl font-bold text-slate-50 mb-4">
                 Policies
               </h2>
-              <nav 
+              <nav
                 className="flex flex-row lg:flex-col gap-2 overflow-x-auto lg:overflow-visible pb-2 lg:pb-0"
                 role="tablist"
                 aria-label="Policy documents"
               >
                 {policies.map((policy, index) => {
                   const isActive = activePolicyId === policy.id;
-                  
+
                   // Use the active policy's theme for styling the active tab
                   // This ensures colors match the displayed content
                   const activeTabTheme = isActive ? activeTheme : null;
-                  
+
                   return (
                     <button
                       key={policy.id}
@@ -157,7 +160,9 @@ export function PoliciesPage({ policies, initialTab }: PoliciesPageProps) {
                       id={`policy-tab-${policy.id}`}
                       tabIndex={isActive ? 0 : -1}
                     >
-                      <span className="font-sans font-medium">{policy.name}</span>
+                      <span className="font-sans font-medium">
+                        {policy.name}
+                      </span>
                     </button>
                   );
                 })}
@@ -179,7 +184,7 @@ export function PoliciesPage({ policies, initialTab }: PoliciesPageProps) {
               </header>
 
               {/* Document Content */}
-              <div 
+              <div
                 ref={contentRef}
                 className="flex-1 overflow-y-auto px-6 py-8"
                 id={`policy-content-${activePolicyId}`}
@@ -195,8 +200,8 @@ export function PoliciesPage({ policies, initialTab }: PoliciesPageProps) {
                     transition={{ duration: 0.3 }}
                     className="document-transition"
                   >
-                    <PseudoMarkdownRenderer 
-                      content={activePolicy.content} 
+                    <PseudoMarkdownRenderer
+                      content={activePolicy.content}
                       themeColor={activeTheme}
                     />
                   </motion.div>
@@ -209,4 +214,3 @@ export function PoliciesPage({ policies, initialTab }: PoliciesPageProps) {
     </div>
   );
 }
-

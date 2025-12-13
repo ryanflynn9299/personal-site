@@ -3,8 +3,6 @@
 import { motion, Variants } from "framer-motion";
 import type { AnimatedTextProps } from "@/types/components";
 
-import { DECODE_CHARS } from "@/constants/animations";
-
 export function AnimatedText({
   text,
   animationType = "stagger-words",

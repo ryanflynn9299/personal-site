@@ -29,7 +29,7 @@ const pinoOptions: pino.LoggerOptions = {
           },
         }
       : undefined,
-  
+
   // Disable browser.asObject to avoid tracingChannel dependency
   browser: {
     asObject: false,

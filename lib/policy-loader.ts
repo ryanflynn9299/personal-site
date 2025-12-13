@@ -31,7 +31,10 @@ function parseFrontmatter(content: string): {
     if (colonIndex === -1) continue;
 
     const key = line.substring(0, colonIndex).trim();
-    const value = line.substring(colonIndex + 1).trim().replace(/^["']|["']$/g, "");
+    const value = line
+      .substring(colonIndex + 1)
+      .trim()
+      .replace(/^["']|["']$/g, "");
     frontmatter[key] = value;
   }
 
@@ -55,7 +58,8 @@ export function loadPolicyDocument(filename: string): PolicyDocument {
 
   const metadata: PolicyMetadata = {
     title: frontmatter.title || "Policy Document",
-    lastUpdated: frontmatter.lastUpdated || new Date().toISOString().split("T")[0],
+    lastUpdated:
+      frontmatter.lastUpdated || new Date().toISOString().split("T")[0],
   };
 
   return {
@@ -92,7 +96,7 @@ export function loadAllPolicies(): Array<{
   content: string;
 }> {
   const policyIds = getAvailablePolicies();
-  
+
   return policyIds.map((id) => {
     const document = loadPolicyDocument(`${id}.md`);
     // Convert filename to display name (e.g., "privacy-policy" -> "Privacy Policy")
@@ -100,7 +104,7 @@ export function loadAllPolicies(): Array<{
       .split("-")
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
       .join(" ");
-    
+
     return {
       id,
       name,
@@ -109,4 +113,3 @@ export function loadAllPolicies(): Array<{
     };
   });
 }
-

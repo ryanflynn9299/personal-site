@@ -1,6 +1,6 @@
 /**
  * Plaintext Formatter
- * 
+ *
  * This utility provides the foundation for converting plaintext content
  * into formatted HTML. It handles common plaintext patterns like:
  * - Bullet points (lines starting with -, *, or •)
@@ -9,7 +9,7 @@
  * - Italic text (wrapped in * or _)
  * - Headers (lines starting with #)
  * - Paragraphs (double line breaks)
- * 
+ *
  * This is designed to be extensible for future formatting needs.
  */
 
@@ -20,7 +20,7 @@ import type { PlaintextFormatOptions } from "@/types/data";
  */
 function isBulletPoint(line: string, bulletChars: string[]): boolean {
   const trimmed = line.trim();
-  return bulletChars.some(char => trimmed.startsWith(char));
+  return bulletChars.some((char) => trimmed.startsWith(char));
 }
 
 /**
@@ -52,18 +52,24 @@ function isHeader(line: string): { level: number; text: string } | null {
 function formatInlineText(text: string): string {
   // Escape HTML first
   let formatted = text
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
-  
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+
   // Bold: **text** or __text__
-  formatted = formatted.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-  formatted = formatted.replace(/__(.+?)__/g, '<strong>$1</strong>');
-  
+  formatted = formatted.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+  formatted = formatted.replace(/__(.+?)__/g, "<strong>$1</strong>");
+
   // Italic: *text* or _text_ (but not if it's part of bold)
-  formatted = formatted.replace(/(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)/g, '<em>$1</em>');
-  formatted = formatted.replace(/(?<!_)_(?!_)(.+?)(?<!_)_(?!_)/g, '<em>$1</em>');
-  
+  formatted = formatted.replace(
+    /(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)/g,
+    "<em>$1</em>"
+  );
+  formatted = formatted.replace(
+    /(?<!_)_(?!_)(.+?)(?<!_)_(?!_)/g,
+    "<em>$1</em>"
+  );
+
   return formatted;
 }
 
@@ -72,12 +78,15 @@ function formatInlineText(text: string): string {
  */
 function linkifyUrls(text: string): string {
   const urlRegex = /(https?:\/\/[^\s]+)/g;
-  return text.replace(urlRegex, '<a href="$1" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:text-blue-300 underline">$1</a>');
+  return text.replace(
+    urlRegex,
+    '<a href="$1" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:text-blue-300 underline">$1</a>'
+  );
 }
 
 /**
  * Formats plaintext content into HTML
- * 
+ *
  * @param plaintext - The plaintext content to format
  * @param options - Formatting options
  * @returns Formatted HTML string
@@ -89,14 +98,14 @@ export function formatPlaintext(
   const {
     preserveLineBreaks = true,
     linkifyUrls: shouldLinkify = true,
-    bulletChars = ['-', '*', '•'],
+    bulletChars = ["-", "*", "•"],
   } = options;
 
   if (!plaintext || !plaintext.trim()) {
-    return '';
+    return "";
   }
 
-  const lines = plaintext.split('\n');
+  const lines = plaintext.split("\n");
   const output: string[] = [];
   let inList = false;
   let inNumberedList = false;
@@ -104,7 +113,7 @@ export function formatPlaintext(
 
   const flushParagraph = () => {
     if (currentParagraph.length > 0) {
-      const paragraphText = currentParagraph.join(' ');
+      const paragraphText = currentParagraph.join(" ");
       let formatted = formatInlineText(paragraphText);
       if (shouldLinkify) {
         formatted = linkifyUrls(formatted);
@@ -116,11 +125,11 @@ export function formatPlaintext(
 
   const closeList = () => {
     if (inList) {
-      output.push('</ul>');
+      output.push("</ul>");
       inList = false;
     }
     if (inNumberedList) {
-      output.push('</ol>');
+      output.push("</ol>");
       inNumberedList = false;
     }
   };
@@ -142,7 +151,9 @@ export function formatPlaintext(
       flushParagraph();
       closeList();
       const formattedText = formatInlineText(header.text);
-      output.push(`<h${header.level} class="font-bold mt-6 mb-4">${formattedText}</h${header.level}>`);
+      output.push(
+        `<h${header.level} class="font-bold mt-6 mb-4">${formattedText}</h${header.level}>`
+      );
       continue;
     }
 
@@ -150,7 +161,7 @@ export function formatPlaintext(
     if (isBulletPoint(line, bulletChars)) {
       flushParagraph();
       if (inNumberedList) {
-        output.push('</ol>');
+        output.push("</ol>");
         inNumberedList = false;
       }
       if (!inList) {
@@ -170,14 +181,14 @@ export function formatPlaintext(
     if (isNumberedItem(line)) {
       flushParagraph();
       if (inList) {
-        output.push('</ul>');
+        output.push("</ul>");
         inList = false;
       }
       if (!inNumberedList) {
         output.push('<ol class="list-decimal list-inside space-y-2 my-4">');
         inNumberedList = true;
       }
-      const itemText = trimmed.replace(/^\d+[.)]\s/, '');
+      const itemText = trimmed.replace(/^\d+[.)]\s/, "");
       let formatted = formatInlineText(itemText);
       if (shouldLinkify) {
         formatted = linkifyUrls(formatted);
@@ -204,7 +215,7 @@ export function formatPlaintext(
   flushParagraph();
   closeList();
 
-  return output.join('\n');
+  return output.join("\n");
 }
 
 /**
@@ -212,21 +223,21 @@ export function formatPlaintext(
  */
 export function isLikelyMarkdown(content: string): boolean {
   if (!content) return false;
-  
+
   // Check for markdown-specific patterns
   const markdownPatterns = [
-    /^#{1,6}\s+/m,                    // Headers
-    /```[\s\S]*?```/m,                // Code blocks
-    /\[.*?\]\(.*?\)/m,                // Links
-    /!\[.*?\]\(.*?\)/m,               // Images
-    /^\s*[-*+]\s+/m,                  // Bullet lists
-    /^\s*\d+\.\s+/m,                  // Numbered lists
-    /`[^`]+`/m,                        // Inline code
-    /^\s*>/m,                          // Blockquotes
-    /^\s*\|.*\|.*\|/m,                // Tables
+    /^#{1,6}\s+/m, // Headers
+    /```[\s\S]*?```/m, // Code blocks
+    /\[.*?\]\(.*?\)/m, // Links
+    /!\[.*?\]\(.*?\)/m, // Images
+    /^\s*[-*+]\s+/m, // Bullet lists
+    /^\s*\d+\.\s+/m, // Numbered lists
+    /`[^`]+`/m, // Inline code
+    /^\s*>/m, // Blockquotes
+    /^\s*\|.*\|.*\|/m, // Tables
   ];
-  
-  return markdownPatterns.some(pattern => pattern.test(content));
+
+  return markdownPatterns.some((pattern) => pattern.test(content));
 }
 
 /**
@@ -234,9 +245,8 @@ export function isLikelyMarkdown(content: string): boolean {
  */
 export function isLikelyHTML(content: string): boolean {
   if (!content) return false;
-  
+
   // Check for HTML tags
   const htmlPattern = /<[a-z][\s\S]*>/i;
   return htmlPattern.test(content);
 }
-

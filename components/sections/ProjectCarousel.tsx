@@ -2,20 +2,18 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import useEmblaCarousel from "embla-carousel-react";
 import { EmblaOptionsType } from "embla-carousel";
 import { Github, ArrowUpRight, ArrowLeft, ArrowRight } from "lucide-react";
 import { Button } from "@/components/primitives/Button";
 import { projects } from "@/data/projects";
-import { carouselImages } from "@/data/constants";
 
 // Carousel options
 const OPTIONS: EmblaOptionsType = { loop: true };
 
-function getRandomImageUrl() {
-  return carouselImages[Math.floor(Math.random() * carouselImages.length)];
-}
+// function getRandomImageUrl() {
+//   return carouselImages[Math.floor(Math.random() * carouselImages.length)];
+// }
 
 // Home page projects section method 2: a Carousel of Featured Projects
 export function ProjectCarousel() {

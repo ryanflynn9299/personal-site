@@ -18,7 +18,9 @@ This document outlines the comprehensive testing strategy for the personal-site 
 ### Recommended Testing Stack
 
 #### 1. **Vitest** (Unit & Integration Tests)
+
 **Why Vitest?**
+
 - ✅ Native ESM support (works great with Next.js 16)
 - ✅ Fast execution (powered by Vite)
 - ✅ Jest-compatible API (easy migration path)
@@ -28,24 +30,30 @@ This document outlines the comprehensive testing strategy for the personal-site 
 - ✅ Coverage reporting built-in
 
 **Installation:**
+
 ```bash
 npm install -D vitest @vitest/ui @vitest/coverage-v8
 ```
 
 #### 2. **React Testing Library** (Component Tests)
+
 **Why React Testing Library?**
+
 - ✅ Encourages testing user behavior, not implementation
 - ✅ Accessible queries (getByRole, getByLabelText, etc.)
 - ✅ Works seamlessly with Vitest
 - ✅ Industry standard for React testing
 
 **Installation:**
+
 ```bash
 npm install -D @testing-library/react @testing-library/jest-dom @testing-library/user-event
 ```
 
 #### 3. **Playwright** (E2E Tests)
+
 **Why Playwright?**
+
 - ✅ Cross-browser testing (Chromium, Firefox, WebKit)
 - ✅ Built-in auto-waiting and retries
 - ✅ Excellent debugging tools
@@ -54,23 +62,28 @@ npm install -D @testing-library/react @testing-library/jest-dom @testing-library
 - ✅ Better than Cypress for Next.js App Router
 
 **Installation:**
+
 ```bash
 npm install -D @playwright/test
 ```
 
 #### 4. **MSW (Mock Service Worker)** (API Mocking)
+
 **Why MSW?**
+
 - ✅ Intercepts requests at the network level
 - ✅ Works in both Node.js and browser environments
 - ✅ Perfect for mocking Directus API calls
 - ✅ Realistic request/response handling
 
 **Installation:**
+
 ```bash
 npm install -D msw
 ```
 
 #### 5. **Testing Utilities**
+
 - **@testing-library/jest-dom**: Custom matchers for DOM assertions
 - **@vitest/coverage-v8**: Code coverage reporting
 - **jsdom**: DOM environment for tests (via Vitest)
@@ -84,6 +97,7 @@ npm install -D msw
 **Purpose:** Test individual functions, utilities, and pure logic in isolation.
 
 **What to Test:**
+
 - ✅ Utility functions (`lib/utils.ts`)
 - ✅ Data transformation functions
 - ✅ Validation logic
@@ -92,6 +106,7 @@ npm install -D msw
 - ✅ Configuration helpers
 
 **Example Areas:**
+
 ```typescript
 // lib/utils.ts
 - cn() function (class name merging)
@@ -115,18 +130,19 @@ npm install -D msw
 ```
 
 **Test Structure:**
+
 ```typescript
 // lib/utils.test.ts
-import { describe, it, expect } from 'vitest';
-import { cn } from './utils';
+import { describe, it, expect } from "vitest";
+import { cn } from "./utils";
 
-describe('cn', () => {
-  it('merges class names correctly', () => {
-    expect(cn('foo', 'bar')).toBe('foo bar');
+describe("cn", () => {
+  it("merges class names correctly", () => {
+    expect(cn("foo", "bar")).toBe("foo bar");
   });
-  
-  it('handles conditional classes', () => {
-    expect(cn('foo', false && 'bar', 'baz')).toBe('foo baz');
+
+  it("handles conditional classes", () => {
+    expect(cn("foo", false && "bar", "baz")).toBe("foo baz");
   });
 });
 ```
@@ -136,6 +152,7 @@ describe('cn', () => {
 **Purpose:** Test React components in isolation, focusing on user interactions and rendering.
 
 **What to Test:**
+
 - ✅ Component rendering
 - ✅ User interactions (clicks, form submissions, typing)
 - ✅ Conditional rendering
@@ -144,6 +161,7 @@ describe('cn', () => {
 - ✅ Accessibility (ARIA attributes, keyboard navigation)
 
 **Example Components to Test:**
+
 ```typescript
 // components/primitives/Button.tsx
 - Renders with correct text
@@ -171,6 +189,7 @@ describe('cn', () => {
 ```
 
 **Test Structure:**
+
 ```typescript
 // components/Button.test.tsx
 import { describe, it, expect, vi } from 'vitest';
@@ -187,10 +206,10 @@ describe('Button', () => {
   it('calls onClick when clicked', async () => {
     const handleClick = vi.fn();
     const user = userEvent.setup();
-    
+
     render(<Button onClick={handleClick}>Click</Button>);
     await user.click(screen.getByRole('button'));
-    
+
     expect(handleClick).toHaveBeenCalledTimes(1);
   });
 });
@@ -201,6 +220,7 @@ describe('Button', () => {
 **Purpose:** Test how multiple units work together, including server actions, API calls, and data flow.
 
 **What to Test:**
+
 - ✅ Server Actions with mocked dependencies
 - ✅ Directus integration (with MSW mocks)
 - ✅ Form submission flow
@@ -208,6 +228,7 @@ describe('Button', () => {
 - ✅ Error handling across layers
 
 **Example Areas:**
+
 ```typescript
 // app/actions/contact.ts
 - Full form submission flow
@@ -227,53 +248,54 @@ describe('Button', () => {
 ```
 
 **Test Structure:**
+
 ```typescript
 // app/actions/contact.test.ts
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { submitContactForm } from './contact';
-import * as emailService from '@/lib/email-service';
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { submitContactForm } from "./contact";
+import * as emailService from "@/lib/email-service";
 
-vi.mock('@/lib/email-service');
+vi.mock("@/lib/email-service");
 
-describe('submitContactForm', () => {
+describe("submitContactForm", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it('validates required fields', async () => {
+  it("validates required fields", async () => {
     const formData = new FormData();
-    formData.set('name', '');
-    formData.set('email', 'test@example.com');
-    formData.set('message', 'Hello');
+    formData.set("name", "");
+    formData.set("email", "test@example.com");
+    formData.set("message", "Hello");
 
     const result = await submitContactForm(formData);
-    
+
     expect(result.success).toBe(false);
-    expect(result.error).toBe('All fields are required');
+    expect(result.error).toBe("All fields are required");
   });
 
-  it('validates email format', async () => {
+  it("validates email format", async () => {
     const formData = new FormData();
-    formData.set('name', 'John');
-    formData.set('email', 'invalid-email');
-    formData.set('message', 'Hello');
+    formData.set("name", "John");
+    formData.set("email", "invalid-email");
+    formData.set("message", "Hello");
 
     const result = await submitContactForm(formData);
-    
+
     expect(result.success).toBe(false);
-    expect(result.error).toBe('Please enter a valid email address');
+    expect(result.error).toBe("Please enter a valid email address");
   });
 
-  it('handles missing email service', async () => {
+  it("handles missing email service", async () => {
     vi.mocked(emailService.isEmailServiceConfigured).mockReturnValue(false);
-    
+
     const formData = new FormData();
-    formData.set('name', 'John');
-    formData.set('email', 'test@example.com');
-    formData.set('message', 'Hello');
+    formData.set("name", "John");
+    formData.set("email", "test@example.com");
+    formData.set("message", "Hello");
 
     const result = await submitContactForm(formData);
-    
+
     expect(result.success).toBe(true);
     expect(result.emailSent).toBe(false);
   });
@@ -285,6 +307,7 @@ describe('submitContactForm', () => {
 **Purpose:** Test complete user flows across the entire application in a real browser environment.
 
 **What to Test:**
+
 - ✅ Critical user journeys
 - ✅ Navigation between pages
 - ✅ Form submissions end-to-end
@@ -293,6 +316,7 @@ describe('submitContactForm', () => {
 - ✅ Cross-browser compatibility
 
 **Example E2E Scenarios:**
+
 ```typescript
 // Critical Paths:
 1. Homepage → About → Contact → Submit form
@@ -305,51 +329,54 @@ describe('submitContactForm', () => {
 ```
 
 **Test Structure:**
+
 ```typescript
 // e2e/homepage.spec.ts
-import { test, expect } from '@playwright/test';
+import { test, expect } from "@playwright/test";
 
-test.describe('Homepage', () => {
-  test('loads and displays main content', async ({ page }) => {
-    await page.goto('/');
-    
+test.describe("Homepage", () => {
+  test("loads and displays main content", async ({ page }) => {
+    await page.goto("/");
+
     // Check hero section
-    await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
-    
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+
     // Check navigation
-    await expect(page.getByRole('link', { name: /about/i })).toBeVisible();
-    await expect(page.getByRole('link', { name: /blog/i })).toBeVisible();
+    await expect(page.getByRole("link", { name: /about/i })).toBeVisible();
+    await expect(page.getByRole("link", { name: /blog/i })).toBeVisible();
   });
 
-  test('navigates to about page', async ({ page }) => {
-    await page.goto('/');
-    await page.getByRole('link', { name: /about/i }).click();
-    
-    await expect(page).toHaveURL('/about');
-    await expect(page.getByRole('heading', { level: 1 })).toContainText('About');
+  test("navigates to about page", async ({ page }) => {
+    await page.goto("/");
+    await page.getByRole("link", { name: /about/i }).click();
+
+    await expect(page).toHaveURL("/about");
+    await expect(page.getByRole("heading", { level: 1 })).toContainText(
+      "About"
+    );
   });
 });
 
 // e2e/contact-form.spec.ts
-test.describe('Contact Form', () => {
-  test('submits form successfully', async ({ page }) => {
-    await page.goto('/contact');
-    
-    await page.getByLabel(/name/i).fill('John Doe');
-    await page.getByLabel(/email/i).fill('john@example.com');
-    await page.getByLabel(/message/i).fill('Test message');
-    
-    await page.getByRole('button', { name: /send/i }).click();
-    
+test.describe("Contact Form", () => {
+  test("submits form successfully", async ({ page }) => {
+    await page.goto("/contact");
+
+    await page.getByLabel(/name/i).fill("John Doe");
+    await page.getByLabel(/email/i).fill("john@example.com");
+    await page.getByLabel(/message/i).fill("Test message");
+
+    await page.getByRole("button", { name: /send/i }).click();
+
     // Wait for success message
     await expect(page.getByText(/thank you/i)).toBeVisible({ timeout: 10000 });
   });
 
-  test('displays validation errors', async ({ page }) => {
-    await page.goto('/contact');
-    
-    await page.getByRole('button', { name: /send/i }).click();
-    
+  test("displays validation errors", async ({ page }) => {
+    await page.goto("/contact");
+
+    await page.getByRole("button", { name: /send/i }).click();
+
     await expect(page.getByText(/required/i)).toBeVisible();
   });
 });
@@ -360,10 +387,12 @@ test.describe('Contact Form', () => {
 **Purpose:** Catch unintended visual changes using screenshot comparisons.
 
 **Tools:**
+
 - **Playwright** (built-in screenshot comparison)
 - **Percy** or **Chromatic** (cloud-based, recommended for CI)
 
 **What to Test:**
+
 - ✅ Component visual states
 - ✅ Page layouts
 - ✅ Responsive breakpoints
@@ -376,6 +405,7 @@ test.describe('Contact Form', () => {
 ### Test in This Repository
 
 ✅ **Application Logic**
+
 - Server Actions (`app/actions/`)
 - Utility functions (`lib/`)
 - Component behavior and interactions
@@ -384,11 +414,13 @@ test.describe('Contact Form', () => {
 - Error handling
 
 ✅ **Integration Points**
+
 - Directus API integration (with mocks)
 - Email service integration (with mocks)
 - Next.js routing and page rendering
 
 ✅ **User-Facing Features**
+
 - Component rendering
 - User interactions
 - Form submissions
@@ -397,21 +429,25 @@ test.describe('Contact Form', () => {
 ### Test Elsewhere / Don't Test
 
 ❌ **Third-Party Libraries**
+
 - Don't test React, Next.js, or Directus SDK internals
 - Don't test Framer Motion, GSAP, or other library functionality
 - Trust that these libraries work as documented
 
 ❌ **Infrastructure**
+
 - Docker configuration (test in deployment environment)
 - CI/CD pipelines (test the pipeline itself, not application code)
 - Server configuration (nginx, etc.)
 
 ❌ **External Services**
+
 - Don't make real API calls to Directus in tests (use MSW)
 - Don't send real emails in tests (mock email service)
 - Don't test external analytics (Matomo) - test that events are triggered
 
 ❌ **Build System**
+
 - Next.js build process (trust Next.js)
 - TypeScript compilation (covered by type-check script)
 - Webpack/Turbopack bundling
@@ -419,24 +455,26 @@ test.describe('Contact Form', () => {
 ### Testing Boundaries
 
 **Mock External Dependencies:**
+
 ```typescript
 // ✅ Mock Directus API calls
-vi.mock('@/lib/directus', () => ({
+vi.mock("@/lib/directus", () => ({
   getPublishedPosts: vi.fn(),
   getPostBySlug: vi.fn(),
 }));
 
 // ✅ Mock email service
-vi.mock('@/lib/email-service', () => ({
+vi.mock("@/lib/email-service", () => ({
   isEmailServiceConfigured: vi.fn(),
   sendEmail: vi.fn(),
 }));
 
 // ✅ Mock environment variables
-vi.stubEnv('DIRECTUS_URL_SERVER_SIDE', 'http://localhost:8055');
+vi.stubEnv("DIRECTUS_URL_SERVER_SIDE", "http://localhost:8055");
 ```
 
 **Don't Mock:**
+
 ```typescript
 // ❌ Don't mock React hooks (test with real hooks)
 // ❌ Don't mock Next.js router (use Next.js testing utilities)
@@ -471,34 +509,34 @@ Add the following scripts to `package.json`:
 Create `vitest.config.ts`:
 
 ```typescript
-import { defineConfig } from 'vitest/config';
-import react from '@vitejs/plugin-react';
-import path from 'path';
+import { defineConfig } from "vitest/config";
+import react from "@vitejs/plugin-react";
+import path from "path";
 
 export default defineConfig({
   plugins: [react()],
   test: {
     globals: true,
-    environment: 'jsdom',
-    setupFiles: ['./tests/setup.ts'],
-    include: ['**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
-    exclude: ['node_modules', '.next', 'out', 'e2e'],
+    environment: "jsdom",
+    setupFiles: ["./tests/setup.ts"],
+    include: ["**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"],
+    exclude: ["node_modules", ".next", "out", "e2e"],
     coverage: {
-      provider: 'v8',
-      reporter: ['text', 'json', 'html'],
+      provider: "v8",
+      reporter: ["text", "json", "html"],
       exclude: [
-        'node_modules/',
-        'tests/',
-        '**/*.d.ts',
-        '**/*.config.*',
-        '**/mockData/**',
-        '.next/**',
+        "node_modules/",
+        "tests/",
+        "**/*.d.ts",
+        "**/*.config.*",
+        "**/mockData/**",
+        ".next/**",
       ],
     },
   },
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './'),
+      "@": path.resolve(__dirname, "./"),
     },
   },
 });
@@ -509,36 +547,36 @@ export default defineConfig({
 Create `playwright.config.ts`:
 
 ```typescript
-import { defineConfig, devices } from '@playwright/test';
+import { defineConfig, devices } from "@playwright/test";
 
 export default defineConfig({
-  testDir: './e2e',
+  testDir: "./e2e",
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
-  reporter: 'html',
+  reporter: "html",
   use: {
-    baseURL: 'http://localhost:3000',
-    trace: 'on-first-retry',
+    baseURL: "http://localhost:3000",
+    trace: "on-first-retry",
   },
   projects: [
     {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      name: "chromium",
+      use: { ...devices["Desktop Chrome"] },
     },
     {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
+      name: "firefox",
+      use: { ...devices["Desktop Firefox"] },
     },
     {
-      name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
+      name: "webkit",
+      use: { ...devices["Desktop Safari"] },
     },
   ],
   webServer: {
-    command: 'npm run dev',
-    url: 'http://localhost:3000',
+    command: "npm run dev",
+    url: "http://localhost:3000",
     reuseExistingServer: !process.env.CI,
   },
 });
@@ -596,28 +634,28 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
-      
+          node-version: "20"
+          cache: "npm"
+
       - name: Install dependencies
         run: npm ci
-      
+
       - name: Run type check
         run: npm run type-check
-      
+
       - name: Run linter
         run: npm run lint
-      
+
       - name: Run ESLint
         run: npm run eslint
-      
+
       - name: Run unit tests
         run: npm run test:coverage
-      
+
       - name: Upload coverage
         uses: codecov/codecov-action@v3
         with:
@@ -628,25 +666,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
-      
+          node-version: "20"
+          cache: "npm"
+
       - name: Install dependencies
         run: npm ci
-      
+
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
-      
+
       - name: Build application
         run: npm run build
-      
+
       - name: Run E2E tests
         run: npm run test:e2e
-      
+
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v3
@@ -678,16 +716,9 @@ Update `package.json`:
 ```json
 {
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
-      "eslint --fix",
-      "prettier --write"
-    ],
-    "*.{json,css,md}": [
-      "prettier --write"
-    ],
-    "*.{ts,tsx}": [
-      "bash -c 'npm run type-check'"
-    ]
+    "*.{js,jsx,ts,tsx}": ["eslint --fix", "prettier --write"],
+    "*.{json,css,md}": ["prettier --write"],
+    "*.{ts,tsx}": ["bash -c 'npm run type-check'"]
   }
 }
 ```
@@ -699,26 +730,32 @@ Update `package.json`:
 ### 1. Code Quality Checks
 
 #### TypeScript Type Checking
+
 ```bash
 npm run type-check
 ```
+
 - ✅ Already implemented
 - ✅ Should run in CI before tests
 - ✅ Catches type errors early
 
 #### ESLint
+
 ```bash
 npm run eslint
 ```
+
 - ✅ Already implemented
 - ✅ Enforces code quality rules
 - ✅ Should fail CI on errors
 
 #### Prettier
+
 ```bash
 npm run lint  # Check
 npm run lint:fix  # Fix
 ```
+
 - ✅ Already implemented
 - ✅ Enforces consistent formatting
 - ✅ Should run in pre-commit hooks
@@ -726,6 +763,7 @@ npm run lint:fix  # Fix
 ### 2. Security Checks
 
 #### npm audit
+
 ```json
 {
   "scripts": {
@@ -736,18 +774,21 @@ npm run lint:fix  # Fix
 ```
 
 #### Snyk (Optional)
+
 ```bash
 npm install -g snyk
 snyk test
 ```
 
 #### Dependabot / Renovate
+
 - Enable GitHub Dependabot for automatic dependency updates
 - Configure Renovate for more control
 
 ### 3. Build Verification
 
 #### Build Success Check
+
 ```json
 {
   "scripts": {
@@ -757,6 +798,7 @@ snyk test
 ```
 
 #### Bundle Size Analysis
+
 ```json
 {
   "scripts": {
@@ -764,6 +806,7 @@ snyk test
   }
 }
 ```
+
 - ✅ Already implemented
 - ✅ Monitor bundle size in CI
 - ✅ Set size limits with `@next/bundle-analyzer`
@@ -771,7 +814,9 @@ snyk test
 ### 4. File Quality Checks
 
 #### No Console.logs in Production
+
 Add to ESLint config:
+
 ```javascript
 {
   rules: {
@@ -781,6 +826,7 @@ Add to ESLint config:
 ```
 
 #### No Debugger Statements
+
 ```javascript
 {
   rules: {
@@ -790,11 +836,13 @@ Add to ESLint config:
 ```
 
 #### No TODO Comments (Optional)
+
 ```bash
 npm install -D eslint-plugin-no-todo
 ```
 
 #### Check for Large Files
+
 ```json
 {
   "scripts": {
@@ -815,15 +863,17 @@ const requiredEnvVars = {
 
 export function validateEnv() {
   const missing: string[] = [];
-  
+
   for (const [key, value] of Object.entries(requiredEnvVars)) {
     if (!process.env[key] || process.env[key] === value) {
       missing.push(key);
     }
   }
-  
+
   if (missing.length > 0) {
-    throw new Error(`Missing required environment variables: ${missing.join(', ')}`);
+    throw new Error(
+      `Missing required environment variables: ${missing.join(", ")}`
+    );
   }
 }
 ```
@@ -831,17 +881,19 @@ export function validateEnv() {
 ### 6. Accessibility Checks
 
 #### ESLint Plugin
+
 ```bash
 npm install -D eslint-plugin-jsx-a11y
 ```
 
 #### Playwright Accessibility Tests
-```typescript
-import { test, expect } from '@playwright/test';
-import { injectAxe, checkA11y } from 'axe-playwright';
 
-test('homepage is accessible', async ({ page }) => {
-  await page.goto('/');
+```typescript
+import { test, expect } from "@playwright/test";
+import { injectAxe, checkA11y } from "axe-playwright";
+
+test("homepage is accessible", async ({ page }) => {
+  await page.goto("/");
   await injectAxe(page);
   await checkA11y(page);
 });
@@ -850,24 +902,26 @@ test('homepage is accessible', async ({ page }) => {
 ### 7. Performance Checks
 
 #### Lighthouse CI
+
 ```bash
 npm install -D @lhci/cli
 ```
 
 Create `lighthouserc.js`:
+
 ```javascript
 module.exports = {
   ci: {
     collect: {
-      url: ['http://localhost:3000'],
-      startServerCommand: 'npm run start',
+      url: ["http://localhost:3000"],
+      startServerCommand: "npm run start",
     },
     assert: {
       assertions: {
-        'categories:performance': ['error', { minScore: 0.9 }],
-        'categories:accessibility': ['error', { minScore: 0.9 }],
-        'categories:best-practices': ['error', { minScore: 0.9 }],
-        'categories:seo': ['error', { minScore: 0.9 }],
+        "categories:performance": ["error", { minScore: 0.9 }],
+        "categories:accessibility": ["error", { minScore: 0.9 }],
+        "categories:best-practices": ["error", { minScore: 0.9 }],
+        "categories:seo": ["error", { minScore: 0.9 }],
       },
     },
   },
@@ -877,9 +931,10 @@ module.exports = {
 ### 8. Database/API Health Checks
 
 #### Directus Health Check
+
 ```typescript
 // tests/health/directus.test.ts
-test('Directus is accessible', async () => {
+test("Directus is accessible", async () => {
   const response = await fetch(`${process.env.DIRECTUS_URL}/server/health`);
   expect(response.ok).toBe(true);
 });
@@ -898,18 +953,21 @@ test('Directus is accessible', async () => {
 ### 10. Git Hooks & Commit Quality
 
 #### Commit Message Linting
+
 ```bash
 npm install -D @commitlint/cli @commitlint/config-conventional
 ```
 
 Create `commitlint.config.js`:
+
 ```javascript
 module.exports = {
-  extends: ['@commitlint/config-conventional'],
+  extends: ["@commitlint/config-conventional"],
 };
 ```
 
 #### Branch Protection Rules (GitHub)
+
 - Require pull request reviews
 - Require status checks to pass
 - Require branches to be up to date
@@ -921,6 +979,7 @@ module.exports = {
 ## Implementation Roadmap
 
 ### Phase 1: Foundation (Week 1)
+
 1. ✅ Install testing dependencies
 2. ✅ Set up Vitest configuration
 3. ✅ Set up Playwright configuration
@@ -929,6 +988,7 @@ module.exports = {
 6. ✅ Write first component test
 
 ### Phase 2: Core Testing (Week 2-3)
+
 1. ✅ Test all utility functions
 2. ✅ Test server actions (contact form)
 3. ✅ Test Directus integration (with mocks)
@@ -936,18 +996,21 @@ module.exports = {
 5. ✅ Set up MSW for API mocking
 
 ### Phase 3: E2E Testing (Week 4)
+
 1. ✅ Write critical path E2E tests
 2. ✅ Test form submissions end-to-end
 3. ✅ Test navigation flows
 4. ✅ Test responsive design
 
 ### Phase 4: CI/CD Integration (Week 5)
+
 1. ✅ Set up GitHub Actions workflow
 2. ✅ Configure test coverage reporting
 3. ✅ Add pre-commit hooks
 4. ✅ Set up branch protection rules
 
 ### Phase 5: Production Hardening (Week 6)
+
 1. ✅ Add security checks (npm audit)
 2. ✅ Add accessibility testing
 3. ✅ Add performance monitoring
@@ -955,6 +1018,7 @@ module.exports = {
 5. ✅ Document test coverage goals
 
 ### Phase 6: Maintenance (Ongoing)
+
 1. ✅ Maintain test coverage above 80%
 2. ✅ Update tests when features change
 3. ✅ Review and refactor tests quarterly
@@ -985,6 +1049,7 @@ module.exports = {
 ## Best Practices
 
 ### 1. Test Organization
+
 ```
 tests/
 ├── unit/           # Unit tests
@@ -996,22 +1061,26 @@ tests/
 ```
 
 ### 2. Naming Conventions
+
 - Test files: `*.test.ts` or `*.spec.ts`
 - Test descriptions: Use descriptive names
 - Group related tests with `describe` blocks
 
 ### 3. Test Data
+
 - Use factories for test data
 - Keep test data close to tests
 - Use MSW handlers for API mocks
 
 ### 4. Test Maintenance
+
 - Update tests when features change
 - Remove obsolete tests
 - Refactor tests for clarity
 - Keep tests fast (< 5 seconds for unit tests)
 
 ### 5. Debugging Tests
+
 - Use `test.only()` to run single test
 - Use `console.log` in tests (it's okay!)
 - Use Playwright's `--debug` mode
@@ -1032,6 +1101,7 @@ tests/
 ## Questions or Issues?
 
 If you encounter issues with testing setup or have questions about the strategy, please:
+
 1. Check the framework documentation
 2. Review existing test examples
 3. Consult the team (if applicable)
@@ -1041,4 +1111,3 @@ If you encounter issues with testing setup or have questions about the strategy,
 
 **Last Updated:** 2025-01-27
 **Maintained By:** Development Team
-

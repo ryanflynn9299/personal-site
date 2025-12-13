@@ -11,6 +11,6 @@ export const metadata: Metadata = {
 export default function ContactPage() {
   // Check email service availability on the server
   const emailServiceAvailable = isEmailServiceConfigured();
-  
+
   return <ContactPageClient emailServiceAvailable={emailServiceAvailable} />;
 }

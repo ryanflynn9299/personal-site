@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import {Menu, X, Atom} from "lucide-react";
+import { Menu, X, Atom } from "lucide-react";
 
 const navItems = [
   { name: "Home", href: "/" },
@@ -25,7 +25,7 @@ const HomeIcon = () => {
   return (
     <Atom className="h-5 w-5 text-sky-400 sm:h-6 sm:w-6" aria-hidden="true" />
   );
-  
+
   // Future SVG implementation example:
   // return (
   //   <svg className="h-5 w-5 text-sky-400 sm:h-6 sm:w-6" aria-hidden="true" viewBox="0 0 24 24" fill="currentColor">

@@ -11,6 +11,7 @@ This is a **Next.js 15** personal portfolio website built with **TypeScript** an
 Next.js is a React framework that provides server-side rendering, routing, and optimization out of the box. This project uses the **App Router** architecture (introduced in Next.js 13), which is the current recommended approach.
 
 **Why App Router?**
+
 - **Server Components by default**: Components render on the server unless explicitly marked as client components, resulting in smaller JavaScript bundles and faster initial page loads
 - **File-based routing**: The folder structure in `app/` directly maps to URLs, making routing intuitive
 - **Built-in optimizations**: Automatic code splitting, image optimization, font optimization, and more
@@ -21,6 +22,7 @@ Next.js is a React framework that provides server-side rendering, routing, and o
 TypeScript adds static type checking to JavaScript, catching errors before code runs and providing better IDE support.
 
 **Why TypeScript?**
+
 - **Type safety**: Prevents common bugs by catching type mismatches at compile time
 - **Better developer experience**: Autocomplete, refactoring tools, and inline documentation
 - **Self-documenting code**: Types serve as documentation for what data structures are expected
@@ -30,6 +32,7 @@ TypeScript adds static type checking to JavaScript, catching errors before code 
 Tailwind is a utility-first CSS framework that provides low-level utility classes instead of pre-built components.
 
 **Why Tailwind?**
+
 - **Rapid development**: Write styles directly in JSX without switching to separate CSS files
 - **Consistent design**: Predefined spacing, colors, and typography scales ensure design consistency
 - **Small bundle size**: Only the CSS classes you actually use are included in the final bundle
@@ -40,6 +43,7 @@ Tailwind is a utility-first CSS framework that provides low-level utility classe
 Directus is a self-hosted headless CMS that provides a database and admin interface for managing content.
 
 **Why Directus?**
+
 - **Self-hosted**: Full control over your data and infrastructure
 - **Type-safe SDK**: The Directus SDK provides TypeScript types for your content models
 - **Flexible content model**: Easy to add new content types or fields
@@ -56,6 +60,7 @@ This project follows Next.js's **Server-First** architecture pattern. Components
 Server Components render on the server and send HTML to the browser. They never include JavaScript in the client bundle unless they use Client Components as children.
 
 **When to use Server Components:**
+
 - Data fetching (databases, APIs, file system)
 - Accessing backend resources (API keys, secrets)
 - Large dependencies that would bloat the client bundle
@@ -63,6 +68,7 @@ Server Components render on the server and send HTML to the browser. They never 
 - Components that need to export metadata for SEO
 
 **Benefits:**
+
 - **Smaller bundle size**: No JavaScript sent to the browser for Server Components
 - **Better performance**: Rendering happens on the server with faster access to data sources
 - **Improved SEO**: Fully rendered HTML is sent to search engines
@@ -70,6 +76,7 @@ Server Components render on the server and send HTML to the browser. They never 
 - **Direct data access**: Can directly query databases without exposing endpoints
 
 **Example:**
+
 ```typescript
 // app/(portfolio)/blog/page.tsx - Server Component
 export default async function BlogPage() {
@@ -84,6 +91,7 @@ export default async function BlogPage() {
 Client Components render in the browser and include JavaScript in the client bundle. They're marked with the `'use client'` directive at the top of the file.
 
 **When to use Client Components:**
+
 - Interactive features (buttons, forms, animations)
 - Browser APIs (localStorage, window, document)
 - React hooks (useState, useEffect, useContext)
@@ -91,11 +99,13 @@ Client Components render in the browser and include JavaScript in the client bun
 - Third-party libraries that require client-side JavaScript (e.g., animation libraries)
 
 **Benefits:**
+
 - **Interactivity**: Can respond to user actions in real-time
 - **Browser APIs**: Access to browser-specific features
 - **State management**: Can maintain component state across renders
 
 **Example:**
+
 ```typescript
 // components/DownloadButton.tsx - Client Component
 'use client';
@@ -113,6 +123,7 @@ export function DownloadButton() {
 Server Components can import and use Client Components, but Client Components cannot directly import Server Components. This creates a clear boundary and allows for optimal composition.
 
 **Pattern: Server Wrapper + Client Content**
+
 ```typescript
 // Server Component (page.tsx)
 export const metadata = { title: 'About' }; // SEO metadata
@@ -128,12 +139,14 @@ This pattern allows pages to have SEO metadata (server-only feature) while still
 #### Server-Side Data Fetching
 
 Data fetching happens in Server Components using `async/await`. This is the recommended pattern because:
+
 - **Direct access**: Can query databases or APIs directly without exposing endpoints
 - **No client-side loading states**: Data is available immediately when the page renders
 - **Better security**: API keys and credentials never leave the server
 - **Smaller bundles**: Data fetching logic isn't included in client JavaScript
 
 **Example:**
+
 ```typescript
 // app/(portfolio)/blog/[slug]/page.tsx
 export default async function BlogPostPage({ params }: Props) {
@@ -146,11 +159,13 @@ export default async function BlogPostPage({ params }: Props) {
 #### Static Generation
 
 Blog posts use static generation (`generateStaticParams`) to pre-render pages at build time. This means:
+
 - **Faster page loads**: HTML is pre-generated, no server processing needed
 - **Better SEO**: Search engines get fully rendered pages immediately
 - **Reduced server load**: Pages are served as static files
 
 **Example:**
+
 ```typescript
 export async function generateStaticParams() {
   const posts = await getPublishedPosts();
@@ -181,6 +196,7 @@ app/
 ```
 
 **Route Groups** (folders in parentheses like `(portfolio)`) organize routes without affecting URLs. They're useful for:
+
 - Applying different layouts to different sections
 - Organizing related routes together
 - Separating public and admin sections
@@ -206,6 +222,7 @@ components/
 ```
 
 **Naming Conventions:**
+
 - Components use PascalCase (e.g., `BlogPost.tsx`)
 - Client Components are explicitly marked with `'use client'`
 - Server Components have no directive (default)
@@ -232,6 +249,7 @@ export function BlogPageClient({ posts }) {
 ```
 
 **Why this pattern?**
+
 - Data fetching happens server-side (faster, more secure)
 - Interactivity happens client-side (responsive user experience)
 - Clear separation of concerns
@@ -248,6 +266,7 @@ export async function BlogHighlight4() {
 ```
 
 **Why this pattern?**
+
 - Data is fetched during server rendering
 - No client-side loading states needed
 - Better performance and SEO
@@ -271,6 +290,7 @@ export default function HomePage() {
 ```
 
 **Why this pattern?**
+
 - Server Components can use Client Components seamlessly
 - Minimal client-side JavaScript (only where needed)
 - Optimal performance
@@ -305,6 +325,7 @@ personal-site/
 ### Server-Side Rendering (SSR)
 
 This project uses server-side rendering extensively because:
+
 - **Better SEO**: Search engines receive fully rendered HTML
 - **Faster initial load**: HTML is ready immediately, no waiting for JavaScript to render
 - **Better performance on slow devices**: Rendering happens on powerful servers, not user devices
@@ -313,6 +334,7 @@ This project uses server-side rendering extensively because:
 ### Static Generation Where Possible
 
 Blog posts are statically generated at build time because:
+
 - **Optimal performance**: Pre-rendered HTML is served instantly
 - **Reduced server costs**: No server processing needed for each request
 - **Better caching**: Static files can be cached at CDN edge locations
@@ -321,11 +343,13 @@ Blog posts are statically generated at build time because:
 ### Minimal Client-Side JavaScript
 
 The project minimizes client-side JavaScript by:
+
 - Using Server Components by default
 - Only marking components as Client when necessary
 - Keeping client components focused on interactivity, not data fetching
 
 **Benefits:**
+
 - Smaller bundle sizes
 - Faster page loads
 - Better performance on mobile devices
@@ -334,6 +358,7 @@ The project minimizes client-side JavaScript by:
 ### Type Safety
 
 TypeScript is used throughout for:
+
 - **Compile-time error checking**: Catch bugs before deployment
 - **Better IDE support**: Autocomplete and refactoring tools
 - **Self-documenting code**: Types serve as inline documentation
@@ -351,6 +376,7 @@ TypeScript is used throughout for:
 ### Implementation Details
 
 The tracking implementation uses Matomo's JavaScript API (`_paq`). The `Matomo` component:
+
 1. Loads the Matomo tracking script dynamically
 2. Configures the tracker URL and site ID from environment variables
 3. Automatically tracks page views on route changes
@@ -367,6 +393,7 @@ The following features are not currently implemented but could be added if neede
 **Current state**: Contact form is a placeholder with simulated submission.
 
 **Why not implemented**: The form doesn't have a backend yet. When implementing form submission, Next.js Server Actions would be the recommended approach because they:
+
 - Provide type-safe form handling
 - Run on the server (secure, no API endpoints needed)
 - Integrate seamlessly with React Server Components
@@ -379,6 +406,7 @@ The following features are not currently implemented but could be added if neede
 **Current state**: Data fetching is blocking (waits for all data before rendering).
 
 **Why not implemented**: The current data fetching is fast enough that streaming wouldn't provide noticeable benefits. Suspense would be useful if:
+
 - Data fetching takes longer (multiple seconds)
 - You want to show partial content while waiting for other data
 - You have multiple independent data sources
@@ -400,4 +428,3 @@ The following features are not currently implemented but could be added if neede
 - [Client Components](https://nextjs.org/docs/app/building-your-application/rendering/client-components)
 - [Data Fetching](https://nextjs.org/docs/app/building-your-application/data-fetching)
 - [Metadata API](https://nextjs.org/docs/app/building-your-application/optimizing/metadata)
-

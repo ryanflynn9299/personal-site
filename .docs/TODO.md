@@ -174,4 +174,3 @@ _Random tasks and ideas that don't fit elsewhere_
 
 - [] Implement hidden sections revealed by URL manipulation or sessions for gemini links and other organizational nonsense
 - ***
-

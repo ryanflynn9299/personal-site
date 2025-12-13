@@ -1,6 +1,6 @@
 /**
  * Policy Color Mapping
- * 
+ *
  * Maps each policy ID to a specific color theme from the palette.
  * Colors are applied to thematic elements (tabs, icons, links) while
  * keeping background and viewport unchanged.
@@ -31,4 +31,3 @@ export function mapTabToPolicyId(tabParam: string | null): string {
 
   return mapping[tabParam || ""] || "privacy-policy"; // Default to first policy
 }
-

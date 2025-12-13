@@ -7,4 +7,3 @@ export const carouselImages = [
   "/images/random/old-alarm-clocks-analog-time-retro-free-stock-photo.jpg.webp",
   "/images/random/picjumbo-premium-futuristic-3d-backgrounds-18.jpeg.webp",
 ];
-

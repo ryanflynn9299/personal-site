@@ -81,4 +81,3 @@ export const values: Value[] = [
       "Building applications that provide real-world value and a great user experience.",
   },
 ];
-

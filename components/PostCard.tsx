@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Calendar } from "lucide-react";
 import { Post } from "@/types";
+import { getBlogPostUrl } from "@/lib/utils";
 
 interface PostCardProps {
   post: Post;
@@ -21,10 +22,9 @@ export function PostCard({ post }: PostCardProps) {
   //     ? `${process.env.NEXT_PUBLIC_DIRECTUS_URL}/assets/${post.feature_image}`
   //     : null;
 
-  // @ts-ignore
   return (
     <Link
-      href={`/app/(portfolio)/blog/${post.slug}`}
+      href={getBlogPostUrl(post.slug)}
       className="group flex flex-col overflow-hidden rounded-lg border border-slate-700 bg-slate-800 transition-all hover:border-sky-400 hover:shadow-lg hover:shadow-sky-900/20"
     >
       {post.feature_image && (

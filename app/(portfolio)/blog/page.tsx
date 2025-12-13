@@ -14,9 +14,7 @@ export const revalidate = 3600;
 export default async function BlogIndexPage() {
   // Check if Directus is configured before attempting to fetch
   if (!isDirectusConfigured()) {
-    return (
-      <BlogPageClient posts={[]} status="error" />
-    );
+    return <BlogPageClient posts={[]} status="error" />;
   }
 
   const postsResponse = await getPublishedPosts();

@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/primitives/Button";
-import { Download } from "lucide-react";
 import { trackDownload } from "@/components/Matomo";
 
 interface DownloadButtonProps {

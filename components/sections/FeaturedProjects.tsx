@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { motion } from "framer-motion";
 import { Github, ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/primitives/Button";

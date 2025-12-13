@@ -5,15 +5,18 @@ A modern personal portfolio website built with Next.js, TypeScript, and Tailwind
 ## Technology Stack
 
 ### Core Framework
+
 - **Next.js 16.0.7** - React framework with App Router, server-side rendering, and file-based routing
 - **React 19.2.1** - UI library
 - **TypeScript 5** - Type-safe JavaScript
 - **Tailwind CSS 3.4.17** - Utility-first CSS framework
 
 ### Content Management
+
 - **Directus SDK 16.1.0** - Headless CMS for blog content management
 
 ### UI & Animation Libraries
+
 - **Framer Motion 12.19.1** - Animation library for React
 - **GSAP 3.13.0** - Advanced animation library
 - **Radix UI** - Accessible component primitives
@@ -21,11 +24,13 @@ A modern personal portfolio website built with Next.js, TypeScript, and Tailwind
 - **Lucide React** - Icon library
 
 ### Content Processing
+
 - **React Markdown 10.1.0** - Markdown rendering
 - **Rehype** - HTML processing plugins (raw, sanitize)
 - **Remark GFM** - GitHub Flavored Markdown support
 
 ### Utilities
+
 - **Pino 10.0.0** - Structured logging
 - **Class Variance Authority** - Component variant management
 - **Tailwind Merge** - Merge Tailwind classes intelligently
@@ -33,10 +38,12 @@ A modern personal portfolio website built with Next.js, TypeScript, and Tailwind
 ## Version Requirements
 
 ### Runtime
+
 - **Node.js**: 18.17+ (Next.js 16 requires 18.17 or later; 20.x LTS recommended)
 - **npm**: 9.8+ (comes with Node.js)
 
 ### Build Tools
+
 - **Next.js**: 16.0.7
 - **TypeScript**: 5.x
 - **Turbopack**: Enabled by default (Next.js 16's new bundler)
@@ -122,6 +129,7 @@ personal-site/
 ## Common Commands
 
 ### Development
+
 ```bash
 # Install dependencies
 npm install
@@ -135,6 +143,7 @@ npm run build:webpack
 ```
 
 ### Code Quality
+
 ```bash
 # Check code formatting (Prettier)
 npm run lint
@@ -161,6 +170,7 @@ npm run validate
 ```
 
 ### Build & Production
+
 ```bash
 # Build for production (with Turbopack)
 npm run build
@@ -176,6 +186,7 @@ npm run analyze
 ```
 
 ### Maintenance
+
 ```bash
 # Clean build artifacts and cache
 npm run clean
@@ -215,6 +226,7 @@ The site uses Directus as a headless CMS for blog content:
   - `isDirectusConfigured()` - Check if Directus is configured
 
 **Blog Post Schema** (expected in Directus):
+
 - `id` (string)
 - `title` (string)
 - `slug` (string) - URL-friendly identifier
@@ -278,6 +290,7 @@ The site uses multiple animation libraries:
 ### TypeScript Paths
 
 The project uses path aliases:
+
 - `@/*` maps to project root
 - Example: `import { Post } from "@/types"`
 
@@ -290,6 +303,7 @@ npm run build
 ```
 
 This creates an optimized `.next/` folder with:
+
 - Server-side rendered pages
 - Static assets
 - API routes
@@ -298,6 +312,7 @@ This creates an optimized `.next/` folder with:
 ### Docker Deployment
 
 The project includes Docker configuration:
+
 - `Dockerfile` - Production build
 - `docker-compose.yml` - Multi-container setup
 - Uses Next.js standalone output mode
@@ -361,11 +376,13 @@ npm install package-name@latest
 ### Code Quality Before Committing
 
 The project includes a `prepare` script that reminds you to run validation:
+
 ```bash
 npm run validate
 ```
 
 This runs:
+
 - Type checking
 - Formatting checks
 - ESLint checks
@@ -384,16 +401,17 @@ This runs:
 
 ## Quick Reference
 
-| Task | Command |
-|------|---------|
-| Start development | `npm run dev` |
-| Build for production | `npm run build` |
-| Run validation | `npm run validate` |
-| Fix formatting | `npm run format` |
-| Type check | `npm run type-check` |
-| Clean build artifacts | `npm run clean` |
+| Task                  | Command              |
+| --------------------- | -------------------- |
+| Start development     | `npm run dev`        |
+| Build for production  | `npm run build`      |
+| Run validation        | `npm run validate`   |
+| Fix formatting        | `npm run format`     |
+| Type check            | `npm run type-check` |
+| Clean build artifacts | `npm run clean`      |
 
 **Key Paths**:
+
 - Components: `@/components/ComponentName`
 - Utilities: `@/lib/utilityName`
 - Types: `@/types`

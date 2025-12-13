@@ -28,4 +28,3 @@ export interface PolicyDocument {
   metadata: PolicyMetadata;
   content: string;
 }
-

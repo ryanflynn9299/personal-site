@@ -7,12 +7,12 @@ import { HeroSection } from "@/components/sections/HeroSection";
 import { BlogHighlight4 } from "@/components/sections/BlogHighlight4";
 
 /* Unused swappable components */
-import { AboutMe1 } from "@/components/sections/AboutMe1";
-import { FeaturedProjects } from "@/components/sections/FeaturedProjects";
-import { TechStack } from "@/components/sections/TechStack";
-import { TechStack2 } from "@/components/sections/TechStack2";
-import { BentoGrid } from "@/components/sections/MagicBento3";
-import { BlogHighlight } from "@/components/sections/BlogHighlight";
+// import { AboutMe1 } from "@/components/sections/AboutMe1";
+// import { FeaturedProjects } from "@/components/sections/FeaturedProjects";
+// import { TechStack } from "@/components/sections/TechStack";
+// import { TechStack2 } from "@/components/sections/TechStack2";
+// import { BentoGrid } from "@/components/sections/MagicBento3";
+// import { BlogHighlight } from "@/components/sections/BlogHighlight";
 // import {EditorialBlogHighlight3} from "@/components/home/editorial-blog";
 
 export default function HomePage() {

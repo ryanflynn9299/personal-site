@@ -6,6 +6,7 @@ export default function DashboardPage() {
       {/* Header: Contains title and system status */}
       <header className="flex-shrink-0 border-b border-slate-700 px-4 py-2">
         <div className="flex items-center justify-between">
+          {/* eslint-disable-next-line react/jsx-no-comment-textnodes */}
           <h1 className="font-mono text-lg text-sky-300">
             // COMMUNICATIONS HUB
           </h1>

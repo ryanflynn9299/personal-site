@@ -24,24 +24,26 @@ export interface DirectusErrorInfo {
 /**
  * Checks if Directus is configured and available.
  * Returns true if both required environment variables are set with non-placeholder values.
- * 
+ *
  * In dev mode without .env file, these will be undefined or use placeholder values.
  */
 export function isDirectusConfigured(): boolean {
   const serverUrl = process.env.DIRECTUS_URL_SERVER_SIDE;
   const publicUrl = process.env.NEXT_PUBLIC_DIRECTUS_URL;
-  
+
   // Check if both URLs are set, not empty, and not placeholder values
-  const hasServerUrl = serverUrl && 
-                       serverUrl.trim() !== "" && 
-                       !serverUrl.includes("your-") && // Exclude placeholder text
-                       serverUrl !== "http://ps-directus:8055"; // Default from .env.example
-  
-  const hasPublicUrl = publicUrl && 
-                       publicUrl.trim() !== "" && 
-                       !publicUrl.includes("your-") && // Exclude placeholder text
-                       publicUrl !== "http://localhost:8055"; // Default from .env.example
-  
+  const hasServerUrl =
+    serverUrl &&
+    serverUrl.trim() !== "" &&
+    !serverUrl.includes("your-") && // Exclude placeholder text
+    serverUrl !== "http://ps-directus:8055"; // Default from .env.example
+
+  const hasPublicUrl =
+    publicUrl &&
+    publicUrl.trim() !== "" &&
+    !publicUrl.includes("your-") && // Exclude placeholder text
+    publicUrl !== "http://localhost:8055"; // Default from .env.example
+
   return !!(hasServerUrl && hasPublicUrl);
 }
 
@@ -72,10 +74,11 @@ const getDirectusUrl = (): string | null => {
 /**
  * A helper function to get the full public asset URL from a Directus file ID.
  * This should *always* use the public URL, as asset URLs are used by the client.
+ * Currently unused but kept for potential future use.
  * @param fileId - The ID of the file in Directus.
  * @returns The full URL to the asset, or null if fileId is null/undefined.
  */
-function getAssetURL(fileId: string | null | undefined): string | null {
+function _getAssetURL(fileId: string | null | undefined): string | null {
   if (!fileId) return null;
   // Use the public URL directly. Ensure this var is set.
   const publicUrl = process.env.NEXT_PUBLIC_DIRECTUS_URL;
@@ -95,9 +98,10 @@ function getAssetURL(fileId: string | null | undefined): string | null {
 function classifyDirectusError(error: unknown): DirectusErrorInfo {
   // Check if it's a Directus SDK error (has status property)
   if (error && typeof error === "object" && "status" in error) {
-    const statusCode = (error as { status?: number; statusCode?: number }).status || 
-                       (error as { status?: number; statusCode?: number }).statusCode;
-    
+    const statusCode =
+      (error as { status?: number; statusCode?: number }).status ||
+      (error as { status?: number; statusCode?: number }).statusCode;
+
     if (statusCode) {
       if (statusCode === 401 || statusCode === 403) {
         return {
@@ -107,7 +111,7 @@ function classifyDirectusError(error: unknown): DirectusErrorInfo {
           statusCode,
         };
       }
-      
+
       if (statusCode === 404) {
         return {
           type: "not_found",
@@ -116,7 +120,7 @@ function classifyDirectusError(error: unknown): DirectusErrorInfo {
           statusCode,
         };
       }
-      
+
       if (statusCode === 400 || statusCode === 422) {
         return {
           type: "validation_error",
@@ -125,7 +129,7 @@ function classifyDirectusError(error: unknown): DirectusErrorInfo {
           statusCode,
         };
       }
-      
+
       if (statusCode >= 500) {
         return {
           type: "server_error",
@@ -136,7 +140,7 @@ function classifyDirectusError(error: unknown): DirectusErrorInfo {
       }
     }
   }
-  
+
   // Check for network errors
   if (error instanceof Error) {
     if (
@@ -152,7 +156,7 @@ function classifyDirectusError(error: unknown): DirectusErrorInfo {
       };
     }
   }
-  
+
   // Unknown error
   return {
     type: "unknown_error",
@@ -405,15 +409,21 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
       content: rawPost.content || "",
     };
 
-    log.debug({ slug, postId: transformedPost.id }, "Successfully fetched post by slug");
+    log.debug(
+      { slug, postId: transformedPost.id },
+      "Successfully fetched post by slug"
+    );
     return transformedPost;
   } catch (error) {
     const errorInfo = classifyDirectusError(error);
-    
+
     // For "not_found" errors, we can return null without logging as an error
     // since this is an expected case (post doesn't exist)
     if (errorInfo.type === "not_found") {
-      log.debug({ slug, errorType: errorInfo.type }, "Post not found in Directus");
+      log.debug(
+        { slug, errorType: errorInfo.type },
+        "Post not found in Directus"
+      );
       return null;
     }
 

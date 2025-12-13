@@ -37,11 +37,7 @@ export function PlanetIcon({ className = "w-5 h-5" }: IconProps) {
 
 export function StarIcon({ className = "w-4 h-4" }: IconProps) {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      className={className}
-    >
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
       <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
     </svg>
   );
@@ -50,11 +46,7 @@ export function StarIcon({ className = "w-4 h-4" }: IconProps) {
 // List Bullet Icons
 export function SmallStarIcon({ className = "w-2 h-2" }: IconProps) {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      className={className}
-    >
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
       <path d="M12 2l2.4 7.2h7.6l-6 4.8 2.4 7.2L12 17l-6 4.2 2.4-7.2-6-4.8h7.6L12 2z" />
     </svg>
   );
@@ -62,11 +54,7 @@ export function SmallStarIcon({ className = "w-2 h-2" }: IconProps) {
 
 export function AsteroidIcon({ className = "w-2.5 h-2.5" }: IconProps) {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      className={className}
-    >
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
       <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
       <circle cx="8" cy="8" r="1.5" />
       <circle cx="16" cy="8" r="1.5" />
@@ -115,12 +103,16 @@ export function TerminalWindowIcon({ className = "w-full" }: IconProps) {
 // Horizontal Rule (Constellation Line)
 export function ConstellationLineIcon({ className = "w-full h-1" }: IconProps) {
   return (
-    <svg
-      viewBox="0 0 100 4"
-      fill="none"
-      className={className}
-    >
-      <line x1="0" y1="2" x2="100" y2="2" stroke="currentColor" strokeWidth="1" strokeDasharray="2 2" />
+    <svg viewBox="0 0 100 4" fill="none" className={className}>
+      <line
+        x1="0"
+        y1="2"
+        x2="100"
+        y2="2"
+        stroke="currentColor"
+        strokeWidth="1"
+        strokeDasharray="2 2"
+      />
       <circle cx="10" cy="2" r="1" fill="currentColor" />
       <circle cx="30" cy="2" r="1" fill="currentColor" />
       <circle cx="50" cy="2" r="1" fill="currentColor" />
@@ -129,4 +121,3 @@ export function ConstellationLineIcon({ className = "w-full h-1" }: IconProps) {
     </svg>
   );
 }
-

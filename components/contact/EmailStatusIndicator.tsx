@@ -5,11 +5,11 @@ import { useState } from "react";
 
 /**
  * Email Status Indicator Component
- * 
+ *
  * Shows a minimal status indicator when email service is unavailable.
  * Only displays when email service is not configured.
  * Includes a hover tooltip explaining the status.
- * 
+ *
  * This component accepts the email service status as a prop,
  * which should be checked on the server side using isEmailServiceConfigured().
  */
@@ -46,13 +46,15 @@ export function EmailStatusIndicatorWithStatus({
       >
         <AlertCircle className="h-4 w-4 text-amber-400" />
       </div>
-      
+
       {/* Tooltip */}
       {isHovered && (
         <div className="absolute bottom-full left-1/2 mb-2 -translate-x-1/2 z-50 pointer-events-none w-[400px]">
           <div className="relative">
             <div className="rounded-md bg-slate-950 px-3 py-2 text-xs text-slate-200 shadow-lg border border-slate-950 w-full h-auto min-h-[1.5rem]">
-              <p className="whitespace-normal leading-relaxed break-words">{tooltipText}</p>
+              <p className="whitespace-normal leading-relaxed break-words">
+                {tooltipText}
+              </p>
             </div>
             {/* Tooltip arrow */}
             <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-px">

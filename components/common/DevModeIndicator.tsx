@@ -4,7 +4,7 @@ import { Code, AlertCircle } from "lucide-react";
 
 /**
  * Dev Mode Indicator Component
- * 
+ *
  * Shows a banner indicating that the application is running in development mode
  * and that certain services (like Directus) are unavailable.
  * Only displays in development environment.
@@ -33,7 +33,7 @@ export function DevModeIndicator() {
 
 /**
  * Service Unavailable with Dev Mode Context
- * 
+ *
  * Enhanced version of ServiceUnavailable that includes dev mode information
  * when running in development.
  */
@@ -55,13 +55,24 @@ export function ServiceUnavailableWithDevMode() {
         <div className="mt-4 rounded-md bg-slate-800/50 p-3 text-left text-xs text-slate-300">
           <p className="font-semibold mb-1">Quick Setup:</p>
           <ol className="list-decimal list-inside space-y-1 ml-2">
-            <li>Copy <code className="bg-slate-700 px-1 rounded">.env.example</code> to <code className="bg-slate-700 px-1 rounded">.env</code></li>
-            <li>Update Directus URLs in <code className="bg-slate-700 px-1 rounded">.env</code></li>
-            <li>Start Directus service: <code className="bg-slate-700 px-1 rounded">docker compose up ps-directus</code></li>
+            <li>
+              Copy{" "}
+              <code className="bg-slate-700 px-1 rounded">.env.example</code> to{" "}
+              <code className="bg-slate-700 px-1 rounded">.env</code>
+            </li>
+            <li>
+              Update Directus URLs in{" "}
+              <code className="bg-slate-700 px-1 rounded">.env</code>
+            </li>
+            <li>
+              Start Directus service:{" "}
+              <code className="bg-slate-700 px-1 rounded">
+                docker compose up ps-directus
+              </code>
+            </li>
           </ol>
         </div>
       )}
     </div>
   );
 }
-
