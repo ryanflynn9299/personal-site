@@ -18,9 +18,15 @@ export function MatomoProvider() {
     matomoUrl === "DISABLED" ||
     siteId === "DISABLED"
   ) {
-    // Silently fail in production, log warning in development
-    if (process.env.NODE_ENV === "development") {
-      console.warn(
+    // Only log in development, and not in test/CI environments
+    const shouldLog =
+      process.env.NODE_ENV === "development" &&
+      !process.env.CI &&
+      !process.env.VITEST &&
+      !process.env.PLAYWRIGHT_TEST_BASE_URL;
+
+    if (shouldLog) {
+      console.info(
         "Matomo analytics not configured. Set NEXT_PUBLIC_MATOMO_URL and NEXT_PUBLIC_MATOMO_SITE_ID"
       );
     }

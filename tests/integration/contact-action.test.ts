@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { submitContactForm } from "@/app/actions/contact";
 import * as emailService from "@/lib/email-service";
 
@@ -10,8 +10,13 @@ vi.mock("@/lib/email-service", () => ({
 describe("submitContactForm", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    // Reset NODE_ENV to test
-    process.env.NODE_ENV = "test";
+    // Reset NODE_ENV to test using Vitest's stubEnv utility
+    vi.stubEnv("NODE_ENV", "test");
+  });
+
+  afterEach(() => {
+    // Restore original NODE_ENV after each test
+    vi.unstubAllEnvs();
   });
 
   it("validates that all fields are required", async () => {
@@ -52,7 +57,7 @@ describe("submitContactForm", () => {
   });
 
   it("handles missing email service in development", async () => {
-    process.env.NODE_ENV = "development";
+    vi.stubEnv("NODE_ENV", "development");
     vi.mocked(emailService.isEmailServiceConfigured).mockReturnValue(false);
 
     const formData = new FormData();
@@ -68,7 +73,7 @@ describe("submitContactForm", () => {
   });
 
   it("handles missing email service in production", async () => {
-    process.env.NODE_ENV = "production";
+    vi.stubEnv("NODE_ENV", "production");
     vi.mocked(emailService.isEmailServiceConfigured).mockReturnValue(false);
 
     const formData = new FormData();

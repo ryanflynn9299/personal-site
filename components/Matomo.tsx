@@ -26,9 +26,6 @@ export function Matomo({ matomoUrl, siteId }: MatomoProps) {
   useEffect(() => {
     // Only initialize if Matomo URL and Site ID are provided
     if (!matomoUrl || !siteId) {
-      console.warn(
-        "Matomo analytics not configured. Missing MATOMO_URL or MATOMO_SITE_ID"
-      );
       return;
     }
 
