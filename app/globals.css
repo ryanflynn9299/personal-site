@@ -1,35 +1,16 @@
-/* These are the essential Tailwind directives. They instruct the Tailwind
-  engine to inject its base styles, component classes, and utility classes.
-  They MUST be at the top of the file.
-*/
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/*
-  This is the correct way to apply base layer styles and define global
-  CSS variables in a Tailwind project.
-*/
 @layer base {
   :root {
-    /* Define CSS variables for our color palette from the design document. */
-    --color-background: 239 68% 68%; /* hsl(203 89% 53%) - A [slug], we will use classes */
-    --color-foreground: 222 47% 11%; /* hsl(215 28% 17%) - A [slug], we will use classes */
+    --color-background: 239 68% 68%;
+    --color-foreground: 222 47% 11%;
   }
 
-  /* The body tag is the best place to set default text color and background color.
-    However, the idiomatic Next.js + Tailwind approach is to do this via classes
-    on the <html> or <body> tag in layout.tsx.
-    
-    We can set the default font-family here using the CSS variables that
-    will be provided by the `next/font` instances in the layout file.
-  */
   body {
     font-family: var(--font-sans), sans-serif;
-
-    /* Create a background vignette effect, undo by removing these two lines and replace bg-slate-900
-      in { layout.tsx -> <body /> }*/
-    background-color: #0f172a; /* Fallback color */
+    background-color: #0f172a;
     background-image: radial-gradient(ellipse at top, #1e293b, #0f172a);
   }
 
@@ -47,7 +28,6 @@
   display: none;
 }
 
-/* === Starfield Background Animation for 404 Page === */
 @keyframes move-stars {
   from {
     background-position: 0 0;
@@ -67,23 +47,6 @@
   height: 100%;
   display: block;
   background: transparent;
-}
-
-/* Mobile Menu Bubble Animation */
-@keyframes menuBubbleDeploy {
-  from {
-    opacity: 0;
-    transform: translateY(-8px) scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-.menu-bubble-animation {
-  animation: menuBubbleDeploy 0.2s ease-out;
-  transform-origin: top right;
 }
 
 .stars-1 {
@@ -122,9 +85,23 @@
   background-size: 400px 400px;
   animation: move-stars 100s linear infinite;
 }
-/* === END Starfield Background Animation for 404 Page === */
 
-/* Custom animations for various effects throughout the site */
+@keyframes menuBubbleDeploy {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.menu-bubble-animation {
+  animation: menuBubbleDeploy 0.2s ease-out;
+  transform-origin: top right;
+}
+
 @keyframes slow-spin {
   from {
     transform: rotate(0deg);
@@ -140,10 +117,8 @@
   }
 }
 
-/* === CMDK Command Palette Styling === */
 [cmdk-dialog-overlay] {
   @apply fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-sm;
-  /*@apply fixed inset-0 z-50 bg-black/75 backdrop-blur-lg;*/
 }
 
 [cmdk-dialog] {
@@ -164,7 +139,7 @@
 
 [cmdk-item] {
   @apply flex cursor-pointer select-none items-start rounded-md p-3 transition-colors;
-  content-visibility: auto; /* Performance optimization for long lists */
+  content-visibility: auto;
 }
 
 [cmdk-item][aria-selected="true"] {
@@ -185,22 +160,18 @@
   transform: scale(0.99);
 }
 
-/* === Policy Document Page Option 2 Animations === */
 .policies-tab-active {
   position: relative;
-  /* Glow intensity can be controlled via CSS variables */
   --glow-intensity-min: 0.4;
   --glow-intensity-max: 0.8;
   --glow-blur-min: 8px;
   --glow-blur-max: 16px;
-  /* Animation only affects border/glow, not background/text */
   animation: tab-border-glow 2s ease-in-out infinite;
 }
 
 @keyframes tab-border-glow {
   0%,
   100% {
-    /* Only animate the box-shadow (border glow), keep opacity at 1 for text/background */
     box-shadow:
       0 0 var(--glow-blur-min) currentColor,
       inset 0 0 var(--glow-blur-min) currentColor;
@@ -217,7 +188,7 @@
 }
 
 .pseudo-markdown-editor:hover {
-  border-color: rgba(148, 163, 184, 0.4); /* Use neutral slate color */
+  border-color: rgba(148, 163, 184, 0.4);
 }
 
 .space-icon-header {
@@ -235,7 +206,6 @@
 }
 
 .space-icon-header svg {
-  /* Subtle glow effect that matches theme color */
   filter: drop-shadow(0 0 4px currentColor);
   animation: icon-pulse 2s ease-in-out infinite;
 }
@@ -261,7 +231,6 @@
 }
 
 .space-bullet-list li svg {
-  /* Subtle glow effect for list icons */
   filter: drop-shadow(0 0 2px currentColor);
   animation: bullet-twinkle 2s ease-in-out infinite;
 }
@@ -278,7 +247,6 @@
   }
 }
 
-/* Glow effect for link icons (rocket icons) */
 .pseudo-markdown-editor a svg {
   filter: drop-shadow(0 0 2px currentColor);
   transition: filter 0.2s ease;
@@ -291,4 +259,3 @@
 .document-transition {
   will-change: opacity, transform;
 }
-/* === END Policy Document Page Option 2 Animations === */

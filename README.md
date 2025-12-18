@@ -420,3 +420,25 @@ This runs:
 **Styling**: Tailwind classes in `className` prop
 **CMS**: Directus configured via environment variables
 **Routes**: File-based routing in `app/` directory
+
+---
+
+## Codebase Metrics
+
+Track project size over time with these commands (requires [cloc](https://github.com/AlDanial/cloc)):
+
+**All project code:**
+
+```bash
+cloc . \
+  --exclude-dir=node_modules,.next,playwright-report,test-results,.git,.docs \
+  --not-match-f="(package-lock\.json|pnpm-lock\.yaml|tsconfig\.tsbuildinfo)"
+```
+
+**Source code only (excludes tests):**
+
+```bash
+cloc . \
+  --exclude-dir=node_modules,.next,playwright-report,test-results,.git,.docs,tests \
+  --not-match-f="(package-lock\.json|pnpm-lock\.yaml|tsconfig\.tsbuildinfo|\.test\.|\.spec\.)"
+```
