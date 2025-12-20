@@ -19,6 +19,8 @@ _High priority items to tackle soon_
 - [x] update about page with more content
 - [x] update vitae information
 - [x] attach real resume
+- [ ] design and implement quotes page
+- [ ] organize todo
 
 ### Bug Fixes & Critical Issues
 
@@ -57,7 +59,7 @@ _High priority items to tackle soon_
 - [x] clean up code and comments -- TODO
 - [ ] finish up sitemap and robots.ts -- TODO
 - [x] clean up files and directories -- TODO
-- [ ] add tests
+- [x] add tests
 
 ## Future Items
 
