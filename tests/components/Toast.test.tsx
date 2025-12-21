@@ -110,4 +110,3 @@ describe("Toast", () => {
     expect(defaultProps.onDismiss).not.toHaveBeenCalled();
   });
 });
-

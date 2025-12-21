@@ -3,11 +3,14 @@
  * Defines all available variants for A/B testing.
  */
 
-export type NormalVariant = 'mission_control' | 'hyper_compass';
+export type NormalVariant = "mission_control" | "tesseract";
 
-export type ConstellationVariant = 'constellation' | 'solar_system' | 'hex_grid';
+export type ConstellationVariant =
+  | "constellation"
+  | "solar_system"
+  | "hex_array";
 
-export type ViewMode = 'normal' | 'constellation';
+export type ViewMode = "normal" | "constellation";
 
 /**
  * Quote data structure
@@ -19,4 +22,3 @@ export interface Quote {
   source?: string;
   tags?: string[];
 }
-

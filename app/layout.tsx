@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { Montserrat, Open_Sans } from "next/font/google";
 import "./globals.css";
-import { Header } from "@/components/Header";
-import { Footer } from "@/components/Footer";
+import { Header } from "@/components/common/Header";
+import { Footer } from "@/components/common/Footer";
 import React from "react";
 import { ToastProvider } from "@/context/ToastContext";
-import { MatomoProvider } from "@/components/MatomoProvider";
+import { MatomoProvider } from "@/components/common/MatomoProvider";
 import { DevModeIndicator } from "@/components/common/DevModeIndicator";
 
 // Font configuration according to our design document

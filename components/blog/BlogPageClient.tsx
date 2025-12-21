@@ -6,12 +6,12 @@ import { useState, useEffect, useRef, useTransition } from "react";
 import Link from "next/link";
 import { Command } from "cmdk";
 import { Post } from "@/types";
-import { PostCard } from "@/components/PostCard";
+import { PostCard } from "@/components/blog/PostCard";
 import { SearchButton } from "@/components/blog/SearchButton";
 import { FileText } from "lucide-react";
 import { Dialog } from "radix-ui";
 import { ServiceUnavailable } from "@/components/common/ServiceUnavailable";
-import { trackBlogSearch } from "@/components/Matomo";
+import { trackBlogSearch } from "@/components/common/Matomo";
 
 interface BlogPageClientProps {
   status: "success" | "error";

@@ -17,11 +17,17 @@ test.describe("Homepage", () => {
   test("displays navigation header", async ({ page }) => {
     // Check navigation is visible
     await expect(page.getByRole("navigation")).toBeVisible();
-    
+
     // Check navigation links are visible (use first() to handle duplicates in footer)
-    await expect(page.getByRole("link", { name: /about/i }).first()).toBeVisible();
-    await expect(page.getByRole("link", { name: /blog/i }).first()).toBeVisible();
-    await expect(page.getByRole("link", { name: /contact/i }).first()).toBeVisible();
+    await expect(
+      page.getByRole("link", { name: /about/i }).first()
+    ).toBeVisible();
+    await expect(
+      page.getByRole("link", { name: /blog/i }).first()
+    ).toBeVisible();
+    await expect(
+      page.getByRole("link", { name: /contact/i }).first()
+    ).toBeVisible();
   });
 
   test("displays footer with links", async ({ page }) => {
@@ -78,4 +84,3 @@ test.describe("Homepage", () => {
     expect(criticalErrors).toHaveLength(0);
   });
 });
-

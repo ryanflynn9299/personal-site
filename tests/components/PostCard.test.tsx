@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { PostCard } from "@/components/PostCard";
+import { PostCard } from "@/components/blog/PostCard";
 import type { Post } from "@/types";
 
 const mockPost: Post = {

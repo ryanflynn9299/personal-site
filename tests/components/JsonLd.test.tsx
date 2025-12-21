@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { render } from "@testing-library/react";
-import { JsonLd } from "@/components/JsonLd";
+import { JsonLd } from "@/components/common/JsonLd";
 import type { Post } from "@/types";
 
 describe("JsonLd", () => {
@@ -30,13 +30,17 @@ describe("JsonLd", () => {
 
   it("renders a script tag with type application/ld+json", () => {
     const { container } = render(<JsonLd post={mockPost} />);
-    const script = container.querySelector('script[type="application/ld+json"]');
+    const script = container.querySelector(
+      'script[type="application/ld+json"]'
+    );
     expect(script).toBeInTheDocument();
   });
 
   it("includes correct schema.org context", () => {
     const { container } = render(<JsonLd post={mockPost} />);
-    const script = container.querySelector('script[type="application/ld+json"]');
+    const script = container.querySelector(
+      'script[type="application/ld+json"]'
+    );
     const jsonLd = JSON.parse(script?.innerHTML || "{}");
 
     expect(jsonLd["@context"]).toBe("https://schema.org");
@@ -45,7 +49,9 @@ describe("JsonLd", () => {
 
   it("includes post headline", () => {
     const { container } = render(<JsonLd post={mockPost} />);
-    const script = container.querySelector('script[type="application/ld+json"]');
+    const script = container.querySelector(
+      'script[type="application/ld+json"]'
+    );
     const jsonLd = JSON.parse(script?.innerHTML || "{}");
 
     expect(jsonLd.headline).toBe("Test Blog Post");
@@ -53,7 +59,9 @@ describe("JsonLd", () => {
 
   it("includes post publish date", () => {
     const { container } = render(<JsonLd post={mockPost} />);
-    const script = container.querySelector('script[type="application/ld+json"]');
+    const script = container.querySelector(
+      'script[type="application/ld+json"]'
+    );
     const jsonLd = JSON.parse(script?.innerHTML || "{}");
 
     expect(jsonLd.datePublished).toBe("2024-01-15T00:00:00Z");
@@ -61,7 +69,9 @@ describe("JsonLd", () => {
 
   it("includes author information", () => {
     const { container } = render(<JsonLd post={mockPost} />);
-    const script = container.querySelector('script[type="application/ld+json"]');
+    const script = container.querySelector(
+      'script[type="application/ld+json"]'
+    );
     const jsonLd = JSON.parse(script?.innerHTML || "{}");
 
     expect(jsonLd.author["@type"]).toBe("Person");
@@ -70,7 +80,9 @@ describe("JsonLd", () => {
 
   it("includes publisher information", () => {
     const { container } = render(<JsonLd post={mockPost} />);
-    const script = container.querySelector('script[type="application/ld+json"]');
+    const script = container.querySelector(
+      'script[type="application/ld+json"]'
+    );
     const jsonLd = JSON.parse(script?.innerHTML || "{}");
 
     expect(jsonLd.publisher["@type"]).toBe("Person");
@@ -81,7 +93,9 @@ describe("JsonLd", () => {
     vi.stubEnv("NEXT_PUBLIC_DIRECTUS_URL", "https://api.example.com");
 
     const { container } = render(<JsonLd post={mockPost} />);
-    const script = container.querySelector('script[type="application/ld+json"]');
+    const script = container.querySelector(
+      'script[type="application/ld+json"]'
+    );
     const jsonLd = JSON.parse(script?.innerHTML || "{}");
 
     expect(jsonLd.image).toContain("/assets/123");
@@ -91,7 +105,9 @@ describe("JsonLd", () => {
 
   it("excludes image when feature_image is null", () => {
     const { container } = render(<JsonLd post={mockPostWithoutImage} />);
-    const script = container.querySelector('script[type="application/ld+json"]');
+    const script = container.querySelector(
+      'script[type="application/ld+json"]'
+    );
     const jsonLd = JSON.parse(script?.innerHTML || "{}");
 
     expect(jsonLd.image).toBeUndefined();
@@ -99,7 +115,9 @@ describe("JsonLd", () => {
 
   it("includes mainEntityOfPage with correct structure", () => {
     const { container } = render(<JsonLd post={mockPost} />);
-    const script = container.querySelector('script[type="application/ld+json"]');
+    const script = container.querySelector(
+      'script[type="application/ld+json"]'
+    );
     const jsonLd = JSON.parse(script?.innerHTML || "{}");
 
     expect(jsonLd.mainEntityOfPage["@type"]).toBe("WebPage");
@@ -108,9 +126,10 @@ describe("JsonLd", () => {
 
   it("generates valid JSON", () => {
     const { container } = render(<JsonLd post={mockPost} />);
-    const script = container.querySelector('script[type="application/ld+json"]');
+    const script = container.querySelector(
+      'script[type="application/ld+json"]'
+    );
 
     expect(() => JSON.parse(script?.innerHTML || "")).not.toThrow();
   });
 });
-

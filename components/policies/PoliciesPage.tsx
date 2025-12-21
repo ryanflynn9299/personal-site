@@ -3,7 +3,7 @@
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
-import { PseudoMarkdownRenderer } from "@/components/PseudoMarkdownRenderer";
+import { PseudoMarkdownRenderer } from "@/components/common/PseudoMarkdownRenderer";
 import { getPolicyColorTheme } from "@/lib/policy-colors";
 import type { PolicyMetadata } from "@/types/policies";
 

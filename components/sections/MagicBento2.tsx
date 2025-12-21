@@ -813,4 +813,4 @@ const MagicBento: FC<MagicBentoProps> = ({
   );
 };
 
-export default MagicBento;
+export { MagicBento };

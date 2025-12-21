@@ -53,9 +53,7 @@ describe("EmailStatusIndicatorWithStatus", () => {
     const indicator = screen.getByRole("status");
     fireEvent.mouseEnter(indicator);
 
-    expect(
-      screen.getByText(/SMTP environment variables/)
-    ).toBeInTheDocument();
+    expect(screen.getByText(/SMTP environment variables/)).toBeInTheDocument();
 
     vi.unstubAllEnvs();
   });
@@ -67,9 +65,7 @@ describe("EmailStatusIndicatorWithStatus", () => {
     const indicator = screen.getByRole("status");
     fireEvent.mouseEnter(indicator);
 
-    expect(
-      screen.getByText(/currently unavailable/)
-    ).toBeInTheDocument();
+    expect(screen.getByText(/currently unavailable/)).toBeInTheDocument();
 
     vi.unstubAllEnvs();
   });
@@ -80,4 +76,3 @@ describe("EmailStatusIndicatorWithStatus", () => {
     expect(indicator).toHaveClass("cursor-help");
   });
 });
-

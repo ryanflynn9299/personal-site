@@ -157,9 +157,7 @@ describe("formatPlaintext", () => {
     });
 
     it("handles multiple URLs", () => {
-      const result = formatPlaintext(
-        "Check https://a.com and https://b.com"
-      );
+      const result = formatPlaintext("Check https://a.com and https://b.com");
       expect(result).toContain('href="https://a.com"');
       expect(result).toContain('href="https://b.com"');
     });
@@ -251,4 +249,3 @@ describe("isLikelyHTML", () => {
     expect(isLikelyHTML("[link](url)")).toBe(false);
   });
 });
-

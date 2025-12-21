@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { create } from 'zustand';
+import { create } from "zustand";
 import type {
   ViewMode,
   NormalVariant,
   ConstellationVariant,
-} from '@/app/(portfolio)/quotes/config';
+} from "@/app/(portfolio)/quotes/config";
 
 interface QuoteViewState {
   viewMode: ViewMode;
@@ -17,12 +17,11 @@ interface QuoteViewState {
 }
 
 export const useQuoteViewStore = create<QuoteViewState>((set) => ({
-  viewMode: 'normal',
-  activeNormalVariant: 'mission_control',
-  activeConstellationVariant: 'constellation',
+  viewMode: "normal",
+  activeNormalVariant: "mission_control",
+  activeConstellationVariant: "constellation",
   setViewMode: (mode) => set({ viewMode: mode }),
   setActiveNormalVariant: (variant) => set({ activeNormalVariant: variant }),
   setActiveConstellationVariant: (variant) =>
     set({ activeConstellationVariant: variant }),
 }));
-

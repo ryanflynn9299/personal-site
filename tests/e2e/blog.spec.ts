@@ -17,11 +17,16 @@ test.describe("Blog Page", () => {
 
     // Either shows blog posts or an empty/unavailable state
     const postCards = page.locator("article, [class*='post'], [class*='card']");
-    const emptyStateText = page.getByText(/no posts|check back soon|content service|problem connecting/i);
+    const emptyStateText = page.getByText(
+      /no posts|check back soon|content service|problem connecting/i
+    );
 
     // One of these should be visible
-    const hasPostCards = await postCards.count() > 0;
-    const hasEmptyState = await emptyStateText.first().isVisible().catch(() => false);
+    const hasPostCards = (await postCards.count()) > 0;
+    const hasEmptyState = await emptyStateText
+      .first()
+      .isVisible()
+      .catch(() => false);
 
     expect(hasPostCards || hasEmptyState).toBe(true);
   });
@@ -70,7 +75,9 @@ test.describe("Blog Post Page", () => {
     await page.goto("/blog/non-existent-post-slug-12345");
 
     // Should show 404 page ("lost in space" message) or service unavailable
-    const errorText = page.getByText(/not found|404|lost in space|content service|problem connecting/i);
+    const errorText = page.getByText(
+      /not found|404|lost in space|content service|problem connecting/i
+    );
     await expect(errorText.first()).toBeVisible({ timeout: 5000 });
   });
 
@@ -131,4 +138,3 @@ test.describe("Blog - Responsive", () => {
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
   });
 });
-

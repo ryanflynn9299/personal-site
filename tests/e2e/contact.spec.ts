@@ -27,11 +27,17 @@ test.describe("Contact Page", () => {
     await expect(page.getByText(/direct contact/i)).toBeVisible();
 
     // Check for email link (contains "Email" heading)
-    const emailLink = page.getByRole("link").filter({ hasText: /email/i }).first();
+    const emailLink = page
+      .getByRole("link")
+      .filter({ hasText: /email/i })
+      .first();
     await expect(emailLink).toBeVisible();
 
     // Check for LinkedIn link (contains "LinkedIn" heading)
-    const linkedInLink = page.getByRole("link").filter({ hasText: /linkedin/i }).first();
+    const linkedInLink = page
+      .getByRole("link")
+      .filter({ hasText: /linkedin/i })
+      .first();
     await expect(linkedInLink).toBeVisible();
   });
 
@@ -70,7 +76,9 @@ test.describe("Contact Page", () => {
     // Fill form with valid data
     await page.getByPlaceholder(/your name/i).fill("John Doe");
     await page.getByPlaceholder(/your email/i).fill("john@example.com");
-    await page.getByPlaceholder(/your message/i).fill("This is a test message from E2E tests.");
+    await page
+      .getByPlaceholder(/your message/i)
+      .fill("This is a test message from E2E tests.");
 
     // Submit form
     await page.getByRole("button", { name: /send message/i }).click();
@@ -96,7 +104,10 @@ test.describe("Contact Page", () => {
     // This might happen quickly, so we check if button was disabled
     const wasDisabledOrChanged = await Promise.race([
       submitButton.isDisabled().then(() => true),
-      page.getByText(/sending/i).isVisible().then(() => true),
+      page
+        .getByText(/sending/i)
+        .isVisible()
+        .then(() => true),
       new Promise((resolve) => setTimeout(() => resolve(true), 1000)),
     ]);
 
@@ -104,14 +115,20 @@ test.describe("Contact Page", () => {
   });
 
   test("email link has correct mailto href", async ({ page }) => {
-    const emailLink = page.getByRole("link").filter({ hasText: /email/i }).first();
+    const emailLink = page
+      .getByRole("link")
+      .filter({ hasText: /email/i })
+      .first();
     const href = await emailLink.getAttribute("href");
 
     expect(href).toMatch(/^mailto:/);
   });
 
   test("LinkedIn link opens in new tab", async ({ page }) => {
-    const linkedInLink = page.getByRole("link").filter({ hasText: /linkedin/i }).first();
+    const linkedInLink = page
+      .getByRole("link")
+      .filter({ hasText: /linkedin/i })
+      .first();
 
     const target = await linkedInLink.getAttribute("target");
     expect(target).toBe("_blank");
@@ -144,4 +161,3 @@ test.describe("Contact Page - Mobile", () => {
     ).toBeVisible();
   });
 });
-

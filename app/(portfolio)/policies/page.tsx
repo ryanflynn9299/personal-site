@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { PoliciesPage } from "@/components/PoliciesPage";
+import { PoliciesPage } from "@/components/policies/PoliciesPage";
 import { loadAllPolicies } from "@/lib/policy-loader";
 import { mapTabToPolicyId } from "@/lib/policy-colors";
 

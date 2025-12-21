@@ -1,8 +1,5 @@
 import { describe, it, expect } from "vitest";
-import {
-  getPolicyColorTheme,
-  mapTabToPolicyId,
-} from "@/lib/policy-colors";
+import { getPolicyColorTheme, mapTabToPolicyId } from "@/lib/policy-colors";
 
 describe("getPolicyColorTheme", () => {
   it("returns privacy-policy theme for privacy-policy id", () => {
@@ -29,7 +26,7 @@ describe("getPolicyColorTheme", () => {
 
   it("returns theme with all required properties", () => {
     const theme = getPolicyColorTheme("privacy-policy");
-    
+
     // Check all required theme properties exist
     expect(theme.text).toBeDefined();
     expect(theme.textHover).toBeDefined();
@@ -69,4 +66,3 @@ describe("mapTabToPolicyId", () => {
     expect(mapTabToPolicyId("")).toBe("privacy-policy");
   });
 });
-

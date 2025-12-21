@@ -39,7 +39,7 @@ This is the content.`;
 
       // Dynamic import to get fresh module with mocks
       const { loadPolicyDocument } = await import("@/lib/policy-loader");
-      
+
       const result = loadPolicyDocument("privacy-policy.md");
 
       expect(result.metadata.title).toBe("Privacy Policy");
@@ -64,7 +64,7 @@ This is the content.`;
       vi.mocked(fs.readFileSync).mockReturnValue(mockContent);
 
       const { loadPolicyDocument } = await import("@/lib/policy-loader");
-      
+
       const result = loadPolicyDocument("simple.md");
 
       expect(result.metadata.title).toBe("Policy Document"); // Default
@@ -82,7 +82,7 @@ Content here`;
       vi.mocked(fs.readFileSync).mockReturnValue(mockContent);
 
       const { loadPolicyDocument } = await import("@/lib/policy-loader");
-      
+
       const result = loadPolicyDocument("test.md");
 
       expect(result.metadata.title).toBe("Policy Document");
@@ -99,7 +99,7 @@ Content here`;
       ] as unknown as fs.Dirent[]);
 
       const { getAvailablePolicies } = await import("@/lib/policy-loader");
-      
+
       const result = getAvailablePolicies();
 
       expect(result).toContain("privacy-policy");
@@ -111,7 +111,7 @@ Content here`;
       vi.mocked(fs.existsSync).mockReturnValue(false);
 
       const { getAvailablePolicies } = await import("@/lib/policy-loader");
-      
+
       const result = getAvailablePolicies();
 
       expect(result).toEqual([]);
@@ -126,7 +126,7 @@ Content here`;
       ] as unknown as fs.Dirent[]);
 
       const { getAvailablePolicies } = await import("@/lib/policy-loader");
-      
+
       const result = getAvailablePolicies();
 
       expect(result).toEqual(["privacy-policy"]);
@@ -140,7 +140,7 @@ Content here`;
         "privacy-policy.md",
         "terms-of-service.md",
       ] as unknown as fs.Dirent[]);
-      
+
       vi.mocked(fs.readFileSync).mockImplementation((filePath) => {
         if (String(filePath).includes("privacy-policy")) {
           return `---
@@ -159,11 +159,11 @@ Terms content`;
       });
 
       const { loadAllPolicies } = await import("@/lib/policy-loader");
-      
+
       const result = loadAllPolicies();
 
       expect(result).toHaveLength(2);
-      
+
       const privacy = result.find((p) => p.id === "privacy-policy");
       expect(privacy?.name).toBe("Privacy Policy");
       expect(privacy?.metadata.title).toBe("Privacy Policy");
@@ -177,7 +177,7 @@ Terms content`;
       vi.mocked(fs.readdirSync).mockReturnValue([
         "cookie-policy.md",
       ] as unknown as fs.Dirent[]);
-      
+
       vi.mocked(fs.readFileSync).mockReturnValue(`---
 title: Cookie Policy
 ---
@@ -185,11 +185,10 @@ title: Cookie Policy
 Content`);
 
       const { loadAllPolicies } = await import("@/lib/policy-loader");
-      
+
       const result = loadAllPolicies();
 
       expect(result[0].name).toBe("Cookie Policy");
     });
   });
 });
-

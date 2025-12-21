@@ -22,14 +22,16 @@ test.describe("Vitae/CV Page", () => {
   });
 
   test("displays skills section", async ({ page }) => {
-    await expect(
-      page.getByRole("heading", { name: /skills/i })
-    ).toBeVisible();
+    await expect(page.getByRole("heading", { name: /skills/i })).toBeVisible();
   });
 
   test("has download/print option if available", async ({ page }) => {
-    const downloadButton = page.getByRole("button", { name: /download|print|pdf/i });
-    const downloadLink = page.getByRole("link", { name: /download|print|pdf/i });
+    const downloadButton = page.getByRole("button", {
+      name: /download|print|pdf/i,
+    });
+    const downloadLink = page.getByRole("link", {
+      name: /download|print|pdf/i,
+    });
 
     const hasDownload =
       (await downloadButton.isVisible().catch(() => false)) ||
@@ -43,7 +45,9 @@ test.describe("Vitae/CV Page", () => {
 
   test("has navigation back to main site", async ({ page }) => {
     await expect(page.getByRole("navigation")).toBeVisible();
-    await expect(page.getByRole("link", { name: /home|about/i }).first()).toBeVisible();
+    await expect(
+      page.getByRole("link", { name: /home|about/i }).first()
+    ).toBeVisible();
   });
 
   test("works on mobile viewport", async ({ page }) => {
@@ -53,4 +57,3 @@ test.describe("Vitae/CV Page", () => {
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
   });
 });
-

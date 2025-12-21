@@ -14,7 +14,9 @@ test.describe("Error Pages", () => {
     await page.goto("/non-existent-page");
 
     // Should have a way to get back to home ("Return to Home Base" button)
-    const homeLink = page.getByRole("link", { name: /return to home|home base/i });
+    const homeLink = page.getByRole("link", {
+      name: /return to home|home base/i,
+    });
 
     await expect(homeLink).toBeVisible();
     await homeLink.click();
@@ -44,7 +46,9 @@ test.describe("Error Pages", () => {
 });
 
 test.describe("Policy Pages", () => {
-  test("privacy policy page loads (redirects to /policies)", async ({ page }) => {
+  test("privacy policy page loads (redirects to /policies)", async ({
+    page,
+  }) => {
     await page.goto("/privacy");
 
     // Should redirect to /policies?tab=privacy
@@ -53,7 +57,9 @@ test.describe("Policy Pages", () => {
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
   });
 
-  test("terms of service page loads (redirects to /policies)", async ({ page }) => {
+  test("terms of service page loads (redirects to /policies)", async ({
+    page,
+  }) => {
     await page.goto("/terms");
 
     // Should redirect to /policies?tab=terms
@@ -100,10 +106,7 @@ test.describe("Vitae/CV Page", () => {
       await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
     } else if (response?.status() === 404) {
       // 404 is acceptable if page doesn't exist
-      await expect(
-        page.getByText(/not found|404/i)
-      ).toBeVisible();
+      await expect(page.getByText(/not found|404/i)).toBeVisible();
     }
   });
 });
-

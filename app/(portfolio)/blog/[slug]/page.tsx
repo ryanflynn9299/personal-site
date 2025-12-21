@@ -6,10 +6,10 @@ import {
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Image from "next/image";
-import { JsonLd } from "@/components/JsonLd";
-import { BlogPostTracker } from "@/components/BlogPostTracker";
+import { JsonLd } from "@/components/common/JsonLd";
+import { BlogPostTracker } from "@/components/blog/BlogPostTracker";
 import { ServiceUnavailableWithDevMode } from "@/components/common/DevModeIndicator";
-import { BlogContentRenderer } from "@/components/BlogContentRenderer";
+import { BlogContentRenderer } from "@/components/blog/BlogContentRenderer";
 import { Post } from "@/types";
 
 type Props = {

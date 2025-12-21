@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/primitives/Button";
-import { trackDownload } from "@/components/Matomo";
+import { trackDownload } from "@/components/common/Matomo";
 
 interface DownloadButtonProps {
   href: string;

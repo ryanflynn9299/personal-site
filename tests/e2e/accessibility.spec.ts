@@ -57,7 +57,9 @@ test.describe("Accessibility", () => {
     await page.keyboard.press("Tab");
 
     // Look for skip to content link
-    const skipLink = page.getByRole("link", { name: /skip to content|skip to main/i });
+    const skipLink = page.getByRole("link", {
+      name: /skip to content|skip to main/i,
+    });
 
     // Skip link is a best practice but not required
     if (await skipLink.isVisible()) {
@@ -124,8 +126,8 @@ test.describe("Accessibility", () => {
     // This is a basic check - for full contrast testing, use axe-playwright
     // Check that text is visible against background
     const body = page.locator("body");
-    const backgroundColor = await body.evaluate((el) =>
-      window.getComputedStyle(el).backgroundColor
+    const backgroundColor = await body.evaluate(
+      (el) => window.getComputedStyle(el).backgroundColor
     );
 
     // Should have a background color set
@@ -172,9 +174,6 @@ test.describe("Keyboard Navigation", () => {
     // Tab to first link
     await page.keyboard.press("Tab");
 
-    // Get current URL
-    const initialUrl = page.url();
-
     // Find focused link
     const focused = page.locator(":focus");
     const tagName = await focused.evaluate((el) => el.tagName.toLowerCase());
@@ -208,4 +207,3 @@ test.describe("Keyboard Navigation", () => {
     }
   });
 });
-

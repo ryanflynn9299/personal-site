@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import type { Quote } from '@/app/(portfolio)/quotes/config';
+import type { Quote } from "@/app/(portfolio)/quotes/config";
 
 interface QuoteCardProps {
   quote: Quote;
@@ -22,4 +22,3 @@ export function QuoteCard({ quote }: QuoteCardProps) {
     </div>
   );
 }
-

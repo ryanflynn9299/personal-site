@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { trackBlogPostView } from "@/components/Matomo";
+import { trackBlogPostView } from "@/components/common/Matomo";
 
 interface BlogPostTrackerProps {
   slug: string;

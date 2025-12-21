@@ -22,7 +22,10 @@ test.describe("Navigation", () => {
   test("navigates from homepage to contact page", async ({ page }) => {
     await page.goto("/");
 
-    await page.getByRole("link", { name: /contact/i }).first().click();
+    await page
+      .getByRole("link", { name: /contact/i })
+      .first()
+      .click();
 
     await expect(page).toHaveURL(/\/contact/);
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
@@ -50,9 +53,15 @@ test.describe("Navigation", () => {
       await expect(page.getByRole("navigation")).toBeVisible();
 
       // Verify all main nav links are accessible
-      await expect(page.getByRole("link", { name: /about/i }).first()).toBeVisible();
-      await expect(page.getByRole("link", { name: /blog/i }).first()).toBeVisible();
-      await expect(page.getByRole("link", { name: /contact/i }).first()).toBeVisible();
+      await expect(
+        page.getByRole("link", { name: /about/i }).first()
+      ).toBeVisible();
+      await expect(
+        page.getByRole("link", { name: /blog/i }).first()
+      ).toBeVisible();
+      await expect(
+        page.getByRole("link", { name: /contact/i }).first()
+      ).toBeVisible();
     }
   });
 
@@ -120,9 +129,15 @@ test.describe("Mobile Navigation", () => {
     await menuButton.click();
 
     // Navigation links should become visible in mobile menu
-    await expect(page.getByRole("link", { name: /about/i }).first()).toBeVisible();
-    await expect(page.getByRole("link", { name: /blog/i }).first()).toBeVisible();
-    await expect(page.getByRole("link", { name: /contact/i }).first()).toBeVisible();
+    await expect(
+      page.getByRole("link", { name: /about/i }).first()
+    ).toBeVisible();
+    await expect(
+      page.getByRole("link", { name: /blog/i }).first()
+    ).toBeVisible();
+    await expect(
+      page.getByRole("link", { name: /contact/i }).first()
+    ).toBeVisible();
 
     // Click again to close
     await menuButton.click();
@@ -143,4 +158,3 @@ test.describe("Mobile Navigation", () => {
     await expect(page).toHaveURL(/\/about/);
   });
 });
-

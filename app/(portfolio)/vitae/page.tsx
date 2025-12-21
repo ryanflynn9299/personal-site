@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Download } from "lucide-react";
 import Link from "next/link";
 import { vitaeData } from "@/data/work_experience";
-import { DownloadButton } from "@/components/DownloadButton";
+import { DownloadButton } from "@/components/common/DownloadButton";
 
 export const metadata: Metadata = {
   title: "Vitae",

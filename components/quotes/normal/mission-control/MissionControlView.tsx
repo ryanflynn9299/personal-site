@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import type { Quote } from '@/app/(portfolio)/quotes/config';
+import type { Quote } from "@/app/(portfolio)/quotes/config";
 
 interface MissionControlViewProps {
   quotes: Quote[];
@@ -14,12 +14,9 @@ export function MissionControlView({ quotes }: MissionControlViewProps) {
           <h2 className="mb-4 text-2xl font-bold text-blue-200">
             Rendering: Mission Control
           </h2>
-          <p className="text-blue-300">
-            {quotes.length} quote(s) loaded
-          </p>
+          <p className="text-blue-300">{quotes.length} quote(s) loaded</p>
         </div>
       </div>
     </div>
   );
 }
-
