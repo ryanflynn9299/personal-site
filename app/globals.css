@@ -22,6 +22,14 @@
   h6 {
     font-family: var(--font-heading), sans-serif;
   }
+
+  .font-inter {
+    font-family: var(--font-inter), sans-serif;
+  }
+
+  .font-mono {
+    font-family: var(--font-mono), monospace;
+  }
 }
 
 .timeline-item:last-child .timeline-line {
@@ -84,6 +92,65 @@
   background-repeat: repeat;
   background-size: 400px 400px;
   animation: move-stars 100s linear infinite;
+}
+
+/* Constellation view stars - minimal motion */
+.stars-constellation {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  background: transparent;
+}
+
+.stars-constellation-1 {
+  background-image:
+    radial-gradient(1px 1px at 20px 30px, #e2e8f0, rgba(0, 0, 0, 0)),
+    radial-gradient(1px 1px at 40px 70px, #f8fafc, rgba(0, 0, 0, 0)),
+    radial-gradient(1px 1px at 50px 160px, #e2e8f0, rgba(0, 0, 0, 0)),
+    radial-gradient(1px 1px at 90px 40px, #94a3b8, rgba(0, 0, 0, 0)),
+    radial-gradient(2px 2px at 130px 80px, #f8fafc, rgba(0, 0, 0, 0)),
+    radial-gradient(1px 1px at 160px 120px, #94a3b8, rgba(0, 0, 0, 0));
+  background-repeat: repeat;
+  background-size: 200px 200px;
+  animation: move-stars-constellation 1000s linear infinite;
+}
+
+.stars-constellation-2 {
+  background-image:
+    radial-gradient(1px 1px at 10px 90px, #e2e8f0, rgba(0, 0, 0, 0)),
+    radial-gradient(2px 2px at 30px 110px, #f8fafc, rgba(0, 0, 0, 0)),
+    radial-gradient(2px 2px at 80px 20px, #e2e8f0, rgba(0, 0, 0, 0)),
+    radial-gradient(1px 1px at 120px 140px, #94a3b8, rgba(0, 0, 0, 0)),
+    radial-gradient(1px 1px at 150px 190px, #f8fafc, rgba(0, 0, 0, 0)),
+    radial-gradient(2px 2px at 180px 60px, #94a3b8, rgba(0, 0, 0, 0));
+  background-repeat: repeat;
+  background-size: 300px 300px;
+  animation: move-stars-constellation 1200s linear infinite;
+}
+
+.stars-constellation-3 {
+  background-image:
+    radial-gradient(2px 2px at 50px 50px, #f8fafc, rgba(0, 0, 0, 0)),
+    radial-gradient(3px 3px at 100px 100px, #f8fafc, rgba(0, 0, 0, 0)),
+    radial-gradient(2px 2px at 200px 150px, #e2e8f0, rgba(0, 0, 0, 0)),
+    radial-gradient(1px 1px at 250px 90px, #94a3b8, rgba(0, 0, 0, 0));
+  background-repeat: repeat;
+  background-size: 400px 400px;
+  animation: move-stars-constellation 1500s linear infinite;
+}
+
+@keyframes move-stars-constellation {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: -2000px 1000px;
+  }
 }
 
 @keyframes menuBubbleDeploy {

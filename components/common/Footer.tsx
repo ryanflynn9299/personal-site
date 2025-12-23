@@ -23,6 +23,7 @@ const socialLinks = [
 const footerNav = [
   { name: "About", href: "/about", is_active: true },
   { name: "Blog", href: "/blog", is_active: true },
+  { name: "Quotes", href: "/quotes", is_active: true },
   { name: "Vitae", href: "/vitae", is_active: true },
   { name: "Contact", href: "/contact", is_active: true },
   // Example for future extensibility

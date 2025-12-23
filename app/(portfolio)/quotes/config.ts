@@ -21,4 +21,13 @@ export interface Quote {
   author?: string;
   source?: string;
   tags?: string[];
+  priority?: 'high' | 'normal';
 }
+
+/**
+ * Hex Array view configuration
+ * Change the seed value to get a different distribution pattern
+ */
+export const HEX_ARRAY_CONFIG = {
+  seed: "default-seed-2024", // Change this value to get a new distribution
+} as const;

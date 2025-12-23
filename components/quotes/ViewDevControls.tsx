@@ -11,14 +11,20 @@ export function ViewDevControls() {
     viewMode,
     activeNormalVariant,
     activeConstellationVariant,
+    hexSurgeEnabled,
+    triggerHexSurge,
     setViewMode,
     setActiveNormalVariant,
     setActiveConstellationVariant,
+    setHexSurgeEnabled,
   } = useQuoteViewStore();
 
+  const isHexArraySelected =
+    viewMode === "constellation" && activeConstellationVariant === "hex_array";
+
   return (
-    <div className="fixed bottom-4 right-4 z-50 rounded-lg border border-slate-700/50 bg-slate-900/95 p-4 shadow-lg backdrop-blur-sm">
-      <h3 className="mb-3 text-sm font-semibold text-slate-200">
+    <div className="fixed bottom-4 right-4 z-50 rounded-lg border border-slate-700/50 bg-slate-900/95 p-6 shadow-lg backdrop-blur-sm">
+      <h3 className="mb-4 text-sm font-semibold text-slate-200">
         View Controls
       </h3>
 
@@ -77,7 +83,7 @@ export function ViewDevControls() {
 
       {/* Constellation Variants */}
       {viewMode === "constellation" && (
-        <div>
+        <div className="mb-4">
           <label className="mb-1 block text-xs text-slate-400">
             Constellation Variant
           </label>
@@ -102,6 +108,38 @@ export function ViewDevControls() {
               </button>
             ))}
           </div>
+        </div>
+      )}
+
+      {/* Hex Surge Controls - Only show when hex_array is selected */}
+      {isHexArraySelected && (
+        <div className="mt-4 border-t border-slate-700/50 pt-4">
+          <div className="mb-3 flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="hex-surge-enabled"
+              checked={hexSurgeEnabled}
+              onChange={(e) => setHexSurgeEnabled(e.target.checked)}
+              className="h-4 w-4 cursor-pointer rounded border-slate-600 bg-slate-800 text-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-slate-900"
+            />
+            <label
+              htmlFor="hex-surge-enabled"
+              className="cursor-pointer text-xs font-medium text-slate-300"
+            >
+              Enable hex surge
+            </label>
+          </div>
+          <button
+            onClick={triggerHexSurge}
+            disabled={!hexSurgeEnabled}
+            className={`w-full rounded px-3 py-2 text-xs font-medium transition-all ${
+              hexSurgeEnabled
+                ? "bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800"
+                : "cursor-not-allowed bg-slate-700 text-slate-500 opacity-50"
+            }`}
+          >
+            Trigger Surge
+          </button>
         </div>
       )}
     </div>

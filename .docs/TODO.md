@@ -16,6 +16,7 @@ _Start here - these are the most important items to tackle next_
 - [ ] Finish sitemap and robots.ts
 - [ ] Figure out scalability for blog
 - [ ] Make client-primary
+- [ ] Consolidate colors
 
 ---
 

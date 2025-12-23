@@ -2,8 +2,8 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useQuoteViewStore } from "./store/useQuoteViewStore";
-import { ViewDevControls } from "./ViewDevControls";
 import { QuoteViewRenderer } from "./QuoteViewRenderer";
+import { QuoteModeToggle } from "./QuoteModeToggle";
 import { dummyQuotes } from "@/data/quotes";
 
 export function QuotesPageClient() {
@@ -18,6 +18,7 @@ export function QuotesPageClient() {
 
   return (
     <div className="relative min-h-screen">
+      <QuoteModeToggle />
       <AnimatePresence mode="wait">
         <motion.div
           key={viewKey}
@@ -32,8 +33,6 @@ export function QuotesPageClient() {
           <QuoteViewRenderer quotes={dummyQuotes} />
         </motion.div>
       </AnimatePresence>
-
-      <ViewDevControls />
     </div>
   );
 }

@@ -29,7 +29,10 @@
   },
   "dependencies": {
     "@directus/sdk": "^16.1.0",
+    "@floating-ui/react": "^0.27.16",
     "@radix-ui/react-slot": "^1.2.3",
+    "@react-three/drei": "^10.7.7",
+    "@react-three/fiber": "^9.4.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
@@ -43,11 +46,13 @@
     "radix-ui": "^1.4.2",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
+    "react-force-graph-2d": "^1.29.0",
     "react-markdown": "^10.1.0",
     "rehype-raw": "^7.0.0",
     "rehype-sanitize": "^6.0.0",
     "remark-gfm": "^4.0.1",
     "tailwind-merge": "^2.3.0",
+    "three": "^0.182.0",
     "zustand": "^5.0.9"
   },
   "devDependencies": {
