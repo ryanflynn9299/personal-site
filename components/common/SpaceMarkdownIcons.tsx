@@ -63,6 +63,20 @@ export function AsteroidIcon({ className = "w-2.5 h-2.5" }: IconProps) {
   );
 }
 
+export function MoonIcon({ className = "w-5 h-5" }: IconProps) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      className={className}
+    >
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+    </svg>
+  );
+}
+
 // Link Icon
 export function RocketIcon({ className = "w-3 h-3" }: IconProps) {
   return (

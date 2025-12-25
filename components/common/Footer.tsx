@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+// import { usePathname } from "next/navigation";
 import { Github, Linkedin, Twitter } from "lucide-react";
 
 const socialLinks = [
@@ -21,19 +22,22 @@ const socialLinks = [
   },
 ];
 const footerNav = [
-  { name: "About", href: "/about", is_active: true },
-  { name: "Blog", href: "/blog", is_active: true },
-  { name: "Quotes", href: "/quotes", is_active: true },
-  { name: "Vitae", href: "/vitae", is_active: true },
-  { name: "Contact", href: "/contact", is_active: true },
+  { name: "About", href: "/about", is_active: true, devOnly: false },
+  { name: "Blog", href: "/blog", is_active: true, devOnly: false },
+  { name: "Quotes", href: "/quotes", is_active: true, devOnly: true },
+  { name: "Vitae", href: "/vitae", is_active: true, devOnly: false },
+  { name: "Contact", href: "/contact", is_active: true, devOnly: false },
   // Example for future extensibility
-  { name: "Talks", href: "/talks", is_active: false },
-  { name: "Privacy Policy", href: "/privacy", is_active: false },
+  { name: "Talks", href: "/talks", is_active: false, devOnly: false },
+  { name: "Privacy Policy", href: "/privacy", is_active: false, devOnly: false },
 ];
 
 export function Footer() {
+  // const pathname = usePathname();
+  // const isProjectsCabinetPage = pathname === "/projects-cabinet";
+  
   return (
-    <footer className="border-t border-slate-700 bg-slate-800">
+    <footer className="border-t border-slate-700 bg-slate-800 relative z-10">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
           <div className="md:col-span-1">
@@ -52,17 +56,42 @@ export function Footer() {
               </h4>
               <ul className="mt-4 space-y-2">
                 {footerNav
-                  .filter((item: any) => item.is_active)
+                  .filter((item: any) => {
+                    // Filter by active status
+                    if (!item.is_active) return false;
+                    // Filter by dev-only status
+                    if (item.devOnly && process.env.NODE_ENV !== "development") return false;
+                    return true;
+                  })
                   .map((item: any) => (
                     <li key={item.href}>
                       <Link
                         href={item.href}
-                        className="text-base text-slate-300 hover:text-sky-300"
+                        className="flex items-center gap-2 text-base text-slate-300 hover:text-sky-300"
                       >
-                        {item.name}
+                        <span>{item.name}</span>
+                        {item.devOnly && (
+                          <span className="rounded bg-amber-500/20 px-1.5 py-0.5 text-xs text-amber-400">
+                            DEV
+                          </span>
+                        )}
                       </Link>
                     </li>
                   ))}
+                {/* Dev-only link */}
+                {process.env.NODE_ENV === "development" && (
+                  <li>
+                    <Link
+                      href="/projects-cabinet"
+                      className="flex items-center gap-2 text-base text-slate-300 hover:text-sky-300"
+                    >
+                      <span>Project Cabinet</span>
+                      <span className="ml-1 rounded bg-amber-500/20 px-1.5 py-0.5 text-xs text-amber-400">
+                        DEV
+                      </span>
+                    </Link>
+                  </li>
+                )}
               </ul>
             </div>
             <div>

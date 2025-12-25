@@ -72,6 +72,7 @@ export function TesseractView({ quotes }: TesseractViewProps) {
   const [activeCategoryIndex, setActiveCategoryIndex] = useState(0);
   const [rotation, setRotation] = useState<[number, number, number]>([0, 0, 0]);
   const feedRef = useRef<HTMLDivElement>(null);
+  const tesseractRef = useRef<HTMLDivElement>(null);
   const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
   const isScrollingRef = useRef(false);
   const isRotatingRef = useRef(false);
@@ -188,6 +189,30 @@ export function TesseractView({ quotes }: TesseractViewProps) {
     }
   }, [activeCategoryIndex, getRotationForCategory]);
 
+  // Set tesseract size based on viewport (1/3 to 1/2 of smaller dimension)
+  useEffect(() => {
+    const updateTesseractSize = () => {
+      if (!tesseractRef.current) return;
+      
+      const smallerDimension = Math.min(window.innerHeight, window.innerWidth);
+      const size = smallerDimension * 0.42; // 42% of smaller dimension (between 1/3 and 1/2)
+      
+      if (window.innerWidth >= 1024) {
+        // Desktop: square sidebar
+        tesseractRef.current.style.width = `${size}px`;
+        tesseractRef.current.style.height = `${size}px`;
+      } else {
+        // Mobile: full width, calculated height
+        tesseractRef.current.style.width = '100%';
+        tesseractRef.current.style.height = `${size}px`;
+      }
+    };
+
+    updateTesseractSize();
+    window.addEventListener('resize', updateTesseractSize);
+    return () => window.removeEventListener('resize', updateTesseractSize);
+  }, []);
+
   // Get active category color
   const activeCategory = categories[activeCategoryIndex];
   const activeColor = activeCategory?.color || CATEGORY_COLORS[0];
@@ -195,7 +220,10 @@ export function TesseractView({ quotes }: TesseractViewProps) {
   return (
     <div className="flex h-screen flex-col bg-slate-950 lg:flex-row">
       {/* 3D Tesseract Navigation - Sidebar on desktop, sticky top on mobile */}
-      <div className="h-64 w-full border-b border-slate-800 bg-slate-950 lg:h-full lg:w-96 lg:border-b-0 lg:border-r">
+      <div 
+        ref={tesseractRef}
+        className="border-b border-slate-800 bg-slate-950 lg:border-b-0 lg:border-r lg:flex-shrink-0"
+      >
         <Canvas
           camera={{ position: [0, 0, 10], fov: 50 }}
           className="h-full w-full"

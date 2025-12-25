@@ -55,13 +55,13 @@ export function HexPulse({ x, y, color }: HexPulseProps) {
         strokeLinejoin="round"
         initial={{ opacity: 0, scale: PULSE_SCALE_KEYFRAMES[0] }}
         animate={{
-          opacity: PULSE_OPACITY_KEYFRAMES, // Less opaque, fades out completely
-          scale: PULSE_SCALE_KEYFRAMES, // Smaller expansion - doesn't radiate as far
+          opacity: [...PULSE_OPACITY_KEYFRAMES], // Less opaque, fades out completely
+          scale: [...PULSE_SCALE_KEYFRAMES], // Smaller expansion - doesn't radiate as far
         }}
         transition={{
           duration: PULSE_ANIMATION_DURATION,
-          times: PULSE_TIMING_KEYFRAMES, // Fade in quickly, hold briefly, fade out at end
-          ease: PULSE_EASE, // Smooth ease out
+          times: [...PULSE_TIMING_KEYFRAMES], // Fade in quickly, hold briefly, fade out at end
+          ease: [...PULSE_EASE], // Smooth ease out
         }}
         style={{
           filter: `drop-shadow(0 0 ${PULSE_DROP_SHADOW_BLUR}px ${color})`,

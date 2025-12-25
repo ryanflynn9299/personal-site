@@ -1,11 +1,24 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import type { Quote } from "@/app/(portfolio)/quotes/config";
 import type { Comet } from "./types";
-import { ROCKET_COLORS, COMET_INITIAL_COUNT, COMET_MAX_COUNT, COMET_SPAWN_CHANCE, COMET_SPAWN_INTERVAL } from "./constants";
+import {
+  ROCKET_COLORS,
+  COMET_INITIAL_COUNT,
+  COMET_MAX_COUNT,
+  COMET_SPAWN_CHANCE,
+  COMET_SPAWN_INTERVAL,
+  COMET_OFFSCREEN_MARGIN,
+  COMET_SPEED_MEAN,
+  COMET_SPEED_STD_DEV,
+  COMET_SPEED_MIN,
+  COMET_SPEED_MAX,
+  COMET_ICON_TYPE_CHANCE,
+  ASTEROID_SIZE_WEIGHTS,
+} from "./constants";
 
 export function useComets(
   quotes: Quote[],
-  containerRef: React.RefObject<HTMLDivElement>,
+  containerRef: React.RefObject<HTMLDivElement | null>,
   isZoomed: boolean,
   setCometTriggerCallback: (callback: (() => void) | null) => void
 ) {
@@ -18,20 +31,48 @@ export function useComets(
     setComets([...cometsRef.current]);
   }, []);
 
+  /**
+   * Generate a random number from a normal distribution using Box-Muller transform
+   * @param mean - Mean of the distribution
+   * @param stdDev - Standard deviation of the distribution
+   * @returns Random number from normal distribution
+   */
+  const generateNormalRandom = useCallback((mean: number, stdDev: number): number => {
+    // Box-Muller transform for normal distribution
+    const u1 = Math.random();
+    const u2 = Math.random();
+    const z0 = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+    return z0 * stdDev + mean;
+  }, []);
+
+  /**
+   * Generate speed from normal distribution with min/max clamping
+   * @returns Speed value clamped between COMET_SPEED_MIN and COMET_SPEED_MAX
+   */
+  const generateSpeed = useCallback((): number => {
+    let speed = generateNormalRandom(COMET_SPEED_MEAN, COMET_SPEED_STD_DEV);
+    // Clamp to min/max bounds
+    speed = Math.max(COMET_SPEED_MIN, Math.min(COMET_SPEED_MAX, speed));
+    return speed;
+  }, [generateNormalRandom]);
+
   // Generate comet function
   const generateComet = useCallback((): Comet => {
-    if (!containerRef.current || quotes.length === 0) {
+    if (!containerRef.current) {
       return {
         id: `comet-${cometIdRef.current++}`,
         x: 0,
         y: 0,
         vx: 0,
         vy: 0,
-        quote: { id: "default", text: "" },
+        quote: process.env.NODE_ENV === "development" 
+          ? { id: "default", text: "No quotes available" }
+          : null,
         iconType: "rocket" as const,
         rotation: 0,
         color: "blue",
         size: "medium" as const,
+        entityCategory: "transient" as const, // Comets are transient entities
       };
     }
 
@@ -46,7 +87,8 @@ export function useComets(
     let vx = 0;
     let vy = 0;
 
-    const speed = 0.3 + Math.random() * 0.4; // Random speed between 0.3 and 0.7
+    // Generate speed from normal distribution with min/max clamping
+    const speed = generateSpeed();
     const angle = Math.random() * Math.PI * 2; // Random direction
 
     if (side === 0) {
@@ -75,11 +117,15 @@ export function useComets(
       vy = Math.sin(angle) * speed;
     }
 
-    // Pick a random quote
-    const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+    // Pick a random quote, or use default if none available (only in dev mode)
+    const randomQuote = quotes.length > 0 
+      ? quotes[Math.floor(Math.random() * quotes.length)]
+      : process.env.NODE_ENV === "development"
+      ? { id: "default", text: "No quotes available" }
+      : null; // No quote in production
 
-    // Random icon type
-    const iconType = Math.random() > 0.5 ? "rocket" : "asteroid";
+    // Random icon type based on configured chance
+    const iconType = Math.random() < COMET_ICON_TYPE_CHANCE ? "rocket" : "asteroid";
     
     // Calculate rotation based on velocity direction (pointing in direction of travel)
     const rotation = (Math.atan2(vy, vx) * (180 / Math.PI)) + 45;
@@ -93,11 +139,11 @@ export function useComets(
     const size: "small" | "medium" | "large" = iconType === "rocket" 
       ? "large"
       : (() => {
-          // Random size with weighted distribution for asteroids: medium (55%) > small (30%) > large (15%)
+          // Weighted distribution for asteroids based on ASTEROID_SIZE_WEIGHTS
           const sizeRandom = Math.random();
-          return sizeRandom < 0.55 ? "medium" : 
-                 sizeRandom < 0.85 ? "small" : 
-                 "large";
+          if (sizeRandom < ASTEROID_SIZE_WEIGHTS.medium) return "medium";
+          if (sizeRandom < ASTEROID_SIZE_WEIGHTS.medium + ASTEROID_SIZE_WEIGHTS.small) return "small";
+          return "large";
         })();
 
     return {
@@ -111,8 +157,9 @@ export function useComets(
       rotation,
       color,
       size,
+      entityCategory: "transient" as const, // Comets are transient entities
     };
-  }, [quotes, containerRef]);
+  }, [quotes, containerRef, generateSpeed]);
 
   // Generate comets periodically
   useEffect(() => {
@@ -132,13 +179,12 @@ export function useComets(
       if (!rect) return;
 
       // Remove comets that are off-screen
-      const margin = 100;
       cometsRef.current = cometsRef.current.filter((comet) => {
         return (
-          comet.x > -margin &&
-          comet.x < rect.width + margin &&
-          comet.y > -margin &&
-          comet.y < rect.height + margin
+          comet.x > -COMET_OFFSCREEN_MARGIN &&
+          comet.x < rect.width + COMET_OFFSCREEN_MARGIN &&
+          comet.y > -COMET_OFFSCREEN_MARGIN &&
+          comet.y < rect.height + COMET_OFFSCREEN_MARGIN
         );
       });
 

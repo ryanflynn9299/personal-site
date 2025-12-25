@@ -25,7 +25,7 @@ const MODAL_STYLES = {
 export function QuoteModalTitle({ title, description, className = "" }: QuoteModalTitleProps) {
   return (
     <div
-      className={`pointer-events-auto absolute left-0 top-0 z-10 ${className}`}
+      className={`pointer-events-auto absolute left-0 top-0 z-40 ${className}`}
       style={{
         backgroundColor: MODAL_STYLES.backgroundColor,
         backdropFilter: `blur(${MODAL_STYLES.backdropBlur})`,

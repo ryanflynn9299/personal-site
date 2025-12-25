@@ -6,38 +6,21 @@ import type { Entity } from "../types";
 interface SunProps {
   sunEntity: Entity;
   onClick: (entity: Entity) => void;
+  onHover: () => void;
+  onHoverEnd: () => void;
 }
 
-export function Sun({ sunEntity, onClick }: SunProps) {
+export function Sun({ sunEntity, onClick, onHover, onHoverEnd }: SunProps) {
   return (
     <div
-      className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 cursor-pointer group z-20"
+      className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 cursor-pointer z-20"
       onClick={() => onClick(sunEntity)}
-    >
-      {/* Sun tooltip on hover */}
-      <div
-        className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-72 p-4 bg-slate-900/95 border-2 rounded-lg shadow-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 backdrop-blur-xl"
-        style={{
-          borderColor: sunEntity.color,
-        }}
-      >
-        <p
-          className="text-sm font-semibold text-slate-50 mb-2"
-          style={{
-            color: sunEntity.color,
-          }}
+      onMouseEnter={onHover}
+      onMouseLeave={onHoverEnd}
         >
-          {sunEntity.name}
-        </p>
-        <p className="text-xs text-slate-400 font-mono mb-2">
-          0.0 AU
-        </p>
-        <p className="text-xs text-slate-300 leading-relaxed">
-          Click to explore more quotes
-        </p>
-      </div>
+      {/* Sun visual - z-10 ensures it's above background */}
       <motion.div
-        className="relative h-12 w-12"
+        className="relative z-10 h-12 w-12"
         style={{
           transformOrigin: "center center",
         }}
@@ -50,4 +33,3 @@ export function Sun({ sunEntity, onClick }: SunProps) {
     </div>
   );
 }
-

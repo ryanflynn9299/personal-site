@@ -467,7 +467,7 @@ const useMobileDetection = (): boolean => {
   );
 };
 
-const MagicBento: FC<MagicBentoProps> = ({
+const MagicBento2: FC<MagicBentoProps> = ({
   textAutoHide = true,
   enableStars = true,
   enableSpotlight = true,
@@ -813,4 +813,4 @@ const MagicBento: FC<MagicBentoProps> = ({
   );
 };
 
-export { MagicBento };
+export { MagicBento2 };

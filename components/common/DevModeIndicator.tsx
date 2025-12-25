@@ -16,8 +16,12 @@ export function DevModeIndicator() {
   }
 
   return (
-    <div className="border-b border-amber-500/20 bg-amber-500/5 px-4 py-2">
-      <div className="container mx-auto flex flex-col items-center justify-center gap-1 text-center sm:flex-row sm:gap-2 sm:text-sm">
+    <div className="border-b border-amber-500/20 px-4 py-2 relative z-10">
+      {/* Solid backdrop to block grid background */}
+      <div className="absolute inset-0 bg-slate-800 -z-10"></div>
+      {/* Amber overlay to maintain original look */}
+      <div className="absolute inset-0 bg-amber-500/5 -z-[5]"></div>
+      <div className="container mx-auto flex flex-col items-center justify-center gap-1 text-center sm:flex-row sm:gap-2 sm:text-sm relative">
         <div className="flex items-center gap-2">
           <Code className="h-4 w-4 text-amber-400 flex-shrink-0" />
           <span className="font-bold text-amber-300">Dev Mode Active</span>

@@ -492,11 +492,12 @@ function generateDataSurges(
     // Create path through gaps (horizontal, vertical, or diagonal)
     const path = `M ${startX} ${startY} L ${endX} ${endY}`;
 
+    const delay = Math.random() * 3; // Random delay up to 3 seconds
     surges.push({
       id: `surge-${i}`,
       path,
       duration: 0.5 + Math.random() * 1.5, // 0.5-2 seconds
-      delay: Math.random() * 3, // Random delay up to 3 seconds
+      startTime: Date.now() + delay * 1000, // Convert delay to milliseconds and add to current time
       color: Math.random() > 0.5 ? "white" : "cyan",
     });
   }

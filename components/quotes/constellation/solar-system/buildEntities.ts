@@ -13,16 +13,24 @@ import {
   SUN_SIZE,
   SUN_QUOTE_PERCENTAGE,
 } from "./constants";
+import { getShapeByIndex } from "./shapeUtils";
 
 /**
  * Extract categories and create entities
+ * Returns entities, a set of quote IDs that are assigned to planets/sun, and unused quotes for comets
  */
-export function buildEntities(quotes: Quote[]): { entities: Entity[]; sunEntity: Entity | null } {
+export function buildEntities(quotes: Quote[]): { 
+  entities: Entity[]; 
+  sunEntity: Entity | null;
+  usedQuoteIds: Set<string>; // Quote IDs assigned to planets/sun for filtering comets
+  quoteBank: Quote[]; // Leftover quotes for comets/rockets
+} {
+  const usedQuoteIds = new Set<string>();
   const categoryMap = new Map<string, Quote[]>();
   const sunQuotes: Quote[] = [];
+  const MAX_QUOTES_PER_ENTITY = 3;
 
-  // Redistribute some quotes to the Sun (take ~15% of quotes, prioritizing high priority)
-  const quotesForSun = Math.max(1, Math.floor(quotes.length * SUN_QUOTE_PERCENTAGE));
+  // Redistribute some quotes to the Sun (take up to 3 quotes, prioritizing high priority)
   const sortedQuotes = [...quotes].sort((a, b) => {
     if (a.priority === "high" && b.priority !== "high") return -1;
     if (a.priority !== "high" && b.priority === "high") return 1;
@@ -30,6 +38,7 @@ export function buildEntities(quotes: Quote[]): { entities: Entity[]; sunEntity:
   });
 
   const sunQuoteIndices = new Set<number>();
+  const quotesForSun = Math.min(MAX_QUOTES_PER_ENTITY, sortedQuotes.length);
   for (let i = 0; i < quotesForSun && i < sortedQuotes.length; i++) {
     const originalIndex = quotes.indexOf(sortedQuotes[i]);
     sunQuoteIndices.add(originalIndex);
@@ -58,12 +67,14 @@ export function buildEntities(quotes: Quote[]): { entities: Entity[]; sunEntity:
 
   const entities: Entity[] = Array.from(categoryMap.entries()).map(
     ([category, quoteList], idx) => {
-      const shapeTypes: Array<"ringed-planet" | "monolith" | "pyramid"> = [
-        "ringed-planet",
-        "monolith",
-        "pyramid",
-      ];
-      const shape = shapeTypes[idx % shapeTypes.length];
+      // Limit quotes to MAX_QUOTES_PER_ENTITY per entity
+      const limitedQuotes = quoteList.slice(0, MAX_QUOTES_PER_ENTITY);
+      
+      // Track quotes assigned to this planet
+      limitedQuotes.forEach(quote => usedQuoteIds.add(quote.id));
+      
+      // Get shape based on configuration (mode-aware)
+      const shape = getShapeByIndex(idx);
       
       // Deterministic spacing variation: some orbits closer, some more spaced out
       const spacingMultiplier = SPACING_PATTERN[idx % SPACING_PATTERN.length];
@@ -85,35 +96,46 @@ export function buildEntities(quotes: Quote[]): { entities: Entity[]; sunEntity:
         id: category,
         name: category.charAt(0).toUpperCase() + category.slice(1),
         category,
-        quotes: quoteList,
+        entityCategory: "focal" as const, // Planets are focal entities
+        quotes: limitedQuotes, // Use limited quotes
         orbitRadius,
         orbitSpeed,
         angle: initialAngle,
         shape,
         color: ENTITY_COLORS[idx % ENTITY_COLORS.length],
-        size: 12 + (quoteList.length % 5) * 3,
+        size: 12 + (limitedQuotes.length % 5) * 3,
         eccentricity,
         spacingMultiplier,
       };
     }
   );
 
-  // Create Sun entity if we have quotes for it
-  const sunEntity: Entity | null = sunQuotes.length > 0 ? {
-    id: "sun",
-    name: "Sun",
-    category: "sun",
-    quotes: sunQuotes,
-    orbitRadius: 0, // Sun is at center
-    orbitSpeed: 0,
-    angle: 0,
-    shape: "ringed-planet", // Not used for Sun
-    color: SUN_COLOR,
-    size: SUN_SIZE,
-    eccentricity: 0,
-    spacingMultiplier: 1.0,
-  } : null;
+  // Create Sun entity if we have quotes for it (limit to MAX_QUOTES_PER_ENTITY)
+  const limitedSunQuotes = sunQuotes.slice(0, MAX_QUOTES_PER_ENTITY);
+  const sunEntity: Entity | null = limitedSunQuotes.length > 0 ? (() => {
+    // Track quotes assigned to sun
+    limitedSunQuotes.forEach(quote => usedQuoteIds.add(quote.id));
+    
+    return {
+      id: "sun",
+      name: "Sun",
+      category: "sun",
+      entityCategory: "focal" as const, // Sun is a focal entity
+      quotes: limitedSunQuotes, // Use limited quotes
+      orbitRadius: 0, // Sun is at center
+      orbitSpeed: 0,
+      angle: 0,
+      shape: "ringed-planet" as const, // Not used for Sun
+      color: SUN_COLOR,
+      size: SUN_SIZE,
+      eccentricity: 0,
+      spacingMultiplier: 1.0,
+    };
+  })() : null;
 
-  return { entities, sunEntity };
+  // Collect all unused quotes into a bank for comets/rockets
+  const quoteBank = quotes.filter(quote => !usedQuoteIds.has(quote.id));
+
+  return { entities, sunEntity, usedQuoteIds, quoteBank };
 }
 

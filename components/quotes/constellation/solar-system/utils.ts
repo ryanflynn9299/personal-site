@@ -6,7 +6,7 @@ import { ELLIPSE_COMPRESSION } from "./constants";
  */
 export function getEntityPosition(
   entity: Entity,
-  containerRef: React.RefObject<HTMLDivElement>
+  containerRef: React.RefObject<HTMLDivElement | null>
 ): { x: number; y: number } {
   if (!containerRef.current) return { x: 0, y: 0 };
   const rect = containerRef.current.getBoundingClientRect();
@@ -35,7 +35,7 @@ export function getEntityPosition(
  */
 export function getEntityClickPosition(
   entity: Entity,
-  containerRef: React.RefObject<HTMLDivElement>
+  containerRef: React.RefObject<HTMLDivElement | null>
 ): { x: number; y: number } {
   if (!containerRef.current) return { x: 0, y: 0 };
   const rect = containerRef.current.getBoundingClientRect();

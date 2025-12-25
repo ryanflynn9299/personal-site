@@ -3,14 +3,15 @@
 import { motion } from "framer-motion";
 import { RocketIcon, AsteroidIcon } from "@/components/common/SpaceMarkdownIcons";
 import type { Comet } from "../types";
-import { CometTooltip } from "./CometTooltip";
 
 interface CometProps {
   comet: Comet;
+  onHover: () => void;
+  onHoverEnd: () => void;
 }
 
 // 'Comet' refers to tailed entities that move across the screen: rockets and asteroids
-export function Comet({ comet }: CometProps) {
+export function Comet({ comet, onHover, onHoverEnd }: CometProps) {
   const IconComponent = comet.iconType === "rocket" ? RocketIcon : AsteroidIcon;
   
   // Color mapping for rockets
@@ -46,7 +47,7 @@ export function Comet({ comet }: CometProps) {
   return (
     <motion.div
       key={comet.id}
-      className="absolute cursor-pointer group"
+      className="absolute cursor-pointer z-30"
       style={{
         left: `${comet.x}px`,
         top: `${comet.y}px`,
@@ -55,9 +56,9 @@ export function Comet({ comet }: CometProps) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3 }}
+      onMouseEnter={onHover}
+      onMouseLeave={onHoverEnd}
     >
-      {/* Quote tooltip on hover - positioned outside rotation */}
-      <CometTooltip quote={comet.quote} />
       
       {/* Rotated icon container - rotation is fixed, only scale animates */}
       <div
@@ -86,6 +87,7 @@ export function Comet({ comet }: CometProps) {
               zIndex: -1,
             }}
           />
+          {/* Comet visual - z-10 ensures it's below tooltip but above background */}
           <IconComponent className={`${iconSize} ${iconColorClass} drop-shadow-lg relative z-10`} />
         </motion.div>
       </div>

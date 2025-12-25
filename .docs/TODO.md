@@ -17,6 +17,12 @@ _Start here - these are the most important items to tackle next_
 - [ ] Figure out scalability for blog
 - [ ] Make client-primary
 - [ ] Consolidate colors
+- [ ] connect counter to database
+- [ ] Flesh out project file cabinet idea
+- [ ] Organize and slightly refine vitae details
+- [ ] images for about page
+- [ ] make about page UX optimized
+- [ ] add christmas mode
 
 ---
 
