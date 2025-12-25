@@ -14,6 +14,7 @@ import {
 import { Button } from "@/components/primitives/Button";
 import { submitContactForm } from "@/app/actions/contact";
 import { EmailStatusIndicatorWithStatus } from "@/components/contact/EmailStatusIndicator";
+import { FunCounter } from "@/components/contact/FunCounter";
 import type { FormState, SavedFormData, ContactPageClientProps } from "@/types";
 
 const initialState: FormState = { success: false };
@@ -156,6 +157,8 @@ export function ContactPageClient({
               </div>
             </a>
           </div>
+          
+          <FunCounter />
         </div>
 
         {/* Right Pane: Contact Form */}
