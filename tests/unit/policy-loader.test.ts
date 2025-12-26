@@ -1,14 +1,28 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import fs from "fs";
-import path from "path";
 
 // Mock fs module
-vi.mock("fs");
-vi.mock("path", async () => {
-  const actual = await vi.importActual<typeof path>("path");
+vi.mock("fs", () => ({
+  default: {
+    existsSync: vi.fn(),
+    readFileSync: vi.fn(),
+    readdirSync: vi.fn(),
+  },
+  existsSync: vi.fn(),
+  readFileSync: vi.fn(),
+  readdirSync: vi.fn(),
+}));
+
+vi.mock("path", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("path")>();
+  const mockJoin = vi.fn((...args: string[]) => args.join("/"));
   return {
     ...actual,
-    join: vi.fn((...args: string[]) => args.join("/")),
+    default: {
+      ...actual.default,
+      join: mockJoin,
+    },
+    join: mockJoin,
   };
 });
 
@@ -34,8 +48,10 @@ lastUpdated: 2024-01-15
 
 This is the content.`;
 
-      vi.mocked(fs.existsSync).mockReturnValue(true);
-      vi.mocked(fs.readFileSync).mockReturnValue(mockContent);
+      (fs.existsSync as ReturnType<typeof vi.fn>).mockReturnValue(true);
+      (fs.readFileSync as ReturnType<typeof vi.fn>).mockReturnValue(
+        mockContent
+      );
 
       // Dynamic import to get fresh module with mocks
       const { loadPolicyDocument } = await import("@/lib/policy-loader");
@@ -48,7 +64,7 @@ This is the content.`;
     });
 
     it("throws error when file does not exist", async () => {
-      vi.mocked(fs.existsSync).mockReturnValue(false);
+      (fs.existsSync as ReturnType<typeof vi.fn>).mockReturnValue(false);
 
       const { loadPolicyDocument } = await import("@/lib/policy-loader");
 
@@ -60,8 +76,10 @@ This is the content.`;
     it("handles documents without frontmatter", async () => {
       const mockContent = "# Policy\n\nJust content, no frontmatter.";
 
-      vi.mocked(fs.existsSync).mockReturnValue(true);
-      vi.mocked(fs.readFileSync).mockReturnValue(mockContent);
+      (fs.existsSync as ReturnType<typeof vi.fn>).mockReturnValue(true);
+      (fs.readFileSync as ReturnType<typeof vi.fn>).mockReturnValue(
+        mockContent
+      );
 
       const { loadPolicyDocument } = await import("@/lib/policy-loader");
 
@@ -78,8 +96,10 @@ lastUpdated: 2024-01-15
 
 Content here`;
 
-      vi.mocked(fs.existsSync).mockReturnValue(true);
-      vi.mocked(fs.readFileSync).mockReturnValue(mockContent);
+      (fs.existsSync as ReturnType<typeof vi.fn>).mockReturnValue(true);
+      (fs.readFileSync as ReturnType<typeof vi.fn>).mockReturnValue(
+        mockContent
+      );
 
       const { loadPolicyDocument } = await import("@/lib/policy-loader");
 
@@ -92,7 +112,7 @@ Content here`;
   describe("getAvailablePolicies", () => {
     it("returns list of policy filenames without .md extension", async () => {
       vi.mocked(fs.existsSync).mockReturnValue(true);
-      vi.mocked(fs.readdirSync).mockReturnValue([
+      (fs.readdirSync as ReturnType<typeof vi.fn>).mockReturnValue([
         "privacy-policy.md",
         "terms-of-service.md",
         "README.md",
@@ -108,7 +128,7 @@ Content here`;
     });
 
     it("returns empty array when policies directory does not exist", async () => {
-      vi.mocked(fs.existsSync).mockReturnValue(false);
+      (fs.existsSync as ReturnType<typeof vi.fn>).mockReturnValue(false);
 
       const { getAvailablePolicies } = await import("@/lib/policy-loader");
 
@@ -119,7 +139,7 @@ Content here`;
 
     it("filters out non-markdown files", async () => {
       vi.mocked(fs.existsSync).mockReturnValue(true);
-      vi.mocked(fs.readdirSync).mockReturnValue([
+      (fs.readdirSync as ReturnType<typeof vi.fn>).mockReturnValue([
         "privacy-policy.md",
         "image.png",
         "data.json",
@@ -136,27 +156,29 @@ Content here`;
   describe("loadAllPolicies", () => {
     it("loads all policies with formatted names", async () => {
       vi.mocked(fs.existsSync).mockReturnValue(true);
-      vi.mocked(fs.readdirSync).mockReturnValue([
+      (fs.readdirSync as ReturnType<typeof vi.fn>).mockReturnValue([
         "privacy-policy.md",
         "terms-of-service.md",
       ] as unknown as fs.Dirent[]);
 
-      vi.mocked(fs.readFileSync).mockImplementation((filePath) => {
-        if (String(filePath).includes("privacy-policy")) {
-          return `---
+      (fs.readFileSync as ReturnType<typeof vi.fn>).mockImplementation(
+        (filePath) => {
+          if (String(filePath).includes("privacy-policy")) {
+            return `---
 title: Privacy Policy
 lastUpdated: 2024-01-15
 ---
 
 Privacy content`;
-        }
-        return `---
+          }
+          return `---
 title: Terms of Service
 lastUpdated: 2024-01-20
 ---
 
 Terms content`;
-      });
+        }
+      );
 
       const { loadAllPolicies } = await import("@/lib/policy-loader");
 
@@ -174,11 +196,11 @@ Terms content`;
 
     it("converts kebab-case to Title Case for names", async () => {
       vi.mocked(fs.existsSync).mockReturnValue(true);
-      vi.mocked(fs.readdirSync).mockReturnValue([
+      (fs.readdirSync as ReturnType<typeof vi.fn>).mockReturnValue([
         "cookie-policy.md",
       ] as unknown as fs.Dirent[]);
 
-      vi.mocked(fs.readFileSync).mockReturnValue(`---
+      (fs.readFileSync as ReturnType<typeof vi.fn>).mockReturnValue(`---
 title: Cookie Policy
 ---
 

@@ -11,9 +11,7 @@ interface EntityShapeProps {
  * Shared shadow/glow styles for all shapes
  */
 const getGlowStyle = (color: string, isSelected: boolean) => ({
-  boxShadow: isSelected
-    ? `0 0 20px ${color}`
-    : `0 0 10px ${color}80`,
+  boxShadow: isSelected ? `0 0 20px ${color}` : `0 0 10px ${color}80`,
   willChange: "box-shadow" as const,
   backfaceVisibility: "hidden" as const,
 });
@@ -32,15 +30,19 @@ export function EntityShape({ entity, isSelected }: EntityShapeProps) {
     return (
       <IconComponent
         className="w-full h-full"
-        style={{ 
-          color: entity.color, 
-          width: size, 
+        style={{
+          color: entity.color,
+          width: size,
           height: size,
-          filter: isSelected 
-            ? `drop-shadow(0 0 8px ${entity.color})` 
+          filter: isSelected
+            ? `drop-shadow(0 0 8px ${entity.color})`
             : `drop-shadow(0 0 4px ${entity.color}80)`,
         }}
-        strokeWidth={iconEntry.library === "lucide" || iconEntry.library === "tabler" ? 1.5 : undefined}
+        strokeWidth={
+          iconEntry.library === "lucide" || iconEntry.library === "tabler"
+            ? 1.5
+            : undefined
+        }
       />
     );
   }
@@ -74,7 +76,6 @@ export function EntityShape({ entity, isSelected }: EntityShapeProps) {
       </div>
     );
   }
-
 
   if (entity.shape === "cube") {
     return (
@@ -163,13 +164,13 @@ export function EntityShape({ entity, isSelected }: EntityShapeProps) {
           height: hexSize,
           backgroundColor: entity.color,
           borderColor: entity.color,
-          clipPath: "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
+          clipPath:
+            "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
           ...glowStyle,
         }}
       />
     );
   }
-
 
   if (entity.shape === "sphere") {
     return (
@@ -269,7 +270,8 @@ export function EntityShape({ entity, isSelected }: EntityShapeProps) {
           height: size * 0.85,
           backgroundColor: entity.color,
           borderColor: entity.color,
-          clipPath: "polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%)",
+          clipPath:
+            "polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%)",
           transform: "rotate(22.5deg)",
           ...glowStyle,
         }}
@@ -506,7 +508,8 @@ export function EntityShape({ entity, isSelected }: EntityShapeProps) {
         style={{
           width: size,
           height: size,
-          clipPath: "polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)",
+          clipPath:
+            "polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)",
           backgroundColor: entity.color,
           ...glowStyle,
         }}
@@ -518,7 +521,12 @@ export function EntityShape({ entity, isSelected }: EntityShapeProps) {
     return (
       <div className="relative" style={{ width: size, height: size }}>
         {/* Spiral arms */}
-        <svg width={size} height={size} className="absolute" style={{ transform: "rotate(45deg)" }}>
+        <svg
+          width={size}
+          height={size}
+          className="absolute"
+          style={{ transform: "rotate(45deg)" }}
+        >
           <path
             d={`M ${size / 2} ${size / 2} 
                 A ${size * 0.2} ${size * 0.2} 0 1 1 ${size * 0.6} ${size * 0.4}

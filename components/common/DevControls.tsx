@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { usePathname } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import { useQuoteViewStore } from "@/components/quotes/store/useQuoteViewStore";
 import { useDevControlsStore } from "./store/useDevControlsStore";
@@ -13,7 +13,7 @@ import type {
 
 /**
  * Global Dev Controls Component
- * 
+ *
  * Route-aware component that shows different controls based on the current page.
  * Available on all pages for testing and development features.
  * Features collapsible functionality with smooth animations.
@@ -159,7 +159,9 @@ function CollapsibleControls({
               }}
               className="mb-4 flex items-center justify-between"
             >
-              <h3 className="text-sm font-semibold text-slate-200 font-inter">{title}</h3>
+              <h3 className="text-sm font-semibold text-slate-200 font-inter">
+                {title}
+              </h3>
               <button
                 onClick={onToggle}
                 className="rounded p-1 text-slate-400 transition-colors hover:bg-slate-800 hover:text-slate-200"
@@ -216,14 +218,16 @@ function QuotesControls() {
   const isHexArraySelected =
     viewMode === "constellation" && activeConstellationVariant === "hex_array";
   const isSolarSystemSelected =
-    viewMode === "constellation" && activeConstellationVariant === "solar_system";
+    viewMode === "constellation" &&
+    activeConstellationVariant === "solar_system";
 
   return (
     <div className="w-full font-inter">
-
       {/* Mode Toggle */}
       <div className="mb-4">
-        <label className="mb-1 block text-xs text-slate-400 font-inter">Mode</label>
+        <label className="mb-1 block text-xs text-slate-400 font-inter">
+          Mode
+        </label>
         <div className="flex gap-2">
           <button
             onClick={() => setViewMode("normal")}
@@ -368,10 +372,11 @@ function HomePageControls() {
 
   return (
     <div className="w-full max-h-[80vh] overflow-y-auto font-inter">
-
       {/* About Me Section */}
       <div className="mb-4">
-        <label className="mb-1 block text-xs text-slate-400 font-inter">About Me</label>
+        <label className="mb-1 block text-xs text-slate-400 font-inter">
+          About Me
+        </label>
         <div className="flex flex-col gap-1">
           {(["aboutMe1", "aboutMe2"] as const).map((variant) => (
             <button
@@ -391,7 +396,9 @@ function HomePageControls() {
 
       {/* Projects Section */}
       <div className="mb-4">
-        <label className="mb-1 block text-xs text-slate-400 font-inter">Projects</label>
+        <label className="mb-1 block text-xs text-slate-400 font-inter">
+          Projects
+        </label>
         <div className="flex flex-col gap-1">
           {(["projectCarousel", "featuredProjects", "bentoGrid"] as const).map(
             (variant) => (
@@ -413,7 +420,9 @@ function HomePageControls() {
 
       {/* Tech Stack Section */}
       <div className="mb-4">
-        <label className="mb-1 block text-xs text-slate-400 font-inter">Tech Stack</label>
+        <label className="mb-1 block text-xs text-slate-400 font-inter">
+          Tech Stack
+        </label>
         <div className="flex flex-col gap-1">
           {(["techStack", "techStack2", "techStack3"] as const).map(
             (variant) => (
@@ -457,4 +466,3 @@ function HomePageControls() {
     </div>
   );
 }
-

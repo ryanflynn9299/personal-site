@@ -21,5 +21,3 @@ export interface DataSurge {
   duration: number; // Animation duration in seconds
   startTime: number; // Timestamp when surge started
 }
-
-

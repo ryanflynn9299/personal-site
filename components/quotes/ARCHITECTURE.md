@@ -112,6 +112,7 @@ viewMode: "normal" | "constellation"
 ### 2. Component Composition
 
 Views are composed of:
+
 - **Container Components**: Orchestrate state and data flow (e.g., `SolarSystemView`)
 - **Presentation Components**: Render UI based on props (e.g., `Entity`, `Comet`)
 - **Custom Hooks**: Encapsulate complex logic (e.g., `useComets`, `usePulseScheduler`)
@@ -188,15 +189,15 @@ Entities are categorized into two types:
 
 ### Global Z-Index Scale
 
-| Z-Index | Layer | Components | Notes |
-|---------|-------|------------|-------|
-| `z-[100]` | **Highest** | Category 1 Tooltips (Sun/Planets) | Above all other elements |
-| `z-50` | **High** | Modals, Command Console, Dev Controls | Interactive overlays |
-| `z-40` | **High** | QuoteModalTitle | Modal title component |
-| `z-[90]` | **High** | Category 2 Tooltips (Comets) | Below Category 1 tooltips |
-| `z-30` | **Medium-High** | Category 2 Entities (Comets/Rockets) | Above focal entities |
-| `z-20` | **Medium** | Category 1 Entities (Sun/Planets) | Focal entities |
-| `z-10` | **Low** | Visual elements, overlays, backgrounds | Within entity containers |
+| Z-Index   | Layer           | Components                             | Notes                     |
+| --------- | --------------- | -------------------------------------- | ------------------------- |
+| `z-[100]` | **Highest**     | Category 1 Tooltips (Sun/Planets)      | Above all other elements  |
+| `z-50`    | **High**        | Modals, Command Console, Dev Controls  | Interactive overlays      |
+| `z-40`    | **High**        | QuoteModalTitle                        | Modal title component     |
+| `z-[90]`  | **High**        | Category 2 Tooltips (Comets)           | Below Category 1 tooltips |
+| `z-30`    | **Medium-High** | Category 2 Entities (Comets/Rockets)   | Above focal entities      |
+| `z-20`    | **Medium**      | Category 1 Entities (Sun/Planets)      | Focal entities            |
+| `z-10`    | **Low**         | Visual elements, overlays, backgrounds | Within entity containers  |
 
 ### Detailed Breakdown by View
 
@@ -271,6 +272,7 @@ When adding new components, follow this decision tree:
 #### Main Orchestrator: `SolarSystemView.tsx`
 
 **Responsibilities**:
+
 - Entity/quote distribution via `buildEntities`
 - Animation loop management
 - Pan/zoom state
@@ -278,6 +280,7 @@ When adding new components, follow this decision tree:
 - Comet generation coordination
 
 **Key State**:
+
 ```typescript
 - selectedEntity: Entity | null
 - isZoomed: boolean
@@ -291,6 +294,7 @@ When adding new components, follow this decision tree:
 **Function**: `buildEntities(quotes: Quote[])`
 
 **Returns**:
+
 ```typescript
 {
   entities: Entity[];           // Planet entities (max 3 quotes each)
@@ -301,6 +305,7 @@ When adding new components, follow this decision tree:
 ```
 
 **Logic**:
+
 1. Prioritize high-priority quotes for sun (up to 3)
 2. Group remaining quotes by tags/categories
 3. Assign up to 3 quotes per planet category
@@ -311,6 +316,7 @@ When adding new components, follow this decision tree:
 **Hook**: `useComets(quotes, containerRef, isZoomed, setCometTriggerCallback)`
 
 **Features**:
+
 - Initial comet generation (3 comets)
 - Periodic spawning (every 2s, 30% chance)
 - Movement animation via `requestAnimationFrame`
@@ -318,6 +324,7 @@ When adding new components, follow this decision tree:
 - Max 5 comets at once
 
 **Quote Selection**:
+
 - Random selection from `quoteBank`
 - `null` in production if no quotes
 - "No quotes available" in dev mode
@@ -325,10 +332,12 @@ When adding new components, follow this decision tree:
 #### Position Calculations: `utils.ts`
 
 **Functions**:
+
 - `getEntityPosition()`: Calculate current orbital position
 - `getEntityClickPosition()`: Position for click handlers
 
 **Algorithm**:
+
 - Elliptical orbits with eccentricity
 - 35° tilt compression for 3D effect
 - Real-time angle updates
@@ -342,6 +351,7 @@ When adding new components, follow this decision tree:
 **Technology**: Zustand with persistence middleware
 
 **State**:
+
 ```typescript
 {
   viewMode: "normal" | "constellation"
@@ -354,22 +364,26 @@ When adding new components, follow this decision tree:
 ```
 
 **Persistence**:
+
 - Only in development environment
 - Excludes callback functions
 - Uses localStorage
 
 **Actions**:
+
 - `setViewMode()`, `setActiveNormalVariant()`, `setActiveConstellationVariant()`
 - `triggerHexSurge()`, `triggerComet()` - Cross-component triggers
 
 ### Local State Patterns
 
 **View-Specific State**:
+
 - Managed within view components
 - Not persisted
 - Reset on view change
 
 **Animation State**:
+
 - Stored in `useRef` to avoid re-renders
 - Updated via `requestAnimationFrame`
 - Cleaned up on unmount
@@ -450,6 +464,7 @@ Animation Loop (requestAnimationFrame)
 ### Adding a New View Variant
 
 1. **Create View Component**:
+
    ```typescript
    // components/quotes/[mode]/[variant]/[Variant]View.tsx
    export function VariantView({ quotes }: VariantViewProps) {
@@ -458,6 +473,7 @@ Animation Loop (requestAnimationFrame)
    ```
 
 2. **Add to Router**:
+
    ```typescript
    // QuoteViewRenderer.tsx
    case "new_variant":
@@ -465,9 +481,14 @@ Animation Loop (requestAnimationFrame)
    ```
 
 3. **Update Types**:
+
    ```typescript
    // app/(portfolio)/quotes/config.ts
-   export type ConstellationVariant = "constellation" | "solar_system" | "hex_array" | "new_variant";
+   export type ConstellationVariant =
+     | "constellation"
+     | "solar_system"
+     | "hex_array"
+     | "new_variant";
    ```
 
 4. **Follow Z-Index Rules**: Use appropriate z-index values from hierarchy
@@ -512,14 +533,14 @@ Animation Loop (requestAnimationFrame)
 
 **Location**: `components/quotes/constellation/solar-system/constants.ts`
 
-| Constant | Value | Purpose |
-|----------|-------|---------|
-| `MAX_QUOTES_PER_ENTITY` | 3 | Maximum quotes per sun/planet |
-| `TOOLTIP_HIDE_DELAY` | 400ms | Delay before hiding tooltip |
-| `COMET_INITIAL_COUNT` | 3 | Initial comets on load |
-| `COMET_MAX_COUNT` | 5 | Maximum concurrent comets |
-| `COMET_SPAWN_CHANCE` | 0.3 | Probability of spawning new comet |
-| `COMET_SPAWN_INTERVAL` | 2000ms | Interval between spawn checks |
+| Constant                | Value  | Purpose                           |
+| ----------------------- | ------ | --------------------------------- |
+| `MAX_QUOTES_PER_ENTITY` | 3      | Maximum quotes per sun/planet     |
+| `TOOLTIP_HIDE_DELAY`    | 400ms  | Delay before hiding tooltip       |
+| `COMET_INITIAL_COUNT`   | 3      | Initial comets on load            |
+| `COMET_MAX_COUNT`       | 5      | Maximum concurrent comets         |
+| `COMET_SPAWN_CHANCE`    | 0.3    | Probability of spawning new comet |
+| `COMET_SPAWN_INTERVAL`  | 2000ms | Interval between spawn checks     |
 
 ---
 
@@ -560,4 +581,3 @@ Animation Loop (requestAnimationFrame)
 **Last Updated**: 2024  
 **Maintainer**: Development Team  
 **Status**: Active Development
-

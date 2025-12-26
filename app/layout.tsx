@@ -47,7 +47,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${fontHeading.variable} ${fontSans.variable} ${fontInter.variable} ${fontMono.variable}`}>
+    <html
+      lang="en"
+      className={`${fontHeading.variable} ${fontSans.variable} ${fontInter.variable} ${fontMono.variable}`}
+    >
       <body className="text-slate-200 antialiased">
         <MatomoProvider />
         <ToastProvider>

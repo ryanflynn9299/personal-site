@@ -79,7 +79,7 @@ export function QuotesPageClient() {
                 )
               `,
               mixBlendMode: "screen",
-          }}
+            }}
           />
           <QuoteViewRenderer quotes={dummyQuotes} />
         </motion.div>

@@ -2,7 +2,6 @@
 
 import { useMemo, useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import type { Quote } from "@/app/(portfolio)/quotes/config";
 import { QuoteModalTitle } from "@/components/quotes/QuoteModalTitle";
 import { useQuoteViewStore } from "@/components/quotes/store/useQuoteViewStore";
 import type { Entity, SolarSystemViewProps } from "./types";
@@ -17,7 +16,7 @@ import { CommandConsole } from "./components/CommandConsole";
 import { TOOLTIP_HIDE_DELAY } from "./constants";
 
 export function SolarSystemView({ quotes }: SolarSystemViewProps) {
-  const { entities, sunEntity, usedQuoteIds, quoteBank } = useMemo(
+  const { entities, sunEntity, quoteBank } = useMemo(
     () => buildEntities(quotes),
     [quotes]
   );
@@ -33,7 +32,12 @@ export function SolarSystemView({ quotes }: SolarSystemViewProps) {
 
   const { setCometTriggerCallback } = useQuoteViewStore();
   // Use quote bank for comets (leftover quotes from entities)
-  const { comets } = useComets(quoteBank, containerRef, isZoomed, setCometTriggerCallback);
+  const { comets } = useComets(
+    quoteBank,
+    containerRef,
+    isZoomed,
+    setCometTriggerCallback
+  );
 
   // Update orbital positions
   useEffect(() => {
@@ -65,7 +69,10 @@ export function SolarSystemView({ quotes }: SolarSystemViewProps) {
     const centerY = rect.height / 2;
 
     // Calculate entity position in original coordinate system (elliptical with eccentricity)
-    const { x: entityX, y: entityY } = getEntityClickPosition(entity, containerRef);
+    const { x: entityX, y: entityY } = getEntityClickPosition(
+      entity,
+      containerRef
+    );
 
     // Target position: top-center of screen
     const targetX = centerX;
@@ -183,8 +190,8 @@ export function SolarSystemView({ quotes }: SolarSystemViewProps) {
         {/* Category 1: Central Star (Sun) - z-20 */}
         {/* Rendered after orbit lines to ensure it's clickable */}
         {sunEntity && (
-          <Sun 
-            sunEntity={sunEntity} 
+          <Sun
+            sunEntity={sunEntity}
             onClick={handleEntityClick}
             onHover={() => handleEntityHover(sunEntity.id)}
             onHoverEnd={handleEntityHoverEnd}
@@ -214,8 +221,8 @@ export function SolarSystemView({ quotes }: SolarSystemViewProps) {
       {/* Category 2: Comets - z-30 entities */}
       {/* May render above Category 1 entities, tooltips below Category 1 tooltips */}
       {comets.map((comet) => (
-        <Comet 
-          key={comet.id} 
+        <Comet
+          key={comet.id}
           comet={comet}
           onHover={() => setHoveredCometId(comet.id)}
           onHoverEnd={() => setHoveredCometId(null)}
@@ -224,7 +231,7 @@ export function SolarSystemView({ quotes }: SolarSystemViewProps) {
 
       {/* Category 1 Tooltips Layer - z-100, rendered after all entities */}
       {/* All Category 1 tooltips in same stacking context, above everything */}
-      <motion.div 
+      <motion.div
         className="absolute inset-0 pointer-events-none z-[100]"
         style={{
           x: panState.x,
@@ -240,14 +247,12 @@ export function SolarSystemView({ quotes }: SolarSystemViewProps) {
         }}
       >
         {sunEntity && hoveredEntityId === sunEntity.id && (
-          <div
-            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
-          >
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
             <div
               className="absolute bottom-full left-0 -translate-x-1/2 mb-2 w-72 p-4 bg-slate-900/95 border-2 rounded-lg shadow-xl backdrop-blur-xl"
               style={{
                 borderColor: sunEntity.color,
-                left: '50%',
+                left: "50%",
               }}
             >
               <p
@@ -258,9 +263,7 @@ export function SolarSystemView({ quotes }: SolarSystemViewProps) {
               >
                 {sunEntity.name}
               </p>
-              <p className="text-xs text-slate-400 font-mono mb-2">
-                0.0 AU
-              </p>
+              <p className="text-xs text-slate-400 font-mono mb-2">0.0 AU</p>
               <p className="text-xs text-slate-300 leading-relaxed">
                 Click to explore more quotes
               </p>
@@ -271,7 +274,7 @@ export function SolarSystemView({ quotes }: SolarSystemViewProps) {
           if (hoveredEntityId !== entity.id) return null;
           const position = getEntityPosition(entity, containerRef);
           const auDistance = (entity.orbitRadius / 15).toFixed(1);
-          
+
           return (
             <div
               key={`tooltip-${entity.id}`}
@@ -313,12 +316,12 @@ export function SolarSystemView({ quotes }: SolarSystemViewProps) {
       <div className="absolute inset-0 pointer-events-none z-[90]">
         {comets.map((comet) => {
           if (hoveredCometId !== comet.id) return null;
-          
+
           // Don't show tooltip if no quote (production) or show "No quotes available" in dev
           if (!comet.quote) {
             // In dev mode, show "No quotes available", in prod show nothing
             if (process.env.NODE_ENV !== "development") return null;
-            
+
             return (
               <div
                 key={`tooltip-${comet.id}`}
@@ -337,7 +340,7 @@ export function SolarSystemView({ quotes }: SolarSystemViewProps) {
               </div>
             );
           }
-          
+
           return (
             <div
               key={`tooltip-${comet.id}`}

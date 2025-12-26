@@ -10,7 +10,7 @@ interface MissionControlViewProps {
 
 /**
  * Mission Control View - Deep Space Terminal Interface
- * 
+ *
  * A pristine, read-only data stream that evokes a high-fidelity
  * "Deep Space Terminal" interface with HUD Plate aesthetic.
  */
@@ -23,7 +23,7 @@ export function MissionControlView({ quotes }: MissionControlViewProps) {
 
   const handleCopy = useCallback(async (quote: Quote) => {
     const textToCopy = quote.text + (quote.author ? ` — ${quote.author}` : "");
-    
+
     try {
       await navigator.clipboard.writeText(textToCopy);
       setCopiedId(quote.id);
@@ -42,7 +42,7 @@ export function MissionControlView({ quotes }: MissionControlViewProps) {
           <section className="mb-16 border-b border-slate-800 pb-12">
             <div className="mb-6 flex items-center gap-3">
               <span className="font-mono text-xs font-medium text-slate-500 animate-pulse">
-                // TRANSMISSION_RECEIVED
+                {"// TRANSMISSION_RECEIVED"}
               </span>
             </div>
             <div className="space-y-6">
@@ -55,8 +55,10 @@ export function MissionControlView({ quotes }: MissionControlViewProps) {
                   <span>{transmissionOfTheDay.author}</span>
                   {transmissionOfTheDay.source && (
                     <>
-                      <span className="text-slate-600">//</span>
-                      <span className="text-slate-500">{transmissionOfTheDay.source}</span>
+                      <span className="text-slate-600">{"//"}</span>
+                      <span className="text-slate-500">
+                        {transmissionOfTheDay.source}
+                      </span>
                     </>
                   )}
                 </div>
@@ -69,10 +71,10 @@ export function MissionControlView({ quotes }: MissionControlViewProps) {
         <section>
           <div className="mb-8 flex items-center gap-3">
             <span className="font-mono text-xs font-medium text-slate-600">
-              // ARCHIVE_ACCESS
+              {"// ARCHIVE_ACCESS"}
             </span>
           </div>
-          
+
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
             {remainingQuotes.map((quote) => {
               const isHighPriority = quote.priority === "high";
@@ -106,7 +108,7 @@ export function MissionControlView({ quotes }: MissionControlViewProps) {
                       )}
                       {quote.source && (
                         <>
-                          <span className="text-slate-600">//</span>
+                          <span className="text-slate-600">{"//"}</span>
                           <span className="text-slate-500">{quote.source}</span>
                         </>
                       )}

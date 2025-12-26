@@ -26,4 +26,27 @@ describe("delay", () => {
     const result = delay(100);
     expect(result).toBeInstanceOf(Promise);
   });
+
+  it("actually delays in non-test environment", async () => {
+    const originalEnv = process.env.NODE_ENV;
+    const originalVitest = process.env.VITEST;
+
+    // Temporarily set to production to test actual delay
+    process.env.NODE_ENV = "production";
+    delete process.env.VITEST;
+
+    const start = Date.now();
+    await delay(50); // Short delay for test speed
+    const elapsed = Date.now() - start;
+
+    // Should have actually delayed (with some tolerance)
+    expect(elapsed).toBeGreaterThanOrEqual(45);
+    expect(elapsed).toBeLessThan(200); // Should complete reasonably quickly
+
+    // Restore environment
+    process.env.NODE_ENV = originalEnv;
+    if (originalVitest) {
+      process.env.VITEST = originalVitest;
+    }
+  });
 });

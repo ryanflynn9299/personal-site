@@ -32,7 +32,6 @@ export function ViewDevControls() {
   }, [isExpanded]);
 
   const collapsedHeight = 60; // Approximate collapsed height
-  const expandedHeight = isHexArraySelected ? 450 : 350; // Approximate expanded height
 
   return (
     <div
@@ -57,88 +56,88 @@ export function ViewDevControls() {
             </button>
           </div>
 
-      {/* Mode Toggle */}
-      <div className="mb-4">
-        <label className="mb-1 block text-xs text-slate-400">Mode</label>
-        <div className="flex gap-2">
-          <button
-            onClick={() => setViewMode("normal")}
-            className={`rounded px-3 py-1 text-xs transition-colors ${
-              viewMode === "normal"
-                ? "bg-blue-600 text-white"
-                : "bg-slate-700 text-slate-300 hover:bg-slate-600"
-            }`}
-          >
-            Normal
-          </button>
-          <button
-            onClick={() => setViewMode("constellation")}
-            className={`rounded px-3 py-1 text-xs transition-colors ${
-              viewMode === "constellation"
-                ? "bg-blue-600 text-white"
-                : "bg-slate-700 text-slate-300 hover:bg-slate-600"
-            }`}
-          >
-            Constellation
-          </button>
-        </div>
-      </div>
-
-      {/* Normal Variants */}
-      {viewMode === "normal" && (
-        <div className="mb-4">
-          <label className="mb-1 block text-xs text-slate-400">
-            Normal Variant
-          </label>
-          <div className="flex flex-col gap-1">
-            {(["mission_control", "tesseract"] as NormalVariant[]).map(
-              (variant) => (
-                <button
-                  key={variant}
-                  onClick={() => setActiveNormalVariant(variant)}
-                  className={`rounded px-2 py-1 text-left text-xs transition-colors ${
-                    activeNormalVariant === variant
-                      ? "bg-purple-600 text-white"
-                      : "bg-slate-700 text-slate-300 hover:bg-slate-600"
-                  }`}
-                >
-                  {variant.replace("_", " ")}
-                </button>
-              )
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* Constellation Variants */}
-      {viewMode === "constellation" && (
-        <div className="mb-4">
-          <label className="mb-1 block text-xs text-slate-400">
-            Constellation Variant
-          </label>
-          <div className="flex flex-col gap-1">
-            {(
-              [
-                "constellation",
-                "solar_system",
-                "hex_array",
-              ] as ConstellationVariant[]
-            ).map((variant) => (
+          {/* Mode Toggle */}
+          <div className="mb-4">
+            <label className="mb-1 block text-xs text-slate-400">Mode</label>
+            <div className="flex gap-2">
               <button
-                key={variant}
-                onClick={() => setActiveConstellationVariant(variant)}
-                className={`rounded px-2 py-1 text-left text-xs transition-colors ${
-                  activeConstellationVariant === variant
-                    ? "bg-purple-600 text-white"
+                onClick={() => setViewMode("normal")}
+                className={`rounded px-3 py-1 text-xs transition-colors ${
+                  viewMode === "normal"
+                    ? "bg-blue-600 text-white"
                     : "bg-slate-700 text-slate-300 hover:bg-slate-600"
                 }`}
               >
-                {variant.replace("_", " ")}
+                Normal
               </button>
-            ))}
+              <button
+                onClick={() => setViewMode("constellation")}
+                className={`rounded px-3 py-1 text-xs transition-colors ${
+                  viewMode === "constellation"
+                    ? "bg-blue-600 text-white"
+                    : "bg-slate-700 text-slate-300 hover:bg-slate-600"
+                }`}
+              >
+                Constellation
+              </button>
+            </div>
           </div>
-        </div>
-      )}
+
+          {/* Normal Variants */}
+          {viewMode === "normal" && (
+            <div className="mb-4">
+              <label className="mb-1 block text-xs text-slate-400">
+                Normal Variant
+              </label>
+              <div className="flex flex-col gap-1">
+                {(["mission_control", "tesseract"] as NormalVariant[]).map(
+                  (variant) => (
+                    <button
+                      key={variant}
+                      onClick={() => setActiveNormalVariant(variant)}
+                      className={`rounded px-2 py-1 text-left text-xs transition-colors ${
+                        activeNormalVariant === variant
+                          ? "bg-purple-600 text-white"
+                          : "bg-slate-700 text-slate-300 hover:bg-slate-600"
+                      }`}
+                    >
+                      {variant.replace("_", " ")}
+                    </button>
+                  )
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Constellation Variants */}
+          {viewMode === "constellation" && (
+            <div className="mb-4">
+              <label className="mb-1 block text-xs text-slate-400">
+                Constellation Variant
+              </label>
+              <div className="flex flex-col gap-1">
+                {(
+                  [
+                    "constellation",
+                    "solar_system",
+                    "hex_array",
+                  ] as ConstellationVariant[]
+                ).map((variant) => (
+                  <button
+                    key={variant}
+                    onClick={() => setActiveConstellationVariant(variant)}
+                    className={`rounded px-2 py-1 text-left text-xs transition-colors ${
+                      activeConstellationVariant === variant
+                        ? "bg-purple-600 text-white"
+                        : "bg-slate-700 text-slate-300 hover:bg-slate-600"
+                    }`}
+                  >
+                    {variant.replace("_", " ")}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Hex Surge Controls - Only show when hex_array is selected */}
           {isHexArraySelected && (

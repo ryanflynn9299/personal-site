@@ -85,6 +85,7 @@ const eslintConfig = [
       "public/**",
       "dist/**",
       "build/**",
+      "coverage/**",
     ],
   },
 ];

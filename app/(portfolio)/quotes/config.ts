@@ -21,7 +21,7 @@ export interface Quote {
   author?: string;
   source?: string;
   tags?: string[];
-  priority?: 'high' | 'normal';
+  priority?: "high" | "normal";
 }
 
 /**

@@ -69,7 +69,8 @@ export const useQuoteViewStore = create<QuoteViewState>()(
         }
       },
       setViewMode: (mode) => set({ viewMode: mode }),
-      setActiveNormalVariant: (variant) => set({ activeNormalVariant: variant }),
+      setActiveNormalVariant: (variant) =>
+        set({ activeNormalVariant: variant }),
       setActiveConstellationVariant: (variant) =>
         set({ activeConstellationVariant: variant }),
       setHexSurgeEnabled: (enabled) => set({ hexSurgeEnabled: enabled }),

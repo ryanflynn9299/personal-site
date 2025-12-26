@@ -18,11 +18,11 @@ export function getEntityPosition(
   const a = entity.orbitRadius;
   const e = entity.eccentricity;
   const b = a * Math.sqrt(1 - e * e);
-  
+
   // Apply tilt compression on top of eccentricity
   const rx = a; // Semi-major axis (horizontal)
   const ry = b * ELLIPSE_COMPRESSION; // Semi-minor axis compressed by tilt
-  
+
   // Calculate position on elliptical orbit
   const baseX = centerX + Math.cos(entity.angle) * rx;
   const baseY = centerY + Math.sin(entity.angle) * ry;
@@ -52,4 +52,3 @@ export function getEntityClickPosition(
 
   return { x: entityX, y: entityY };
 }
-

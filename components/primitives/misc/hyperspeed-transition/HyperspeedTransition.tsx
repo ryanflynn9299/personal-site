@@ -9,7 +9,7 @@ import { ReactNode } from "react";
  * - Zooms FOV from 90 to 150 (simulated with scale)
  * - Increases speed multiplier (simulated with motion blur and streaking)
  * - Creates visual distortion/warping effect
- * 
+ *
  * This transition creates the iconic "jump to lightspeed" effect.
  */
 
@@ -21,7 +21,7 @@ export interface HyperspeedTransitionProps {
 /**
  * Animation variants for the hyperspeed transition
  * Mimics the FOV zoom (90 -> 150) and speed increase from hyperspeed component
- * 
+ *
  * The transition works as follows:
  * - Exit: Content zooms out and blurs (jumping to hyperspace)
  * - Initial: New content starts from far away (coming out of hyperspace)
@@ -127,7 +127,7 @@ export function HyperspeedTransition({
           mixBlendMode: "screen",
         }}
       />
-      
+
       {/* Main content with hyperspeed transition */}
       <motion.div
         variants={hyperspeedVariants}
@@ -140,4 +140,3 @@ export function HyperspeedTransition({
     </div>
   );
 }
-

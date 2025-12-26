@@ -1,6 +1,6 @@
 // UI constants (breakpoints, default values, component constants)
 
-import { magicBento, toast as toastColors } from "./theme";
+import { magicBento } from "./theme";
 
 // MagicBento component defaults
 export const DEFAULT_PARTICLE_COUNT = 12;

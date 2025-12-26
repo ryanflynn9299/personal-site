@@ -17,7 +17,7 @@ export function Sun({ sunEntity, onClick, onHover, onHoverEnd }: SunProps) {
       onClick={() => onClick(sunEntity)}
       onMouseEnter={onHover}
       onMouseLeave={onHoverEnd}
-        >
+    >
       {/* Sun visual - z-10 ensures it's above background */}
       <motion.div
         className="relative z-10 h-12 w-12"

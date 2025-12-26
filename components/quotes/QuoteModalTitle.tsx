@@ -23,7 +23,11 @@ const MODAL_STYLES = {
   textSize: "text-base",
 } as const;
 
-export function QuoteModalTitle({ title, description, className = "" }: QuoteModalTitleProps) {
+export function QuoteModalTitle({
+  title,
+  description,
+  className = "",
+}: QuoteModalTitleProps) {
   return (
     <div
       className={`pointer-events-auto absolute left-0 top-0 z-40 ${className}`}
@@ -57,4 +61,3 @@ export function QuoteModalTitle({ title, description, className = "" }: QuoteMod
     </div>
   );
 }
-

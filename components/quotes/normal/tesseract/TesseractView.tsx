@@ -70,14 +70,6 @@ export function TesseractView({ quotes }: TesseractViewProps) {
   const isScrollingRef = useRef(false);
   const isRotatingRef = useRef(false);
 
-  // Organize quotes by category
-  const quotesByCategory = useMemo(() => {
-    const organized: { [key: string]: Quote[] } = {};
-    categories.forEach((cat) => {
-      organized[cat.id] = cat.quotes;
-    });
-    return organized;
-  }, [categories]);
 
   // Calculate rotation from category index
   const getRotationForCategory = useCallback(
@@ -93,21 +85,18 @@ export function TesseractView({ quotes }: TesseractViewProps) {
   );
 
   // Scroll to category section
-  const scrollToCategory = useCallback(
-    (index: number) => {
-      if (sectionRefs.current[index] && !isScrollingRef.current) {
-        isScrollingRef.current = true;
-        sectionRefs.current[index]?.scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-        });
-        setTimeout(() => {
-          isScrollingRef.current = false;
-        }, 1000);
-      }
-    },
-    []
-  );
+  const scrollToCategory = useCallback((index: number) => {
+    if (sectionRefs.current[index] && !isScrollingRef.current) {
+      isScrollingRef.current = true;
+      sectionRefs.current[index]?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+      setTimeout(() => {
+        isScrollingRef.current = false;
+      }, 1000);
+    }
+  }, []);
 
   // Handle tesseract rotation change (from drag/click)
   const handleRotationChange = useCallback(
@@ -147,9 +136,6 @@ export function TesseractView({ quotes }: TesseractViewProps) {
       if (isScrollingRef.current || !feedRef.current) return;
 
       const scrollTop = feedRef.current.scrollTop;
-      const scrollHeight = feedRef.current.scrollHeight;
-      const clientHeight = feedRef.current.clientHeight;
-      const scrollProgress = scrollTop / (scrollHeight - clientHeight);
 
       // Determine active category based on scroll position
       const sectionHeights = sectionRefs.current.map(
@@ -186,24 +172,24 @@ export function TesseractView({ quotes }: TesseractViewProps) {
   useEffect(() => {
     const updateTesseractSize = () => {
       if (!tesseractRef.current) return;
-      
+
       const smallerDimension = Math.min(window.innerHeight, window.innerWidth);
       const size = smallerDimension * 0.42; // 42% of smaller dimension (between 1/3 and 1/2)
-      
+
       if (window.innerWidth >= 1024) {
         // Desktop: square sidebar
         tesseractRef.current.style.width = `${size}px`;
         tesseractRef.current.style.height = `${size}px`;
       } else {
         // Mobile: full width, calculated height
-        tesseractRef.current.style.width = '100%';
+        tesseractRef.current.style.width = "100%";
         tesseractRef.current.style.height = `${size}px`;
       }
     };
 
     updateTesseractSize();
-    window.addEventListener('resize', updateTesseractSize);
-    return () => window.removeEventListener('resize', updateTesseractSize);
+    window.addEventListener("resize", updateTesseractSize);
+    return () => window.removeEventListener("resize", updateTesseractSize);
   }, []);
 
   // Get active category color
@@ -213,7 +199,7 @@ export function TesseractView({ quotes }: TesseractViewProps) {
   return (
     <div className="flex h-screen flex-col bg-slate-950 lg:flex-row">
       {/* 3D Tesseract Navigation - Sidebar on desktop, sticky top on mobile */}
-      <div 
+      <div
         ref={tesseractRef}
         className="border-b border-slate-800 bg-slate-950 lg:border-b-0 lg:border-r lg:flex-shrink-0"
       >
@@ -232,10 +218,7 @@ export function TesseractView({ quotes }: TesseractViewProps) {
         <div className="border-t border-slate-800 bg-slate-950 p-4 lg:hidden">
           <div className="font-mono text-xs text-slate-500">
             ACTIVE:{" "}
-            <span
-              className="font-semibold"
-              style={{ color: activeColor }}
-            >
+            <span className="font-semibold" style={{ color: activeColor }}>
               {activeCategory?.name.toUpperCase() || "ALL"}
             </span>
           </div>
@@ -325,7 +308,7 @@ function QuoteCard({
           )}
           {quote.source && (
             <>
-              <span className="text-slate-600">//</span>
+              <span className="text-slate-600">{"//"}</span>
               <span className="text-slate-500">{quote.source}</span>
             </>
           )}
@@ -335,10 +318,7 @@ function QuoteCard({
       {quote.tags && quote.tags.length > 0 && (
         <div className="mt-4 flex flex-wrap gap-2">
           {quote.tags.map((tag, idx) => (
-            <span
-              key={idx}
-              className="font-mono text-xs text-slate-600"
-            >
+            <span key={idx} className="font-mono text-xs text-slate-600">
               #{tag}
             </span>
           ))}

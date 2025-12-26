@@ -3,6 +3,13 @@ import { render } from "@testing-library/react";
 import { JsonLd } from "@/components/common/JsonLd";
 import type { Post } from "@/types";
 
+// Mock the seo module to enable blog SEO for tests
+vi.mock("@/lib/seo", () => ({
+  SITE_URL: "https://www.ryanflynn.org",
+  SITE_AUTHOR: "Ryan Flynn",
+  ENABLE_BLOG_SEO: true, // Enable for tests
+}));
+
 describe("JsonLd", () => {
   const mockPost: Post = {
     id: "1",
@@ -64,7 +71,8 @@ describe("JsonLd", () => {
     );
     const jsonLd = JSON.parse(script?.innerHTML || "{}");
 
-    expect(jsonLd.datePublished).toBe("2024-01-15T00:00:00Z");
+    // toISOString() includes milliseconds, so we check it starts with the expected date
+    expect(jsonLd.datePublished).toMatch(/^2024-01-15T00:00:00/);
   });
 
   it("includes author information", () => {
@@ -86,7 +94,7 @@ describe("JsonLd", () => {
     const jsonLd = JSON.parse(script?.innerHTML || "{}");
 
     expect(jsonLd.publisher["@type"]).toBe("Person");
-    expect(jsonLd.publisher.name).toBe("John Doe");
+    expect(jsonLd.publisher.name).toBe("Ryan Flynn"); // Publisher uses SITE_AUTHOR, not post author
   });
 
   it("includes image URL when feature_image is present", () => {
@@ -98,7 +106,9 @@ describe("JsonLd", () => {
     );
     const jsonLd = JSON.parse(script?.innerHTML || "{}");
 
-    expect(jsonLd.image).toContain("/assets/123");
+    expect(jsonLd.image).toBeDefined();
+    expect(jsonLd.image["@type"]).toBe("ImageObject");
+    expect(jsonLd.image.url).toContain("/assets/123");
 
     vi.unstubAllEnvs();
   });

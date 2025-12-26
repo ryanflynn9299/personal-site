@@ -68,4 +68,3 @@ For questions about this privacy policy, please contact us at [privacy@example.c
 This policy may be updated from time to time. We will notify you of any changes by posting the new Privacy Policy on this page.
 
 Last updated: January 15, 2025
-

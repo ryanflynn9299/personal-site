@@ -136,8 +136,8 @@ export default function VitaePage() {
                 title="View Project File Cabinet (Dev Only)"
               >
                 {/*<span className="text-xs">File Cabinet</span>*/}
-                  <span className="text-xs font-semibold">More Projects</span>
-                  <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-1" />
+                <span className="text-xs font-semibold">More Projects</span>
+                <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-1" />
               </Link>
             )}
           </div>

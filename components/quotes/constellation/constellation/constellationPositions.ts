@@ -31,7 +31,6 @@ import { quotes } from "@/constants/theme";
  *   y: 0 = top edge, 1 = bottom edge
  */
 export const CONSTELLATION_METADATA: ConstellationMetadata[] = [
-
   // Constellation 1: 4 stars, square variant, blue
   {
     position: { x: 0.25, y: 0.45 },
@@ -40,7 +39,7 @@ export const CONSTELLATION_METADATA: ConstellationMetadata[] = [
     size: 4,
     variantIndex: 0, // Square variant
   },
-  
+
   // Constellation 2: 5 stars, diamond variant, purple
   {
     position: { x: 0.75, y: 0.3 },
@@ -49,19 +48,19 @@ export const CONSTELLATION_METADATA: ConstellationMetadata[] = [
     size: 5,
     variantIndex: 0, // Diamond variant
   },
-  
+
   // Constellation 3: 4 stars, L-shape variant, pink
   {
-    position: { x: 0.30, y: 0.67 },
+    position: { x: 0.3, y: 0.67 },
     color: quotes.constellation.pink,
     colorName: "Pink",
     size: 4,
     variantIndex: 1, // L-shape variant
   },
-  
+
   // Constellation 4: 7 stars, default variant, green
   {
-    position: { x: 0.70, y: 0.57 },
+    position: { x: 0.7, y: 0.57 },
     color: quotes.constellation.emerald,
     colorName: "Green",
     size: 7,
@@ -74,7 +73,9 @@ export const CONSTELLATION_METADATA: ConstellationMetadata[] = [
  * Different sizes and shapes for visual variety
  * Each size can have multiple variants
  */
-export const CONSTELLATION_PATTERNS: { [key: number]: Array<Array<[number, number]>> } = {
+export const CONSTELLATION_PATTERNS: {
+  [key: number]: Array<Array<[number, number]>>;
+} = {
   // 4-star patterns - two variants
   4: [
     // Variant 1: Small compact square
@@ -104,11 +105,11 @@ export const CONSTELLATION_PATTERNS: { [key: number]: Array<Array<[number, numbe
     ],
     // Variant 2: Cross pattern
     [
-      [0, -0.4],    // Top
-      [-0.4, 0],    // Left
-      [0, 0],       // Center
-      [0.4, 0],     // Right
-      [0, 0.4],     // Bottom
+      [0, -0.4], // Top
+      [-0.4, 0], // Left
+      [0, 0], // Center
+      [0.4, 0], // Right
+      [0, 0.4], // Bottom
     ],
   ],
   // 6-star pattern
@@ -168,7 +169,9 @@ export const CONSTELLATION_PATTERNS: { [key: number]: Array<Array<[number, numbe
  * Each size can have multiple variants matching the pattern variants
  * Format: [starIndexA, starIndexB] means star A connects to star B
  */
-export const CONNECTION_PATTERNS: { [key: number]: Array<Array<[number, number]>> } = {
+export const CONNECTION_PATTERNS: {
+  [key: number]: Array<Array<[number, number]>>;
+} = {
   // 4-star connection patterns - two variants
   4: [
     // Variant 1: Square connections
@@ -258,4 +261,3 @@ export const CONNECTION_PATTERNS: { [key: number]: Array<Array<[number, number]>
     ],
   ],
 };
-

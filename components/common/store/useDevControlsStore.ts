@@ -3,16 +3,16 @@
 import { create } from "zustand";
 
 // Home page controls
-export type HomePageSection = 
-  | "aboutMe1" 
-  | "aboutMe2" 
-  | "projectCarousel" 
-  | "featuredProjects" 
+export type HomePageSection =
+  | "aboutMe1"
+  | "aboutMe2"
+  | "projectCarousel"
+  | "featuredProjects"
   | "bentoGrid"
-  | "techStack" 
-  | "techStack2" 
+  | "techStack"
+  | "techStack2"
   | "techStack3"
-  | "blogHighlight" 
+  | "blogHighlight"
   | "blogHighlight4";
 
 interface HomePageState {
@@ -21,9 +21,15 @@ interface HomePageState {
   selectedTechStack: "techStack" | "techStack2" | "techStack3";
   selectedBlogHighlight: "blogHighlight" | "blogHighlight4";
   setSelectedAboutMe: (variant: "aboutMe1" | "aboutMe2") => void;
-  setSelectedProjects: (variant: "projectCarousel" | "featuredProjects" | "bentoGrid") => void;
-  setSelectedTechStack: (variant: "techStack" | "techStack2" | "techStack3") => void;
-  setSelectedBlogHighlight: (variant: "blogHighlight" | "blogHighlight4") => void;
+  setSelectedProjects: (
+    variant: "projectCarousel" | "featuredProjects" | "bentoGrid"
+  ) => void;
+  setSelectedTechStack: (
+    variant: "techStack" | "techStack2" | "techStack3"
+  ) => void;
+  setSelectedBlogHighlight: (
+    variant: "blogHighlight" | "blogHighlight4"
+  ) => void;
 }
 
 // Quotes page controls (from existing store)
@@ -35,7 +41,9 @@ interface QuoteViewState {
   hexSurgeTriggerCallback: (() => void) | null;
   setViewMode: (mode: "normal" | "constellation") => void;
   setActiveNormalVariant: (variant: "mission_control" | "tesseract") => void;
-  setActiveConstellationVariant: (variant: "constellation" | "solar_system" | "hex_array") => void;
+  setActiveConstellationVariant: (
+    variant: "constellation" | "solar_system" | "hex_array"
+  ) => void;
   setHexSurgeEnabled: (enabled: boolean) => void;
   setHexSurgeTriggerCallback: (callback: (() => void) | null) => void;
   triggerHexSurge: () => void;
@@ -53,7 +61,8 @@ export const useDevControlsStore = create<DevControlsState>((set, get) => ({
   setSelectedAboutMe: (variant) => set({ selectedAboutMe: variant }),
   setSelectedProjects: (variant) => set({ selectedProjects: variant }),
   setSelectedTechStack: (variant) => set({ selectedTechStack: variant }),
-  setSelectedBlogHighlight: (variant) => set({ selectedBlogHighlight: variant }),
+  setSelectedBlogHighlight: (variant) =>
+    set({ selectedBlogHighlight: variant }),
 
   // Quotes page state
   viewMode: "normal",
@@ -72,7 +81,6 @@ export const useDevControlsStore = create<DevControlsState>((set, get) => ({
   setActiveConstellationVariant: (variant) =>
     set({ activeConstellationVariant: variant }),
   setHexSurgeEnabled: (enabled) => set({ hexSurgeEnabled: enabled }),
-  setHexSurgeTriggerCallback: (callback) => set({ hexSurgeTriggerCallback: callback }),
+  setHexSurgeTriggerCallback: (callback) =>
+    set({ hexSurgeTriggerCallback: callback }),
 }));
-
-

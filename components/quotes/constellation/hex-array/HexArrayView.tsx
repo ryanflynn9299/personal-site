@@ -12,7 +12,7 @@ import {
 } from "@/components/common/SpaceMarkdownIcons";
 import { usePulseScheduler } from "./usePulseScheduler";
 import { HexPulse } from "./HexPulse";
-import type {DataSurge, HexTile} from "./types";
+import type { DataSurge, HexTile } from "./types";
 import { buildVertexGraph } from "./vertexGraph";
 import { useSurgeSpawner } from "./useSurgeSpawner";
 import { SurgePath } from "./SurgePath";
@@ -47,7 +47,7 @@ function hash(str: string, seed: string = ""): number {
   let hash = 0;
   for (let i = 0; i < combined.length; i++) {
     const char = combined.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
+    hash = (hash << 5) - hash + char;
     hash = hash & hash; // Convert to 32-bit integer
   }
   return Math.abs(hash);
@@ -57,11 +57,7 @@ function hash(str: string, seed: string = ""): number {
  * Calculate distance between two tiles (in grid units)
  * Accounts for hexagonal grid structure
  */
-function tileDistance(
-  index1: number,
-  index2: number,
-  cols: number
-): number {
+function tileDistance(index1: number, index2: number, cols: number): number {
   const row1 = Math.floor(index1 / cols);
   const col1 = index1 % cols;
   const row2 = Math.floor(index2 / cols);
@@ -70,10 +66,10 @@ function tileDistance(
   // Account for hex grid offset (every other row is shifted)
   const offset1 = row1 % 2 === 0 ? 0 : 0.5;
   const offset2 = row2 % 2 === 0 ? 0 : 0.5;
-  
-  const dx = (col1 + offset1) - (col2 + offset2);
+
+  const dx = col1 + offset1 - (col2 + offset2);
   const dy = (row1 - row2) * 0.866; // Vertical spacing in hex grid (sqrt(3)/2)
-  
+
   return Math.sqrt(dx * dx + dy * dy);
 }
 
@@ -89,15 +85,15 @@ function getQuadrant(
 ): number {
   const row = Math.floor(tileIndex / cols);
   const col = tileIndex % cols;
-  
+
   const visibleRows = rows - edgeRows * 2;
   const visibleCols = cols - edgeCols * 2;
   const midRow = edgeRows + Math.floor(visibleRows / 2);
   const midCol = edgeCols + Math.floor(visibleCols / 2);
-  
+
   const isTop = row < midRow;
   const isLeft = col < midCol;
-  
+
   if (isTop && isLeft) return 0; // Top-left
   if (isTop && !isLeft) return 1; // Top-right
   if (!isTop && isLeft) return 2; // Bottom-left
@@ -110,11 +106,11 @@ function getQuadrant(
  * - margin: 24px
  * - width: ~400px (average of min 320px and max 480px)
  * - height: ~180px (estimated: title + text + padding)
- * 
+ *
  * Grid starts at (-HEX_WIDTH, -HEX_HEIGHT) and tiles are positioned at:
  * - x = startX + col * HEX_WIDTH + (row % 2 === 0 ? 0 : HEX_WIDTH / 2)
  * - y = startY + row * HEX_HEIGHT
- * 
+ *
  * We calculate which grid tiles would overlap the modal area
  */
 function getModalExclusionZone(
@@ -126,51 +122,53 @@ function getModalExclusionZone(
   edgeCols: number
 ): Set<number> {
   const excluded = new Set<number>();
-  
+
   // Modal dimensions (in pixels) - calculated beforehand
   const MODAL_MARGIN = 24; // margin from viewport edge
   const MODAL_WIDTH = 400; // average width (between 320-480px)
   const MODAL_HEIGHT = 180; // estimated height (title + 2 lines of text + padding)
-  
+
   // Modal bounds in viewport pixels
   const modalStartX = MODAL_MARGIN;
   const modalEndX = modalStartX + MODAL_WIDTH;
   const modalStartY = MODAL_MARGIN;
   const modalEndY = modalStartY + MODAL_HEIGHT;
-  
+
   // Grid starting position (from generateHexGrid)
   const gridStartX = -hexWidth;
   const gridStartY = -hexHeight;
-  
+
   // Add buffer to ensure no tiles are placed near modal (1 tile buffer)
   const buffer = 1.5; // tiles
-  
+
   // Calculate which grid tiles overlap modal area
   for (let row = edgeRows; row < rows - edgeRows; row++) {
     // Calculate tile Y position in viewport coordinates
     const tileY = gridStartY + row * hexHeight;
-    
+
     // Check if tile Y is within modal bounds (with buffer)
     // Tiles are centered at their Y position, so check if center is in range
-    if (tileY >= modalStartY - hexHeight * buffer && 
-        tileY <= modalEndY + hexHeight * buffer) {
-      
+    if (
+      tileY >= modalStartY - hexHeight * buffer &&
+      tileY <= modalEndY + hexHeight * buffer
+    ) {
       for (let col = edgeCols; col < cols - edgeCols; col++) {
         // Calculate tile X position (accounting for hex grid row offset)
         const rowOffset = row % 2 === 0 ? 0 : hexWidth / 2;
         const tileX = gridStartX + col * hexWidth + rowOffset;
-        
+
         // Check if tile X is within modal bounds (with buffer)
-        if (tileX >= modalStartX - hexWidth * buffer && 
-            tileX <= modalEndX + hexWidth * buffer) {
-          
+        if (
+          tileX >= modalStartX - hexWidth * buffer &&
+          tileX <= modalEndX + hexWidth * buffer
+        ) {
           const tileIndex = row * cols + col;
           excluded.add(tileIndex);
         }
       }
     }
   }
-  
+
   return excluded;
 }
 
@@ -191,7 +189,7 @@ function selectActiveTiles(
 ): Set<number> {
   const activeIndices = new Set<number>();
   const numActive = Math.min(numQuotes, totalTiles);
-  
+
   if (numActive === 0) return activeIndices;
 
   // Larger edge buffer to avoid partial tiles and edge proximity
@@ -203,7 +201,14 @@ function selectActiveTiles(
   const minDistance = 2.5;
 
   // Calculate modal exclusion zone
-  const modalExclusion = getModalExclusionZone(rows, cols, hexWidth, hexHeight, edgeRows, edgeCols);
+  const modalExclusion = getModalExclusionZone(
+    rows,
+    cols,
+    hexWidth,
+    hexHeight,
+    edgeRows,
+    edgeCols
+  );
 
   // Create candidate pool from safe visible area (fully visible tiles only)
   // Exclude tiles in modal area
@@ -225,18 +230,20 @@ function selectActiveTiles(
   }
 
   // Shuffle candidates in each quadrant deterministically
-  const shuffledByQuadrant = candidatesByQuadrant.map((quadCandidates, quadIdx) => {
-    return [...quadCandidates].sort((a, b) => {
-      const hashA = hash(`quadrant-${quadIdx}-candidate-${a}`, seed);
-      const hashB = hash(`quadrant-${quadIdx}-candidate-${b}`, seed);
-      return hashA - hashB;
-    });
-  });
+  const shuffledByQuadrant = candidatesByQuadrant.map(
+    (quadCandidates, quadIdx) => {
+      return [...quadCandidates].sort((a, b) => {
+        const hashA = hash(`quadrant-${quadIdx}-candidate-${a}`, seed);
+        const hashB = hash(`quadrant-${quadIdx}-candidate-${b}`, seed);
+        return hashA - hashB;
+      });
+    }
+  );
 
   // Select tiles ensuring minimum distance between them
   const selected: number[] = [];
   const usedQuadrants = new Set<number>();
-  
+
   for (let quoteIdx = 0; quoteIdx < numActive; quoteIdx++) {
     let found = false;
     let attempts = 0;
@@ -246,10 +253,17 @@ function selectActiveTiles(
     if (quoteIdx < 4) {
       const targetQuadrant = quoteIdx % 4;
       const quadCandidates = shuffledByQuadrant[targetQuadrant];
-      
+
       // Try to find a valid tile in the target quadrant
-      for (let attempt = 0; attempt < quadCandidates.length && !found; attempt++) {
-        const candidateHash = hash(`quote-${quoteIdx}-quadrant-${targetQuadrant}-attempt-${attempt}`, seed);
+      for (
+        let attempt = 0;
+        attempt < quadCandidates.length && !found;
+        attempt++
+      ) {
+        const candidateHash = hash(
+          `quote-${quoteIdx}-quadrant-${targetQuadrant}-attempt-${attempt}`,
+          seed
+        );
         const candidateIndex = candidateHash % quadCandidates.length;
         const candidate = quadCandidates[candidateIndex];
 
@@ -277,8 +291,15 @@ function selectActiveTiles(
       if (!found) {
         for (let quadIdx = 0; quadIdx < 4 && !found; quadIdx++) {
           const quadCandidates = shuffledByQuadrant[quadIdx];
-          for (let attempt = 0; attempt < quadCandidates.length && !found; attempt++) {
-            const candidateHash = hash(`quote-${quoteIdx}-fallback-quadrant-${quadIdx}-attempt-${attempt}`, seed);
+          for (
+            let attempt = 0;
+            attempt < quadCandidates.length && !found;
+            attempt++
+          ) {
+            const candidateHash = hash(
+              `quote-${quoteIdx}-fallback-quadrant-${quadIdx}-attempt-${attempt}`,
+              seed
+            );
             const candidateIndex = candidateHash % quadCandidates.length;
             const candidate = quadCandidates[candidateIndex];
 
@@ -318,7 +339,10 @@ function selectActiveTiles(
 
       // Try to find a valid tile
       while (!found && attempts < maxAttempts && shuffledAll.length > 0) {
-        const candidateHash = hash(`quote-${quoteIdx}-attempt-${attempts}`, seed);
+        const candidateHash = hash(
+          `quote-${quoteIdx}-attempt-${attempts}`,
+          seed
+        );
         const candidateIndex = candidateHash % shuffledAll.length;
         const candidate = shuffledAll[candidateIndex];
 
@@ -363,7 +387,7 @@ function selectActiveTiles(
 
       for (const candidate of allRemaining) {
         if (selected.includes(candidate)) continue;
-        
+
         let isValid = true;
         for (const selectedTile of selected) {
           const distance = tileDistance(candidate, selectedTile, cols);
@@ -405,7 +429,7 @@ function generateHexGrid(
   seed: string
 ): HexTile[] {
   const tiles: HexTile[] = [];
-  
+
   // Calculate number of rows and columns needed to cover viewport
   // Add extra rows/cols to ensure full coverage
   const rows = Math.ceil(height / HEX_HEIGHT) + 4;
@@ -415,7 +439,11 @@ function generateHexGrid(
   const startX = -HEX_WIDTH; // Start slightly off-screen to ensure coverage
   const startY = -HEX_HEIGHT; // Start slightly off-screen to ensure coverage
 
-  const colorKeys: Array<"cyan" | "amber" | "violet"> = ["cyan", "amber", "violet"];
+  const colorKeys: Array<"cyan" | "amber" | "violet"> = [
+    "cyan",
+    "amber",
+    "violet",
+  ];
   const iconKeys: Array<"satellite" | "planet" | "star" | "rocket"> = [
     "satellite",
     "planet",
@@ -427,7 +455,7 @@ function generateHexGrid(
   for (let row = 0; row < rows; row++) {
     // Offset every other row for hexagonal packing
     const offsetX = row % 2 === 0 ? 0 : HEX_WIDTH / 2;
-    
+
     for (let col = 0; col < cols; col++) {
       // Calculate hex center position
       const x = startX + col * HEX_WIDTH + offsetX;
@@ -448,10 +476,10 @@ function generateHexGrid(
   // Deterministically select active tiles for even distribution
   const numQuotes = quotes.length;
   const activeIndices = selectActiveTiles(
-    tiles.length, 
-    numQuotes, 
-    rows, 
-    cols, 
+    tiles.length,
+    numQuotes,
+    rows,
+    cols,
     seed,
     HEX_WIDTH,
     HEX_HEIGHT
@@ -476,7 +504,7 @@ function generateHexGrid(
 /**
  * Generate data surge paths through gaps
  */
-function generateDataSurges(
+function _generateDataSurges(
   width: number,
   height: number,
   count: number = 5
@@ -522,16 +550,20 @@ function getHexPath(size: number): string {
   return `M ${points[0]} L ${points.slice(1).join(" L ")} Z`;
 }
 
-
 export function HexArrayView({ quotes }: HexArrayViewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
   const [selectedTile, setSelectedTile] = useState<HexTile | null>(null);
-  const [modalPosition, setModalPosition] = useState<{ x: number; y: number } | null>(null);
-  
+  const [modalPosition, setModalPosition] = useState<{
+    x: number;
+    y: number;
+  } | null>(null);
+
   // Get hex surge controls from store
   const hexSurgeEnabled = useQuoteViewStore((state) => state.hexSurgeEnabled);
-  const setHexSurgeTriggerCallback = useQuoteViewStore((state) => state.setHexSurgeTriggerCallback);
+  const setHexSurgeTriggerCallback = useQuoteViewStore(
+    (state) => state.setHexSurgeTriggerCallback
+  );
 
   // Update dimensions on mount and resize
   useEffect(() => {
@@ -552,7 +584,12 @@ export function HexArrayView({ quotes }: HexArrayViewProps) {
   // Generate hex grid
   const hexGrid = useMemo(() => {
     if (dimensions.width === 0 || dimensions.height === 0) return [];
-    return generateHexGrid(dimensions.width, dimensions.height, quotes, HEX_ARRAY_CONFIG.seed);
+    return generateHexGrid(
+      dimensions.width,
+      dimensions.height,
+      quotes,
+      HEX_ARRAY_CONFIG.seed
+    );
   }, [dimensions, quotes]);
 
   // Get active tiles for pulse scheduler
@@ -586,9 +623,8 @@ export function HexArrayView({ quotes }: HexArrayViewProps) {
     };
   }, [triggerSurge, setHexSurgeTriggerCallback]);
 
-
   // Handle tile click - Holo-Projection
-  const handleTileClick = (tile: HexTile, event: React.MouseEvent) => {
+  const handleTileClick = (tile: HexTile, _event: React.MouseEvent) => {
     if (!tile.isActive || !tile.quote) return;
 
     const rect = containerRef.current?.getBoundingClientRect();
@@ -647,8 +683,14 @@ export function HexArrayView({ quotes }: HexArrayViewProps) {
     }
 
     // Final clamp to ensure modal stays within viewport
-    modalX = Math.max(margin, Math.min(window.innerWidth - modalWidth - margin, modalX));
-    modalY = Math.max(margin, Math.min(window.innerHeight - modalHeight - margin, modalY));
+    modalX = Math.max(
+      margin,
+      Math.min(window.innerWidth - modalWidth - margin, modalX)
+    );
+    modalY = Math.max(
+      margin,
+      Math.min(window.innerHeight - modalHeight - margin, modalY)
+    );
 
     return {
       position: "fixed",
@@ -709,11 +751,10 @@ export function HexArrayView({ quotes }: HexArrayViewProps) {
           className={`${MODAL_STYLES.textSize} space-y-2 leading-relaxed`}
           style={{ color: MODAL_STYLES.textColor }}
         >
+          <p>Click on any colored hex tile to view its quote.</p>
           <p>
-            Click on any colored hex tile to view its quote.
-          </p>
-          <p>
-            Tiles are scattered across the grid—explore to discover different quotes.
+            Tiles are scattered across the grid—explore to discover different
+            quotes.
           </p>
         </div>
       </div>
@@ -774,7 +815,7 @@ export function HexArrayView({ quotes }: HexArrayViewProps) {
                     </div>
                   </foreignObject>
                 )}
-                
+
                 {/* Pulsing hexagon around active tile - only when this tile is pulsing */}
                 {pulsingTileId === tile.id && (
                   <HexPulse x={tile.x} y={tile.y} color={color} />
@@ -787,7 +828,6 @@ export function HexArrayView({ quotes }: HexArrayViewProps) {
         {dataSurges.map((surge) => (
           <SurgePath key={surge.id} surge={surge} />
         ))}
-
       </svg>
 
       {/* Holo-Projection Modal */}
@@ -820,7 +860,7 @@ export function HexArrayView({ quotes }: HexArrayViewProps) {
                     : accents.cyan,
                 }}
               >
-                // HOLO_PROJECTION_ACTIVE
+                {"// HOLO_PROJECTION_ACTIVE"}
               </span>
             </div>
 
@@ -839,8 +879,10 @@ export function HexArrayView({ quotes }: HexArrayViewProps) {
                 )}
                 {selectedTile.quote.source && (
                   <>
-                    <span className="text-slate-600">//</span>
-                    <span className="text-slate-500">{selectedTile.quote.source}</span>
+                    <span className="text-slate-600">{"//"}</span>
+                    <span className="text-slate-500">
+                      {selectedTile.quote.source}
+                    </span>
                   </>
                 )}
               </div>
@@ -849,10 +891,7 @@ export function HexArrayView({ quotes }: HexArrayViewProps) {
             {selectedTile.quote.tags && selectedTile.quote.tags.length > 0 && (
               <div className="mt-4 flex flex-wrap gap-2">
                 {selectedTile.quote.tags.map((tag, idx) => (
-                  <span
-                    key={idx}
-                    className="font-mono text-xs text-slate-600"
-                  >
+                  <span key={idx} className="font-mono text-xs text-slate-600">
                     #{tag}
                   </span>
                 ))}
@@ -885,4 +924,3 @@ export function HexArrayView({ quotes }: HexArrayViewProps) {
     </div>
   );
 }
-

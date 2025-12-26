@@ -75,11 +75,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // 2. Generate routes for dynamic blog posts
   // Fetch published posts from CMS if configured and blog SEO is enabled
   let postRoutes: MetadataRoute.Sitemap = [];
-  
+
   if (ENABLE_BLOG_SEO && isDirectusConfigured()) {
     try {
       const postsResponse = await getPublishedPosts();
-      if (postsResponse.status === "success" && postsResponse.posts.length > 0) {
+      if (
+        postsResponse.status === "success" &&
+        postsResponse.posts.length > 0
+      ) {
         postRoutes = postsResponse.posts.map((post) => ({
           url: `${SITE_URL}/blog/${post.slug}`,
           lastModified: new Date(post.publish_date),

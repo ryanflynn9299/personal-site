@@ -40,11 +40,16 @@ function hexToRgb(hex: string): { r: number; g: number; b: number } | null {
     : null;
 }
 
-export function ProjectModal({ project, isOpen, onClose, accentColor = projectColors.default }: ProjectModalProps) {
+export function ProjectModal({
+  project,
+  isOpen,
+  onClose,
+  accentColor = projectColors.default,
+}: ProjectModalProps) {
   // Handle ESC key
   useEffect(() => {
     if (!isOpen) return;
-    
+
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         onClose();
@@ -90,20 +95,22 @@ export function ProjectModal({ project, isOpen, onClose, accentColor = projectCo
               <motion.button
                 onClick={onClose}
                 className="absolute right-4 top-4 rounded-full p-2 text-slate-400 transition-all hover:ring-2 z-10"
-                style={{
-                  '--hover-bg': `${accentColor}33`, // 20% opacity
-                  '--hover-text': accentColor,
-                  '--hover-ring': `${accentColor}80`, // 50% opacity
-                } as React.CSSProperties}
+                style={
+                  {
+                    "--hover-bg": `${accentColor}33`, // 20% opacity
+                    "--hover-text": accentColor,
+                    "--hover-ring": `${accentColor}80`, // 50% opacity
+                  } as React.CSSProperties
+                }
                 onMouseEnter={(e) => {
                   e.currentTarget.style.backgroundColor = `${accentColor}33`;
                   e.currentTarget.style.color = accentColor;
                   e.currentTarget.style.borderColor = `${accentColor}80`;
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = '';
-                  e.currentTarget.style.color = '';
-                  e.currentTarget.style.borderColor = '';
+                  e.currentTarget.style.backgroundColor = "";
+                  e.currentTarget.style.color = "";
+                  e.currentTarget.style.borderColor = "";
                 }}
                 initial={{ opacity: 0, scale: 0.5 }}
                 animate={{ opacity: 1, scale: 1, transition: { delay: 0.2 } }}
@@ -132,7 +139,7 @@ export function ProjectModal({ project, isOpen, onClose, accentColor = projectCo
                 )}
 
                 {/* Title */}
-                <h2 
+                <h2
                   className="mb-4 text-center font-heading text-3xl font-bold"
                   style={{ color: accentColor }}
                 >
@@ -140,7 +147,7 @@ export function ProjectModal({ project, isOpen, onClose, accentColor = projectCo
                 </h2>
 
                 {/* Divider */}
-                <div 
+                <div
                   className="mb-6 h-px bg-gradient-to-r from-transparent to-transparent"
                   style={{
                     background: `linear-gradient(to right, transparent, ${accentColor}4D, transparent)`, // 30% opacity

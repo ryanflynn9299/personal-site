@@ -79,4 +79,3 @@ export interface Comet {
 export interface SolarSystemViewProps {
   quotes: Quote[];
 }
-

@@ -157,7 +157,7 @@ export function ContactPageClient({
               </div>
             </a>
           </div>
-          
+
           <FunCounter />
         </div>
 

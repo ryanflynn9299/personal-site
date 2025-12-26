@@ -36,4 +36,3 @@ export function OrbitLine({ entity }: OrbitLineProps) {
     </svg>
   );
 }
-

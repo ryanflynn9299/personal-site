@@ -29,13 +29,18 @@ const footerNav = [
   { name: "Contact", href: "/contact", is_active: true, devOnly: false },
   // Example for future extensibility
   { name: "Talks", href: "/talks", is_active: false, devOnly: false },
-  { name: "Privacy Policy", href: "/privacy", is_active: false, devOnly: false },
+  {
+    name: "Privacy Policy",
+    href: "/privacy",
+    is_active: false,
+    devOnly: false,
+  },
 ];
 
 export function Footer() {
   // const pathname = usePathname();
   // const isProjectsCabinetPage = pathname === "/projects-cabinet";
-  
+
   return (
     <footer className="border-t border-slate-700 bg-slate-800 relative z-10">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
@@ -60,7 +65,8 @@ export function Footer() {
                     // Filter by active status
                     if (!item.is_active) return false;
                     // Filter by dev-only status
-                    if (item.devOnly && process.env.NODE_ENV !== "development") return false;
+                    if (item.devOnly && process.env.NODE_ENV !== "development")
+                      return false;
                     return true;
                   })
                   .map((item: any) => (

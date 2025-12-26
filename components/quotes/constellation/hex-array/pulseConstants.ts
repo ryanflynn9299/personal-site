@@ -18,13 +18,18 @@ export const PULSE_SCALE_END = 1.2; // Final scale (20% expansion)
 
 // Animation keyframe arrays - more granular for smoother animation
 // 8 keyframes for fluid transitions
-export const PULSE_OPACITY_KEYFRAMES = [0, 0.3, 0.37, 0.4, 0.37, 0.30, 0.2, 0] as const;
-export const PULSE_SCALE_KEYFRAMES = [0.95, 0.99, 1.02, 1.06, 1.09, 1.12, 1.16, 1.2] as const;
-export const PULSE_TIMING_KEYFRAMES = [0, 0.1, 0.2, 0.3, 0.5, 0.65, 0.8, 1] as const; // Smooth fade in, hold, fade out
+export const PULSE_OPACITY_KEYFRAMES = [
+  0, 0.3, 0.37, 0.4, 0.37, 0.3, 0.2, 0,
+] as const;
+export const PULSE_SCALE_KEYFRAMES = [
+  0.95, 0.99, 1.02, 1.06, 1.09, 1.12, 1.16, 1.2,
+] as const;
+export const PULSE_TIMING_KEYFRAMES = [
+  0, 0.1, 0.2, 0.3, 0.5, 0.65, 0.8, 1,
+] as const; // Smooth fade in, hold, fade out
 
 // Easing function
 export const PULSE_EASE = [0.4, 0, 0.2, 1] as const; // Smooth ease out
 
 // Drop shadow filter
 export const PULSE_DROP_SHADOW_BLUR = 4; // px
-

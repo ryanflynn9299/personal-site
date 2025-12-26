@@ -1,5 +1,5 @@
-import { describe, it, expect } from "vitest";
-import { cn } from "@/lib/utils";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { cn, getBlogPostUrl } from "@/lib/utils";
 
 describe("cn", () => {
   it("merges class names correctly", () => {
@@ -39,5 +39,66 @@ describe("cn", () => {
     expect(cn()).toBe("");
     expect(cn("")).toBe("");
     expect(cn("", undefined, null)).toBe("");
+  });
+});
+
+describe("getBlogPostUrl", () => {
+  let consoleErrorSpy: ReturnType<typeof vi.spyOn>;
+
+  beforeEach(() => {
+    consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    consoleErrorSpy.mockRestore();
+  });
+
+  it("returns correct URL for valid slug", () => {
+    expect(getBlogPostUrl("my-blog-post")).toBe("/blog/my-blog-post");
+    expect(getBlogPostUrl("another-post")).toBe("/blog/another-post");
+  });
+
+  it("trims whitespace from slug", () => {
+    expect(getBlogPostUrl("  my-post  ")).toBe("/blog/my-post");
+  });
+
+  it("returns /blog for null slug", () => {
+    expect(getBlogPostUrl(null)).toBe("/blog");
+  });
+
+  it("returns /blog for undefined slug", () => {
+    expect(getBlogPostUrl(undefined)).toBe("/blog");
+  });
+
+  it("returns /blog for empty string", () => {
+    expect(getBlogPostUrl("")).toBe("/blog");
+  });
+
+  it("returns /blog for whitespace-only slug", () => {
+    expect(getBlogPostUrl("   ")).toBe("/blog");
+  });
+
+  it("logs error in development mode for invalid slug", () => {
+    const originalEnv = process.env.NODE_ENV;
+    process.env.NODE_ENV = "development";
+
+    getBlogPostUrl(null);
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      expect.stringContaining("[getBlogPostUrl]"),
+      null,
+      expect.stringContaining("Falling back to /blog")
+    );
+
+    process.env.NODE_ENV = originalEnv;
+  });
+
+  it("does not log error in production mode", () => {
+    const originalEnv = process.env.NODE_ENV;
+    process.env.NODE_ENV = "production";
+
+    getBlogPostUrl(null);
+    expect(consoleErrorSpy).not.toHaveBeenCalled();
+
+    process.env.NODE_ENV = originalEnv;
   });
 });

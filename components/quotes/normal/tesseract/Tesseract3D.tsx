@@ -60,16 +60,12 @@ export function Tesseract3D({
   }, []);
 
   // Project 4D to 3D (simple projection, can be enhanced with rotation)
-  const projectTo3D = (vertex: number[], wRotation: number = 0) => {
+  const projectTo3D = (vertex: number[], _wRotation: number = 0) => {
     const [x, y, z, w] = vertex;
     // Simple perspective projection
     const distance = 5;
     const factor = distance / (distance - w * 0.3);
-    return [
-      x * factor,
-      y * factor,
-      z * factor,
-    ] as [number, number, number];
+    return [x * factor, y * factor, z * factor] as [number, number, number];
   };
 
   // Edges of the tesseract (simplified - showing key edges)
@@ -96,7 +92,7 @@ export function Tesseract3D({
       // Smoothly interpolate to target rotation
       const targetRotation = rotation;
       const currentRotation = groupRef.current.rotation;
-      
+
       currentRotation.x = THREE.MathUtils.lerp(
         currentRotation.x,
         targetRotation[0],
@@ -154,7 +150,7 @@ export function Tesseract3D({
           const vertex = vertices[idx % vertices.length];
           const pos3D = projectTo3D(vertex);
           const isActive = idx === activeCategoryIndex;
-          
+
           return (
             <PlanetaryNode
               key={category.id}
@@ -188,8 +184,9 @@ function PlanetaryNode({
   useFrame((state) => {
     if (meshRef.current) {
       // Subtle floating animation
-      meshRef.current.position.y = position[1] + Math.sin(state.clock.elapsedTime + position[0]) * 0.1;
-      
+      meshRef.current.position.y =
+        position[1] + Math.sin(state.clock.elapsedTime + position[0]) * 0.1;
+
       // Active node pulses
       if (isActive) {
         const scale = 1 + Math.sin(state.clock.elapsedTime * 2) * 0.1;
@@ -238,4 +235,3 @@ function PlanetaryNode({
     </mesh>
   );
 }
-

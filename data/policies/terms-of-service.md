@@ -79,4 +79,3 @@ For questions about these Terms of Service, please contact us at [legal@example.
 ## Effective Date
 
 These Terms of Service are effective as of January 15, 2025.
-

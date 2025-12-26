@@ -14,12 +14,11 @@ import {
   type ConstellationMetadata,
 } from "./constellationPositions";
 import { MOBILE_BREAKPOINT } from "@/constants/ui";
-import { stars, quotes } from "@/constants/theme";
+import { quotes } from "@/constants/theme";
 
 interface ConstellationViewProps {
   quotes: Quote[];
 }
-
 
 // Star appearance - colored dots matching constellation
 const STAR_SIZE = 3.5; // Larger than background dots (which are 1-2px)
@@ -46,7 +45,6 @@ interface Constellation {
 }
 
 const MIN_CONSTELLATION_SIZE = 4;
-const MAX_CONSTELLATION_SIZE = 9; // Allow larger constellations for variety
 const CONSTELLATION_RADIUS = 150; // Radius for constellation layout
 const POSITION_OFFSET_RANGE = 15; // Random offset range for star positions
 
@@ -80,30 +78,30 @@ function groupIntoConstellations(quotes: Quote[]): Quote[][] {
   // Target average of 4.5 stars - mix of 4, 5, and 7 star constellations
   // For 20 quotes: 4, 5, 4, 7 = 20 quotes, average 5.0 (but with 4-star variants, closer to 4.5)
   const targetSizes = [4, 5, 4, 7]; // Mix with one 7-star constellation
-  
+
   for (let i = 0; i < targetSizes.length && quoteIndex < quotes.length; i++) {
     const targetSize = targetSizes[i];
     const constellation: Quote[] = [];
-    
+
     // Fill this constellation up to target size
     while (constellation.length < targetSize && quoteIndex < quotes.length) {
       constellation.push(quotes[quoteIndex]);
       quoteIndex++;
     }
-    
+
     // Only add if it meets minimum size
     if (constellation.length >= MIN_CONSTELLATION_SIZE) {
       constellations.push(constellation);
     }
   }
-  
+
   // Add any remaining quotes to a final constellation if enough
   const remaining: Quote[] = [];
   while (quoteIndex < quotes.length) {
     remaining.push(quotes[quoteIndex]);
     quoteIndex++;
   }
-  
+
   if (remaining.length >= MIN_CONSTELLATION_SIZE) {
     constellations.push(remaining);
   }
@@ -136,8 +134,9 @@ function convertToMobilePosition(
   const horizontalPadding = viewportWidth * MOBILE_HORIZONTAL_PADDING;
   const availableWidth = viewportWidth - horizontalPadding * 2;
   const pixelX = horizontalPadding + normalizedPos.x * availableWidth;
-  const pixelY = groupIndex * MOBILE_VERTICAL_SPACING + MOBILE_VERTICAL_SPACING * 0.5;
-  
+  const pixelY =
+    groupIndex * MOBILE_VERTICAL_SPACING + MOBILE_VERTICAL_SPACING * 0.5;
+
   return { x: pixelX, y: pixelY };
 }
 
@@ -165,10 +164,7 @@ function buildConstellations(
       CONSTELLATION_METADATA[groupIndex % CONSTELLATION_METADATA.length];
 
     // Use variant from metadata, but validate it exists for this size
-    const variantIndex = Math.min(
-      metadata.variantIndex,
-      patterns.length - 1
-    );
+    const variantIndex = Math.min(metadata.variantIndex, patterns.length - 1);
     const pattern = patterns[variantIndex];
     const connections = connectionPatterns[variantIndex];
 
@@ -184,13 +180,15 @@ function buildConstellations(
       const size = STAR_SIZE;
 
       const [patternX, patternY] = pattern[index];
-      
+
       // Add slight random offset for natural variation
       // Use quote ID as seed for deterministic but varied offsets
       const offsetSeed = parseInt(quote.id) || index;
-      const offsetX = (offsetSeed % POSITION_OFFSET_RANGE) - POSITION_OFFSET_RANGE / 2;
-      const offsetY = ((offsetSeed * 7) % POSITION_OFFSET_RANGE) - POSITION_OFFSET_RANGE / 2;
-      
+      const offsetX =
+        (offsetSeed % POSITION_OFFSET_RANGE) - POSITION_OFFSET_RANGE / 2;
+      const offsetY =
+        ((offsetSeed * 7) % POSITION_OFFSET_RANGE) - POSITION_OFFSET_RANGE / 2;
+
       const x = centerX + patternX * CONSTELLATION_RADIUS + offsetX;
       const y = centerY + patternY * CONSTELLATION_RADIUS + offsetY;
 
@@ -319,7 +317,7 @@ export function ConstellationView({ quotes }: ConstellationViewProps) {
       const padding = 50;
       const width = maxX - minX + padding * 2;
       const height = maxY - minY + padding * 2;
-      
+
       return `${minX - padding} ${minY - padding} ${width} ${height}`;
     } else {
       // Desktop: Use fixed square size
@@ -328,9 +326,12 @@ export function ConstellationView({ quotes }: ConstellationViewProps) {
     }
   }, [constellations, isMobile]);
 
-  const handleStarClick = useCallback((starId: string) => {
-    setSelectedStarId(starId === selectedStarId ? null : starId);
-  }, [selectedStarId]);
+  const handleStarClick = useCallback(
+    (starId: string) => {
+      setSelectedStarId(starId === selectedStarId ? null : starId);
+    },
+    [selectedStarId]
+  );
 
   const handleBackgroundClick = useCallback(() => {
     setSelectedStarId(null);
@@ -377,108 +378,112 @@ export function ConstellationView({ quotes }: ConstellationViewProps) {
               viewBox={viewBox}
               preserveAspectRatio="xMidYMid meet"
             >
-        {/* Render connections */}
-        {constellations.map((constellation) => {
-          // Check if this entire constellation is hovered
-          const isConstellationHovered = hoveredConstellation?.id === constellation.id;
+              {/* Render connections */}
+              {constellations.map((constellation) => {
+                // Check if this entire constellation is hovered
+                const isConstellationHovered =
+                  hoveredConstellation?.id === constellation.id;
 
-          return constellation.connections.map(([a, b], connIndex) => {
-            const starA = constellation.stars[a];
-            const starB = constellation.stars[b];
+                return constellation.connections.map(([a, b], connIndex) => {
+                  const starA = constellation.stars[a];
+                  const starB = constellation.stars[b];
 
-            // Determine line color and width
-            let strokeColor = "#f8fafc"; // White in stasis
-            let strokeWidth = 0.5;
+                  // Determine line color and width
+                  let strokeColor = "#f8fafc"; // White in stasis
+                  let strokeWidth = 0.5;
 
-            if (isConstellationHovered) {
-              // Use the constellation color when any star in constellation is hovered
-              strokeColor = constellation.color;
-              strokeWidth = 3;
-            }
+                  if (isConstellationHovered) {
+                    // Use the constellation color when any star in constellation is hovered
+                    strokeColor = constellation.color;
+                    strokeWidth = 3;
+                  }
 
-            return (
-              <line
-                key={`${constellation.id}-conn-${connIndex}`}
-                x1={starA.x}
-                y1={starA.y}
-                x2={starB.x}
-                y2={starB.y}
-                stroke={strokeColor}
-                strokeWidth={strokeWidth}
-                opacity={isConstellationHovered ? 1 : 0.5}
-                style={{
-                  transition: "all 0.2s ease",
-                }}
-              />
-            );
-          });
-        })}
+                  return (
+                    <line
+                      key={`${constellation.id}-conn-${connIndex}`}
+                      x1={starA.x}
+                      y1={starA.y}
+                      x2={starB.x}
+                      y2={starB.y}
+                      stroke={strokeColor}
+                      strokeWidth={strokeWidth}
+                      opacity={isConstellationHovered ? 1 : 0.5}
+                      style={{
+                        transition: "all 0.2s ease",
+                      }}
+                    />
+                  );
+                });
+              })}
 
-        {/* Render stars */}
-        {constellations.map((constellation) => {
-          // Check if this entire constellation is hovered
-          const isConstellationHovered = hoveredConstellation?.id === constellation.id;
+              {/* Render stars */}
+              {constellations.map((constellation) => {
+                // Check if this entire constellation is hovered
+                const isConstellationHovered =
+                  hoveredConstellation?.id === constellation.id;
 
-          return constellation.stars.map((star) => {
-            const isHovered = hoveredStarId === star.id;
-            const isInHoveredConstellation = constellationStarIds.has(star.id);
-            const isSelected = selectedStarId === star.id;
-            const isDimmed = hoveredStarId && !isInHoveredConstellation;
+                return constellation.stars.map((star) => {
+                  const isInHoveredConstellation = constellationStarIds.has(
+                    star.id
+                  );
+                  const isDimmed = hoveredStarId && !isInHoveredConstellation;
 
-            return (
-              <g key={star.id}>
-                {/* Base glow effect - always visible, subtle */}
-                <circle
-                  cx={star.x}
-                  cy={star.y}
-                  r={STAR_GLOW_SIZE}
-                  fill={constellation.color}
-                  opacity={0.15}
-                  style={{
-                    filter: "blur(2px)",
-                  }}
-                />
-                
-                {/* Enhanced glow when constellation is hovered */}
-                {isConstellationHovered && (
-                  <circle
-                    cx={star.x}
-                    cy={star.y}
-                    r={STAR_GLOW_SIZE * 1.5}
-                    fill={constellation.color}
-                    opacity={0.4}
-                    style={{
-                      filter: "blur(3px)",
-                      transition: "all 0.2s ease",
-                    }}
-                  />
-                )}
+                  return (
+                    <g key={star.id}>
+                      {/* Base glow effect - always visible, subtle */}
+                      <circle
+                        cx={star.x}
+                        cy={star.y}
+                        r={STAR_GLOW_SIZE}
+                        fill={constellation.color}
+                        opacity={0.15}
+                        style={{
+                          filter: "blur(2px)",
+                        }}
+                      />
 
-                {/* Main star circle - constellation color */}
-                <circle
-                  cx={star.x}
-                  cy={star.y}
-                  r={star.size}
-                  fill={constellation.color}
-                  opacity={isDimmed ? 0.3 : 1}
-                  style={{
-                    transition: "all 0.2s ease",
-                    cursor: "pointer",
-                    filter: isConstellationHovered
-                      ? "drop-shadow(0 0 4px " + constellation.color + ")"
-                      : "drop-shadow(0 0 2px " + constellation.color + ")",
-                  }}
-                  onMouseEnter={() => setHoveredStarId(star.id)}
-                  onMouseLeave={() => setHoveredStarId(null)}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleStarClick(star.id);
-                  }}
-                />
-              </g>
-            );
-          });
-        })}
+                      {/* Enhanced glow when constellation is hovered */}
+                      {isConstellationHovered && (
+                        <circle
+                          cx={star.x}
+                          cy={star.y}
+                          r={STAR_GLOW_SIZE * 1.5}
+                          fill={constellation.color}
+                          opacity={0.4}
+                          style={{
+                            filter: "blur(3px)",
+                            transition: "all 0.2s ease",
+                          }}
+                        />
+                      )}
+
+                      {/* Main star circle - constellation color */}
+                      <circle
+                        cx={star.x}
+                        cy={star.y}
+                        r={star.size}
+                        fill={constellation.color}
+                        opacity={isDimmed ? 0.3 : 1}
+                        style={{
+                          transition: "all 0.2s ease",
+                          cursor: "pointer",
+                          filter: isConstellationHovered
+                            ? "drop-shadow(0 0 4px " + constellation.color + ")"
+                            : "drop-shadow(0 0 2px " +
+                              constellation.color +
+                              ")",
+                        }}
+                        onMouseEnter={() => setHoveredStarId(star.id)}
+                        onMouseLeave={() => setHoveredStarId(null)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleStarClick(star.id);
+                        }}
+                      />
+                    </g>
+                  );
+                });
+              })}
             </svg>
           </div>
         </div>
@@ -494,7 +499,8 @@ export function ConstellationView({ quotes }: ConstellationViewProps) {
           {/* Render connections */}
           {constellations.map((constellation) => {
             // Check if this entire constellation is hovered
-            const isConstellationHovered = hoveredConstellation?.id === constellation.id;
+            const isConstellationHovered =
+              hoveredConstellation?.id === constellation.id;
 
             return constellation.connections.map(([a, b], connIndex) => {
               const starA = constellation.stars[a];
@@ -531,12 +537,13 @@ export function ConstellationView({ quotes }: ConstellationViewProps) {
           {/* Render stars */}
           {constellations.map((constellation) => {
             // Check if this entire constellation is hovered
-            const isConstellationHovered = hoveredConstellation?.id === constellation.id;
+            const isConstellationHovered =
+              hoveredConstellation?.id === constellation.id;
 
             return constellation.stars.map((star) => {
-              const isHovered = hoveredStarId === star.id;
-              const isInHoveredConstellation = constellationStarIds.has(star.id);
-              const isSelected = selectedStarId === star.id;
+              const isInHoveredConstellation = constellationStarIds.has(
+                star.id
+              );
               const isDimmed = hoveredStarId && !isInHoveredConstellation;
 
               return (
@@ -552,7 +559,7 @@ export function ConstellationView({ quotes }: ConstellationViewProps) {
                       filter: "blur(2px)",
                     }}
                   />
-                  
+
                   {/* Enhanced glow when constellation is hovered */}
                   {isConstellationHovered && (
                     <circle
@@ -617,7 +624,7 @@ export function ConstellationView({ quotes }: ConstellationViewProps) {
               )}
               {selectedQuote.source && (
                 <>
-                  <span className="text-slate-600">//</span>
+                  <span className="text-slate-600">{"//"}</span>
                   <span className="text-slate-500">{selectedQuote.source}</span>
                 </>
               )}
@@ -631,7 +638,8 @@ export function ConstellationView({ quotes }: ConstellationViewProps) {
                 const constellation = constellations.find((c) =>
                   c.stars.some((s) => s.id === selectedStarId)
                 );
-                const tagColor = constellation?.color || quotes.constellation.default;
+                const tagColor =
+                  constellation?.color || quotes.constellation.default;
                 return (
                   <span
                     key={idx}

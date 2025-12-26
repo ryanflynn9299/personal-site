@@ -80,4 +80,3 @@ export function QuoteModeToggle({ className = "" }: { className?: string }) {
     </div>
   );
 }
-

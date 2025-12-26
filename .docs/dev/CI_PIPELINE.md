@@ -53,6 +53,7 @@ A complete Continuous Integration (CI) pipeline that automatically validates you
 ### Platform: GitHub Actions
 
 **Why GitHub Actions?**
+
 - ✅ Native integration with GitHub (no external accounts needed)
 - ✅ Free for public repositories (unlimited minutes)
 - ✅ 2,000 free minutes/month for private repositories
@@ -61,6 +62,7 @@ A complete Continuous Integration (CI) pipeline that automatically validates you
 - ✅ Excellent documentation and community support
 
 **Alternative Options (Not Currently Used):**
+
 - GitLab CI/CD - If using GitLab
 - CircleCI - 6,000 free minutes/month
 - Jenkins - Self-hosted (more complex)
@@ -80,10 +82,12 @@ All jobs run in parallel to minimize total CI time (~5-10 minutes total).
 ### When CI Runs
 
 **Current Configuration (Phase 1 - Initial Testing):**
+
 - ✅ **On push to:** `main`, `master`, `dev-main`
 - ✅ **On pull requests to:** `main`, `master`, `dev-main`
 
 **Future Configuration (Phase 2 - After Testing):**
+
 - ✅ **On push to:** `main`, `master` only
 - ✅ **On pull requests to:** `main`, `master`, `dev-main`
 
@@ -101,7 +105,7 @@ The CI pipeline uses a **minimal set of environment variables** to ensure it wor
 env:
   # Site URL - Required for Next.js build and SEO metadata
   NEXT_PUBLIC_SITE_URL: "https://www.ryanflynn.org"
-  
+
   # Directus URLs - Empty strings are fine (app gracefully handles missing Directus)
   # These are set to empty to ensure CI works without a database connection
   DIRECTUS_URL_SERVER_SIDE: ""
@@ -113,12 +117,14 @@ env:
 #### `NEXT_PUBLIC_SITE_URL` (Required)
 
 **Why it's needed:**
+
 - Next.js uses this for SEO metadata generation during build
 - Required for proper sitemap and robots.txt generation
 - Used in JSON-LD structured data
 - Must be set to your actual production site URL
 
 **What happens if missing:**
+
 - Build may fail or generate incorrect metadata
 - SEO tags may be incomplete
 - Sitemap may have wrong URLs
@@ -128,18 +134,21 @@ env:
 #### `DIRECTUS_URL_SERVER_SIDE` and `NEXT_PUBLIC_DIRECTUS_URL` (Empty Strings)
 
 **Why they're empty:**
+
 - Your application gracefully handles missing Directus (see `lib/directus.ts`)
 - The `isDirectusConfigured()` function returns `false` when URLs are empty
 - App returns empty arrays instead of crashing
 - E2E tests are designed to work with or without Directus
 
 **What happens with empty values:**
+
 - ✅ Build succeeds (no database connection needed)
 - ✅ Unit tests use MSW mocks (no real API calls)
 - ✅ E2E tests check for posts OR empty state (both are valid)
 - ✅ No errors or failures
 
 **Why not use a test database?**
+
 - Not necessary - app handles missing Directus gracefully
 - Adds complexity (database setup, credentials, cleanup)
 - Slower CI runs (database connection overhead)
@@ -159,19 +168,23 @@ Each job also sets `NODE_ENV`:
 These are **not configured** but could be added if needed:
 
 **For Email Service Testing:**
+
 ```yaml
 SMTP_HOST: ""
 SMTP_PORT: ""
 SMTP_FROM: ""
 SMTP_TO: ""
 ```
+
 **Note:** Contact form tests work without these (app handles missing email service gracefully).
 
 **For Analytics Testing:**
+
 ```yaml
 NEXT_PUBLIC_MATOMO_URL: ""
 NEXT_PUBLIC_MATOMO_SITE_ID: ""
 ```
+
 **Note:** Analytics is optional and doesn't block builds.
 
 ### Secrets Management
@@ -179,11 +192,13 @@ NEXT_PUBLIC_MATOMO_SITE_ID: ""
 **Current Secrets:** None required for basic CI operation
 
 **Future Secrets (if needed):**
+
 - `CODECOV_TOKEN` - Only if you enable code coverage (see Code Coverage section)
 - `SMTP_*` - Only if you want to test actual email sending
 - `DEPLOY_WEBHOOK_SECRET` - Only if you add deployment automation
 
 **How to Add Secrets:**
+
 1. Go to GitHub repository
 2. Settings → Secrets and variables → Actions
 3. Click "New repository secret"
@@ -201,6 +216,7 @@ NEXT_PUBLIC_MATOMO_SITE_ID: ""
 **Purpose:** Validate code quality and type safety
 
 **What it does:**
+
 1. Checks out code from repository
 2. Sets up Node.js 20 with npm caching
 3. Installs dependencies (`npm ci`)
@@ -209,12 +225,14 @@ NEXT_PUBLIC_MATOMO_SITE_ID: ""
 6. Runs TypeScript type checking (`npm run type-check`)
 
 **Why it's important:**
+
 - Catches formatting inconsistencies before merge
 - Identifies potential bugs through static analysis
 - Ensures type safety across the codebase
 - Enforces consistent code style
 
 **What failure means:**
+
 - Code doesn't meet style guidelines (Prettier)
 - Code quality issues detected (ESLint)
 - Type errors exist (TypeScript)
@@ -227,6 +245,7 @@ NEXT_PUBLIC_MATOMO_SITE_ID: ""
 **Purpose:** Validate component logic and utilities work correctly
 
 **What it does:**
+
 1. Checks out code from repository
 2. Sets up Node.js 20 with npm caching
 3. Installs dependencies (`npm ci`)
@@ -234,17 +253,20 @@ NEXT_PUBLIC_MATOMO_SITE_ID: ""
 5. Generates coverage reports (optional, for Codecov)
 
 **Why it's important:**
+
 - Validates component logic works as expected
 - Ensures utilities and helpers function correctly
 - Prevents regressions when code changes
 - Catches bugs in isolated unit tests
 
 **What failure means:**
+
 - Tests are failing (logic errors)
 - Code changes broke existing functionality
 - Must fix tests or code before merging
 
 **Test Environment:**
+
 - Uses MSW (Mock Service Worker) to mock Directus API
 - No real database connection needed
 - Tests run in jsdom environment (simulated browser)
@@ -256,6 +278,7 @@ NEXT_PUBLIC_MATOMO_SITE_ID: ""
 **Purpose:** Validate user workflows work end-to-end across browsers
 
 **What it does:**
+
 1. Checks out code from repository
 2. Sets up Node.js 20 with npm caching
 3. Installs dependencies (`npm ci`)
@@ -265,18 +288,21 @@ NEXT_PUBLIC_MATOMO_SITE_ID: ""
 7. Generates HTML test report
 
 **Why it's important:**
+
 - Validates complete user workflows
 - Tests across different browsers (Chrome, Firefox, Safari)
 - Catches integration issues
 - Ensures UI works as expected
 
 **What failure means:**
+
 - User-facing functionality is broken
 - Browser compatibility issues
 - Integration problems between components
 - Must fix before merging
 
 **Test Strategy:**
+
 - Tests are designed to work with OR without Directus
 - Checks for blog posts OR empty state (both valid)
 - Tests navigation, forms, and page structure
@@ -289,6 +315,7 @@ NEXT_PUBLIC_MATOMO_SITE_ID: ""
 **Purpose:** Verify production build succeeds
 
 **What it does:**
+
 1. Checks out code from repository
 2. Sets up Node.js 20 with npm caching
 3. Installs dependencies (`npm ci`)
@@ -296,12 +323,14 @@ NEXT_PUBLIC_MATOMO_SITE_ID: ""
 5. Uploads build artifacts (for debugging if needed)
 
 **Why it's important:**
+
 - Ensures production build works
 - Catches build-time errors
 - Validates all configuration is correct
 - Confirms dependencies are compatible
 
 **What failure means:**
+
 - Build configuration is broken
 - Dependencies are incompatible
 - Environment variables missing or incorrect
@@ -309,6 +338,7 @@ NEXT_PUBLIC_MATOMO_SITE_ID: ""
 - Must fix before deploying
 
 **Build Environment:**
+
 - Uses `NODE_ENV: "production"` (simulates production)
 - Builds with Turbopack (Next.js 16 default)
 - Generates optimized production bundle
@@ -323,15 +353,17 @@ NEXT_PUBLIC_MATOMO_SITE_ID: ""
 ### Current Phase: Initial Testing (Phase 1)
 
 **Configuration:**
+
 ```yaml
 on:
   push:
-    branches: [main, master, dev-main]  # ← dev-main temporarily enabled
+    branches: [main, master, dev-main] # ← dev-main temporarily enabled
   pull_request:
     branches: [main, master, dev-main]
 ```
 
 **Why `dev-main` is enabled on push:**
+
 - **Gathering baseline timing data** for all jobs
 - **Verifying CI works correctly** on all branches
 - **Establishing performance benchmarks** for future optimization
@@ -340,6 +372,7 @@ on:
 **Duration:** 1-2 weeks (or ~10-20 commits to `dev-main`)
 
 **What to monitor during this phase:**
+
 - Average CI duration per job
 - Total CI minutes used per week
 - Frequency of `dev-main` commits
@@ -349,21 +382,24 @@ on:
 ### Future Phase: Optimization (Phase 2)
 
 **Recommended Configuration:**
+
 ```yaml
 on:
   push:
-    branches: [main, master]  # ← dev-main removed
+    branches: [main, master] # ← dev-main removed
   pull_request:
-    branches: [main, master, dev-main]  # ← Still validates PRs
+    branches: [main, master, dev-main] # ← Still validates PRs
 ```
 
 **Why remove `dev-main` from push triggers:**
+
 - **Saves CI minutes** (important for private repos with 2,000/month limit)
 - **Reduces noise** (fewer CI runs for development commits)
 - **Still validates via PRs** (better workflow - catches issues before merge)
 - **Focuses CI on production-ready code** (main/master branches)
 
 **Result:**
+
 - CI still runs on PRs to `dev-main` (validates before merge)
 - CI runs on every push to `main`/`master` (production branches)
 - Saves CI minutes on frequent `dev-main` commits
@@ -374,18 +410,21 @@ on:
 #### Current Setup (With `dev-main` on Push)
 
 **Estimated Usage:**
+
 - Each full CI run: ~5-10 minutes
 - If you push to `dev-main` 5x/day: 25-50 minutes/day
 - Weekly: 175-350 minutes/week
 - Monthly: 700-1400 minutes/month
 
 **GitHub Actions Limits:**
+
 - **Public repos:** ✅ Unlimited (no concern)
 - **Private repos:** 2,000 minutes/month (could be tight if very active)
 
 #### After Removing `dev-main` from Push
 
 **Estimated Usage:**
+
 - Each full CI run: ~5-10 minutes
 - Pushes to `main`: Typically 1-3x/week = 5-30 minutes/week
 - PRs to `dev-main`: Validates before merge = same quality, less frequent
@@ -393,19 +432,20 @@ on:
 
 ### Decision Matrix
 
-| Scenario | Keep `dev-main` on Push? | Reason |
-|----------|---------------------------|--------|
-| **Public repo** | ✅ Yes (optional) | Unlimited minutes, no cost concern |
-| **Private repo, active dev** | ❌ No (after testing) | Save minutes for important runs |
-| **Private repo, occasional commits** | ✅ Maybe | Low usage, convenience may be worth it |
-| **Need timing data** | ✅ Yes (temporarily) | Gather metrics first |
-| **Want to catch issues early** | ⚠️ PRs are better | PR validation catches issues before merge |
+| Scenario                             | Keep `dev-main` on Push? | Reason                                    |
+| ------------------------------------ | ------------------------ | ----------------------------------------- |
+| **Public repo**                      | ✅ Yes (optional)        | Unlimited minutes, no cost concern        |
+| **Private repo, active dev**         | ❌ No (after testing)    | Save minutes for important runs           |
+| **Private repo, occasional commits** | ✅ Maybe                 | Low usage, convenience may be worth it    |
+| **Need timing data**                 | ✅ Yes (temporarily)     | Gather metrics first                      |
+| **Want to catch issues early**       | ⚠️ PRs are better        | PR validation catches issues before merge |
 
 ### How to Remove `dev-main` from Push Triggers
 
 **When:** After 1-2 weeks of data collection
 
 **Steps:**
+
 1. Open `.github/workflows/ci.yml`
 2. Find line 10: `branches: [main, master, dev-main]`
 3. Change to: `branches: [main, master]`
@@ -416,15 +456,18 @@ on:
 ### Best Practices
 
 **Production branches (`main`, `master`):**
+
 - ✅ Always run CI on push (critical for deployment confidence)
 - ✅ Run CI on PRs (validate before merge)
 
 **Development branches (`dev-main`):**
+
 - ✅ Run CI on PRs (validates before merge)
 - ❌ Don't run on every push (saves minutes)
 - ✅ Still catches issues before they reach `main`
 
 **Feature branches:**
+
 - ✅ Run CI on PRs only
 - ❌ Never run on push (too frequent)
 
@@ -435,21 +478,25 @@ on:
 ### Adding a CI Status Badge to README
 
 **Basic Badge:**
+
 ```markdown
 ![CI](https://github.com/YOUR_USERNAME/YOUR_REPO/workflows/CI/badge.svg)
 ```
 
 **Branch-Specific Badge:**
+
 ```markdown
 ![CI](https://github.com/YOUR_USERNAME/YOUR_REPO/workflows/CI/badge.svg?branch=main)
 ```
 
 **Custom Badge (using shields.io):**
+
 ```markdown
 ![CI](https://img.shields.io/github/actions/workflow/status/YOUR_USERNAME/YOUR_REPO/ci.yml?branch=main&label=CI)
 ```
 
 **How to Get Your Badge URL:**
+
 1. Go to your GitHub repository
 2. Click "Actions" tab
 3. Click on the "CI" workflow
@@ -458,6 +505,7 @@ on:
 6. Paste into your README.md
 
 **Multiple Badges Example:**
+
 ```markdown
 # Personal Site
 
@@ -483,12 +531,14 @@ on:
 ### How to Enable Code Coverage (If You Decide To)
 
 **Step 1: Sign Up for Codecov**
+
 1. Go to [codecov.io](https://codecov.io)
 2. Sign up with your GitHub account
 3. Add your repository
 4. Copy your repository token
 
 **Step 2: Add GitHub Secret**
+
 1. Go to GitHub repository
 2. Settings → Secrets and variables → Actions
 3. Click "New repository secret"
@@ -499,12 +549,14 @@ on:
 **Step 3: Verify Coverage Generation**
 
 The CI pipeline already includes coverage generation in the unit tests job:
+
 ```yaml
 - name: Run unit tests
-  run: npm run test  # This generates coverage automatically
+  run: npm run test # This generates coverage automatically
 ```
 
 Verify coverage is generated:
+
 ```bash
 npm run test:coverage
 # Should create coverage/ directory with reports
@@ -533,17 +585,19 @@ npm run test:coverage
 ### Current Coverage Setup
 
 The workflow already includes:
+
 ```yaml
 - name: Upload coverage reports
   uses: codecov/codecov-action@v4
   if: always()
   with:
     files: ./coverage/coverage-final.json
-    fail_ci_if_error: false  # Won't fail if token missing
+    fail_ci_if_error: false # Won't fail if token missing
     token: ${{ secrets.CODECOV_TOKEN }}
 ```
 
 **This step:**
+
 - ✅ Only runs if `CODECOV_TOKEN` secret is set
 - ✅ Won't fail CI if token is missing
 - ✅ Uploads coverage data if configured
@@ -586,6 +640,7 @@ npm run test:all
 - Optimize slow jobs
 
 **Example update:**
+
 ```yaml
 # Check for newer versions
 uses: actions/checkout@v4  # Check for v5, v6, etc.
@@ -624,12 +679,14 @@ npm run test:coverage
 ### Monitoring CI Health
 
 **What to Watch:**
+
 - **Flaky tests** - Tests that fail randomly (investigate and fix)
 - **Slow builds** - Jobs taking >10 minutes (optimize)
 - **High CI minutes usage** - Approaching limits (optimize branch strategy)
 - **Dependency vulnerabilities** - Dependabot alerts (review weekly)
 
 **Where to Check:**
+
 - GitHub Actions tab - See all runs and durations
 - Repository Insights - See CI minutes usage
 - Dependabot alerts - Security vulnerabilities
@@ -642,17 +699,20 @@ npm run test:coverage
 ### Public Repository (Current Assumption)
 
 **GitHub Actions Limits:**
+
 - ✅ **Unlimited CI minutes** - No cost concerns
 - ✅ **Unlimited storage** - No artifact storage limits
 - ✅ **All features free** - No restrictions
 
 **Implications:**
+
 - Can run CI on every commit to any branch
 - No need to optimize for CI minutes
 - Can enable all optional features (Codecov, etc.)
 - Can keep `dev-main` on push triggers if desired
 
 **Recommendation:**
+
 - Still remove `dev-main` from push after testing (better workflow)
 - But not critical for minutes usage
 - Focus on code quality over minutes optimization
@@ -660,17 +720,20 @@ npm run test:coverage
 ### Private Repository
 
 **GitHub Actions Limits:**
+
 - ⚠️ **2,000 minutes/month free** - Must monitor usage
 - ⚠️ **500 MB storage** - Limited artifact storage
 - ⚠️ **Some features may be paid** - Check pricing
 
 **Implications:**
+
 - Must optimize CI minutes usage
 - Should remove `dev-main` from push after testing
 - Monitor monthly usage closely
 - Consider alternatives if exceeding limits
 
 **Optimization Strategies:**
+
 1. **Remove `dev-main` from push triggers** (saves ~700-1400 min/month)
 2. **Use PR-only validation** for development branches
 3. **Cache dependencies aggressively** (already done)
@@ -679,12 +742,12 @@ npm run test:coverage
 
 **Decision Matrix for Private Repos:**
 
-| Usage Level | Action |
-|------------|--------|
-| <500 min/month | No optimization needed |
-| 500-1500 min/month | Monitor, optimize if growing |
-| 1500-2000 min/month | Remove `dev-main` from push, optimize |
-| >2000 min/month | Consider self-hosted runners or paid plan |
+| Usage Level         | Action                                    |
+| ------------------- | ----------------------------------------- |
+| <500 min/month      | No optimization needed                    |
+| 500-1500 min/month  | Monitor, optimize if growing              |
+| 1500-2000 min/month | Remove `dev-main` from push, optimize     |
+| >2000 min/month     | Consider self-hosted runners or paid plan |
 
 ### How to Check Your Repository Type
 
@@ -696,12 +759,14 @@ npm run test:coverage
 ### Switching Between Public/Private
 
 **If you switch from public to private:**
+
 - CI minutes become limited (2,000/month)
 - Should optimize branch strategy
 - Monitor usage closely
 - Consider removing `dev-main` from push
 
 **If you switch from private to public:**
+
 - CI minutes become unlimited
 - Can be more liberal with CI runs
 - Still recommended to use PR validation workflow
@@ -715,17 +780,20 @@ npm run test:coverage
 #### 1. Environment Variables
 
 **Required:**
+
 - ✅ `NEXT_PUBLIC_SITE_URL` - Must be your actual site URL
 - ✅ `DIRECTUS_URL_SERVER_SIDE` - Can be empty (app handles it)
 - ✅ `NEXT_PUBLIC_DIRECTUS_URL` - Can be empty (app handles it)
 
 **Why empty Directus URLs work:**
+
 - Your app gracefully degrades when Directus is unavailable
 - `isDirectusConfigured()` returns `false` when URLs are empty
 - Tests use MSW mocks (no real API needed)
 - E2E tests check for posts OR empty state (both valid)
 
 **Never commit:**
+
 - ❌ Real API keys
 - ❌ Database passwords
 - ❌ SMTP credentials
@@ -734,15 +802,18 @@ npm run test:coverage
 #### 2. Branch Strategy
 
 **Current (Testing Phase):**
+
 - CI runs on push to `main`, `master`, `dev-main`
 - CI runs on PRs to all branches
 
 **Future (After Testing):**
+
 - Remove `dev-main` from push triggers
 - Keep PR validation for all branches
 - Saves CI minutes (important for private repos)
 
 **Action Required:**
+
 - After 1-2 weeks, edit `.github/workflows/ci.yml` line 10
 - Change `branches: [main, master, dev-main]` to `branches: [main, master]`
 
@@ -751,11 +822,13 @@ npm run test:coverage
 **File:** `.github/workflows/ci.yml`
 
 **Never:**
+
 - ❌ Delete this file (CI will stop working)
 - ❌ Commit secrets to this file
 - ❌ Hardcode environment-specific values
 
 **Always:**
+
 - ✅ Use GitHub Secrets for sensitive data
 - ✅ Test workflow changes in a branch first
 - ✅ Keep workflow file in version control
@@ -763,16 +836,19 @@ npm run test:coverage
 #### 4. Test Strategy
 
 **Unit Tests:**
+
 - Use MSW to mock Directus API
 - No real database connection needed
 - Run in jsdom environment
 
 **E2E Tests:**
+
 - Work with OR without Directus
 - Check for posts OR empty state
 - Test across multiple browsers
 
 **Build:**
+
 - Works without Directus (empty URLs are fine)
 - Validates production build succeeds
 - Catches build-time errors
@@ -780,16 +856,19 @@ npm run test:coverage
 #### 5. Maintenance Schedule
 
 **Monthly:**
+
 - Update dependencies
 - Monitor build times
 - Review security alerts
 
 **Quarterly:**
+
 - Update CI workflow (action versions, Node.js)
 - Review test coverage (if enabled)
 - Optimize slow jobs
 
 **As Needed:**
+
 - Fix CI failures promptly
 - Investigate flaky tests
 - Add tests for new features
@@ -797,11 +876,13 @@ npm run test:coverage
 #### 6. Public vs Private Repo
 
 **Public Repo:**
+
 - Unlimited CI minutes
 - Can be more liberal with CI runs
 - Still recommended to optimize workflow
 
 **Private Repo:**
+
 - 2,000 minutes/month limit
 - Must optimize branch strategy
 - Monitor usage closely
@@ -812,6 +893,7 @@ npm run test:coverage
 **Current Status:** Not enabled
 
 **To Enable:**
+
 1. Sign up for Codecov
 2. Add `CODECOV_TOKEN` to GitHub Secrets
 3. Badge will automatically update
@@ -822,11 +904,13 @@ npm run test:coverage
 #### 8. Status Badges
 
 **How to Add:**
+
 1. Go to Actions tab → CI workflow → "..." menu → "Create status badge"
 2. Copy markdown
 3. Add to README.md
 
 **Why It Matters:**
+
 - Shows CI status at a glance
 - Builds confidence in code quality
 - Professional appearance
@@ -834,12 +918,14 @@ npm run test:coverage
 #### 9. Secrets Management
 
 **Never commit secrets:**
+
 - ❌ API keys
 - ❌ Passwords
 - ❌ Tokens
 - ❌ Credentials
 
 **Always use GitHub Secrets:**
+
 - ✅ Settings → Secrets and variables → Actions
 - ✅ Access as `${{ secrets.SECRET_NAME }}`
 - ✅ Rotate secrets regularly
@@ -847,6 +933,7 @@ npm run test:coverage
 #### 10. CI Failure Response
 
 **When CI fails:**
+
 1. Check GitHub Actions tab for details
 2. Review job logs to identify issue
 3. Fix the problem (code, tests, or config)
@@ -854,6 +941,7 @@ npm run test:coverage
 5. Don't merge PRs with failing CI
 
 **Response Time:**
+
 - Critical failures: Fix within 24 hours
 - Non-critical: Fix within a week
 - Flaky tests: Investigate and fix root cause
@@ -867,11 +955,13 @@ npm run test:coverage
 #### 1. CI Fails Locally But Passes in CI
 
 **Possible Causes:**
+
 - Node.js version mismatch
 - Environment variables not set locally
 - Cache issues
 
 **Solutions:**
+
 - Verify Node.js version matches (20)
 - Check environment variables are set
 - Use `npm ci` instead of `npm install` (cleans install)
@@ -880,12 +970,14 @@ npm run test:coverage
 #### 2. Tests Pass Locally But Fail in CI
 
 **Possible Causes:**
+
 - Timeout issues (CI is slower)
 - Race conditions
 - Test isolation problems
 - Environment differences
 
 **Solutions:**
+
 - Increase test timeouts if needed
 - Verify tests are isolated (no shared state)
 - Check for race conditions
@@ -894,12 +986,14 @@ npm run test:coverage
 #### 3. Build Fails in CI
 
 **Possible Causes:**
+
 - Missing environment variables
 - Platform-specific issues
 - Dependency problems
 - Type errors only visible during build
 
 **Solutions:**
+
 - Verify all required env vars are set
 - Check build logs for specific errors
 - Test build locally: `npm run build`
@@ -908,12 +1002,14 @@ npm run test:coverage
 #### 4. Slow CI Runs
 
 **Possible Causes:**
+
 - Large dependency installation
 - Slow tests
 - No caching
 - Too many sequential jobs
 
 **Solutions:**
+
 - Caching is already enabled (npm cache)
 - Consider caching Playwright browsers
 - Optimize slow tests
@@ -922,12 +1018,14 @@ npm run test:coverage
 #### 5. E2E Tests Flaky
 
 **Possible Causes:**
+
 - Timing issues
 - Network delays
 - Browser-specific problems
 - Test isolation issues
 
 **Solutions:**
+
 - Increase timeouts
 - Use `waitForLoadState('networkidle')`
 - Check for race conditions
@@ -936,11 +1034,13 @@ npm run test:coverage
 #### 6. Codecov Upload Fails
 
 **Possible Causes:**
+
 - `CODECOV_TOKEN` not set (expected if not using Codecov)
 - Coverage file not generated
 - Network issues
 
 **Solutions:**
+
 - If not using Codecov: This is expected, ignore the warning
 - If using Codecov: Verify token is set in GitHub Secrets
 - Check that `npm run test` generates coverage
@@ -949,11 +1049,13 @@ npm run test:coverage
 #### 7. Environment Variable Issues
 
 **Possible Causes:**
+
 - Variable not set in workflow
 - Wrong variable name
 - Missing in specific job
 
 **Solutions:**
+
 - Check workflow file for env vars
 - Verify variable names match exactly
 - Check job-specific env vars
@@ -969,6 +1071,7 @@ npm run test:coverage
 **Future:** CI/CD (build, test, and deploy)
 
 **Potential Steps:**
+
 1. Build and test (current)
 2. Build Docker image (optional)
 3. Deploy to staging environment
@@ -980,20 +1083,24 @@ npm run test:coverage
 ### Advanced Features
 
 **Matrix Testing:**
+
 - Test across multiple Node.js versions
 - Test across multiple operating systems
 
 **Security Scanning:**
+
 - npm audit in CI
 - Snyk vulnerability scanning
 - Dependabot automated updates
 
 **Performance Testing:**
+
 - Lighthouse CI for performance metrics
 - Bundle size monitoring
 - Load testing
 
 **Visual Regression:**
+
 - Screenshot comparison tests
 - Visual diff detection
 - Automated visual reviews
@@ -1001,6 +1108,7 @@ npm run test:coverage
 ### Staging Environment
 
 **Future Setup:**
+
 - `main` branch → Staging deployment
 - `production` branch → Production deployment
 - Preview deployments for pull requests
@@ -1008,6 +1116,7 @@ npm run test:coverage
 ### Blue-Green Deployments
 
 **Zero-downtime deployments:**
+
 - Deploy to new environment
 - Run health checks
 - Switch traffic
@@ -1047,19 +1156,19 @@ npm run test:coverage
 
 ### Environment Variables Summary
 
-| Variable | Required? | Current Value | Purpose |
-|----------|-----------|---------------|---------|
-| `NEXT_PUBLIC_SITE_URL` | ✅ Yes | `https://www.ryanflynn.org` | Site URL for SEO/build |
-| `DIRECTUS_URL_SERVER_SIDE` | ❌ No | `""` (empty) | Directus server URL |
-| `NEXT_PUBLIC_DIRECTUS_URL` | ❌ No | `""` (empty) | Directus public URL |
-| `NODE_ENV` | ✅ Yes | `test`/`production` | Node environment |
+| Variable                   | Required? | Current Value               | Purpose                |
+| -------------------------- | --------- | --------------------------- | ---------------------- |
+| `NEXT_PUBLIC_SITE_URL`     | ✅ Yes    | `https://www.ryanflynn.org` | Site URL for SEO/build |
+| `DIRECTUS_URL_SERVER_SIDE` | ❌ No     | `""` (empty)                | Directus server URL    |
+| `NEXT_PUBLIC_DIRECTUS_URL` | ❌ No     | `""` (empty)                | Directus public URL    |
+| `NODE_ENV`                 | ✅ Yes    | `test`/`production`         | Node environment       |
 
 ### Branch Strategy Summary
 
-| Branch | Push CI? | PR CI? | Notes |
-|--------|----------|-------|-------|
-| `main` | ✅ Yes | ✅ Yes | Production branch |
-| `master` | ✅ Yes | ✅ Yes | Production branch |
+| Branch     | Push CI?     | PR CI? | Notes                          |
+| ---------- | ------------ | ------ | ------------------------------ |
+| `main`     | ✅ Yes       | ✅ Yes | Production branch              |
+| `master`   | ✅ Yes       | ✅ Yes | Production branch              |
 | `dev-main` | ⚠️ Temporary | ✅ Yes | Remove from push after testing |
 
 ---
@@ -1069,6 +1178,7 @@ npm run test:coverage
 Your CI pipeline is **fully configured and ready to use**. The setup uses minimal environment variables, works without external dependencies, and is optimized for both public and private repositories.
 
 **Key Points to Remember:**
+
 1. ✅ CI is active and working
 2. ✅ Environment variables are minimal and configured
 3. ⚠️ Remove `dev-main` from push after 1-2 weeks of testing
@@ -1076,6 +1186,7 @@ Your CI pipeline is **fully configured and ready to use**. The setup uses minima
 5. ✅ App gracefully handles missing Directus (empty URLs are fine)
 
 **Next Steps:**
+
 1. Monitor first few CI runs
 2. Gather timing data
 3. After 1-2 weeks, optimize branch strategy
@@ -1083,6 +1194,7 @@ Your CI pipeline is **fully configured and ready to use**. The setup uses minima
 5. Consider code coverage if desired
 
 **Questions or Issues?**
+
 - Check Troubleshooting section
 - Review GitHub Actions logs
 - Consult this documentation
@@ -1092,4 +1204,3 @@ Your CI pipeline is **fully configured and ready to use**. The setup uses minima
 **Last Updated:** Initial implementation  
 **Maintained By:** You  
 **Review Schedule:** Quarterly
-

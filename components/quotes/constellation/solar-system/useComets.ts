@@ -25,7 +25,7 @@ export function useComets(
   const [comets, setComets] = useState<Comet[]>([]);
   const cometIdRef = useRef(0);
   const cometsRef = useRef<Comet[]>([]);
-  
+
   // Function to update comets state from ref
   const updateCometsFromRef = useCallback(() => {
     setComets([...cometsRef.current]);
@@ -37,13 +37,16 @@ export function useComets(
    * @param stdDev - Standard deviation of the distribution
    * @returns Random number from normal distribution
    */
-  const generateNormalRandom = useCallback((mean: number, stdDev: number): number => {
-    // Box-Muller transform for normal distribution
-    const u1 = Math.random();
-    const u2 = Math.random();
-    const z0 = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
-    return z0 * stdDev + mean;
-  }, []);
+  const generateNormalRandom = useCallback(
+    (mean: number, stdDev: number): number => {
+      // Box-Muller transform for normal distribution
+      const u1 = Math.random();
+      const u2 = Math.random();
+      const z0 = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+      return z0 * stdDev + mean;
+    },
+    []
+  );
 
   /**
    * Generate speed from normal distribution with min/max clamping
@@ -65,9 +68,10 @@ export function useComets(
         y: 0,
         vx: 0,
         vy: 0,
-        quote: process.env.NODE_ENV === "development" 
-          ? { id: "default", text: "No quotes available" }
-          : null,
+        quote:
+          process.env.NODE_ENV === "development"
+            ? { id: "default", text: "No quotes available" }
+            : null,
         iconType: "rocket" as const,
         rotation: 0,
         color: "blue",
@@ -118,33 +122,41 @@ export function useComets(
     }
 
     // Pick a random quote, or use default if none available (only in dev mode)
-    const randomQuote = quotes.length > 0 
-      ? quotes[Math.floor(Math.random() * quotes.length)]
-      : process.env.NODE_ENV === "development"
-      ? { id: "default", text: "No quotes available" }
-      : null; // No quote in production
+    const randomQuote =
+      quotes.length > 0
+        ? quotes[Math.floor(Math.random() * quotes.length)]
+        : process.env.NODE_ENV === "development"
+          ? { id: "default", text: "No quotes available" }
+          : null; // No quote in production
 
     // Random icon type based on configured chance
-    const iconType = Math.random() < COMET_ICON_TYPE_CHANCE ? "rocket" : "asteroid";
-    
+    const iconType =
+      Math.random() < COMET_ICON_TYPE_CHANCE ? "rocket" : "asteroid";
+
     // Calculate rotation based on velocity direction (pointing in direction of travel)
-    const rotation = (Math.atan2(vy, vx) * (180 / Math.PI)) + 45;
-    
+    const rotation = Math.atan2(vy, vx) * (180 / Math.PI) + 45;
+
     // Random color for rockets
-    const color = iconType === "rocket" 
-      ? ROCKET_COLORS[Math.floor(Math.random() * ROCKET_COLORS.length)]
-      : undefined;
+    const color =
+      iconType === "rocket"
+        ? ROCKET_COLORS[Math.floor(Math.random() * ROCKET_COLORS.length)]
+        : undefined;
 
     // Size: rockets are always large, asteroids have weighted distribution
-    const size: "small" | "medium" | "large" = iconType === "rocket" 
-      ? "large"
-      : (() => {
-          // Weighted distribution for asteroids based on ASTEROID_SIZE_WEIGHTS
-          const sizeRandom = Math.random();
-          if (sizeRandom < ASTEROID_SIZE_WEIGHTS.medium) return "medium";
-          if (sizeRandom < ASTEROID_SIZE_WEIGHTS.medium + ASTEROID_SIZE_WEIGHTS.small) return "small";
-          return "large";
-        })();
+    const size: "small" | "medium" | "large" =
+      iconType === "rocket"
+        ? "large"
+        : (() => {
+            // Weighted distribution for asteroids based on ASTEROID_SIZE_WEIGHTS
+            const sizeRandom = Math.random();
+            if (sizeRandom < ASTEROID_SIZE_WEIGHTS.medium) return "medium";
+            if (
+              sizeRandom <
+              ASTEROID_SIZE_WEIGHTS.medium + ASTEROID_SIZE_WEIGHTS.small
+            )
+              return "small";
+            return "large";
+          })();
 
     return {
       id: `comet-${cometIdRef.current++}`,
@@ -189,7 +201,10 @@ export function useComets(
       });
 
       // Add a new comet occasionally
-      if (Math.random() < COMET_SPAWN_CHANCE && cometsRef.current.length < COMET_MAX_COUNT) {
+      if (
+        Math.random() < COMET_SPAWN_CHANCE &&
+        cometsRef.current.length < COMET_MAX_COUNT
+      ) {
         cometsRef.current.push(generateComet());
       }
 
@@ -234,4 +249,3 @@ export function useComets(
 
   return { comets, cometsRef };
 }
-

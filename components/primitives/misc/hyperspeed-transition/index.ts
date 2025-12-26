@@ -1,2 +1,4 @@
-export { HyperspeedTransition, hyperspeedVariants } from "./HyperspeedTransition";
-
+export {
+  HyperspeedTransition,
+  hyperspeedVariants,
+} from "./HyperspeedTransition";

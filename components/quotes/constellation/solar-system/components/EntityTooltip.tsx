@@ -21,13 +21,10 @@ export function EntityTooltip({ entity, auDistance }: EntityTooltipProps) {
       >
         {entity.name}
       </p>
-      <p className="text-xs text-slate-400 font-mono mb-2">
-        {auDistance} AU
-      </p>
+      <p className="text-xs text-slate-400 font-mono mb-2">{auDistance} AU</p>
       <p className="text-xs text-slate-300 leading-relaxed">
         Click to explore more quotes
       </p>
     </div>
   );
 }
-

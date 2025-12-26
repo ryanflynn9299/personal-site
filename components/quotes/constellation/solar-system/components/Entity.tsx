@@ -13,7 +13,14 @@ interface EntityProps {
   onHoverEnd: () => void;
 }
 
-export function Entity({ entity, position, isSelected, onClick, onHover, onHoverEnd }: EntityProps) {
+export function Entity({
+  entity,
+  position,
+  isSelected,
+  onClick,
+  onHover,
+  onHoverEnd,
+}: EntityProps) {
   return (
     <div
       key={entity.id}
@@ -43,4 +50,3 @@ export function Entity({ entity, position, isSelected, onClick, onHover, onHover
     </div>
   );
 }
-

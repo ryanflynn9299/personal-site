@@ -21,21 +21,59 @@ interface Project {
 const CATEGORIES = {
   "Web Development": {
     color: projectColors.webDev, // sky-500 - A cool blue gas giant
-    keywords: ["react", "next.js", "typescript", "tailwind", "javascript", "html", "css", "npm", "directus", "docker"],
+    keywords: [
+      "react",
+      "next.js",
+      "typescript",
+      "tailwind",
+      "javascript",
+      "html",
+      "css",
+      "npm",
+      "directus",
+      "docker",
+    ],
   },
   "ML/AI": {
     color: projectColors.mlAi, // fuchsia-500 - An exotic, vibrant star
-    keywords: ["python", "sklearn", "ai/ml", "pytorch", "data science", "nlp", "xgboost"],
+    keywords: [
+      "python",
+      "sklearn",
+      "ai/ml",
+      "pytorch",
+      "data science",
+      "nlp",
+      "xgboost",
+    ],
   },
-  "Systems": {
+  Systems: {
     color: projectColors.systems, // amber-400 - A sandy, golden world
-    keywords: ["c", "golang", "go", "linux", "bash", "concurrency", "systems programming"],
+    keywords: [
+      "c",
+      "golang",
+      "go",
+      "linux",
+      "bash",
+      "concurrency",
+      "systems programming",
+    ],
   },
   "Tools & Automation": {
     color: projectColors.tools, // emerald-500 - A lush, temperate world
-    keywords: ["python", "webscraping", "automation", "bs4", "mongodb", "file generation", "nlp", "html", "apis", "json"],
+    keywords: [
+      "python",
+      "webscraping",
+      "automation",
+      "bs4",
+      "mongodb",
+      "file generation",
+      "nlp",
+      "html",
+      "apis",
+      "json",
+    ],
   },
-  "Other": {
+  Other: {
     color: projectColors.other, // indigo-400 - A deep violet nebula
     keywords: [],
   },
@@ -51,16 +89,21 @@ interface CategorizedProjects {
  * Categorizes projects based on their tags and description
  */
 function categorizeProject(project: Project): CategoryName {
-  const searchText = `${project.title} ${project.description} ${project.tags.join(" ")}`.toLowerCase();
-  
+  const searchText =
+    `${project.title} ${project.description} ${project.tags.join(" ")}`.toLowerCase();
+
   for (const [categoryName, category] of Object.entries(CATEGORIES)) {
     if (categoryName === "Other") continue;
-    
-    if (category.keywords.some(keyword => searchText.includes(keyword.toLowerCase()))) {
+
+    if (
+      category.keywords.some((keyword) =>
+        searchText.includes(keyword.toLowerCase())
+      )
+    ) {
       return categoryName as CategoryName;
     }
   }
-  
+
   return "Other";
 }
 
@@ -70,12 +113,14 @@ function categorizeProject(project: Project): CategoryName {
  */
 export function ProjectFileCabinet() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
-  const [selectedProjectColor, setSelectedProjectColor] = useState<string>(projectColors.default);
+  const [selectedProjectColor, setSelectedProjectColor] = useState<string>(
+    projectColors.default
+  );
 
   // Categorize projects
   const categorizedProjects = useMemo<CategorizedProjects>(() => {
     const categorized: CategorizedProjects = {};
-    
+
     projects.forEach((project) => {
       const category = categorizeProject(project);
       if (!categorized[category]) {
@@ -83,7 +128,7 @@ export function ProjectFileCabinet() {
       }
       categorized[category].push(project);
     });
-    
+
     return categorized;
   }, []);
 
@@ -99,18 +144,18 @@ export function ProjectFileCabinet() {
   return (
     <div className="relative min-h-screen bg-slate-950 py-16">
       {/* Graph Paper Grid Background - Can be replaced with DotGrid component in the future */}
-      <div 
+      <div
         className="fixed inset-0 pointer-events-none z-0"
         style={{
           backgroundImage: `
             linear-gradient(to right, rgba(100, 116, 139, 0.15) 1px, transparent 1px),
             linear-gradient(to bottom, rgba(100, 116, 139, 0.15) 1px, transparent 1px)
           `,
-          backgroundSize: '40px 40px',
-          backgroundPosition: '0 0',
+          backgroundSize: "40px 40px",
+          backgroundPosition: "0 0",
         }}
       />
-      
+
       <div className="container relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-12 text-center">
@@ -118,7 +163,8 @@ export function ProjectFileCabinet() {
             Project File Cabinet
           </h1>
           <p className="mx-auto mt-4 max-w-2xl text-lg text-slate-300">
-            Explore my projects organized by category. Click folders to open, then click papers to view details.
+            Explore my projects organized by category. Click folders to open,
+            then click papers to view details.
           </p>
         </div>
 
@@ -126,14 +172,16 @@ export function ProjectFileCabinet() {
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {Object.entries(CATEGORIES).map(([categoryName, category]) => {
             const categoryProjects = categorizedProjects[categoryName] || [];
-            
+
             return (
               <ProjectFolder
                 key={categoryName}
                 categoryName={categoryName}
                 color={category.color}
                 projects={categoryProjects}
-                onPaperClick={(project) => handlePaperClick(project, category.color)}
+                onPaperClick={(project) =>
+                  handlePaperClick(project, category.color)
+                }
               />
             );
           })}
@@ -180,23 +228,53 @@ function ProjectFolder({
   // 1 item: [0] -> positions [null, 1, null] (second only)
   // Note: index here refers to the paper position (0=image, 1=title, 2=tags), not array index
   const paperItems: (React.ReactNode | null)[] = [];
-  
+
   if (displayProjects.length === 3) {
     paperItems.push(
-      <ProjectPaper key={displayProjects[0].title} project={displayProjects[0]} index={0} onClick={() => onPaperClick(displayProjects[0], color)} />,
-      <ProjectPaper key={displayProjects[1].title} project={displayProjects[1]} index={1} onClick={() => onPaperClick(displayProjects[1], color)} />,
-      <ProjectPaper key={displayProjects[2].title} project={displayProjects[2]} index={2} onClick={() => onPaperClick(displayProjects[2], color)} />
+      <ProjectPaper
+        key={displayProjects[0].title}
+        project={displayProjects[0]}
+        index={0}
+        onClick={() => onPaperClick(displayProjects[0], color)}
+      />,
+      <ProjectPaper
+        key={displayProjects[1].title}
+        project={displayProjects[1]}
+        index={1}
+        onClick={() => onPaperClick(displayProjects[1], color)}
+      />,
+      <ProjectPaper
+        key={displayProjects[2].title}
+        project={displayProjects[2]}
+        index={2}
+        onClick={() => onPaperClick(displayProjects[2], color)}
+      />
     );
   } else if (displayProjects.length === 2) {
     paperItems.push(
-      <ProjectPaper key={displayProjects[0].title} project={displayProjects[0]} index={0} onClick={() => onPaperClick(displayProjects[0], color)} />,
+      <ProjectPaper
+        key={displayProjects[0].title}
+        project={displayProjects[0]}
+        index={0}
+        onClick={() => onPaperClick(displayProjects[0], color)}
+      />,
       null,
-      <ProjectPaper key={displayProjects[1].title} project={displayProjects[1]} index={2} onClick={() => onPaperClick(displayProjects[1], color)} />
+      <ProjectPaper
+        key={displayProjects[1].title}
+        project={displayProjects[1]}
+        index={2}
+        onClick={() => onPaperClick(displayProjects[1], color)}
+      />
     );
   } else if (displayProjects.length === 1) {
     paperItems.push(
       null,
-      <ProjectPaper key={displayProjects[0].title} project={displayProjects[0]} index={1} onClick={() => onPaperClick(displayProjects[0], color)} />,
+      <ProjectPaper
+        key={displayProjects[0].title}
+        project={displayProjects[0]}
+        index={1}
+        onClick={() => onPaperClick(displayProjects[0], color)}
+      />,
       null
     );
   }
@@ -210,14 +288,12 @@ function ProjectFolder({
     >
       <div className="mb-8 text-center">
         <h3 className="text-sm font-semibold text-slate-300">{categoryName}</h3>
-        <p className="text-xs text-slate-500">{projects.length} project{projects.length !== 1 ? 's' : ''}</p>
+        <p className="text-xs text-slate-500">
+          {projects.length} project{projects.length !== 1 ? "s" : ""}
+        </p>
       </div>
       <div className="cursor-pointer">
-        <Folder
-          color={color}
-          size={1.2}
-          items={paperItems}
-        />
+        <Folder color={color} size={1.2} items={paperItems} />
       </div>
     </motion.div>
   );
@@ -269,4 +345,3 @@ function ProjectPaper({ project, index, onClick }: ProjectPaperProps) {
     </div>
   );
 }
-

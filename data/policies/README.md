@@ -150,4 +150,3 @@ If you have questions about:
 - **Markdown formatting**: Refer to [Markdown Guide](https://www.markdownguide.org/)
 - **Policy content**: Consult with legal counsel
 - **UI/UX**: The space-themed viewer handles all styling automatically
-

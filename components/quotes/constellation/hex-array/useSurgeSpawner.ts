@@ -1,6 +1,6 @@
 /**
  * useSurgeSpawner Hook
- * 
+ *
  * Manages a limited pool of concurrent Data Surge animations (max 5).
  * Periodically selects a random Active Tile as source and a random visible
  * vertex as destination, then calculates a path using A* algorithm.
@@ -10,7 +10,11 @@ import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import type { HexTile } from "./types";
 import type { VertexGraph, Vertex } from "./vertexGraph";
 import { findPath, pathToSVGPath } from "./pathfinding";
-import { getVerticesNearTile, getVisibleVertices, getVerticesAwayFromActiveTiles } from "./vertexGraph";
+import {
+  getVerticesNearTile,
+  getVisibleVertices,
+  getVerticesAwayFromActiveTiles,
+} from "./vertexGraph";
 import { ACTIVE_COLORS } from "./constants";
 
 // Configuration constants
@@ -54,7 +58,7 @@ export function useSurgeSpawner(
   const activeTilesRef = useRef(activeTiles);
   const graphRef = useRef(graph);
   const destinationVerticesRef = useRef<Vertex[]>([]);
-  
+
   // Helper to schedule next spawn with proper cleanup
   const scheduleNextSpawn = (callback: () => void, delay: number) => {
     if (!isMountedRef.current) return;
@@ -84,15 +88,24 @@ export function useSurgeSpawner(
 
   // Get vertices away from active tiles (for destinations)
   const destinationVertices = useMemo(() => {
-    if (!graph || activeTiles.length === 0 || viewportWidth === 0 || viewportHeight === 0) {
+    if (
+      !graph ||
+      activeTiles.length === 0 ||
+      viewportWidth === 0 ||
+      viewportHeight === 0
+    ) {
       return [];
     }
     const awayVertices = getVerticesAwayFromActiveTiles(graph, activeTiles);
     // Filter to only visible vertices
-    const filtered = awayVertices.filter(v => {
+    const filtered = awayVertices.filter((v) => {
       const padding = 100;
-      return v.x >= -padding && v.x <= viewportWidth + padding &&
-             v.y >= -padding && v.y <= viewportHeight + padding;
+      return (
+        v.x >= -padding &&
+        v.x <= viewportWidth + padding &&
+        v.y >= -padding &&
+        v.y <= viewportHeight + padding
+      );
     });
     destinationVerticesRef.current = filtered;
     return filtered;
@@ -124,7 +137,7 @@ export function useSurgeSpawner(
         // Remove surges that have completed their animation
         // Add small buffer (100ms) to ensure animation fully completes
         const active = currentSurges.filter(
-          (surge) => now - surge.startTime < (surge.duration * 1000 + 100)
+          (surge) => now - surge.startTime < surge.duration * 1000 + 100
         );
         return active;
       });
@@ -149,7 +162,11 @@ export function useSurgeSpawner(
     const currentActiveTiles = activeTilesRef.current;
     const currentDestinationVertices = destinationVerticesRef.current;
 
-    if (!currentGraph || currentActiveTiles.length === 0 || currentDestinationVertices.length === 0) {
+    if (
+      !currentGraph ||
+      currentActiveTiles.length === 0 ||
+      currentDestinationVertices.length === 0
+    ) {
       return;
     }
 
@@ -160,7 +177,7 @@ export function useSurgeSpawner(
       // Clean up completed surges first
       const now = Date.now();
       const activeSurges = currentSurges.filter(
-        (surge) => now - surge.startTime < (surge.duration * 1000 + 100)
+        (surge) => now - surge.startTime < surge.duration * 1000 + 100
       );
 
       // Check if we can spawn a new surge (max concurrent limit)
@@ -171,7 +188,9 @@ export function useSurgeSpawner(
 
       // Select random active tile as source
       const sourceTile =
-        currentActiveTiles[Math.floor(Math.random() * currentActiveTiles.length)];
+        currentActiveTiles[
+          Math.floor(Math.random() * currentActiveTiles.length)
+        ];
       if (!sourceTile || !sourceTile.color) {
         isSpawningRef.current = false;
         return activeSurges;
@@ -191,11 +210,13 @@ export function useSurgeSpawner(
       // Try to find a valid path (with retry limit to prevent infinite loops)
       let path: string[] | null = null;
       let attempts = 0;
-      
+
       while (!path && attempts < MAX_PATHFINDING_ATTEMPTS) {
         // Select random destination vertex (away from active tiles)
         const destinationVertex =
-          currentDestinationVertices[Math.floor(Math.random() * currentDestinationVertices.length)];
+          currentDestinationVertices[
+            Math.floor(Math.random() * currentDestinationVertices.length)
+          ];
 
         // Skip if source and destination are the same
         if (sourceVertex.id === destinationVertex.id) {
@@ -205,13 +226,13 @@ export function useSurgeSpawner(
 
         // Calculate path using A*
         path = findPath(currentGraph, sourceVertex.id, destinationVertex.id);
-        
+
         // Validate path: must be at least MIN_PATH_LENGTH edges
         // (path length is number of vertices, so edges = vertices - 1)
         if (path && path.length >= MIN_PATH_LENGTH + 1) {
           // Convert path to SVG path string
           const svgPath = pathToSVGPath(currentGraph, path);
-          
+
           // Get color from source tile
           const color = ACTIVE_COLORS[sourceTile.color];
 
@@ -235,7 +256,7 @@ export function useSurgeSpawner(
           isSpawningRef.current = false;
           return [...activeSurges, newSurge];
         }
-        
+
         attempts++;
       }
 
@@ -252,7 +273,12 @@ export function useSurgeSpawner(
 
   // Spawn new surges automatically (when enabled)
   useEffect(() => {
-    if (!graph || activeTiles.length === 0 || destinationVertices.length === 0 || !enabled) {
+    if (
+      !graph ||
+      activeTiles.length === 0 ||
+      destinationVertices.length === 0 ||
+      !enabled
+    ) {
       // Clear timeout if disabled
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
@@ -277,7 +303,14 @@ export function useSurgeSpawner(
       }
       isSpawningRef.current = false;
     };
-  }, [graph, activeTiles, visibleVertices, enabled, destinationVertices, spawnSurge]);
+  }, [
+    graph,
+    activeTiles,
+    visibleVertices,
+    enabled,
+    destinationVertices,
+    spawnSurge,
+  ]);
 
   return {
     surges,

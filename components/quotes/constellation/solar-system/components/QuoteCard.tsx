@@ -30,7 +30,7 @@ export function QuoteCard({ quote, entityColor }: QuoteCardProps) {
           )}
           {quote.source && (
             <>
-              <span className="text-slate-600">//</span>
+              <span className="text-slate-600">{"//"}</span>
               <span className="text-slate-500">{quote.source}</span>
             </>
           )}
@@ -40,10 +40,7 @@ export function QuoteCard({ quote, entityColor }: QuoteCardProps) {
       {quote.tags && quote.tags.length > 0 && (
         <div className="mt-4 flex flex-wrap gap-2">
           {quote.tags.map((tag, idx) => (
-            <span
-              key={idx}
-              className="font-mono text-xs text-slate-600"
-            >
+            <span key={idx} className="font-mono text-xs text-slate-600">
               #{tag}
             </span>
           ))}
@@ -52,4 +49,3 @@ export function QuoteCard({ quote, entityColor }: QuoteCardProps) {
     </article>
   );
 }
-

@@ -43,7 +43,7 @@ export function FunCounter() {
       const newCount = await incrementCounter();
       setCount(newCount);
       setHasClicked(true);
-      
+
       // Store in sessionStorage
       if (typeof window !== "undefined") {
         sessionStorage.setItem(SESSION_STORAGE_KEY, "true");
@@ -74,11 +74,11 @@ export function FunCounter() {
           Useless Counter Challenge
         </h3>
       </div>
-      
+
       <p className="text-sm text-slate-400 mb-4">
         Click the button below to increment a counter for absolutely no reason.
-        It&apos;s stored in a database somewhere (or will be, eventually). 
-        One click per session, because even randomness needs rules.
+        It&apos;s stored in a database somewhere (or will be, eventually). One
+        click per session, because even randomness needs rules.
       </p>
 
       <div className="flex flex-col items-center gap-4">
@@ -111,17 +111,15 @@ export function FunCounter() {
             hasClicked
               ? "bg-slate-700 text-slate-500 cursor-not-allowed"
               : isLoading
-              ? "bg-sky-600 text-slate-200 cursor-wait"
-              : "bg-sky-500 text-white hover:bg-sky-400 active:scale-95"
+                ? "bg-sky-600 text-slate-200 cursor-wait"
+                : "bg-sky-500 text-white hover:bg-sky-400 active:scale-95"
           }`}
         >
-          {isLoading ? (
-            "Incrementing..."
-          ) : hasClicked ? (
-            "Already clicked this session!"
-          ) : (
-            "Click Me (For Science!)"
-          )}
+          {isLoading
+            ? "Incrementing..."
+            : hasClicked
+              ? "Already clicked this session!"
+              : "Click Me (For Science!)"}
         </button>
 
         {message && (
@@ -137,4 +135,3 @@ export function FunCounter() {
     </motion.div>
   );
 }
-

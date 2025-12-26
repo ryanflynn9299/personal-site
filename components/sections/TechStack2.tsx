@@ -1,6 +1,6 @@
 "use client";
 
-import {MagicBento2} from "@/components/sections/MagicBento2";
+import { MagicBento2 } from "@/components/sections/MagicBento2";
 
 // Using Reactbits component (no personal details yet)
 export function TechStack2() {

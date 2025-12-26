@@ -9,9 +9,22 @@ export const ELLIPSE_COMPRESSION = Math.cos((50 * Math.PI) / 180);
 
 // Deterministic patterns for orbit properties
 // Increased variance in spacing pattern for more varied ring spacing
-export const SPACING_PATTERN = [1.0, 0.75, 1.35, 0.85, 1.25, 0.9, 1.15, 1.05, 0.8, 1.3, 0.95, 1.1];
-export const RETROGRADE_PATTERN = [false, false, true, false, false, false, false, true];
-export const ECCENTRICITY_PATTERN = [0.1, 0.15, 0.08, 0.2, 0.12, 0.18, 0.1, 0.22];
+export const SPACING_PATTERN = [
+  1.0, 0.75, 1.35, 0.85, 1.25, 0.9, 1.15, 1.05, 0.8, 1.3, 0.95, 1.1,
+];
+export const RETROGRADE_PATTERN = [
+  false,
+  false,
+  true,
+  false,
+  false,
+  false,
+  false,
+  true,
+];
+export const ECCENTRICITY_PATTERN = [
+  0.1, 0.15, 0.08, 0.2, 0.12, 0.18, 0.1, 0.22,
+];
 
 // Orbit configuration
 // Increased by ~25% to make solar system 20-30% bigger overall
@@ -47,8 +60,8 @@ export const COMET_ICON_TYPE_CHANCE = 0.5; // Probability of rocket vs asteroid 
 // Size distribution (for asteroids only - rockets are always large)
 export const ASTEROID_SIZE_WEIGHTS = {
   medium: 0.55, // 55% chance
-  small: 0.30,  // 30% chance (cumulative: 85%)
-  large: 0.15,  // 15% chance (cumulative: 100%)
+  small: 0.3, // 30% chance (cumulative: 85%)
+  large: 0.15, // 15% chance (cumulative: 100%)
 } as const;
 
 // Tooltip configuration
@@ -98,13 +111,9 @@ export const ACTIVE_ICON_LIBRARY: IconLibrary = "lucide";
 // - fontawesome: REMOVED (don't like) ❌
 // - radix: KEPT - Only circle and dot (dot is dormant) ✅
 
-
-
 // SVG Shape Options (for SVG mode)
 // Icons from the active icon library
 export const SVG_SHAPE_OPTIONS = (() => {
   const icons = getIconsFromLibraries(new Set([ACTIVE_ICON_LIBRARY]));
   return icons.map((icon) => icon.name);
 })() as readonly string[];
-
-

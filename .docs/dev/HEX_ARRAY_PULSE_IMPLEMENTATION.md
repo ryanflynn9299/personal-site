@@ -1,11 +1,13 @@
 # Hex Array Pulse Implementation
 
 ## Overview
+
 The Hex Array view (`components/quotes/constellation/hex-array/HexArrayView.tsx`) implements a pulsing hexagon animation system around active tiles. This document describes the requirements and implementation details.
 
 ## Requirements
 
 ### Visual Design
+
 - **Shape**: Small hexagon-shaped pulses (using the same hexagon geometry as tiles)
 - **Color**: Match the active tile's color (cyan, amber, or violet from `ACTIVE_COLORS`)
 - **Thickness**: Thicker stroke (2.5px `strokeWidth`)
@@ -16,6 +18,7 @@ The Hex Array view (`components/quotes/constellation/hex-array/HexArrayView.tsx`
   - Final radius: `(HEX_SIZE + 2) * 1.2`
 
 ### Animation Behavior
+
 - **Single Pulse**: One smooth pulse per animation cycle (not multiple layered pulses)
 - **Fade Out**: Must fade out completely when reaching end radius (opacity goes to 0)
 - **Duration**: 1 second animation duration
@@ -25,6 +28,7 @@ The Hex Array view (`components/quotes/constellation/hex-array/HexArrayView.tsx`
   - Times: `[0, 0.2, 0.6, 1]` (fade in quickly, hold briefly, fade out at end)
 
 ### Global Scheduler
+
 - **Frequency**: One pulse scheduled globally every 3 seconds across all active tiles
 - **Initial Delay**: 1 second delay before first pulse
 - **Interval**: Exactly 3 seconds between pulses (not random)
@@ -34,10 +38,12 @@ The Hex Array view (`components/quotes/constellation/hex-array/HexArrayView.tsx`
 ### Implementation Details
 
 #### State Management
+
 - `pulsingTileId` state tracks which tile is currently pulsing
 - Scheduler uses `useEffect` with proper cleanup
 
 #### Scheduler Logic
+
 ```typescript
 // Location: components/quotes/constellation/hex-array/HexArrayView.tsx
 // Lines: ~573-592
@@ -51,11 +57,12 @@ useEffect(() => {
 
   const scheduleNextPulse = () => {
     if (!isMounted) return;
-    
+
     // Randomly select one active tile to pulse
-    const randomTile = activeTiles[Math.floor(Math.random() * activeTiles.length)];
+    const randomTile =
+      activeTiles[Math.floor(Math.random() * activeTiles.length)];
     setPulsingTileId(randomTile.id);
-    
+
     // Schedule next pulse in exactly 3 seconds
     timeoutId = setTimeout(scheduleNextPulse, 3000);
   };
@@ -71,6 +78,7 @@ useEffect(() => {
 ```
 
 #### Pulse Rendering
+
 ```typescript
 // Location: components/quotes/constellation/hex-array/HexArrayView.tsx
 // Lines: ~783-805
@@ -102,6 +110,7 @@ useEffect(() => {
 ```
 
 ## Key Files
+
 - **Main Component**: `components/quotes/constellation/hex-array/HexArrayView.tsx`
   - Pulse scheduler: Lines ~573-592
   - Pulse rendering: Lines ~783-805
@@ -109,6 +118,7 @@ useEffect(() => {
   - Active tile colors: `ACTIVE_COLORS` constant
 
 ## Constants Used
+
 - `HEX_SIZE`: 40 (hexagon radius)
 - `ACTIVE_COLORS`: Object mapping color names to hex values
   - `cyan`: "#06b6d4"
@@ -116,15 +126,16 @@ useEffect(() => {
   - `violet`: "#8b5cf6"
 
 ## Animation Timeline
+
 1. **0s**: Pulse starts (opacity: 0, scale: 0.95)
 2. **0.2s**: Fade in complete (opacity: 0.4, scale: 1.15)
 3. **0.6s**: Hold at peak (opacity: 0.4, scale: 1.2)
 4. **1.0s**: Fade out complete (opacity: 0, scale: 1.2)
 
 ## Scheduler Timeline
+
 1. **0s**: Component mounts
 2. **1s**: First pulse on random active tile
 3. **4s**: Second pulse on random active tile (1s animation + 3s wait)
 4. **7s**: Third pulse on random active tile
 5. Continues every 3 seconds
-

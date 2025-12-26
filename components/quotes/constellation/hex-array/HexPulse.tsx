@@ -71,4 +71,3 @@ export function HexPulse({ x, y, color }: HexPulseProps) {
     </g>
   );
 }
-

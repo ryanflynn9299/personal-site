@@ -10,7 +10,11 @@ interface CommandConsoleProps {
   onClose: () => void;
 }
 
-export function CommandConsole({ isOpen, selectedEntity, onClose }: CommandConsoleProps) {
+export function CommandConsole({
+  isOpen,
+  selectedEntity,
+  onClose,
+}: CommandConsoleProps) {
   if (!selectedEntity) return null;
 
   return (
@@ -38,7 +42,7 @@ export function CommandConsole({ isOpen, selectedEntity, onClose }: CommandConso
                 className="font-mono text-2xl font-bold"
                 style={{ color: selectedEntity.color }}
               >
-                // SIGNAL_DECODED
+                {"// SIGNAL_DECODED"}
               </h2>
               <p className="mt-1 font-mono text-xs text-slate-400">
                 ENTITY: {selectedEntity.name.toUpperCase()} |{" "}
@@ -70,4 +74,3 @@ export function CommandConsole({ isOpen, selectedEntity, onClose }: CommandConso
     </AnimatePresence>
   );
 }
-
