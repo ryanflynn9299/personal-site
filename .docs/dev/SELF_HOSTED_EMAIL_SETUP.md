@@ -178,9 +178,9 @@ If you want a dedicated service just for forms.
 ```dockerfile
 FROM node:20-alpine
 WORKDIR /app
-COPY ../package.json .
+COPY ../../package.json .
 RUN npm install
-COPY .. .
+COPY ../.. .
 CMD ["node", "index.js"]
 ```
 

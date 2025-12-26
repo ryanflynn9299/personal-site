@@ -4,25 +4,28 @@
 
 _Start here - these are the most important items to tackle next_
 
-- [ ] Fix missing author from Directus call
-- [ ] Fix slug in metadata
 - [ ] Add professional headshot/profile images
-- [ ] Design and implement quotes page
+- [ ] images for about page
+- [ ] Organize and slightly refine vitae details
+- [ ] Fix missing author from Directus call
+- [ ] Add navigation between blog posts (prev/next)
+- [ ] connect counter to database
+- [ ] Add loading states/screens for API calls
+- [x] Fix slug in metadata
+- [x] Design and implement quotes page
 - [ ] Ensure responsive design works on mobile devices
 - [ ] Consider removing `dangerouslyAllowsSVGs` from next.config.ts
 - [ ] Update site metadata (title, description, favicon)
-- [ ] Add navigation between blog posts (prev/next)
-- [ ] Add loading states/screens for API calls
-- [ ] Finish sitemap and robots.ts
+- [x] Finish sitemap and robots.ts
 - [ ] Figure out scalability for blog
 - [ ] Make client-primary
 - [ ] Consolidate colors
-- [ ] connect counter to database
 - [ ] Flesh out project file cabinet idea
-- [ ] Organize and slightly refine vitae details
-- [ ] images for about page
 - [ ] make about page UX optimized
 - [ ] add christmas mode
+- [ ] Fix planet featured view
+- [ ] Enable SEO for blogs in lib/seo.ts
+- [ ] Finish quotes page and make final selection
 
 ---
 
