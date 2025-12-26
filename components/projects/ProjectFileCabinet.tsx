@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import Folder from "@/components/primitives/misc/Folder";
 import { projects } from "@/data/projects";
 import { ProjectModal } from "./ProjectModal";
+import { projects as projectColors } from "@/constants/theme";
 
 // Project type based on the data structure
 interface Project {
@@ -19,23 +20,23 @@ interface Project {
 // Category definitions with colors matching vitae bullet point palette
 const CATEGORIES = {
   "Web Development": {
-    color: "#0ea5e9", // sky-500 - A cool blue gas giant
+    color: projectColors.webDev, // sky-500 - A cool blue gas giant
     keywords: ["react", "next.js", "typescript", "tailwind", "javascript", "html", "css", "npm", "directus", "docker"],
   },
   "ML/AI": {
-    color: "#d946ef", // fuchsia-500 - An exotic, vibrant star
+    color: projectColors.mlAi, // fuchsia-500 - An exotic, vibrant star
     keywords: ["python", "sklearn", "ai/ml", "pytorch", "data science", "nlp", "xgboost"],
   },
   "Systems": {
-    color: "#fbbf24", // amber-400 - A sandy, golden world
+    color: projectColors.systems, // amber-400 - A sandy, golden world
     keywords: ["c", "golang", "go", "linux", "bash", "concurrency", "systems programming"],
   },
   "Tools & Automation": {
-    color: "#10b981", // emerald-500 - A lush, temperate world
+    color: projectColors.tools, // emerald-500 - A lush, temperate world
     keywords: ["python", "webscraping", "automation", "bs4", "mongodb", "file generation", "nlp", "html", "apis", "json"],
   },
   "Other": {
-    color: "#818cf8", // indigo-400 - A deep violet nebula
+    color: projectColors.other, // indigo-400 - A deep violet nebula
     keywords: [],
   },
 } as const;
@@ -69,7 +70,7 @@ function categorizeProject(project: Project): CategoryName {
  */
 export function ProjectFileCabinet() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
-  const [selectedProjectColor, setSelectedProjectColor] = useState<string>("#03b3c3");
+  const [selectedProjectColor, setSelectedProjectColor] = useState<string>(projectColors.default);
 
   // Categorize projects
   const categorizedProjects = useMemo<CategorizedProjects>(() => {

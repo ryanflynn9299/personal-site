@@ -11,6 +11,7 @@ import { BlogPostTracker } from "@/components/blog/BlogPostTracker";
 import { ServiceUnavailableWithDevMode } from "@/components/common/DevModeIndicator";
 import { BlogContentRenderer } from "@/components/blog/BlogContentRenderer";
 import { Post } from "@/types";
+import { SITE_URL, ENABLE_BLOG_SEO } from "@/lib/seo";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -34,16 +35,55 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
   }
 
+  // If blog SEO is disabled, return minimal metadata with noindex
+  if (!ENABLE_BLOG_SEO) {
+    return {
+      title: post.title,
+      description: post.summary || post.title,
+      robots: {
+        index: false,
+        follow: false,
+      },
+    };
+  }
+
+  const postUrl = `${SITE_URL}/blog/${post.slug}`;
+  const authorName = `${post.author.first_name} ${post.author.last_name}`;
+  const imageUrl = post.feature_image
+    ? `${process.env.NEXT_PUBLIC_DIRECTUS_URL}/assets/${post.feature_image.id}`
+    : undefined;
+
   return {
     title: post.title,
-    // description: post.summary,
+    description: post.summary || post.title,
+    keywords: post.tags && post.tags.length > 0 ? post.tags : undefined,
+    authors: [{ name: authorName }],
     openGraph: {
       title: post.title,
-      description: post.summary,
+      description: post.summary || post.title,
       type: "article",
+      url: postUrl,
       publishedTime: post.publish_date,
-      authors: [`${post.author.first_name} ${post.author.last_name}`],
-      images: [{ url: post.feature_image ? post.feature_image.filename : "" }],
+      authors: [authorName],
+      ...(imageUrl && {
+        images: [
+          {
+            url: imageUrl,
+            width: 1200,
+            height: 630,
+            alt: post.title,
+          },
+        ],
+      }),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.summary || post.title,
+      ...(imageUrl && { images: [imageUrl] }),
+    },
+    alternates: {
+      canonical: postUrl,
     },
   };
 }
@@ -87,7 +127,7 @@ export default async function BlogPostPage({ params }: Props) {
   );
 
   const imageUrl = post.feature_image
-    ? `${process.env.NEXT_PUBLIC_DIRECTUS_URL}/assets/${post.feature_image}`
+    ? `${process.env.NEXT_PUBLIC_DIRECTUS_URL}/assets/${post.feature_image.id}`
     : null;
 
   return (

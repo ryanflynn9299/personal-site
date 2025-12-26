@@ -1,5 +1,6 @@
 import type { Entity } from "../types";
 import { getIconByName } from "../iconLibrary";
+import { utils } from "@/constants/theme";
 
 interface EntityShapeProps {
   entity: Entity;
@@ -579,7 +580,7 @@ export function EntityShape({ entity, isSelected }: EntityShapeProps) {
           style={{
             width: size * 0.4,
             height: size * 0.4,
-            backgroundColor: "#000000",
+            backgroundColor: utils.entityBackground,
             border: `2px solid ${entity.color}66`,
             boxShadow: `0 0 20px ${entity.color}40, inset 0 0 10px ${entity.color}20`,
           }}

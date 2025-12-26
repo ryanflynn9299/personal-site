@@ -3,12 +3,14 @@ import { Download, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { vitaeData } from "@/data/work_experience";
 import { DownloadButton } from "@/components/common/DownloadButton";
+import { generatePageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = generatePageMetadata({
   title: "Vitae",
   description:
-    "A comprehensive Curriculum Vitae for Ryan Flynn, detailing work experience, projects, skills, and education.",
-};
+    "A comprehensive Curriculum Vitae for Ryan Flynn, detailing work experience, projects, skills, and education. Download the PDF resume or explore online.",
+  path: "/vitae",
+});
 
 // Bullet point colors
 const colorPalette = [

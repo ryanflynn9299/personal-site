@@ -10,6 +10,8 @@
 
   body {
     font-family: var(--font-sans), sans-serif;
+    /* Theme colors: core.background.primary (#0f172a) and core.background.secondary (#1e293b) */
+    /* See: constants/theme.ts */
     background-color: #0f172a;
     background-image: radial-gradient(ellipse at top, #1e293b, #0f172a);
   }
@@ -57,6 +59,8 @@
   background: transparent;
 }
 
+/* Star colors: stars.medium (#e2e8f0), stars.bright (#f8fafc), stars.dim (#94a3b8) */
+/* See: constants/theme.ts */
 .stars-1 {
   background-image:
     radial-gradient(1px 1px at 20px 30px, #e2e8f0, rgba(0, 0, 0, 0)),

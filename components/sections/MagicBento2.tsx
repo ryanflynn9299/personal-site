@@ -23,40 +23,42 @@ import {
 
 type Tween = gsap.core.Tween;
 
+import { core, magicBento as magicBentoColors } from "@/constants/theme";
+
 // --- DATA ---
 const cardData: CardData[] = [
   {
-    color: "#060010",
+    color: core.background.dark,
     title: "Analytics",
     description: "Track user behavior",
     label: "Insights",
   },
   {
-    color: "#060010",
+    color: core.background.dark,
     title: "Dashboard",
     description: "Centralized data view",
     label: "Overview",
   },
   {
-    color: "#060010",
+    color: core.background.dark,
     title: "Collaboration",
     description: "Work together seamlessly",
     label: "Teamwork",
   },
   {
-    color: "#060010",
+    color: core.background.dark,
     title: "Automation",
     description: "Streamline workflows",
     label: "Efficiency",
   },
   {
-    color: "#060010",
+    color: core.background.dark,
     title: "Integration",
     description: "Connect favorite tools",
     label: "Connectivity",
   },
   {
-    color: "#060010",
+    color: core.background.dark,
     title: "Security",
     description: "Enterprise-grade protection",
     label: "Protection",
@@ -504,12 +506,12 @@ const MagicBento2: FC<MagicBentoProps> = ({
             --glow-intensity: 0;
             --glow-radius: 200px;
             --glow-color: ${glowColor};
-            --border-color: #392e4e;
-            --background-dark: #060010;
+            --border-color: ${magicBentoColors.card.border};
+            --background-dark: ${magicBentoColors.card.background};
             --white: hsl(0, 0%, 100%);
-            --purple-primary: rgba(132, 0, 255, 1);
-            --purple-glow: rgba(132, 0, 255, 0.2);
-            --purple-border: rgba(132, 0, 255, 0.8);
+            --purple-primary: ${magicBentoColors.purple.primary};
+            --purple-glow: ${magicBentoColors.purple.glow};
+            --purple-border: ${magicBentoColors.purple.border};
           }
           
           .card-responsive {

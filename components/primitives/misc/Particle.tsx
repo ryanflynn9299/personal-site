@@ -17,7 +17,9 @@ interface ParticlesProps {
     className?: string;
 }
 
-const defaultColors: string[] = ['#ffffff', '#ffffff', '#ffffff'];
+import { particles } from "@/constants/theme";
+
+const defaultColors: string[] = particles.default;
 
 const hexToRgb = (hex: string): [number, number, number] => {
     hex = hex.replace(/^#/, '');

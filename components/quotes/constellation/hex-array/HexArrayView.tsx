@@ -18,6 +18,7 @@ import { useSurgeSpawner } from "./useSurgeSpawner";
 import { SurgePath } from "./SurgePath";
 import { ACTIVE_COLORS } from "./constants";
 import { useQuoteViewStore } from "../../store/useQuoteViewStore";
+import { quotes, core, accents } from "@/constants/theme";
 
 interface HexArrayViewProps {
   quotes: Quote[];
@@ -659,19 +660,19 @@ export function HexArrayView({ quotes }: HexArrayViewProps) {
   // Hex path with gap accounted for - hex size reduced to create gap between tiles
   const hexPath = getHexPath(HEX_SIZE - GAP);
 
-  // Styling constants - easy to tweak -- TODO: come back to styling
+  // Styling constants - easy to tweak
   const MODAL_STYLES = {
-    backgroundColor: "rgba(30, 41, 59, 0.25)", // slate-800 with lower opacity
+    backgroundColor: quotes.modal.background,
     backdropBlur: "12px",
-    borderColor: "rgba(81, 125, 132, 0.25)", // sky-300 with lower opacity (softer, brighter)
+    borderColor: quotes.modal.border,
     borderWidth: "1px",
     borderRadius: "12px",
     padding: "28px",
     margin: "24px",
     minWidth: "320px",
     maxWidth: "480px",
-    titleColor: "#38bdf8", // sky-400
-    textColor: "#bae6fd", // sky-200
+    titleColor: quotes.modal.title,
+    textColor: quotes.modal.text,
     titleSize: "text-2xl",
     textSize: "text-base",
   } as const;
@@ -733,7 +734,7 @@ export function HexArrayView({ quotes }: HexArrayViewProps) {
               <path
                 d={hexPath}
                 transform={`translate(${tile.x}, ${tile.y})`}
-                fill="#1e293b"
+                fill={core.background.secondary}
                 stroke="none"
               />
             </g>
@@ -744,7 +745,7 @@ export function HexArrayView({ quotes }: HexArrayViewProps) {
           .filter((tile) => tile.isActive)
           .map((tile) => {
             const IconComponent = tile.icon ? SPACE_ICONS[tile.icon] : null;
-            const color = tile.color ? ACTIVE_COLORS[tile.color] : "#06b6d4";
+            const color = tile.color ? ACTIVE_COLORS[tile.color] : accents.cyan;
 
             return (
               <g key={tile.id}>
@@ -752,7 +753,7 @@ export function HexArrayView({ quotes }: HexArrayViewProps) {
                   d={hexPath}
                   transform={`translate(${tile.x}, ${tile.y})`}
                   fill={color}
-                  stroke="#0f172a"
+                  stroke={core.background.primary}
                   strokeWidth="2"
                   className="cursor-pointer transition-opacity hover:opacity-80"
                   onClick={(e) => {
@@ -806,7 +807,7 @@ export function HexArrayView({ quotes }: HexArrayViewProps) {
               ...getModalStyle(),
               borderColor: selectedTile.color
                 ? ACTIVE_COLORS[selectedTile.color]
-                : "#06b6d4",
+                : accents.cyan,
             }}
             onClick={(e) => e.stopPropagation()}
           >
@@ -816,7 +817,7 @@ export function HexArrayView({ quotes }: HexArrayViewProps) {
                 style={{
                   color: selectedTile.color
                     ? ACTIVE_COLORS[selectedTile.color]
-                    : "#06b6d4",
+                    : accents.cyan,
                 }}
               >
                 // HOLO_PROJECTION_ACTIVE

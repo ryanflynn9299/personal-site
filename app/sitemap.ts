@@ -1,4 +1,6 @@
 import { MetadataRoute } from "next";
+import { SITE_URL, ENABLE_BLOG_SEO } from "@/lib/seo";
+import { getPublishedPosts, isDirectusConfigured } from "@/lib/directus";
 
 /**
  * Generates the sitemap.xml file for the website.
@@ -6,42 +8,91 @@ import { MetadataRoute } from "next";
  * @returns {Promise<MetadataRoute.Sitemap>} A promise that resolves to an array of sitemap entries.
  */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  // --- IMPORTANT ---
-  // Replace this with your actual, public domain name.
-  const siteUrl = "https://www.ryanflynn.org";
-
   // 1. Generate routes for static pages
-  const staticRoutes = [
-    "", // Represents the homepage '/'
-    "/about",
-    "/vitae",
-    "/blog",
-    "/contact",
-  ].map((route) => {
-    const cf: "weekly" | "yearly" =
-      route === "" || route === "/blog" ? "weekly" : "yearly";
-    return {
-      url: `${siteUrl}${route}`,
-      lastModified: new Date().toISOString(),
-      changeFrequency: cf,
-      priority: route === "" ? 1.0 : 0.8,
-      alternates: undefined,
-    };
-  });
+  const staticRoutes: MetadataRoute.Sitemap = [
+    {
+      url: `${SITE_URL}`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 1.0,
+    },
+    {
+      url: `${SITE_URL}/about`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    {
+      url: `${SITE_URL}/vitae`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    {
+      url: `${SITE_URL}/blog`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
+    {
+      url: `${SITE_URL}/contact`,
+      lastModified: new Date(),
+      changeFrequency: "yearly",
+      priority: 0.7,
+    },
+    {
+      url: `${SITE_URL}/quotes`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.6,
+    },
+    {
+      url: `${SITE_URL}/projects-cabinet`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
+      url: `${SITE_URL}/policies`,
+      lastModified: new Date(),
+      changeFrequency: "yearly",
+      priority: 0.5,
+    },
+    {
+      url: `${SITE_URL}/privacy`,
+      lastModified: new Date(),
+      changeFrequency: "yearly",
+      priority: 0.5,
+    },
+    {
+      url: `${SITE_URL}/terms`,
+      lastModified: new Date(),
+      changeFrequency: "yearly",
+      priority: 0.5,
+    },
+  ];
 
   // 2. Generate routes for dynamic blog posts
-  // We call the function that fetches posts from the CMS.
-  // // This ensures the sitemap is always up-to-date with your content.
-  // const posts: Post[] = await getPublishedPosts();
-  //
-  // const postRoutes = posts.map((post) => ({
-  //     url: `${siteUrl}/blog/${post.slug}`,
-  //     lastModified: new Date(post.publish_date).toISOString(), // Use the actual publish date
-  //     changeFrequency: 'monthly',
-  //     priority: 0.7,
-  //     alternates: undefined
-  // }));
+  // Fetch published posts from CMS if configured and blog SEO is enabled
+  let postRoutes: MetadataRoute.Sitemap = [];
+  
+  if (ENABLE_BLOG_SEO && isDirectusConfigured()) {
+    try {
+      const postsResponse = await getPublishedPosts();
+      if (postsResponse.status === "success" && postsResponse.posts.length > 0) {
+        postRoutes = postsResponse.posts.map((post) => ({
+          url: `${SITE_URL}/blog/${post.slug}`,
+          lastModified: new Date(post.publish_date),
+          changeFrequency: "monthly" as const,
+          priority: 0.7,
+        }));
+      }
+    } catch (error) {
+      // Log error but don't fail sitemap generation
+      console.error("Error fetching posts for sitemap:", error);
+    }
+  }
 
   // 3. Combine all routes and return
-  return [...staticRoutes];
+  return [...staticRoutes, ...postRoutes];
 }

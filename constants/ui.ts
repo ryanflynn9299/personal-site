@@ -1,9 +1,11 @@
 // UI constants (breakpoints, default values, component constants)
 
+import { magicBento, toast as toastColors } from "./theme";
+
 // MagicBento component defaults
 export const DEFAULT_PARTICLE_COUNT = 12;
 export const DEFAULT_SPOTLIGHT_RADIUS = 300;
-export const DEFAULT_GLOW_COLOR = "132, 0, 255";
+export const DEFAULT_GLOW_COLOR = magicBento.glow.color;
 export const MOBILE_BREAKPOINT = 768;
 
 // Toast component constants

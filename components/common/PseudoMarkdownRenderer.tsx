@@ -14,6 +14,7 @@ import {
   ConstellationLineIcon,
 } from "@/components/common/SpaceMarkdownIcons";
 import type { PolicyColorTheme } from "@/types/policies";
+import { sky } from "@/constants/theme";
 
 interface PseudoMarkdownRendererProps {
   content: string;
@@ -34,8 +35,8 @@ export function PseudoMarkdownRenderer({
     codeBorder: "border-sky-500/30",
     blockquoteBorder: "border-sky-500/50",
     constellation: "text-sky-400/50",
-    linkColor: "#38bdf8",
-    linkHoverColor: "#7dd3fc",
+    linkColor: sky[400],
+    linkHoverColor: sky[300],
   };
   return (
     <div className={className}>

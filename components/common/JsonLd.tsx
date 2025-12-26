@@ -1,4 +1,5 @@
 import { Post } from "@/types";
+import { SITE_URL, SITE_AUTHOR, ENABLE_BLOG_SEO } from "@/lib/seo";
 
 interface JsonLdProps {
   post: Post;
@@ -11,22 +12,18 @@ interface JsonLdProps {
  * to improve SEO, enable rich snippets in search results, and enhance social
  * media previews.
  * 
- * Manual Configuration Required:
- * - Replace "YOUR_DOMAIN" with your actual domain (e.g., "https://ryanflynn.org")
- * - Update author/publisher URLs if you have personal profile pages
- * - Adjust organization details if publishing under an organization
- * 
- * TEMPORARY DISABLE: Set to true to disable JSON-LD output
+ * Uses centralized SEO configuration from lib/seo.ts
+ * Disabled when ENABLE_BLOG_SEO is false
  */
-const DISABLE_JSON_LD = true; // TODO: Set to false when ready to enable
 
 export function JsonLd({ post }: JsonLdProps) {
-  // Temporarily disabled - return null to disable JSON-LD
-  if (DISABLE_JSON_LD) {
+  // Return null if blog SEO is disabled
+  if (!ENABLE_BLOG_SEO) {
     return null;
   }
-  // MANUAL CONFIGURATION: Replace with your actual domain
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL;
+
+  // Use centralized SEO configuration
+  const baseUrl = SITE_URL;
   
   // Construct the full URL to the blog post
   const postUrl = `${baseUrl}/blog/${post.slug}`;
@@ -45,12 +42,11 @@ export function JsonLd({ post }: JsonLdProps) {
   // MANUAL CONFIGURATION: Replace with your actual author profile URL if available
   const authorUrl = `${baseUrl}/about`; // Or specific author page URL
   
-  // MANUAL CONFIGURATION: Replace with your organization details if applicable
-  // If you're publishing as an individual, you can keep this as Person
-  const publisherType = "Person"; // Or "Organization"
-  const publisherName = authorName; // Or your organization name
-  const publisherUrl = baseUrl; // Or your organization URL
-  const publisherLogo = `${baseUrl}/logo.png`; // MANUAL: Add your logo URL
+  // Publisher configuration - using Person type for personal blog
+  const publisherType = "Person";
+  const publisherName = SITE_AUTHOR;
+  const publisherUrl = baseUrl;
+  const publisherLogo = `${baseUrl}/images/og-default.png`; // Update this path if you have a logo
   
   // Extract a plain text description from content (first 200 chars)
   // This is a fallback if summary is not descriptive enough
@@ -67,15 +63,15 @@ export function JsonLd({ post }: JsonLdProps) {
     return textContent || post.title;
   };
   
-  // MANUAL CONFIGURATION: Add your social media profiles
-  const authorSocialProfiles = {
-    // "@type": "Person",
-    // "sameAs": [
-    //   "https://twitter.com/yourhandle",
-    //   "https://github.com/yourusername",
-    //   "https://linkedin.com/in/yourprofile",
-    // ]
-  };
+  // Social media profiles - update these in lib/seo.ts
+  // For now, leaving empty but structure is ready
+  const authorSocialProfiles: { sameAs?: string[] } = {};
+  // Uncomment and update when you have social profiles:
+  // authorSocialProfiles.sameAs = [
+  //   "https://twitter.com/yourhandle",
+  //   "https://github.com/yourusername",
+  //   "https://linkedin.com/in/yourprofile",
+  // ];
   
   // Build comprehensive JSON-LD structured data
   const jsonLd = {
@@ -97,7 +93,7 @@ export function JsonLd({ post }: JsonLdProps) {
       "@type": "Person",
       name: authorName,
       url: authorUrl,
-      ...authorSocialProfiles, // Uncomment and fill in if you have social profiles
+      ...(authorSocialProfiles.sameAs && authorSocialProfiles),
     },
     
     // Publisher information (can be Person or Organization)

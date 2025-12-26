@@ -1,4 +1,5 @@
 import React from "react";
+import { quotes } from "@/constants/theme";
 
 interface QuoteModalTitleProps {
   title: string;
@@ -7,17 +8,17 @@ interface QuoteModalTitleProps {
 }
 
 const MODAL_STYLES = {
-  backgroundColor: "rgba(30, 41, 59, 0.25)", // slate-800 with lower opacity
+  backgroundColor: quotes.modal.background,
   backdropBlur: "12px",
-  borderColor: "rgba(81, 125, 132, 0.25)", // sky-300 with lower opacity (softer, brighter)
+  borderColor: quotes.modal.border,
   borderWidth: "1px",
   borderRadius: "12px",
   padding: "28px",
   margin: "24px",
   minWidth: "320px",
   maxWidth: "480px",
-  titleColor: "#38bdf8", // sky-400
-  textColor: "#bae6fd", // sky-200
+  titleColor: quotes.modal.title,
+  textColor: quotes.modal.text,
   titleSize: "text-2xl",
   textSize: "text-base",
 } as const;

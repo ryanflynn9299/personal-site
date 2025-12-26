@@ -21,6 +21,8 @@ export interface ConstellationMetadata {
   variantIndex: number; // Which pattern variant to use (0-based)
 }
 
+import { quotes } from "@/constants/theme";
+
 /**
  * All constellation metadata grouped together
  * Each entry contains position, color, size, and variant information
@@ -29,10 +31,11 @@ export interface ConstellationMetadata {
  *   y: 0 = top edge, 1 = bottom edge
  */
 export const CONSTELLATION_METADATA: ConstellationMetadata[] = [
+
   // Constellation 1: 4 stars, square variant, blue
   {
     position: { x: 0.25, y: 0.45 },
-    color: "#60a5fa",
+    color: quotes.constellation.blue,
     colorName: "Blue",
     size: 4,
     variantIndex: 0, // Square variant
@@ -41,7 +44,7 @@ export const CONSTELLATION_METADATA: ConstellationMetadata[] = [
   // Constellation 2: 5 stars, diamond variant, purple
   {
     position: { x: 0.75, y: 0.3 },
-    color: "#a78bfa",
+    color: quotes.constellation.purple,
     colorName: "Purple",
     size: 5,
     variantIndex: 0, // Diamond variant
@@ -50,7 +53,7 @@ export const CONSTELLATION_METADATA: ConstellationMetadata[] = [
   // Constellation 3: 4 stars, L-shape variant, pink
   {
     position: { x: 0.30, y: 0.67 },
-    color: "#f472b6",
+    color: quotes.constellation.pink,
     colorName: "Pink",
     size: 4,
     variantIndex: 1, // L-shape variant
@@ -59,7 +62,7 @@ export const CONSTELLATION_METADATA: ConstellationMetadata[] = [
   // Constellation 4: 7 stars, default variant, green
   {
     position: { x: 0.70, y: 0.57 },
-    color: "#34d399",
+    color: quotes.constellation.emerald,
     colorName: "Green",
     size: 7,
     variantIndex: 0, // Only one variant for 7 stars

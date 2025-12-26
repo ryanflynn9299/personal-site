@@ -14,6 +14,7 @@ import {
   type ConstellationMetadata,
 } from "./constellationPositions";
 import { MOBILE_BREAKPOINT } from "@/constants/ui";
+import { stars, quotes } from "@/constants/theme";
 
 interface ConstellationViewProps {
   quotes: Quote[];
@@ -630,7 +631,7 @@ export function ConstellationView({ quotes }: ConstellationViewProps) {
                 const constellation = constellations.find((c) =>
                   c.stars.some((s) => s.id === selectedStarId)
                 );
-                const tagColor = constellation?.color || "#94a3b8";
+                const tagColor = constellation?.color || quotes.constellation.default;
                 return (
                   <span
                     key={idx}

@@ -1,16 +1,8 @@
 import { getIconsFromLibraries, type IconLibrary } from "./iconLibrary";
+import { quotes } from "@/constants/theme";
 
 // Color palette for entities
-export const ENTITY_COLORS = [
-  "#3b82f6", // blue
-  "#8b5cf6", // purple
-  "#ec4899", // pink
-  "#f59e0b", // amber
-  "#10b981", // emerald
-  "#06b6d4", // cyan
-  "#f97316", // orange
-  "#6366f1", // indigo
-];
+export const ENTITY_COLORS = quotes.entities;
 
 // Elliptical orbit compression factor (simulates 50deg tilt for more pronounced ellipse)
 export const ELLIPSE_COMPRESSION = Math.cos((50 * Math.PI) / 180);
@@ -29,7 +21,7 @@ export const BASE_SPEED_MIN = 0.3;
 export const BASE_SPEED_VARIATION = 0.1;
 
 // Sun configuration
-export const SUN_COLOR = "#fbbf24"; // Yellow/gold color for sun
+export const SUN_COLOR = quotes.sun; // Yellow/gold color for sun
 export const SUN_SIZE = 48; // Sun size (h-12 w-12 = 48px)
 export const SUN_QUOTE_PERCENTAGE = 0.15; // 15% of quotes go to Sun
 

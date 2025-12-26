@@ -1,10 +1,18 @@
+import type { Metadata } from "next";
 import { TechStack3 } from "@/components/sections/TechStack3";
-
 import { FinalCTA } from "@/components/sections/FinalCTA";
 import { AboutMe2 } from "@/components/sections/AboutMe2";
 import { ProjectCarousel } from "@/components/sections/ProjectCarousel";
 import { HeroSection } from "@/components/sections/HeroSection";
 import { BlogHighlight4 } from "@/components/sections/BlogHighlight4";
+import { generatePageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = generatePageMetadata({
+  title: "Ryan Flynn | Software Engineer & Tech Enthusiast",
+  description:
+    "Portfolio of Ryan Flynn - Software Engineer, Tech Enthusiast. Explore projects, read blog posts, and learn about my journey in technology.",
+  path: "/",
+});
 
 /* Unused swappable components */
 // import { AboutMe1 } from "@/components/sections/AboutMe1";

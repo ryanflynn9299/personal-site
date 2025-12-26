@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Sparkles } from "lucide-react";
 import Counter from "@/components/primitives/misc/Counter";
 import { incrementCounter } from "@/app/actions/counter";
+import { core } from "@/constants/theme";
 
 const SESSION_STORAGE_KEY = "contact_counter_clicked";
 const QUIRKY_MESSAGES = [
@@ -91,7 +92,7 @@ export function FunCounter() {
             <Counter
               value={count}
               fontSize={48}
-              textColor="#e2e8f0"
+              textColor={core.foreground.secondary}
               fontWeight="bold"
               places={[10000, 1000, 100, 10, 1]}
               gap={4}

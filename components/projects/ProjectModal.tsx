@@ -15,6 +15,8 @@ interface Project {
   githubUrl: string;
 }
 
+import { projects as projectColors } from "@/constants/theme";
+
 interface ProjectModalProps {
   project: Project | null;
   isOpen: boolean;
@@ -38,7 +40,7 @@ function hexToRgb(hex: string): { r: number; g: number; b: number } | null {
     : null;
 }
 
-export function ProjectModal({ project, isOpen, onClose, accentColor = "#03b3c3" }: ProjectModalProps) {
+export function ProjectModal({ project, isOpen, onClose, accentColor = projectColors.default }: ProjectModalProps) {
   // Handle ESC key
   useEffect(() => {
     if (!isOpen) return;

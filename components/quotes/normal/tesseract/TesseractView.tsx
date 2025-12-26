@@ -9,17 +9,10 @@ interface TesseractViewProps {
   quotes: Quote[];
 }
 
+import { quotes } from "@/constants/theme";
+
 // Color palette for categories
-const CATEGORY_COLORS = [
-  "#3b82f6", // blue
-  "#8b5cf6", // purple
-  "#ec4899", // pink
-  "#f59e0b", // amber
-  "#10b981", // emerald
-  "#06b6d4", // cyan
-  "#f97316", // orange
-  "#6366f1", // indigo
-];
+const CATEGORY_COLORS = quotes.entities;
 
 /**
  * Extract unique categories from quotes based on tags

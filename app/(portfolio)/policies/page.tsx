@@ -2,12 +2,14 @@ import type { Metadata } from "next";
 import { PoliciesPage } from "@/components/policies/PoliciesPage";
 import { loadAllPolicies } from "@/lib/policy-loader";
 import { mapTabToPolicyId } from "@/lib/policy-colors";
+import { generatePageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = generatePageMetadata({
   title: "Policies",
   description:
-    "Privacy Policy and Terms of Service for Ryan Flynn's personal website",
-};
+    "Privacy Policy and Terms of Service for Ryan Flynn's personal website. Review our policies regarding privacy, terms of use, and data handling.",
+  path: "/policies",
+});
 
 interface PoliciesPageProps {
   searchParams: Promise<{ tab?: string }>;

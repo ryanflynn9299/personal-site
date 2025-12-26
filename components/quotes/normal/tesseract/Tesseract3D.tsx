@@ -4,6 +4,7 @@ import { useRef, useMemo } from "react";
 import { useFrame } from "@react-three/fiber";
 import { OrbitControls, Line } from "@react-three/drei";
 import * as THREE from "three";
+import { core } from "@/constants/theme";
 
 interface Tesseract3DProps {
   rotation: [number, number, number];
@@ -142,7 +143,7 @@ export function Tesseract3D({
             <Line
               key={idx}
               points={[start, end]}
-              color="#4a5568"
+              color={core.border.muted}
               lineWidth={1}
             />
           );

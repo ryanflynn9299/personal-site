@@ -1,6 +1,10 @@
 # Personal Site - Technical Documentation
 
+![CI](https://github.com/YOUR_USERNAME/YOUR_REPO/workflows/CI/badge.svg)
+
 A modern personal portfolio website built with Next.js, TypeScript, and Tailwind CSS, featuring a headless CMS integration for blog content management.
+
+> **Note:** Replace `YOUR_USERNAME` and `YOUR_REPO` in the badge URL above with your actual GitHub username and repository name after pushing to GitHub.
 
 ## Technology Stack
 
@@ -293,6 +297,16 @@ The project uses path aliases:
 
 - `@/*` maps to project root
 - Example: `import { Post } from "@/types"`
+
+## CI/CD Pipeline
+
+This project includes a complete CI/CD pipeline configured with GitHub Actions. See [CI/CD Setup Guide](.docs/dev/CI_CD_SETUP.md) for:
+
+- Pipeline configuration and steps
+- Status badge setup
+- Maintenance requirements
+- Tooling recommendations (free external tools vs home server)
+- Advanced configuration options
 
 ## Deployment
 

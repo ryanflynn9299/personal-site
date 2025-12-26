@@ -35,13 +35,10 @@ const fontMono = JetBrains_Mono({
   variable: "--font-mono",
 });
 
+import { defaultMetadata } from "@/lib/seo";
+
 export const metadata: Metadata = {
-  title: {
-    default: "Ryan Flynn | Software Engineer & Tech Enthusiast",
-    template: "%s | Ryan Flynn",
-  },
-  description:
-    "The personal portfolio and blog of Ryan Flynn, a passionate software engineer.",
+  ...defaultMetadata,
 };
 
 export default function RootLayout({

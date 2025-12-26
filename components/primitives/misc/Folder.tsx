@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { folder as folderColors } from "@/constants/theme";
 
 interface FolderProps {
     color?: string;
@@ -25,7 +26,7 @@ const darkenColor = (hex: string, percent: number): string => {
     return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase();
 };
 
-const Folder: React.FC<FolderProps> = ({ color = '#5227FF', size = 1, items = [], className = '' }) => {
+const Folder: React.FC<FolderProps> = ({ color = folderColors.default, size = 1, items = [], className = '' }) => {
     const maxItems = 3;
     const actualItems = items.slice(0, maxItems);
     const itemCount = actualItems.length;
@@ -52,9 +53,9 @@ const Folder: React.FC<FolderProps> = ({ color = '#5227FF', size = 1, items = []
     );
 
     const folderBackColor = darkenColor(color, 0.08);
-    const paper1 = darkenColor('#ffffff', 0.1);
-    const paper2 = darkenColor('#ffffff', 0.05);
-    const paper3 = '#ffffff';
+    const paper1 = folderColors.paper.dark1;
+    const paper2 = folderColors.paper.dark2;
+    const paper3 = folderColors.paper.light;
 
     const handleClick = () => {
         setOpen(prev => !prev);
