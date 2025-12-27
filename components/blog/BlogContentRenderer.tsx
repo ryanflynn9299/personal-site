@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
@@ -141,10 +142,13 @@ export function BlogContentRenderer({
             ),
             // Customize image styles
             img: ({ src, alt }) => (
-              <img
+              <Image
                 src={src || ""}
                 alt={alt || ""}
+                width={800}
+                height={600}
                 className="rounded-lg my-4 max-w-full h-auto"
+                unoptimized={src?.startsWith("http") || false}
               />
             ),
           }}
@@ -227,10 +231,13 @@ export function BlogContentRenderer({
               <p className="text-slate-300 leading-7 my-4">{children}</p>
             ),
             img: ({ src, alt }) => (
-              <img
+              <Image
                 src={src || ""}
                 alt={alt || ""}
+                width={800}
+                height={600}
                 className="rounded-lg my-4 max-w-full h-auto"
+                unoptimized={src?.startsWith("http") || false}
               />
             ),
           }}

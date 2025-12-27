@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import Folder from "@/components/primitives/misc/Folder";
 import { projects } from "@/data/projects";
@@ -321,10 +322,13 @@ function ProjectPaper({ project, index, onClick }: ProjectPaperProps) {
       className="flex h-full w-full flex-col items-center justify-center gap-1 p-2 text-center transition-all hover:scale-105"
     >
       {index === 0 && project.imageUrl && (
-        <img
+        <Image
           src={project.imageUrl}
           alt={project.title}
+          width={32}
+          height={32}
           className="h-8 w-8 rounded object-contain"
+          unoptimized={project.imageUrl.startsWith("http") || false}
         />
       )}
       {index === 1 && (

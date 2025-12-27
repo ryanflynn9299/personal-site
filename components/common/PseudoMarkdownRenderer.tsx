@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
@@ -169,10 +170,13 @@ export function PseudoMarkdownRenderer({
 
           // Images
           img: ({ node: _node, ...props }: any) => (
-            <img
-              className="rounded-lg my-4 max-w-full h-auto border border-slate-700"
+            <Image
+              src={props.src || ""}
               alt={props.alt || ""}
-              {...props}
+              width={800}
+              height={600}
+              className="rounded-lg my-4 max-w-full h-auto border border-slate-700"
+              unoptimized={props.src?.startsWith("http") || false}
             />
           ),
 
