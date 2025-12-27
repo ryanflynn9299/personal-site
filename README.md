@@ -1,136 +1,188 @@
-# Personal Site - Technical Documentation
+# Personal Portfolio Website
 
-![CI](https://github.com/YOUR_USERNAME/YOUR_REPO/workflows/CI/badge.svg)
+![CI Status](https://github.com/ryanflynn9299/personal-site/workflows/CI/badge.svg)
+![Node.js Version](https://img.shields.io/badge/node-%3E%3D20.0.0-brightgreen)
+![pnpm Version](https://img.shields.io/badge/pnpm-10.0.0-orange)
+![Next.js Version](https://img.shields.io/badge/Next.js-16.0.7-black)
+![TypeScript Version](https://img.shields.io/badge/TypeScript-5.5.4-blue)
+![License](https://img.shields.io/badge/license-All%20Rights%20Reserved-red)
+![Test Coverage](https://img.shields.io/badge/coverage-60%25+-green)
 
-A modern personal portfolio website built with Next.js, TypeScript, and Tailwind CSS, featuring a headless CMS integration for blog content management.
+A modern, full-stack personal portfolio website built with Next.js, TypeScript, and a headless CMS. This project serves as both a professional showcase and a platform for exploring modern web development practices.
 
-> **Note:** Replace `YOUR_USERNAME` and `YOUR_REPO` in the badge URL above with your actual GitHub username and repository name after pushing to GitHub.
+## Overview
 
-## Technology Stack
+This is a hobby project designed to effectively communicate information about my work and experience while providing opportunities to experiment with web development in an unstructured, creative format. The site features a blog powered by a headless CMS, interactive quote visualizations, project showcases, and standard portfolio pages—all built with attention to performance, accessibility, and maintainability.
 
-### Core Framework
+The codebase demonstrates practical application of modern React patterns, TypeScript best practices, comprehensive testing strategies, and production-ready deployment configurations.
 
-- **Next.js 16.0.7** - React framework with App Router, server-side rendering, and file-based routing
-- **React 19.2.1** - UI library
-- **TypeScript 5** - Type-safe JavaScript
-- **Tailwind CSS 3.4.17** - Utility-first CSS framework
+## Architecture
 
-### Content Management
+### Framework & Core Technologies
 
-- **Directus SDK 16.1.0** - Headless CMS for blog content management
+The application is built on **Next.js 16** using the App Router architecture, providing server-side rendering, static site generation, and API routes. The choice of Next.js enables optimal performance through automatic code splitting, image optimization, and efficient data fetching strategies.
 
-### UI & Animation Libraries
+**Key architectural decisions:**
 
-- **Framer Motion 12.19.1** - Animation library for React
-- **GSAP 3.13.0** - Advanced animation library
-- **Radix UI** - Accessible component primitives
-- **Embla Carousel 8.6.0** - Carousel component library
-- **Lucide React** - Icon library
+- **App Router**: Leverages React Server Components for improved performance and reduced client-side JavaScript
+- **TypeScript**: Full type safety across the application with strict mode enabled
+- **Component Architecture**: Clear separation between server components (routing, data fetching) and client components (interactivity, animations)
+- **Modular Design**: Feature-based organization with shared primitives, utilities, and common components
 
-### Content Processing
-
-- **React Markdown 10.1.0** - Markdown rendering
-- **Rehype** - HTML processing plugins (raw, sanitize)
-- **Remark GFM** - GitHub Flavored Markdown support
-
-### Utilities
-
-- **Pino 10.0.0** - Structured logging
-- **Class Variance Authority** - Component variant management
-- **Tailwind Merge** - Merge Tailwind classes intelligently
-
-## Version Requirements
-
-### Runtime
-
-- **Node.js**: 18.17+ (Next.js 16 requires 18.17 or later; 20.x LTS recommended)
-- **npm**: 9.8+ (comes with Node.js)
-
-### Build Tools
-
-- **Next.js**: 16.0.7
-- **TypeScript**: 5.x
-- **Turbopack**: Enabled by default (Next.js 16's new bundler)
-
-## Project Structure
+### Project Structure
 
 ```
-personal-site/
-├── app/                          # Next.js App Router pages
-│   ├── (admin)/                  # Admin routes group
-│   │   └── dashboard/            # Admin dashboard
-│   ├── (portfolio)/              # Public portfolio routes group
-│   │   ├── about/                # About page
-│   │   ├── blog/                 # Blog listing and posts
-│   │   │   └── [slug]/           # Dynamic blog post pages
-│   │   ├── contact/              # Contact page
-│   │   ├── vitae/                # CV/resume page
-│   │   ├── policies/             # Policies page
-│   │   ├── privacy/              # Privacy policy
-│   │   ├── terms/                # Terms of service
-│   │   └── page.tsx              # Homepage
-│   ├── actions/                  # Server actions
-│   │   └── contact.ts            # Contact form handler
-│   ├── layout.tsx                # Root layout
-│   ├── globals.css               # Global styles
-│   ├── not-found.tsx             # 404 page
-│   ├── robots.ts                 # Robots.txt generator
-│   └── sitemap.ts                # Sitemap generator
-│
-├── components/                   # React components
-│   ├── about/                    # About page components
-│   ├── blog/                     # Blog components
-│   ├── contact/                  # Contact page components
-│   ├── common/                   # Shared components
-│   ├── primitives/               # Base UI components
-│   ├── sections/                 # Page sections
-│   ├── Header.tsx                # Site header
-│   ├── Footer.tsx                # Site footer
-│   └── [other components]        # Various feature components
-│
-├── lib/                          # Utility functions and services
-│   ├── directus.ts              # Directus CMS client
-│   ├── email-service.ts         # Email sending service
-│   ├── logger.ts                # Logging utility
-│   └── utils.ts                 # General utilities
-│
-├── data/                         # Static data files
-│   ├── about.ts                 # About page data
-│   ├── projects.ts              # Project data
-│   ├── skills.ts                # Skills data
-│   ├── work_experience.ts       # Work experience data
-│   └── policies/                # Policy markdown files
-│
-├── types/                        # TypeScript type definitions
-│   ├── animations.ts            # Animation types
-│   ├── components.ts            # Component types
-│   ├── data.ts                  # Data types
-│   └── index.ts                 # Type exports
-│
-├── constants/                    # Application constants
-│   ├── animations.ts            # Animation constants
-│   └── ui.ts                    # UI constants
-│
-├── context/                      # React contexts
-│   └── ToastContext.tsx         # Toast notification context
-│
-├── public/                       # Static assets
-│   ├── images/                  # Image assets
-│   └── [other static files]     # PDFs, SVGs, etc.
-│
-├── sync-service/                 # Content sync service
-│   ├── webhook-server.py        # Webhook server
-│   └── [sync scripts]           # Sync utilities
-│
-├── docker-compose.yml            # Docker Compose configuration
-├── Dockerfile                    # Docker build configuration
-├── next.config.mjs               # Next.js configuration
-├── tailwind.config.ts            # Tailwind CSS configuration
-├── tsconfig.json                 # TypeScript configuration
-└── package.json                  # Dependencies and scripts
+app/                          # Next.js App Router
+├── (portfolio)/             # Public-facing routes
+│   ├── page.tsx             # Homepage
+│   ├── about/               # About page
+│   ├── blog/                # Blog listing and dynamic posts
+│   ├── contact/             # Contact form
+│   ├── vitae/               # Resume/CV page
+│   └── quotes/              # Interactive quote visualizations
+├── (admin)/                 # Admin routes (under development)
+├── actions/                 # Server actions
+└── layout.tsx               # Root layout with metadata
+
+components/                   # React components
+├── primitives/              # Base UI components (Button, Toast, etc.)
+├── sections/                # Reusable page sections
+├── common/                  # Shared utility components
+└── [feature]/               # Feature-specific components
+
+lib/                         # Utilities and services
+├── directus.ts              # CMS client integration
+├── email-service.ts         # Email service abstraction
+├── seo.ts                   # SEO metadata management
+└── utils.ts                 # General utilities
+
+tests/                       # Test suite
+├── unit/                    # Unit tests (Vitest)
+├── components/              # Component tests
+├── integration/             # Integration tests
+└── e2e/                     # End-to-end tests (Playwright)
 ```
 
-## Common Commands
+### Technology Stack
+
+**Core Framework:**
+- Next.js 16.1.1 (App Router, Turbopack)
+- React 19.2.1
+- TypeScript 5.5.4
+
+**Styling & UI:**
+- Tailwind CSS 3.4.17 (utility-first CSS)
+- Framer Motion 12.19.1 (animations)
+- Radix UI (accessible primitives)
+- Custom design system with consistent color palettes and typography
+
+**Content Management:**
+- Directus 16.1.0 (headless CMS for blog content)
+- React Markdown with rehype/remark plugins for content rendering
+
+**State Management:**
+- Zustand (lightweight state management for client-side state)
+- React Context (toast notifications, theme)
+
+**Animation Libraries:**
+- Framer Motion (React component animations)
+- GSAP 3.13.0 (advanced timeline-based animations)
+- Three.js (WebGL-based 3D visualizations)
+
+**Testing:**
+- Vitest (unit and integration tests)
+- React Testing Library (component testing)
+- Playwright (end-to-end testing)
+- MSW (Mock Service Worker for API mocking)
+
+**Development Tools:**
+- ESLint 9.39.2 (code quality)
+- Prettier (code formatting)
+- TypeScript (type checking)
+- pnpm 10.0.0 (package management)
+
+## Key Features & Implementation
+
+### Blog System
+
+The blog is powered by Directus CMS, providing a headless content management solution. Blog posts are fetched server-side at build time for static generation, with dynamic routes for individual posts. The implementation includes:
+
+- Server-side data fetching with proper error handling
+- Markdown and HTML content rendering with sanitization
+- SEO optimization with structured data (JSON-LD)
+- Image optimization using Next.js Image component
+- Content format detection (markdown, HTML, plaintext)
+
+### Interactive Quote Visualizations
+
+A sophisticated quote display system with multiple visualization modes:
+
+- **Normal Mode**: Traditional list views with variants (Mission Control, Tesseract 3D)
+- **Constellation Mode**: Interactive WebGL visualizations (Constellation, Solar System, Hex Array)
+- State management via Zustand for view mode and variant selection
+- Responsive design with mobile-optimized layouts
+- Keyboard navigation and accessibility features
+
+### Contact Form
+
+Server action-based contact form with:
+
+- Client-side validation
+- Server-side processing with error handling
+- Email service abstraction (configurable backend)
+- Toast notifications for user feedback
+- Rate limiting considerations
+
+### Project Showcase
+
+Interactive project display with:
+
+- File cabinet visualization component
+- Modal-based project details
+- Category-based organization
+- Responsive grid layouts
+
+## Development Practices
+
+### Testing Strategy
+
+The project maintains a comprehensive testing suite:
+
+- **Unit Tests**: Utility functions, pure logic, and data transformations
+- **Component Tests**: React components with user interaction testing
+- **Integration Tests**: Server actions, API integrations, and data flow
+- **E2E Tests**: Critical user journeys across multiple browsers (Chromium, Firefox, WebKit)
+
+Test coverage focuses on user-facing behavior and critical paths rather than exhaustive edge cases, maintaining a balance between thoroughness and maintainability.
+
+### Code Quality
+
+- **TypeScript**: Strict mode enabled with comprehensive type definitions
+- **ESLint**: Custom configuration with Next.js, React, and TypeScript rules
+- **Prettier**: Consistent code formatting
+- **Pre-commit Validation**: Automated checks for type errors, linting, and formatting
+
+### CI/CD Pipeline
+
+GitHub Actions workflow includes:
+
+- Linting and type checking
+- Unit and integration test execution
+- End-to-end test suite (Playwright)
+- Production build verification
+- Automated dependency caching for faster builds
+
+The pipeline runs on all pushes and pull requests, ensuring code quality before merging.
+
+### Performance Optimizations
+
+- **Image Optimization**: Next.js Image component with automatic format conversion and lazy loading
+- **Code Splitting**: Automatic route-based code splitting
+- **Static Generation**: Blog posts and static pages pre-rendered at build time
+- **Server Components**: Reduced client-side JavaScript bundle size
+- **Turbopack**: Faster development builds and hot module replacement
+
+## Build & Deployment
 
 ### Development
 
@@ -138,321 +190,116 @@ personal-site/
 # Install dependencies
 pnpm install
 
-# Start development server (with Turbopack)
+# Start development server (Turbopack)
 pnpm run dev
-# Runs at http://localhost:3000
 
-# Start development server (with Webpack - legacy)
-pnpm run build:webpack
-```
-
-### Code Quality
-
-```bash
-# Check code formatting (Prettier)
-pnpm run lint
-
-# Fix formatting issues
-pnpm run lint:fix
-# or
-pnpm run format
-
-# Check formatting without fixing
-pnpm run format:check
-
-# Run ESLint
-pnpm run eslint
-
-# Fix ESLint issues
-pnpm run eslint:fix
-
-# Type checking
+# Run type checking
 pnpm run type-check
 
-# Run all validation checks
-pnpm run validate
+# Run tests
+pnpm run test
+pnpm run test:e2e
 ```
 
-### Build & Production
+### Production Build
 
-```bash
-# Build for production (with Turbopack)
-pnpm run build
-
-# Build for production (with Webpack - legacy)
-pnpm run build:webpack
-
-# Start production server
-pnpm run start
-
-# Analyze bundle size
-pnpm run analyze
-```
-
-### Maintenance
-
-```bash
-# Clean build artifacts and cache
-pnpm run clean
-```
-
-## Environment Setup
-
-### Required Environment Variables
-
-Create a `.env.local` file in the project root:
-
-```env
-# Directus CMS Configuration
-DIRECTUS_URL_SERVER_SIDE=http://ps-directus:8055  # Internal server-side URL
-NEXT_PUBLIC_DIRECTUS_URL=http://localhost:8055    # Public client-side URL
-
-# Email Service (if using contact form)
-# Add your email service configuration here
-```
-
-### Environment-Specific Notes
-
-- **Development**: Uses localhost URLs for Directus
-- **Docker**: Uses service names (e.g., `ps-directus`) for container-to-container communication
-- **Production**: Update URLs to your production Directus instance
-
-## Core Infrastructure
-
-### Directus CMS Integration
-
-The site uses Directus as a headless CMS for blog content:
-
-- **Location**: `lib/directus.ts`
-- **Functions**:
-  - `getPublishedPosts()` - Fetch all published blog posts
-  - `getPostBySlug(slug)` - Fetch a single post by slug
-  - `isDirectusConfigured()` - Check if Directus is configured
-
-**Blog Post Schema** (expected in Directus):
-
-- `id` (string)
-- `title` (string)
-- `slug` (string) - URL-friendly identifier
-- `summary` (string)
-- `content` (string) - HTML content
-- `publication_date` (date)
-- `status` ('published' | 'draft' | 'archived')
-- `feature_image` (file/image)
-- `author` (relation to users)
-- `blog_tags` (array)
-
-### Animation System
-
-The site uses multiple animation libraries:
-
-- **Framer Motion**: Page transitions and component animations
-- **GSAP**: Advanced timeline-based animations
-- **Animation Constants**: Defined in `constants/animations.ts`
-- **Animation Types**: Defined in `types/animations.ts`
-
-### Styling System
-
-- **Tailwind CSS**: Primary styling framework
-- **Custom Colors**: Slate and Sky color palettes (see `tailwind.config.ts`)
-- **Typography**: Montserrat (headings) and Open Sans (body)
-- **Typography Plugin**: `@tailwindcss/typography` for markdown content
-
-### Logging
-
-- **Pino**: Structured logging library
-- **Location**: `lib/logger.ts`
-- **Usage**: Server-side logging with structured JSON output
-
-### Component Architecture
-
-- **Primitives**: Base components in `components/primitives/`
-- **Sections**: Reusable page sections in `components/sections/`
-- **Feature Components**: Feature-specific components organized by domain
-- **Radix UI**: Accessible component primitives for complex UI elements
-
-## Development Workflow
-
-### Making Changes
-
-1. **New Pages**: Create folders in `app/` directory
-   - `app/new-page/page.tsx` → `/new-page` URL
-   - Use route groups `(folder)` for organization without affecting URLs
-
-2. **New Components**: Add to `components/` directory
-   - Export: `export function ComponentName() {}`
-   - Import: `import { ComponentName } from "@/components/ComponentName"`
-
-3. **Styling**: Use Tailwind utility classes
-   - Custom colors: `bg-slate-900`, `text-sky-400`
-   - Typography: `font-heading` (Montserrat), `font-sans` (Open Sans)
-
-4. **API/Data**: Add utilities to `lib/` directory
-   - Use Directus SDK for CMS operations
-   - Handle errors gracefully with try/catch
-
-### TypeScript Paths
-
-The project uses path aliases:
-
-- `@/*` maps to project root
-- Example: `import { Post } from "@/types"`
-
-## CI/CD Pipeline
-
-This project includes a complete CI/CD pipeline configured with GitHub Actions. See [CI/CD Setup Guide](.docs/dev/CI_CD_SETUP.md) for:
-
-- Pipeline configuration and steps
-- Status badge setup
-- Maintenance requirements
-- Tooling recommendations (free external tools vs home server)
-- Advanced configuration options
-
-## Deployment
-
-### Build Process
+The application builds to a standalone output optimized for containerized deployment:
 
 ```bash
 pnpm run build
 ```
 
-This creates an optimized `.next/` folder with:
-
-- Server-side rendered pages
-- Static assets
-- API routes
-- Standalone output (configured for Docker)
+The build process:
+- Compiles TypeScript
+- Optimizes images and assets
+- Generates static pages where possible
+- Creates server-side rendering bundles
+- Outputs to `.next/standalone` for Docker deployment
 
 ### Docker Deployment
 
-The project includes Docker configuration:
+The project includes Docker configuration for containerized deployment:
 
-- `Dockerfile` - Production build
-- `docker-compose.yml` - Multi-container setup
-- Uses Next.js standalone output mode
+- Multi-stage Dockerfile for optimized image size
+- Docker Compose setup for local development with CMS
+- Standalone Next.js output mode for production containers
 
-### Production Considerations
+### Environment Configuration
 
-1. **Environment Variables**: Set all required variables in your hosting platform
-2. **Directus URL**: Update to production Directus instance URL
-3. **Image Domains**: Configured in `next.config.ts` under `images.remotePatterns`
-4. **Build Optimization**: Turbopack is used by default for faster builds
+The application uses environment variables for configuration:
 
-## Troubleshooting
+- CMS connection settings (Directus)
+- Email service configuration
+- Analytics (optional Matomo integration)
+- Site metadata and URLs
 
-### Development Server Issues
+The application gracefully handles missing optional services, allowing it to function with core features even when external services aren't configured.
 
-```bash
-# Clean and reinstall
-pnpm run clean
-rm -rf node_modules
-pnpm install
-pnpm run dev
-```
+## Technical Highlights
 
-### Build Failures
+### Type Safety
 
-1. Run validation: `pnpm run validate`
-2. Check TypeScript errors: `pnpm run type-check`
-3. Check formatting: `pnpm run lint`
-4. Check code quality: `pnpm run eslint`
-5. Verify environment variables are set
+Comprehensive TypeScript usage throughout:
 
-### Directus Connection Issues
+- Strict type checking enabled
+- Custom type definitions for all data structures
+- Type-safe API client integration
+- Proper handling of nullable/optional values
 
-- Verify environment variables are set correctly
-- Check Directus instance is running and accessible
-- Review `lib/directus.ts` for connection logic
-- Check server-side vs client-side URL configuration
+### Component Architecture
 
-### Styling Issues
+Clear separation of concerns:
 
-- Verify Tailwind classes are spelled correctly
-- Check custom colors in `tailwind.config.ts`
-- Use browser dev tools to inspect applied styles
-- Ensure content paths in `tailwind.config.ts` include your files
+- **Server Components**: Data fetching, metadata generation, static content
+- **Client Components**: Interactivity, animations, browser APIs
+- **Shared Primitives**: Reusable base components with consistent APIs
+- **Feature Components**: Domain-specific components organized by feature
 
-## Maintenance Notes
+### State Management
 
-### Updating Dependencies
+Appropriate state management for different use cases:
 
-```bash
-# Check for outdated packages
-pnpm outdated
+- React Server Components for server-side state
+- React hooks for component-local state
+- Zustand for cross-component client state
+- React Context for application-wide UI state (toasts)
 
-# Update all dependencies
-pnpm update
+### Accessibility
 
-# Update specific package
-pnpm add package-name@latest
-```
+Accessibility considerations:
 
-### Code Quality Before Committing
+- Semantic HTML structure
+- ARIA labels where appropriate
+- Keyboard navigation support
+- Screen reader considerations
+- Focus management
 
-The project includes a `prepare` script that reminds you to run validation:
+### SEO
 
-```bash
-pnpm run validate
-```
+Built-in SEO optimizations:
 
-This runs:
+- Dynamic metadata generation per page
+- Structured data (JSON-LD) for blog posts
+- Sitemap generation
+- Robots.txt configuration
+- Open Graph and Twitter Card support
 
-- Type checking
-- Formatting checks
-- ESLint checks
+## Project Philosophy
 
-### Content Updates
+This project balances practical engineering with creative exploration. It demonstrates:
 
-- **Blog Posts**: Managed through Directus CMS admin interface
-- **Static Content**: Edit files in `data/` directory
-- **Policies**: Edit markdown files in `data/policies/`
+- **Production-Ready Practices**: Testing, CI/CD, type safety, error handling
+- **Modern Tooling**: Latest stable versions of frameworks and libraries
+- **Maintainability**: Clear structure, documentation, and consistent patterns
+- **Performance Awareness**: Optimization strategies without premature optimization
+- **Learning Through Practice**: Experimentation with new technologies and patterns
 
-### Performance Monitoring
+The codebase is structured to be understandable by others (and my future self) while allowing flexibility for experimentation and iteration.
 
-- Use `pnpm run analyze` to check bundle sizes
-- Monitor build times (Turbopack should be faster)
-- Check Next.js build output for optimization suggestions
+## License
 
-## Quick Reference
-
-| Task                  | Command               |
-| --------------------- | --------------------- |
-| Start development     | `pnpm run dev`        |
-| Build for production  | `pnpm run build`      |
-| Run validation        | `pnpm run validate`   |
-| Fix formatting        | `pnpm run format`     |
-| Type check            | `pnpm run type-check` |
-| Clean build artifacts | `pnpm run clean`      |
-
-**Key Paths**:
-
-- Components: `@/components/ComponentName`
-- Utilities: `@/lib/utilityName`
-- Types: `@/types`
-- Data: `@/data`
-
-**Styling**: Tailwind classes in `className` prop
-**CMS**: Directus configured via environment variables
-**Routes**: File-based routing in `app/` directory
+Private project - not intended for public use or distribution.
 
 ---
 
-## Codebase Metrics
-
-Track project size over time with these commands (requires [cloc](https://github.com/AlDanial/cloc)):
-
-**All project code:**
-
-```bash
-cloc . \
-  --exclude-dir=node_modules,.next,playwright-report,test-results,.git,.docs \
-  --not-match-f="(package-lock\.json|pnpm-lock\.yaml|tsconfig\.tsbuildinfo)"
-```
-
-**Source code only (excludes tests):**
-
-```bash
-cloc . \
-  --exclude-dir=node_modules,.next,playwright-report,test-results,.git,.docs,tests \
-  --not-match-f="(package-lock\.json|pnpm-lock\.yaml|tsconfig\.tsbuildinfo|\.test\.|\.spec\.)"
-```
+*This README provides a technical overview of the project structure and implementation. For setup instructions or detailed development guidelines, see the project's internal documentation.*
