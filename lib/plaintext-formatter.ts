@@ -222,7 +222,9 @@ export function formatPlaintext(
  * Detects if content is likely markdown based on common patterns
  */
 export function isLikelyMarkdown(content: string): boolean {
-  if (!content) {return false;}
+  if (!content) {
+    return false;
+  }
 
   // Check for markdown-specific patterns
   const markdownPatterns = [
@@ -244,7 +246,9 @@ export function isLikelyMarkdown(content: string): boolean {
  * Detects if content is likely HTML
  */
 export function isLikelyHTML(content: string): boolean {
-  if (!content) {return false;}
+  if (!content) {
+    return false;
+  }
 
   // Check for HTML tags
   const htmlPattern = /<[a-z][\s\S]*>/i;

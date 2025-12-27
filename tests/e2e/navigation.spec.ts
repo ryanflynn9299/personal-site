@@ -4,7 +4,22 @@ test.describe("Navigation", () => {
   test("navigates from homepage to about page", async ({ page }) => {
     await page.goto("/");
 
-    await page.getByRole("link", { name: /about/i }).first().click();
+    // Hide DevControls to prevent click interception
+    await page.waitForLoadState("networkidle");
+    await page.evaluate(() => {
+      const devControls = document.querySelectorAll(
+        '[class*="fixed bottom-4 right-4"]'
+      );
+      devControls.forEach((el) => {
+        (el as HTMLElement).style.display = "none";
+        (el as HTMLElement).style.pointerEvents = "none";
+      });
+    });
+
+    // Wait for link to be visible and stable
+    const aboutLink = page.getByRole("link", { name: /about/i }).first();
+    await aboutLink.waitFor({ state: "visible", timeout: 5000 });
+    await aboutLink.click({ timeout: 5000 });
 
     await expect(page).toHaveURL(/\/about/);
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
@@ -25,7 +40,10 @@ test.describe("Navigation", () => {
       });
     });
 
-    await page.getByRole("link", { name: /blog/i }).first().click();
+    // Wait for link to be visible and stable
+    const blogLink = page.getByRole("link", { name: /blog/i }).first();
+    await blogLink.waitFor({ state: "visible", timeout: 5000 });
+    await blogLink.click({ timeout: 5000 });
 
     await expect(page).toHaveURL(/\/blog/);
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
@@ -34,10 +52,22 @@ test.describe("Navigation", () => {
   test("navigates from homepage to contact page", async ({ page }) => {
     await page.goto("/");
 
-    await page
-      .getByRole("link", { name: /contact/i })
-      .first()
-      .click();
+    // Hide DevControls to prevent click interception
+    await page.waitForLoadState("networkidle");
+    await page.evaluate(() => {
+      const devControls = document.querySelectorAll(
+        '[class*="fixed bottom-4 right-4"]'
+      );
+      devControls.forEach((el) => {
+        (el as HTMLElement).style.display = "none";
+        (el as HTMLElement).style.pointerEvents = "none";
+      });
+    });
+
+    // Wait for link to be visible and stable
+    const contactLink = page.getByRole("link", { name: /contact/i }).first();
+    await contactLink.waitFor({ state: "visible", timeout: 5000 });
+    await contactLink.click({ timeout: 5000 });
 
     await expect(page).toHaveURL(/\/contact/);
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();

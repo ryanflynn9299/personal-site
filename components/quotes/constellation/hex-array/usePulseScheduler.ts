@@ -25,7 +25,9 @@ export function usePulseScheduler(
     let isMounted = true;
 
     const scheduleNextPulse = () => {
-      if (!isMounted || !enabled) {return;}
+      if (!isMounted || !enabled) {
+        return;
+      }
 
       // Randomly select one active tile to pulse
       const randomTile =
@@ -41,7 +43,9 @@ export function usePulseScheduler(
 
     return () => {
       isMounted = false;
-      if (timeoutId) {clearTimeout(timeoutId);}
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
     };
   }, [activeTiles, enabled]);
 

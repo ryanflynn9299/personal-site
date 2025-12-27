@@ -77,7 +77,9 @@ export function Tesseract3D({
       for (let j = i + 1; j < 16; j++) {
         let diff = 0;
         for (let k = 0; k < 4; k++) {
-          if (vertices[i][k] !== vertices[j][k]) {diff++;}
+          if (vertices[i][k] !== vertices[j][k]) {
+            diff++;
+          }
         }
         if (diff === 1) {
           edgeList.push([i, j]);

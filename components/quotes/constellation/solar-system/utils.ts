@@ -8,7 +8,9 @@ export function getEntityPosition(
   entity: Entity,
   containerRef: React.RefObject<HTMLDivElement | null>
 ): { x: number; y: number } {
-  if (!containerRef.current) {return { x: 0, y: 0 };}
+  if (!containerRef.current) {
+    return { x: 0, y: 0 };
+  }
   const rect = containerRef.current.getBoundingClientRect();
   const centerX = rect.width / 2;
   const centerY = rect.height / 2;
@@ -37,7 +39,9 @@ export function getEntityClickPosition(
   entity: Entity,
   containerRef: React.RefObject<HTMLDivElement | null>
 ): { x: number; y: number } {
-  if (!containerRef.current) {return { x: 0, y: 0 };}
+  if (!containerRef.current) {
+    return { x: 0, y: 0 };
+  }
   const rect = containerRef.current.getBoundingClientRect();
   const centerX = rect.width / 2;
   const centerY = rect.height / 2;

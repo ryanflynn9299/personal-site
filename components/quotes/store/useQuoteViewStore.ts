@@ -47,7 +47,9 @@ const noOpStorage = {
 
 // Check if we're in development environment (at runtime)
 const getStorage = () => {
-  if (typeof window === "undefined") {return noOpStorage;}
+  if (typeof window === "undefined") {
+    return noOpStorage;
+  }
   const isDev = process.env.NODE_ENV === "development";
   return isDev ? localStorage : noOpStorage;
 };

@@ -41,8 +41,10 @@ export default defineConfig({
     env: {
       // Suppress noisy warnings during E2E tests
       PLAYWRIGHT_TEST_BASE_URL: "http://localhost:3000",
-      // Hide DevControls in e2e tests
+      // Hide DevControls in e2e tests (server-side)
       PLAYWRIGHT_TEST: "true",
+      // Hide DevControls in e2e tests (client-side - NEXT_PUBLIC_ prefix required)
+      NEXT_PUBLIC_PLAYWRIGHT_TEST: "true",
     },
   },
 });

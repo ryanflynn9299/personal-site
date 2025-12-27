@@ -101,7 +101,9 @@ export function findPath(
       }
     }
 
-    if (!current) {break;}
+    if (!current) {
+      break;
+    }
 
     // Move current from open to closed set
     openSet.delete(current.vertexId);
@@ -124,7 +126,9 @@ export function findPath(
       }
 
       const neighborVertex = graph.vertices.get(neighborId);
-      if (!neighborVertex) {continue;}
+      if (!neighborVertex) {
+        continue;
+      }
 
       // Disallow edges between vertices that both belong to active tiles
       // This prevents paths from staying within active tiles
@@ -168,10 +172,14 @@ export function findPath(
  * Convert a path of vertex IDs to an SVG path string
  */
 export function pathToSVGPath(graph: VertexGraph, path: string[]): string {
-  if (path.length === 0) {return "";}
+  if (path.length === 0) {
+    return "";
+  }
   if (path.length === 1) {
     const vertex = graph.vertices.get(path[0]);
-    if (!vertex) {return "";}
+    if (!vertex) {
+      return "";
+    }
     return `M ${vertex.x} ${vertex.y}`;
   }
 
@@ -179,7 +187,9 @@ export function pathToSVGPath(graph: VertexGraph, path: string[]): string {
 
   for (let i = 0; i < path.length; i++) {
     const vertex = graph.vertices.get(path[i]);
-    if (!vertex) {continue;}
+    if (!vertex) {
+      continue;
+    }
 
     if (i === 0) {
       commands.push(`M ${vertex.x} ${vertex.y}`);
