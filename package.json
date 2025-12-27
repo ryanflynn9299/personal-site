@@ -2,8 +2,9 @@
   "name": "personal-site3",
   "version": "0.1.0",
   "private": true,
-  "packageManager": "npm@10.0.0",
+  "packageManager": "pnpm@8.15.0",
   "scripts": {
+    "prebuild": "node -e \"if (!require('fs').existsSync('node_modules/typescript')) { console.error('TypeScript not found. Run pnpm install first.'); process.exit(1); }\"",
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "build:webpack": "next build",
@@ -16,8 +17,8 @@
     "format:check": "prettier --check \"**/*.{js,jsx,ts,tsx,json,css,scss,md,mdx}\"",
     "type-check": "tsc --noEmit",
     "clean": "rm -rf .next out .turbo node_modules/.cache",
-    "validate": "npm run type-check && npm run lint && npm run eslint",
-    "prepare": "echo 'Run npm run validate before committing'",
+    "validate": "pnpm run type-check && pnpm run lint && pnpm run eslint",
+    "prepare": "echo 'Run pnpm run validate before committing'",
     "analyze": "ANALYZE=true next build",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -26,7 +27,7 @@
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:debug": "playwright test --debug",
-    "test:all": "npm run test && npm run test:e2e"
+    "test:all": "pnpm run test && pnpm run test:e2e"
   },
   "dependencies": {
     "@directus/sdk": "^16.1.0",

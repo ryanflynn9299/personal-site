@@ -124,7 +124,7 @@ personal-site/
 │
 ├── docker-compose.yml            # Docker Compose configuration
 ├── Dockerfile                    # Docker build configuration
-├── next.config.ts                # Next.js configuration
+├── next.config.mjs               # Next.js configuration
 ├── tailwind.config.ts            # Tailwind CSS configuration
 ├── tsconfig.json                 # TypeScript configuration
 └── package.json                  # Dependencies and scripts
@@ -136,64 +136,64 @@ personal-site/
 
 ```bash
 # Install dependencies
-npm install
+pnpm install
 
 # Start development server (with Turbopack)
-npm run dev
+pnpm run dev
 # Runs at http://localhost:3000
 
 # Start development server (with Webpack - legacy)
-npm run build:webpack
+pnpm run build:webpack
 ```
 
 ### Code Quality
 
 ```bash
 # Check code formatting (Prettier)
-npm run lint
+pnpm run lint
 
 # Fix formatting issues
-npm run lint:fix
+pnpm run lint:fix
 # or
-npm run format
+pnpm run format
 
 # Check formatting without fixing
-npm run format:check
+pnpm run format:check
 
 # Run ESLint
-npm run eslint
+pnpm run eslint
 
 # Fix ESLint issues
-npm run eslint:fix
+pnpm run eslint:fix
 
 # Type checking
-npm run type-check
+pnpm run type-check
 
 # Run all validation checks
-npm run validate
+pnpm run validate
 ```
 
 ### Build & Production
 
 ```bash
 # Build for production (with Turbopack)
-npm run build
+pnpm run build
 
 # Build for production (with Webpack - legacy)
-npm run build:webpack
+pnpm run build:webpack
 
 # Start production server
-npm run start
+pnpm run start
 
 # Analyze bundle size
-npm run analyze
+pnpm run analyze
 ```
 
 ### Maintenance
 
 ```bash
 # Clean build artifacts and cache
-npm run clean
+pnpm run clean
 ```
 
 ## Environment Setup
@@ -313,7 +313,7 @@ This project includes a complete CI/CD pipeline configured with GitHub Actions. 
 ### Build Process
 
 ```bash
-npm run build
+pnpm run build
 ```
 
 This creates an optimized `.next/` folder with:
@@ -344,18 +344,18 @@ The project includes Docker configuration:
 
 ```bash
 # Clean and reinstall
-npm run clean
+pnpm run clean
 rm -rf node_modules
-npm install
-npm run dev
+pnpm install
+pnpm run dev
 ```
 
 ### Build Failures
 
-1. Run validation: `npm run validate`
-2. Check TypeScript errors: `npm run type-check`
-3. Check formatting: `npm run lint`
-4. Check code quality: `npm run eslint`
+1. Run validation: `pnpm run validate`
+2. Check TypeScript errors: `pnpm run type-check`
+3. Check formatting: `pnpm run lint`
+4. Check code quality: `pnpm run eslint`
 5. Verify environment variables are set
 
 ### Directus Connection Issues
@@ -378,13 +378,13 @@ npm run dev
 
 ```bash
 # Check for outdated packages
-npm outdated
+pnpm outdated
 
 # Update all dependencies
-npm update
+pnpm update
 
 # Update specific package
-npm install package-name@latest
+pnpm add package-name@latest
 ```
 
 ### Code Quality Before Committing
@@ -392,7 +392,7 @@ npm install package-name@latest
 The project includes a `prepare` script that reminds you to run validation:
 
 ```bash
-npm run validate
+pnpm run validate
 ```
 
 This runs:
@@ -409,20 +409,20 @@ This runs:
 
 ### Performance Monitoring
 
-- Use `npm run analyze` to check bundle sizes
+- Use `pnpm run analyze` to check bundle sizes
 - Monitor build times (Turbopack should be faster)
 - Check Next.js build output for optimization suggestions
 
 ## Quick Reference
 
-| Task                  | Command              |
-| --------------------- | -------------------- |
-| Start development     | `npm run dev`        |
-| Build for production  | `npm run build`      |
-| Run validation        | `npm run validate`   |
-| Fix formatting        | `npm run format`     |
-| Type check            | `npm run type-check` |
-| Clean build artifacts | `npm run clean`      |
+| Task                  | Command               |
+| --------------------- | --------------------- |
+| Start development     | `pnpm run dev`        |
+| Build for production  | `pnpm run build`      |
+| Run validation        | `pnpm run validate`   |
+| Fix formatting        | `pnpm run format`     |
+| Type check            | `pnpm run type-check` |
+| Clean build artifacts | `pnpm run clean`      |
 
 **Key Paths**:
 

@@ -7,7 +7,7 @@
 
 const { spawn } = require("child_process");
 
-const devServer = spawn("npm", ["run", "dev"], {
+const devServer = spawn("pnpm", ["run", "dev"], {
   stdio: ["inherit", "pipe", "pipe"],
   shell: true,
 });

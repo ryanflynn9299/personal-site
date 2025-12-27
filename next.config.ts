@@ -1,11 +1,12 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
   // 1. This is the fix for your Docker build error
   output: "standalone",
 
   // Turbopack Configuration
   // Turbopack is the default bundler in Next.js 16 for development
-  // For production builds, use: npm run build (which uses --turbopack flag)
+  // For production builds, use: pnpm run build (which uses --turbopack flag)
   // This configuration works for both development (Turbopack) and production (Turbopack or webpack)
 
   // Fix for thread-stream worker.js error

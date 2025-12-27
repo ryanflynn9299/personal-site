@@ -19,19 +19,19 @@ tests/
 
 ```bash
 # Run all unit/integration tests
-npm run test
+pnpm run test
 
 # Run tests in watch mode
-npm run test:watch
+pnpm run test:watch
 
 # Run tests with UI
-npm run test:ui
+pnpm run test:ui
 
 # Run tests with coverage
-npm run test:coverage
+pnpm run test:coverage
 
 # Run E2E tests
-npm run test:e2e
+pnpm run test:e2e
 ```
 
 ## Test Organization

@@ -117,16 +117,16 @@ Following the strategy of **core requirements over exhaustive edge cases**:
 
 ```bash
 # Run all tests
-npm run test
+pnpm run test
 
 # Run with coverage
-npm run test:coverage
+pnpm run test:coverage
 
 # Run in watch mode
-npm run test:watch
+pnpm run test:watch
 
 # Run specific test file
-npm run test tests/components/PostCard.test.tsx
+pnpm run test tests/components/PostCard.test.tsx
 ```
 
 ## Next Steps (Phase 3)
