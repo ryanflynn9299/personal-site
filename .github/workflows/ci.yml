@@ -35,8 +35,6 @@ jobs:
       is-protected-branch: ${{ steps.check.outputs.is-protected-branch }}
       is-dev-main: ${{ steps.check.outputs.is-dev-main }}
       run-e2e: ${{ steps.check.outputs.run-e2e }}
-      is-dev-main: ${{ steps.check.outputs.is-dev-main }}
-      run-e2e: ${{ steps.check.outputs.run-e2e }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
