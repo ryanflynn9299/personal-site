@@ -86,6 +86,7 @@ const eslintConfig = [
       "dist/**",
       "build/**",
       "coverage/**",
+      "scripts/**", // Scripts are not part of TypeScript project
     ],
   },
 ];

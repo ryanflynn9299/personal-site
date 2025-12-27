@@ -3,8 +3,6 @@
  * Centralized SEO settings for consistent metadata across the site
  */
 
-import { utils } from "@/constants/theme";
-
 // Base URL configuration - use environment variable if available, otherwise default
 export const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL || "https://www.ryanflynn.org";

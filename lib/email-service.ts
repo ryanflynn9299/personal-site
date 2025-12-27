@@ -95,7 +95,7 @@ export function isEmailServiceConfigured(): boolean {
  * @returns {Promise<EmailSendResult>} Result of the email sending operation
  */
 export async function sendEmail(
-  message: EmailMessage
+  _message: EmailMessage
 ): Promise<EmailSendResult> {
   // Check if email service is configured
   if (!isEmailServiceConfigured()) {

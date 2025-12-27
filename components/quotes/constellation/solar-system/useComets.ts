@@ -212,7 +212,7 @@ export function useComets(
     }, COMET_SPAWN_INTERVAL);
 
     return () => clearInterval(cometInterval);
-  }, [isZoomed, generateComet, updateCometsFromRef]);
+  }, [isZoomed, generateComet, updateCometsFromRef, containerRef]);
 
   // Register comet trigger callback
   useEffect(() => {
