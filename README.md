@@ -66,36 +66,43 @@ tests/                       # Test suite
 ### Technology Stack
 
 **Core Framework:**
+
 - Next.js 16.1.1 (App Router, Turbopack)
 - React 19.2.1
 - TypeScript 5.5.4
 
 **Styling & UI:**
+
 - Tailwind CSS 3.4.17 (utility-first CSS)
 - Framer Motion 12.19.1 (animations)
 - Radix UI (accessible primitives)
 - Custom design system with consistent color palettes and typography
 
 **Content Management:**
+
 - Directus 16.1.0 (headless CMS for blog content)
 - React Markdown with rehype/remark plugins for content rendering
 
 **State Management:**
+
 - Zustand (lightweight state management for client-side state)
 - React Context (toast notifications, theme)
 
 **Animation Libraries:**
+
 - Framer Motion (React component animations)
 - GSAP 3.13.0 (advanced timeline-based animations)
 - Three.js (WebGL-based 3D visualizations)
 
 **Testing:**
+
 - Vitest (unit and integration tests)
 - React Testing Library (component testing)
 - Playwright (end-to-end testing)
 - MSW (Mock Service Worker for API mocking)
 
 **Development Tools:**
+
 - ESLint 9.39.2 (code quality)
 - Prettier (code formatting)
 - TypeScript (type checking)
@@ -210,6 +217,7 @@ pnpm run build
 ```
 
 The build process:
+
 - Compiles TypeScript
 - Optimizes images and assets
 - Generates static pages where possible
@@ -302,4 +310,4 @@ Private project - not intended for public use or distribution.
 
 ---
 
-*This README provides a technical overview of the project structure and implementation. For setup instructions or detailed development guidelines, see the project's internal documentation.*
+_This README provides a technical overview of the project structure and implementation. For setup instructions or detailed development guidelines, see the project's internal documentation._

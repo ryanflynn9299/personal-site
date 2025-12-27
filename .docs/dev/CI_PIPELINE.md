@@ -10,16 +10,17 @@
 
 1. [Overview & Current Status](#overview--current-status)
 2. [Architecture & Setup](#architecture--setup)
-3. [Environment Variables](#environment-variables)
-4. [Pipeline Jobs Explained](#pipeline-jobs-explained)
-5. [Branch Strategy & Implementation](#branch-strategy--implementation)
-6. [Status Badges](#status-badges)
-7. [Code Coverage (Future)](#code-coverage-future)
-8. [Maintenance & Monitoring](#maintenance--monitoring)
-9. [Public vs Private Repository Considerations](#public-vs-private-repository-considerations)
-10. [Core Takeaways & Critical Reminders](#core-takeaways--critical-reminders)
-11. [Troubleshooting](#troubleshooting)
-12. [Future Enhancements](#future-enhancements)
+3. [Skipping CI with Commit Messages](#skipping-ci-with-commit-messages)
+4. [Environment Variables](#environment-variables)
+5. [Pipeline Jobs Explained](#pipeline-jobs-explained)
+6. [Branch Strategy & Implementation](#branch-strategy--implementation)
+7. [Status Badges](#status-badges)
+8. [Code Coverage (Future)](#code-coverage-future)
+9. [Maintenance & Monitoring](#maintenance--monitoring)
+10. [Public vs Private Repository Considerations](#public-vs-private-repository-considerations)
+11. [Core Takeaways & Critical Reminders](#core-takeaways--critical-reminders)
+12. [Troubleshooting](#troubleshooting)
+13. [Future Enhancements](#future-enhancements)
 
 ---
 
@@ -33,8 +34,9 @@ A complete Continuous Integration (CI) pipeline that automatically validates you
 
 ✅ **CI Pipeline:** Fully configured and active in `.github/workflows/ci.yml`  
 ✅ **Environment Variables:** Configured with minimal required set  
-✅ **Four Jobs:** Lint/Type Check, Unit Tests, E2E Tests, Build  
+✅ **Five Jobs:** Commit Message Check, Lint/Type Check, Unit Tests, E2E Tests, Build  
 ✅ **Branch Triggers:** Configured for `main`, `master`, and `dev-main`  
+✅ **Skip Functionality:** Commit message-based CI skipping enabled  
 ⚠️ **Code Coverage:** Not currently enabled (see section below for how to add)  
 ✅ **Status Badge:** Can be added to README (see Status Badges section)
 
@@ -70,14 +72,125 @@ A complete Continuous Integration (CI) pipeline that automatically validates you
 
 ### Pipeline Structure
 
-The CI pipeline consists of **4 parallel jobs** that run automatically:
+The CI pipeline consists of **5 jobs** that run in a specific order:
 
-1. **Lint & Type Check** - Code quality validation
-2. **Unit Tests** - Component and utility testing
-3. **E2E Tests** - End-to-end browser testing
-4. **Build** - Production build verification
+1. **Check Commit Message** - Analyzes commit messages for skip patterns (runs first)
+2. **Lint & Type Check** - Code quality validation (runs in parallel with tests/build)
+3. **Unit Tests** - Component and utility testing (runs in parallel)
+4. **E2E Tests** - End-to-end browser testing (runs in parallel)
+5. **Build** - Production build verification (runs in parallel)
 
-All jobs run in parallel to minimize total CI time (~5-10 minutes total).
+The commit message check runs first, then the remaining jobs run in parallel (if not skipped) to minimize total CI time (~5-10 minutes total).
+
+### Skipping CI with Commit Messages
+
+You can skip CI entirely or skip individual jobs by adding specific tags to your commit message. This is useful for documentation-only changes, dependency updates, or when you need to push code without running the full CI suite.
+
+#### Skip Patterns
+
+The CI pipeline checks commit messages (for push events) or PR titles/descriptions (for pull request events) for the following patterns. Patterns are **case-insensitive**:
+
+**Skip Entire CI:**
+
+- `[skip ci]` or `[ci skip]` - Skips all CI jobs
+
+**Skip Individual Jobs:**
+
+- `[skip lint]` or `[skip type-check]` - Skips lint & type-check job
+- `[skip tests]` or `[skip unit-tests]` - Skips unit tests job
+- `[skip e2e]` or `[skip e2e-tests]` - Skips E2E tests job (⚠️ **Note:** E2E tests always run on `main`/`master` branches, even with this pattern)
+- `[skip build]` - Skips build job
+
+#### Usage Examples
+
+**Skip entire CI:**
+
+```bash
+git commit -m "Update README [skip ci]"
+```
+
+**Skip only tests (useful for documentation changes):**
+
+```bash
+git commit -m "Update documentation [skip tests] [skip e2e]"
+```
+
+**Enable E2E tests on dev-main (opt-in):**
+
+```bash
+git commit -m "Fix bug [run e2e]"
+```
+
+**Skip linting (useful for dependency updates that may have lint issues):**
+
+```bash
+git commit -m "Update dependencies [skip lint]"
+```
+
+**Skip build (useful when only tests matter):**
+
+```bash
+git commit -m "Fix test flakiness [skip build]"
+```
+
+#### How It Works
+
+1. A preliminary job (`check-commit-message`) runs first
+2. It extracts the commit message (push events) or PR title/body (PR events)
+3. It checks for skip patterns (case-insensitive)
+4. Each job checks the skip outputs before running
+5. Skipped jobs are marked as "skipped" in GitHub Actions (not failed)
+
+#### Important Notes
+
+- ⚠️ **Use sparingly**: Skipping CI reduces confidence in code quality
+- ⚠️ **Production branches**: E2E tests **always run** on `main`/`master` branches (protected branches) regardless of skip patterns
+- ✅ **dev-main branch**: E2E tests are **opt-in by default** on `dev-main` - use `[run e2e]` to enable them
+- ✅ **Documentation**: Safe to skip tests for README/docs-only changes
+- ✅ **Dependencies**: May skip lint for dependency updates (but run tests)
+- ⚠️ **PRs**: Skip patterns work on PR titles and descriptions too
+- ✅ **E2E on protected branches**: E2E tests cannot be skipped on `main`/`master` to ensure production quality
+
+#### Best Practices
+
+**Good reasons to skip:**
+
+- Documentation-only changes (`[skip tests] [skip e2e]`)
+- Markdown file updates (`[skip ci]`)
+- CI configuration changes (may need to skip to test the skip itself)
+- Dependency updates where you want to test incrementally
+
+**Avoid skipping:**
+
+- Code changes (always run full CI)
+- Configuration changes that affect runtime
+- Changes to test files
+- Production deployments
+
+#### Technical Details
+
+The skip check job:
+
+- Runs first in the pipeline
+- Uses `fetch-depth: 0` to access full git history
+- Checks both commit message and PR title/body
+- Detects protected branches (`main`/`master`) and sets `is-protected-branch` output
+- Sets job outputs that other jobs read via `needs.check-commit-message.outputs.*`
+- Each job has a conditional: `if: needs.check-commit-message.outputs.skip-* != 'true'`
+
+**Job Dependencies:**
+
+- All jobs depend on `check-commit-message` job
+- Jobs are skipped if their skip flag is `true` OR if `skip-all` is `true`
+- **E2E tests exception**: E2E tests always run on protected branches (`main`/`master`) regardless of skip patterns
+- Skipped jobs show as "skipped" (not failed) in GitHub Actions UI
+
+**Branch-Specific E2E Behavior:**
+
+- **Protected branches (`main`/`master`)**: E2E tests **always run** regardless of any patterns (ensures production quality)
+- **dev-main branch**: E2E tests are **opt-in by default** - only run if `[run e2e]` or `[e2e]` pattern is present
+- **Other branches**: E2E tests run by default, but can be skipped using `[skip e2e]` pattern
+- For PRs, the base branch (target branch) determines the behavior
 
 ### When CI Runs
 
@@ -211,7 +324,42 @@ NEXT_PUBLIC_MATOMO_SITE_ID: ""
 
 ## Pipeline Jobs Explained
 
-### Job 1: Lint & Type Check (`lint-and-typecheck`)
+### Job 1: Check Commit Message (`check-commit-message`)
+
+**Purpose:** Analyze commit messages or PR titles/descriptions for skip patterns
+
+**What it does:**
+
+1. Checks out code with full git history (`fetch-depth: 0`)
+2. Extracts commit message (for push events) or PR title/body (for PR events)
+3. Checks for skip patterns (case-insensitive matching)
+4. Sets job outputs that other jobs use to determine if they should run
+
+**Why it's important:**
+
+- Allows selective CI execution based on commit message
+- Saves CI minutes for documentation-only changes
+- Provides flexibility for dependency updates
+- Enables faster iteration when appropriate
+
+**Skip Patterns Detected:**
+
+- `[skip ci]` or `[ci skip]` - Skip entire CI pipeline
+- `[skip lint]` or `[skip type-check]` - Skip lint & type-check job
+- `[skip tests]` or `[skip unit-tests]` - Skip unit tests job
+- `[skip e2e]` or `[skip e2e-tests]` - Skip E2E tests job
+- `[skip build]` - Skip build job
+
+**How it works:**
+
+- Patterns are case-insensitive (e.g., `[SKIP CI]` works the same as `[skip ci]`)
+- For push events: Checks the commit message
+- For PR events: Checks both PR title and description
+- Sets outputs that other jobs read via `needs.check-commit-message.outputs.*`
+
+**Typical duration:** <10 seconds
+
+### Job 2: Lint & Type Check (`lint-and-typecheck`)
 
 **Purpose:** Validate code quality and type safety
 
@@ -240,7 +388,7 @@ NEXT_PUBLIC_MATOMO_SITE_ID: ""
 
 **Typical duration:** 2-3 minutes
 
-### Job 2: Unit Tests (`unit-tests`)
+### Job 3: Unit Tests (`unit-tests`)
 
 **Purpose:** Validate component logic and utilities work correctly
 
@@ -273,7 +421,7 @@ NEXT_PUBLIC_MATOMO_SITE_ID: ""
 
 **Typical duration:** 1-2 minutes
 
-### Job 3: E2E Tests (`e2e-tests`)
+### Job 4: E2E Tests (`e2e-tests`)
 
 **Purpose:** Validate user workflows work end-to-end across browsers
 
@@ -310,7 +458,7 @@ NEXT_PUBLIC_MATOMO_SITE_ID: ""
 
 **Typical duration:** 3-5 minutes (includes browser installation on first run)
 
-### Job 4: Build (`build`)
+### Job 5: Build (`build`)
 
 **Purpose:** Verify production build succeeds
 
@@ -1148,6 +1296,25 @@ npm run lint && npm run eslint && npm run type-check && npm run test && npm run 
 npm run test:coverage
 ```
 
+### Skip CI Patterns Quick Reference
+
+```bash
+# Skip entire CI
+git commit -m "Update README [skip ci]"
+
+# Skip only tests (documentation changes)
+git commit -m "Fix typo in docs [skip tests] [skip e2e]"
+
+# Skip linting (dependency updates)
+git commit -m "Update dependencies [skip lint]"
+
+# Skip build (test-only changes)
+git commit -m "Fix flaky test [skip build]"
+
+# Skip E2E tests (unit test changes)
+git commit -m "Add unit test [skip e2e]"
+```
+
 ### Important URLs
 
 - **GitHub Actions:** `https://github.com/YOUR_USERNAME/YOUR_REPO/actions`
@@ -1170,6 +1337,25 @@ npm run test:coverage
 | `main`     | ✅ Yes       | ✅ Yes | Production branch              |
 | `master`   | ✅ Yes       | ✅ Yes | Production branch              |
 | `dev-main` | ⚠️ Temporary | ✅ Yes | Remove from push after testing |
+
+### Skip CI Patterns Summary
+
+| Pattern                    | Effect                      | Use Case                   | Branch Behavior                                    |
+| -------------------------- | --------------------------- | -------------------------- | -------------------------------------------------- |
+| `[skip ci]` or `[ci skip]` | Skips entire CI pipeline    | Documentation-only changes | Works on all branches                              |
+| `[skip lint]`              | Skips lint & type-check job | Dependency updates         | Works on all branches                              |
+| `[skip tests]`             | Skips unit tests job        | Documentation changes      | Works on all branches                              |
+| `[skip e2e]`               | Skips E2E tests job         | Unit test changes          | ⚠️ **Ignored on `main`/`master`**                  |
+| `[skip build]`             | Skips build job             | Test-only changes          | Works on all branches                              |
+| `[run e2e]` or `[e2e]`     | Enables E2E tests (opt-in)  | Enable E2E on dev-main     | ✅ **Only affects `dev-main`** (opt-in by default) |
+
+**Note:** Patterns are case-insensitive. Can combine multiple patterns (e.g., `[skip tests] [skip e2e]`).
+
+**Branch-Specific E2E Behavior:**
+
+- **Protected branches (`main`/`master`)**: E2E tests **always run** regardless of any patterns (ensures production quality)
+- **dev-main branch**: E2E tests are **opt-in by default** - only run if `[run e2e]` pattern is present
+- **Other branches**: E2E tests run by default, but can be skipped with `[skip e2e]`
 
 ---
 

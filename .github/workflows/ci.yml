@@ -22,9 +22,125 @@ env:
   NEXT_PUBLIC_DIRECTUS_URL: ""
 
 jobs:
+  # Check commit messages for skip patterns
+  check-commit-message:
+    name: Check Commit Message
+    runs-on: ubuntu-latest
+    outputs:
+      skip-all: ${{ steps.check.outputs.skip-all }}
+      skip-lint: ${{ steps.check.outputs.skip-lint }}
+      skip-tests: ${{ steps.check.outputs.skip-tests }}
+      skip-e2e: ${{ steps.check.outputs.skip-e2e }}
+      skip-build: ${{ steps.check.outputs.skip-build }}
+      is-protected-branch: ${{ steps.check.outputs.is-protected-branch }}
+      is-dev-main: ${{ steps.check.outputs.is-dev-main }}
+      run-e2e: ${{ steps.check.outputs.run-e2e }}
+      is-dev-main: ${{ steps.check.outputs.is-dev-main }}
+      run-e2e: ${{ steps.check.outputs.run-e2e }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch full history to check commit messages
+      
+      - name: Check commit message for skip patterns
+        id: check
+        run: |
+          # Determine the branch name (for push events) or base branch (for PR events)
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            BRANCH="${{ github.base_ref }}"
+            COMMIT_MSG="${{ github.event.pull_request.title }} ${{ github.event.pull_request.body }}"
+          else
+            BRANCH="${{ github.ref_name }}"
+            COMMIT_MSG=$(git log -1 --pretty=%B)
+          fi
+          
+          # Check if this is a protected branch (main or master)
+          if [ "$BRANCH" == "main" ] || [ "$BRANCH" == "master" ]; then
+            echo "is-protected-branch=true" >> $GITHUB_OUTPUT
+            echo "is-dev-main=false" >> $GITHUB_OUTPUT
+            echo "✅ Protected branch detected: $BRANCH - E2E tests will always run"
+          elif [ "$BRANCH" == "dev-main" ]; then
+            echo "is-protected-branch=false" >> $GITHUB_OUTPUT
+            echo "is-dev-main=true" >> $GITHUB_OUTPUT
+            echo "ℹ️ dev-main branch detected - E2E tests are opt-in (use [run e2e] to enable)"
+          else
+            echo "is-protected-branch=false" >> $GITHUB_OUTPUT
+            echo "is-dev-main=false" >> $GITHUB_OUTPUT
+            echo "ℹ️ Non-protected branch: $BRANCH - E2E tests run by default"
+          fi
+          
+          # Convert to uppercase for case-insensitive matching
+          COMMIT_MSG_UPPER=$(echo "$COMMIT_MSG" | tr '[:lower:]' '[:upper:]')
+          
+          # Check for skip patterns
+          if echo "$COMMIT_MSG_UPPER" | grep -qE '\[SKIP CI\]|\[CI SKIP\]'; then
+            echo "skip-all=true" >> $GITHUB_OUTPUT
+            echo "⚠️ Skipping entire CI pipeline due to [skip ci] in commit message"
+          else
+            echo "skip-all=false" >> $GITHUB_OUTPUT
+          fi
+          
+          if echo "$COMMIT_MSG_UPPER" | grep -qE '\[SKIP LINT\]|\[SKIP TYPE-CHECK\]'; then
+            echo "skip-lint=true" >> $GITHUB_OUTPUT
+            echo "⚠️ Skipping lint & type-check job due to [skip lint] in commit message"
+          else
+            echo "skip-lint=false" >> $GITHUB_OUTPUT
+          fi
+          
+          if echo "$COMMIT_MSG_UPPER" | grep -qE '\[SKIP TESTS\]|\[SKIP UNIT-TESTS\]'; then
+            echo "skip-tests=true" >> $GITHUB_OUTPUT
+            echo "⚠️ Skipping unit tests job due to [skip tests] in commit message"
+          else
+            echo "skip-tests=false" >> $GITHUB_OUTPUT
+          fi
+          
+          # Check for opt-in pattern [run e2e] or [e2e]
+          if echo "$COMMIT_MSG_UPPER" | grep -qE '\[RUN E2E\]|\[E2E\]'; then
+            echo "run-e2e=true" >> $GITHUB_OUTPUT
+            echo "✅ Opt-in pattern detected: E2E tests will run"
+          else
+            echo "run-e2e=false" >> $GITHUB_OUTPUT
+          fi
+          
+          # For E2E: Logic depends on branch type
+          # Protected branches (main/master): Always run E2E (ignore all patterns)
+          # dev-main: Only run if opt-in pattern [run e2e] is present
+          # Other branches: Run by default, but can be skipped with [skip e2e]
+          if [ "$BRANCH" == "main" ] || [ "$BRANCH" == "master" ]; then
+            # Protected branch: Always run E2E (ignore all patterns)
+            echo "skip-e2e=false" >> $GITHUB_OUTPUT
+            echo "✅ Protected branch: E2E tests will run regardless of patterns"
+          elif [ "$BRANCH" == "dev-main" ]; then
+            # dev-main: Opt-in only (check for [run e2e] pattern)
+            if echo "$COMMIT_MSG_UPPER" | grep -qE '\[RUN E2E\]|\[E2E\]'; then
+              echo "skip-e2e=false" >> $GITHUB_OUTPUT
+              echo "✅ dev-main: E2E tests will run (opt-in pattern detected)"
+            else
+              echo "skip-e2e=true" >> $GITHUB_OUTPUT
+              echo "ℹ️ dev-main: E2E tests skipped by default (use [run e2e] to enable)"
+            fi
+          elif echo "$COMMIT_MSG_UPPER" | grep -qE '\[SKIP E2E\]|\[SKIP E2E-TESTS\]'; then
+            # Other branches: Can be skipped with [skip e2e]
+            echo "skip-e2e=true" >> $GITHUB_OUTPUT
+            echo "⚠️ Skipping E2E tests job due to [skip e2e] in commit message"
+          else
+            # Other branches: Run by default
+            echo "skip-e2e=false" >> $GITHUB_OUTPUT
+          fi
+          
+          if echo "$COMMIT_MSG_UPPER" | grep -qE '\[SKIP BUILD\]'; then
+            echo "skip-build=true" >> $GITHUB_OUTPUT
+            echo "⚠️ Skipping build job due to [skip build] in commit message"
+          else
+            echo "skip-build=false" >> $GITHUB_OUTPUT
+          fi
+
   lint-and-typecheck:
     name: Lint & Type Check
     runs-on: ubuntu-latest
+    needs: check-commit-message
+    if: needs.check-commit-message.outputs.skip-all != 'true' && needs.check-commit-message.outputs.skip-lint != 'true'
     env:
       NODE_ENV: "test"
     steps:
@@ -67,6 +183,8 @@ jobs:
   unit-tests:
     name: Unit Tests
     runs-on: ubuntu-latest
+    needs: check-commit-message
+    if: needs.check-commit-message.outputs.skip-all != 'true' && needs.check-commit-message.outputs.skip-tests != 'true'
     env:
       NODE_ENV: "test"
     steps:
@@ -112,6 +230,9 @@ jobs:
   e2e-tests:
     name: E2E Tests
     runs-on: ubuntu-latest
+    needs: check-commit-message
+    # Always run on protected branches (main/master), otherwise respect skip pattern
+    if: needs.check-commit-message.outputs.skip-all != 'true' && (needs.check-commit-message.outputs.is-protected-branch == 'true' || needs.check-commit-message.outputs.skip-e2e != 'true')
     env:
       NODE_ENV: "test"
     steps:
@@ -159,6 +280,8 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
+    needs: check-commit-message
+    if: needs.check-commit-message.outputs.skip-all != 'true' && needs.check-commit-message.outputs.skip-build != 'true'
     env:
       NODE_ENV: "production"
     steps:
