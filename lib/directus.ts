@@ -79,7 +79,7 @@ const getDirectusUrl = (): string | null => {
  * @returns The full URL to the asset, or null if fileId is null/undefined.
  */
 function _getAssetURL(fileId: string | null | undefined): string | null {
-  if (!fileId) return null;
+  if (!fileId) {return null;}
   // Use the public URL directly. Ensure this var is set.
   const publicUrl = process.env.NEXT_PUBLIC_DIRECTUS_URL;
   if (!publicUrl) {

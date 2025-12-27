@@ -164,7 +164,7 @@ export function buildVertexGraph(tiles: HexTile[]): VertexGraph {
       // Skip if vertices don't exist (shouldn't happen, but safety check)
       const v1 = vertices.get(v1Id);
       const v2 = vertices.get(v2Id);
-      if (!v1 || !v2) continue;
+      if (!v1 || !v2) {continue;}
 
       const distance = vertexDistance(v1, v2);
 
@@ -250,7 +250,7 @@ export function getVerticesNearTile(
 
   for (const vertex of graph.vertices.values()) {
     // Only consider vertices that belong to this tile
-    if (!vertex.tileIds.has(tile.id)) continue;
+    if (!vertex.tileIds.has(tile.id)) {continue;}
 
     const dx = vertex.x - tile.x;
     const dy = vertex.y - tile.y;
@@ -272,7 +272,7 @@ export function isVertexInActiveTile(
   vertexId: string
 ): boolean {
   const vertex = graph.vertices.get(vertexId);
-  if (!vertex) return false;
+  if (!vertex) {return false;}
 
   for (const tileId of vertex.tileIds) {
     if (graph.activeTileIds.has(tileId)) {
@@ -303,7 +303,7 @@ export function getVerticesAwayFromActiveTiles(
       }
     }
 
-    if (isNearActive) continue;
+    if (isNearActive) {continue;}
 
     // Check distance from all active tiles
     let minDistToActive = Infinity;

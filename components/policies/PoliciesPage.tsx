@@ -29,7 +29,9 @@ export function PoliciesPage({ policies, initialTab }: PoliciesPageProps) {
 
   // Determine initial active policy
   const getInitialPolicyId = () => {
-    if (initialTab) return initialTab;
+    if (initialTab) {
+      return initialTab;
+    }
     const tabParam = searchParams.get("tab");
     if (tabParam) {
       const mapping: Record<string, string> = {

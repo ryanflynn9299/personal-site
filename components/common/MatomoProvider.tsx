@@ -26,7 +26,7 @@ export function MatomoProvider() {
       !process.env.PLAYWRIGHT_TEST_BASE_URL;
 
     if (shouldLog) {
-      console.info(
+      console.warn(
         "Matomo analytics not configured. Set NEXT_PUBLIC_MATOMO_URL and NEXT_PUBLIC_MATOMO_SITE_ID"
       );
     }

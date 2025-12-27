@@ -1193,25 +1193,33 @@ class App {
   }
 
   onMouseDown(ev: MouseEvent) {
-    if (this.options.onSpeedUp) this.options.onSpeedUp(ev);
+    if (this.options.onSpeedUp) {
+      this.options.onSpeedUp(ev);
+    }
     this.fovTarget = this.options.fovSpeedUp;
     this.speedUpTarget = this.options.speedUp;
   }
 
   onMouseUp(ev: MouseEvent) {
-    if (this.options.onSlowDown) this.options.onSlowDown(ev);
+    if (this.options.onSlowDown) {
+      this.options.onSlowDown(ev);
+    }
     this.fovTarget = this.options.fov;
     this.speedUpTarget = 0;
   }
 
   onTouchStart(ev: TouchEvent) {
-    if (this.options.onSpeedUp) this.options.onSpeedUp(ev);
+    if (this.options.onSpeedUp) {
+      this.options.onSpeedUp(ev);
+    }
     this.fovTarget = this.options.fovSpeedUp;
     this.speedUpTarget = this.options.speedUp;
   }
 
   onTouchEnd(ev: TouchEvent) {
-    if (this.options.onSlowDown) this.options.onSlowDown(ev);
+    if (this.options.onSlowDown) {
+      this.options.onSlowDown(ev);
+    }
     this.fovTarget = this.options.fov;
     this.speedUpTarget = 0;
   }
@@ -1298,7 +1306,9 @@ class App {
   }
 
   tick() {
-    if (this.disposed || !this) return;
+    if (this.disposed || !this) {
+      return;
+    }
     if (resizeRendererToDisplaySize(this.renderer, this.setSize)) {
       const canvas = this.renderer.domElement;
       this.camera.aspect = canvas.clientWidth / canvas.clientHeight;
@@ -1334,7 +1344,9 @@ const Hyperspeed: FC<HyperspeedProps> = ({ effectOptions = {} }) => {
     }
 
     const container = hyperspeed.current;
-    if (!container) return;
+    if (!container) {
+      return;
+    }
 
     const options = { ...mergedOptions };
     if (typeof options.distortion === "string") {

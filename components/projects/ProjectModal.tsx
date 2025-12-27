@@ -48,7 +48,9 @@ export function ProjectModal({
 }: ProjectModalProps) {
   // Handle ESC key
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen) {
+      return;
+    }
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -60,7 +62,9 @@ export function ProjectModal({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, onClose]);
 
-  if (!project) return null;
+  if (!project) {
+    return null;
+  }
 
   return (
     <AnimatePresence>

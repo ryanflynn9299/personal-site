@@ -83,7 +83,7 @@ test.describe("Accessibility", () => {
       const type = await input.getAttribute("type");
 
       // Skip hidden and submit inputs
-      if (type === "hidden" || type === "submit") continue;
+      if (type === "hidden" || type === "submit") {continue;}
 
       // Each input should have an associated label or aria-label
       const id = await input.getAttribute("id");

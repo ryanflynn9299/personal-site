@@ -15,7 +15,7 @@ export function CommandConsole({
   selectedEntity,
   onClose,
 }: CommandConsoleProps) {
-  if (!selectedEntity) return null;
+  if (!selectedEntity) {return null;}
 
   return (
     <AnimatePresence>

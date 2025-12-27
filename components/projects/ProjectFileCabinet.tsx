@@ -93,7 +93,9 @@ function categorizeProject(project: Project): CategoryName {
     `${project.title} ${project.description} ${project.tags.join(" ")}`.toLowerCase();
 
   for (const [categoryName, category] of Object.entries(CATEGORIES)) {
-    if (categoryName === "Other") continue;
+    if (categoryName === "Other") {
+      continue;
+    }
 
     if (
       category.keywords.some((keyword) =>

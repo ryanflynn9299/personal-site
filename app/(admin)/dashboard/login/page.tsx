@@ -6,7 +6,6 @@ export default function LoginPage() {
   return (
     <main className="flex items-center justify-center min-h-screen">
       <div className="w-full max-w-sm text-center">
-        {/* eslint-disable-next-line react/jsx-no-comment-textnodes */}
         <h1 className="font-heading text-2xl font-bold text-slate-50">
           // Mission Control Access
         </h1>

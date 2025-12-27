@@ -28,7 +28,9 @@ export function BlogPageClient({ posts, status }: BlogPageClientProps) {
   // React 19: Use useSyncExternalStore for keyboard shortcut handling
   // This provides better performance and avoids unnecessary re-renders
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    if (typeof window === "undefined") {
+      return;
+    }
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "k" && (e.metaKey || e.ctrlKey)) {

@@ -38,7 +38,9 @@ const useMeasure = <T extends HTMLElement>() => {
   const [size, setSize] = useState({ width: 0, height: 0 });
 
   useLayoutEffect(() => {
-    if (!ref.current) return;
+    if (!ref.current) {
+      return;
+    }
     const ro = new ResizeObserver(([entry]) => {
       const { width, height } = entry.contentRect;
       setSize({ width, height });
@@ -117,7 +119,9 @@ const Masonry: React.FC<MasonryProps> = ({
   const getInitialPosition = useCallback(
     (item: GridItem) => {
       const containerRect = containerRef.current?.getBoundingClientRect();
-      if (!containerRect) return { x: item.x, y: item.y };
+      if (!containerRect) {
+        return { x: item.x, y: item.y };
+      }
 
       let direction = animateFrom;
       if (animateFrom === "random") {
@@ -153,7 +157,9 @@ const Masonry: React.FC<MasonryProps> = ({
   }, [items]);
 
   const grid = useMemo<GridItem[]>(() => {
-    if (!width) return [];
+    if (!width) {
+      return [];
+    }
     const colHeights = new Array(columns).fill(0);
     const gap = 16;
     const totalGaps = (columns - 1) * gap;
@@ -173,7 +179,9 @@ const Masonry: React.FC<MasonryProps> = ({
   const hasMounted = useRef(false);
 
   useLayoutEffect(() => {
-    if (!imagesReady) return;
+    if (!imagesReady) {
+      return;
+    }
 
     grid.forEach((item, index) => {
       const selector = `[data-key="${item.id}"]`;
@@ -232,7 +240,9 @@ const Masonry: React.FC<MasonryProps> = ({
     }
     if (colorShiftOnHover) {
       const overlay = element.querySelector(".color-overlay") as HTMLElement;
-      if (overlay) gsap.to(overlay, { opacity: 0.3, duration: 0.3 });
+      if (overlay) {
+        gsap.to(overlay, { opacity: 0.3, duration: 0.3 });
+      }
     }
   };
 
@@ -246,7 +256,9 @@ const Masonry: React.FC<MasonryProps> = ({
     }
     if (colorShiftOnHover) {
       const overlay = element.querySelector(".color-overlay") as HTMLElement;
-      if (overlay) gsap.to(overlay, { opacity: 0, duration: 0.3 });
+      if (overlay) {
+        gsap.to(overlay, { opacity: 0, duration: 0.3 });
+      }
     }
   };
 

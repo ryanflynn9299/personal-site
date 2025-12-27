@@ -43,7 +43,9 @@ export interface DotGridProps {
 
 function hexToRgb(hex: string) {
   const m = hex.match(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i);
-  if (!m) return { r: 0, g: 0, b: 0 };
+  if (!m) {
+    return { r: 0, g: 0, b: 0 };
+  }
   return {
     r: parseInt(m[1], 16),
     g: parseInt(m[2], 16),
@@ -84,7 +86,9 @@ const DotGrid: React.FC<DotGridProps> = ({
   const activeRgb = useMemo(() => hexToRgb(activeColor), [activeColor]);
 
   const circlePath = useMemo(() => {
-    if (typeof window === "undefined" || !window.Path2D) return null;
+    if (typeof window === "undefined" || !window.Path2D) {
+      return null;
+    }
 
     const p = new Path2D();
     p.arc(0, 0, dotSize / 2, 0, Math.PI * 2);
@@ -94,7 +98,9 @@ const DotGrid: React.FC<DotGridProps> = ({
   const buildGrid = useCallback(() => {
     const wrap = wrapperRef.current;
     const canvas = canvasRef.current;
-    if (!wrap || !canvas) return;
+    if (!wrap || !canvas) {
+      return;
+    }
 
     const { width, height } = wrap.getBoundingClientRect();
     const dpr = window.devicePixelRatio || 1;
@@ -104,7 +110,9 @@ const DotGrid: React.FC<DotGridProps> = ({
     canvas.style.width = `${width}px`;
     canvas.style.height = `${height}px`;
     const ctx = canvas.getContext("2d");
-    if (ctx) ctx.scale(dpr, dpr);
+    if (ctx) {
+      ctx.scale(dpr, dpr);
+    }
 
     const cols = Math.floor((width + gap) / (dotSize + gap));
     const rows = Math.floor((height + gap) / (dotSize + gap));
@@ -131,16 +139,22 @@ const DotGrid: React.FC<DotGridProps> = ({
   }, [dotSize, gap]);
 
   useEffect(() => {
-    if (!circlePath) return;
+    if (!circlePath) {
+      return;
+    }
 
     let rafId: number;
     const proxSq = proximity * proximity;
 
     const draw = () => {
       const canvas = canvasRef.current;
-      if (!canvas) return;
+      if (!canvas) {
+        return;
+      }
       const ctx = canvas.getContext("2d");
-      if (!ctx) return;
+      if (!ctx) {
+        return;
+      }
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       const { x: px, y: py } = pointerRef.current;
@@ -181,13 +195,18 @@ const DotGrid: React.FC<DotGridProps> = ({
     let ro: ResizeObserver | null = null;
     if ("ResizeObserver" in window) {
       ro = new ResizeObserver(buildGrid);
-      wrapperRef.current && ro.observe(wrapperRef.current);
+      if (wrapperRef.current) {
+        ro.observe(wrapperRef.current);
+      }
     } else {
       (window as Window).addEventListener("resize", buildGrid);
     }
     return () => {
-      if (ro) ro.disconnect();
-      else window.removeEventListener("resize", buildGrid);
+      if (ro) {
+        ro.disconnect();
+      } else {
+        window.removeEventListener("resize", buildGrid);
+      }
     };
   }, [buildGrid]);
 

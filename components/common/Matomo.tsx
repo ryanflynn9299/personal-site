@@ -126,8 +126,12 @@ export function trackMatomoEvent(
 ) {
   if (typeof window !== "undefined" && (window as any)._paq) {
     const params: any[] = ["trackEvent", category, action];
-    if (name) params.push(name);
-    if (value !== undefined) params.push(value);
+    if (name) {
+      params.push(name);
+    }
+    if (value !== undefined) {
+      params.push(value);
+    }
     (window as any)._paq.push(params);
   }
 }

@@ -41,7 +41,7 @@ export function SolarSystemView({ quotes }: SolarSystemViewProps) {
 
   // Update orbital positions
   useEffect(() => {
-    if (isZoomed) return; // Pause when zoomed
+    if (isZoomed) {return;} // Pause when zoomed
 
     const animate = () => {
       // Update entity orbits
@@ -62,7 +62,7 @@ export function SolarSystemView({ quotes }: SolarSystemViewProps) {
 
   // Handle entity click - Zoom & Dock
   const handleEntityClick = (entity: Entity) => {
-    if (!containerRef.current) return;
+    if (!containerRef.current) {return;}
 
     const rect = containerRef.current.getBoundingClientRect();
     const centerX = rect.width / 2;
@@ -271,7 +271,7 @@ export function SolarSystemView({ quotes }: SolarSystemViewProps) {
           </div>
         )}
         {entities.map((entity) => {
-          if (hoveredEntityId !== entity.id) return null;
+          if (hoveredEntityId !== entity.id) {return null;}
           const position = getEntityPosition(entity, containerRef);
           const auDistance = (entity.orbitRadius / 15).toFixed(1);
 
@@ -315,12 +315,12 @@ export function SolarSystemView({ quotes }: SolarSystemViewProps) {
       {/* All Category 2 tooltips in same stacking context, below Category 1 tooltips */}
       <div className="absolute inset-0 pointer-events-none z-[90]">
         {comets.map((comet) => {
-          if (hoveredCometId !== comet.id) return null;
+          if (hoveredCometId !== comet.id) {return null;}
 
           // Don't show tooltip if no quote (production) or show "No quotes available" in dev
           if (!comet.quote) {
             // In dev mode, show "No quotes available", in prod show nothing
-            if (process.env.NODE_ENV !== "development") return null;
+            if (process.env.NODE_ENV !== "development") {return null;}
 
             return (
               <div

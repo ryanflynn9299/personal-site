@@ -31,8 +31,8 @@ export function buildEntities(quotes: Quote[]): {
 
   // Redistribute some quotes to the Sun (take up to 3 quotes, prioritizing high priority)
   const sortedQuotes = [...quotes].sort((a, b) => {
-    if (a.priority === "high" && b.priority !== "high") return -1;
-    if (a.priority !== "high" && b.priority === "high") return 1;
+    if (a.priority === "high" && b.priority !== "high") {return -1;}
+    if (a.priority !== "high" && b.priority === "high") {return 1;}
     return 0;
   });
 
@@ -46,7 +46,7 @@ export function buildEntities(quotes: Quote[]): {
 
   // Process remaining quotes for regular entities
   quotes.forEach((quote, idx) => {
-    if (sunQuoteIndices.has(idx)) return; // Skip quotes assigned to Sun
+    if (sunQuoteIndices.has(idx)) {return;} // Skip quotes assigned to Sun
 
     if (quote.tags && quote.tags.length > 0) {
       quote.tags.forEach((tag) => {

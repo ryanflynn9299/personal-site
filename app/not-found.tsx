@@ -18,11 +18,11 @@ export default function NotFound() {
           404
         </h1>
         <p className="mt-4 font-heading text-2xl font-semibold text-slate-50 md:text-3xl">
-          Oops! You're lost in space.
+          Oops! You&apos;re lost in space.
         </p>
         <p className="mt-2 max-w-md text-slate-300">
-          The page you're looking for might have been moved, deleted, or maybe
-          it never existed in this galaxy.
+          The page you&apos;re looking for might have been moved, deleted, or
+          maybe it never existed in this galaxy.
         </p>
         <div className="mt-8 flex flex-col gap-4 sm:flex-row">
           <Button asChild size="lg">

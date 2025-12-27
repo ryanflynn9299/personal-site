@@ -76,7 +76,9 @@ const Folder: React.FC<FolderProps> = ({
     e: React.MouseEvent<HTMLDivElement, MouseEvent>,
     index: number
   ) => {
-    if (!open) return;
+    if (!open) {
+      return;
+    }
     const rect = e.currentTarget.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
     const centerY = rect.top + rect.height / 2;
@@ -111,9 +113,15 @@ const Folder: React.FC<FolderProps> = ({
   const scaleStyle = { transform: `scale(${size})` };
 
   const getOpenTransform = (index: number) => {
-    if (index === 0) return "translate(-120%, -70%) rotate(-15deg)";
-    if (index === 1) return "translate(10%, -70%) rotate(15deg)";
-    if (index === 2) return "translate(-50%, -100%) rotate(5deg)";
+    if (index === 0) {
+      return "translate(-120%, -70%) rotate(-15deg)";
+    }
+    if (index === 1) {
+      return "translate(10%, -70%) rotate(15deg)";
+    }
+    if (index === 2) {
+      return "translate(-50%, -100%) rotate(5deg)";
+    }
     return "";
   };
 
@@ -139,15 +147,20 @@ const Folder: React.FC<FolderProps> = ({
           ></span>
           {papers.map((item, i) => {
             // Skip rendering if item is null
-            if (item === null) return null;
+            if (item === null) {
+              return null;
+            }
 
             let sizeClasses = "";
-            if (i === 0)
+            if (i === 0) {
               sizeClasses = open ? "w-[70%] h-[80%]" : "w-[70%] h-[80%]";
-            if (i === 1)
+            }
+            if (i === 1) {
               sizeClasses = open ? "w-[80%] h-[80%]" : "w-[80%] h-[70%]";
-            if (i === 2)
+            }
+            if (i === 2) {
               sizeClasses = open ? "w-[90%] h-[80%]" : "w-[90%] h-[60%]";
+            }
 
             const transformStyle = open
               ? `${getOpenTransform(i)} translate(${paperOffsets[i].x}px, ${paperOffsets[i].y}px)`

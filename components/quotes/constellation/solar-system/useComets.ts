@@ -149,12 +149,12 @@ export function useComets(
         : (() => {
             // Weighted distribution for asteroids based on ASTEROID_SIZE_WEIGHTS
             const sizeRandom = Math.random();
-            if (sizeRandom < ASTEROID_SIZE_WEIGHTS.medium) return "medium";
+            if (sizeRandom < ASTEROID_SIZE_WEIGHTS.medium) {return "medium";}
             if (
               sizeRandom <
               ASTEROID_SIZE_WEIGHTS.medium + ASTEROID_SIZE_WEIGHTS.small
             )
-              return "small";
+              {return "small";}
             return "large";
           })();
 
@@ -175,7 +175,7 @@ export function useComets(
 
   // Generate comets periodically
   useEffect(() => {
-    if (isZoomed) return;
+    if (isZoomed) {return;}
 
     // Generate initial comets
     const initialComets: Comet[] = [];
@@ -188,7 +188,7 @@ export function useComets(
     // Generate new comets periodically
     const cometInterval = setInterval(() => {
       const rect = containerRef.current?.getBoundingClientRect();
-      if (!rect) return;
+      if (!rect) {return;}
 
       // Remove comets that are off-screen
       cometsRef.current = cometsRef.current.filter((comet) => {
@@ -217,7 +217,7 @@ export function useComets(
   // Register comet trigger callback
   useEffect(() => {
     const triggerComet = () => {
-      if (isZoomed) return;
+      if (isZoomed) {return;}
       const newComet = generateComet();
       cometsRef.current.push(newComet);
       updateCometsFromRef();
@@ -229,7 +229,7 @@ export function useComets(
 
   // Animation loop for comet movement
   useEffect(() => {
-    if (isZoomed) return;
+    if (isZoomed) {return;}
 
     const animate = () => {
       // Update comet positions

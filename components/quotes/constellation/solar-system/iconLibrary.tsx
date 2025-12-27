@@ -202,7 +202,7 @@ export function getIconsFromLibraries(
 export function getIconByName(name: string): IconEntry | undefined {
   for (const library of Object.values(ICON_LIBRARIES)) {
     const icon = library.find((i) => i.name === name);
-    if (icon) return icon;
+    if (icon) {return icon;}
   }
   return undefined;
 }

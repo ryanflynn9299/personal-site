@@ -9,7 +9,10 @@ interface TesseractViewProps {
   quotes: Quote[];
 }
 
+ 
 import { quotes } from "@/constants/theme";
+
+ 
 
 // Color palette for categories
 const CATEGORY_COLORS = quotes.entities;
@@ -100,7 +103,7 @@ export function TesseractView({ quotes }: TesseractViewProps) {
   // Handle tesseract rotation change (from drag/click)
   const handleRotationChange = useCallback(
     (newRotation: [number, number, number]) => {
-      if (isRotatingRef.current) return;
+      if (isRotatingRef.current) {return;}
 
       setRotation(newRotation);
 
@@ -132,7 +135,7 @@ export function TesseractView({ quotes }: TesseractViewProps) {
   // Handle scroll - update rotation and active category
   useEffect(() => {
     const handleScroll = () => {
-      if (isScrollingRef.current || !feedRef.current) return;
+      if (isScrollingRef.current || !feedRef.current) {return;}
 
       const scrollTop = feedRef.current.scrollTop;
 
@@ -170,7 +173,7 @@ export function TesseractView({ quotes }: TesseractViewProps) {
   // Set tesseract size based on viewport (1/3 to 1/2 of smaller dimension)
   useEffect(() => {
     const updateTesseractSize = () => {
-      if (!tesseractRef.current) return;
+      if (!tesseractRef.current) {return;}
 
       const smallerDimension = Math.min(window.innerHeight, window.innerWidth);
       const size = smallerDimension * 0.42; // 42% of smaller dimension (between 1/3 and 1/2)

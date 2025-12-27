@@ -55,7 +55,9 @@ const POSITION_OFFSET_RANGE = 15; // Random offset range for star positions
 function useIsMobile(): boolean {
   return useSyncExternalStore(
     (subscribe) => {
-      if (typeof window === "undefined") return () => {};
+      if (typeof window === "undefined") {
+        return () => {};
+      }
       window.addEventListener("resize", subscribe);
       return () => window.removeEventListener("resize", subscribe);
     },
@@ -156,7 +158,9 @@ function buildConstellations(
     const patterns = CONSTELLATION_PATTERNS[size];
     const connectionPatterns = CONNECTION_PATTERNS[size];
 
-    if (!patterns || !connectionPatterns || patterns.length === 0) return;
+    if (!patterns || !connectionPatterns || patterns.length === 0) {
+      return;
+    }
 
     // Get metadata for this constellation (fallback to first if not enough metadata)
     const metadata: ConstellationMetadata =
@@ -248,7 +252,9 @@ export function ConstellationView({ quotes }: ConstellationViewProps) {
 
       for (const constellation of constellations) {
         const starIndex = constellation.stars.findIndex((s) => s.id === starId);
-        if (starIndex === -1) continue;
+        if (starIndex === -1) {
+          continue;
+        }
 
         // Add all stars in this constellation
         constellation.stars.forEach((star) => {
@@ -276,27 +282,37 @@ export function ConstellationView({ quotes }: ConstellationViewProps) {
   );
 
   const constellationStarIds = useMemo(() => {
-    if (!hoveredStarId) return new Set<string>();
+    if (!hoveredStarId) {
+      return new Set<string>();
+    }
     return getConstellationStarIds(hoveredStarId);
   }, [hoveredStarId, getConstellationStarIds]);
 
   const hoveredConstellation = useMemo(() => {
-    if (!hoveredStarId) return null;
+    if (!hoveredStarId) {
+      return null;
+    }
     return getHoveredConstellation(hoveredStarId);
   }, [hoveredStarId, getHoveredConstellation]);
 
   const selectedQuote = useMemo(() => {
-    if (!selectedStarId) return null;
+    if (!selectedStarId) {
+      return null;
+    }
     for (const constellation of constellations) {
       const star = constellation.stars.find((s) => s.id === selectedStarId);
-      if (star) return star.quote;
+      if (star) {
+        return star.quote;
+      }
     }
     return null;
   }, [selectedStarId, constellations]);
 
   // Calculate viewBox based on layout type
   const viewBox = useMemo(() => {
-    if (constellations.length === 0) return "0 0 1000 1000";
+    if (constellations.length === 0) {
+      return "0 0 1000 1000";
+    }
 
     if (isMobile) {
       // Mobile: Calculate bounds for vertical stack layout

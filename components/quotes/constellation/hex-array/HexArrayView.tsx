@@ -94,9 +94,9 @@ function getQuadrant(
   const isTop = row < midRow;
   const isLeft = col < midCol;
 
-  if (isTop && isLeft) return 0; // Top-left
-  if (isTop && !isLeft) return 1; // Top-right
-  if (!isTop && isLeft) return 2; // Bottom-left
+  if (isTop && isLeft) {return 0;} // Top-left
+  if (isTop && !isLeft) {return 1;} // Top-right
+  if (!isTop && isLeft) {return 2;} // Bottom-left
   return 3; // Bottom-right
 }
 
@@ -190,7 +190,7 @@ function selectActiveTiles(
   const activeIndices = new Set<number>();
   const numActive = Math.min(numQuotes, totalTiles);
 
-  if (numActive === 0) return activeIndices;
+  if (numActive === 0) {return activeIndices;}
 
   // Larger edge buffer to avoid partial tiles and edge proximity
   const edgeRows = 4;
@@ -386,7 +386,7 @@ function selectActiveTiles(
       }
 
       for (const candidate of allRemaining) {
-        if (selected.includes(candidate)) continue;
+        if (selected.includes(candidate)) {continue;}
 
         let isValid = true;
         for (const selectedTile of selected) {
@@ -583,7 +583,7 @@ export function HexArrayView({ quotes }: HexArrayViewProps) {
 
   // Generate hex grid
   const hexGrid = useMemo(() => {
-    if (dimensions.width === 0 || dimensions.height === 0) return [];
+    if (dimensions.width === 0 || dimensions.height === 0) {return [];}
     return generateHexGrid(
       dimensions.width,
       dimensions.height,
@@ -602,7 +602,7 @@ export function HexArrayView({ quotes }: HexArrayViewProps) {
 
   // Build vertex graph for Data Surge animations
   const vertexGraph = useMemo(() => {
-    if (hexGrid.length === 0) return null;
+    if (hexGrid.length === 0) {return null;}
     return buildVertexGraph(hexGrid);
   }, [hexGrid]);
 
@@ -625,10 +625,10 @@ export function HexArrayView({ quotes }: HexArrayViewProps) {
 
   // Handle tile click - Holo-Projection
   const handleTileClick = (tile: HexTile, _event: React.MouseEvent) => {
-    if (!tile.isActive || !tile.quote) return;
+    if (!tile.isActive || !tile.quote) {return;}
 
     const rect = containerRef.current?.getBoundingClientRect();
-    if (!rect) return;
+    if (!rect) {return;}
 
     // Calculate tile center position relative to viewport
     const tileCenterX = rect.left + tile.x;

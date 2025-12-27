@@ -88,11 +88,15 @@ export function ContactPageClient({
       const messageTextarea =
         formRef.current.querySelector<HTMLTextAreaElement>("#message");
 
-      if (nameInput && savedFormData.name) nameInput.value = savedFormData.name;
-      if (emailInput && savedFormData.email)
+      if (nameInput && savedFormData.name) {
+        nameInput.value = savedFormData.name;
+      }
+      if (emailInput && savedFormData.email) {
         emailInput.value = savedFormData.email;
-      if (messageTextarea && savedFormData.message)
+      }
+      if (messageTextarea && savedFormData.message) {
         messageTextarea.value = savedFormData.message;
+      }
     }
   }, [showForm, formKey, savedFormData]);
 

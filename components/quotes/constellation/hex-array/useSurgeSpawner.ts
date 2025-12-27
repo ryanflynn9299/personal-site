@@ -61,7 +61,7 @@ export function useSurgeSpawner(
 
   // Helper to schedule next spawn with proper cleanup
   const scheduleNextSpawn = (callback: () => void, delay: number) => {
-    if (!isMountedRef.current) return;
+    if (!isMountedRef.current) {return;}
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }
@@ -130,7 +130,7 @@ export function useSurgeSpawner(
   // Clean up completed surges periodically
   useEffect(() => {
     cleanupIntervalRef.current = setInterval(() => {
-      if (!isMountedRef.current) return;
+      if (!isMountedRef.current) {return;}
 
       setSurges((currentSurges) => {
         const now = Date.now();
@@ -288,7 +288,7 @@ export function useSurgeSpawner(
     }
 
     const scheduleNext = () => {
-      if (!isMountedRef.current || !enabled) return;
+      if (!isMountedRef.current || !enabled) {return;}
       spawnSurge();
       scheduleNextSpawn(scheduleNext, SURGE_SPAWN_INTERVAL);
     };

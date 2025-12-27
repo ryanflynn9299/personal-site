@@ -360,6 +360,6 @@ export function hexToRgb(
  */
 export function hexToRgba(hex: string, opacity: number): string {
   const rgb = hexToRgb(hex);
-  if (!rgb) return hex;
+  if (!rgb) {return hex;}
   return `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${opacity})`;
 }

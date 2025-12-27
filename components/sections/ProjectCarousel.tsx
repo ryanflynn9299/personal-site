@@ -36,14 +36,14 @@ export function ProjectCarousel() {
   );
 
   const onSelect = useCallback(() => {
-    if (!emblaApi) return;
+    if (!emblaApi) {return;}
     setSelectedIndex(emblaApi.selectedScrollSnap());
     setPrevBtnDisabled(!emblaApi.canScrollPrev());
     setNextBtnDisabled(!emblaApi.canScrollNext());
   }, [emblaApi]);
 
   useEffect(() => {
-    if (!emblaApi) return;
+    if (!emblaApi) {return;}
     onSelect();
     emblaApi.on("select", onSelect);
     emblaApi.on("reInit", onSelect);

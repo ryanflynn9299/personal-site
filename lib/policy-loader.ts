@@ -28,7 +28,7 @@ function parseFrontmatter(content: string): {
 
   for (const line of lines) {
     const colonIndex = line.indexOf(":");
-    if (colonIndex === -1) continue;
+    if (colonIndex === -1) {continue;}
 
     const key = line.substring(0, colonIndex).trim();
     const value = line

@@ -33,7 +33,9 @@ export function FunCounter() {
   }, []);
 
   const handleClick = async () => {
-    if (hasClicked || isLoading) return;
+    if (hasClicked || isLoading) {
+      return;
+    }
 
     setIsLoading(true);
     setMessage(null);

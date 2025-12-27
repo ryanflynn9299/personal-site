@@ -158,13 +158,58 @@ export function JsonLd({ post }: JsonLdProps) {
     // comment: [], // Array of comment objects if you have them
   };
 
-  // Remove undefined values to keep JSON clean
-  const cleanJsonLd = JSON.parse(JSON.stringify(jsonLd));
+  // Remove undefined values to keep JSON clean using modern structuredClone
+  const cleanJsonLd = removeUndefinedValues(jsonLd);
 
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(cleanJsonLd, null, 2) }}
+      dangerouslySetInnerHTML={{
+        __html: formatJsonLd(cleanJsonLd),
+      }}
     />
   );
+}
+
+/**
+ * Removes undefined values from an object using structuredClone (2025 standard)
+ * This is more performant and type-safe than JSON.parse(JSON.stringify())
+ */
+function removeUndefinedValues<T extends Record<string, unknown>>(obj: T): T {
+  const cloned = structuredClone(obj);
+  return removeUndefinedRecursive(cloned) as T;
+}
+
+/**
+ * Recursively removes undefined values from an object
+ */
+function removeUndefinedRecursive(value: unknown): unknown {
+  if (value === undefined) {
+    return null; // Convert undefined to null for JSON compatibility
+  }
+
+  if (value === null || typeof value !== "object") {
+    return value;
+  }
+
+  if (Array.isArray(value)) {
+    return value.map(removeUndefinedRecursive);
+  }
+
+  const result: Record<string, unknown> = {};
+  for (const [key, val] of Object.entries(value)) {
+    const cleaned = removeUndefinedRecursive(val);
+    if (cleaned !== undefined) {
+      result[key] = cleaned;
+    }
+  }
+  return result;
+}
+
+/**
+ * Formats JSON-LD for HTML output with proper indentation
+ * Uses modern JSON.stringify with proper formatting
+ */
+function formatJsonLd(data: unknown): string {
+  return JSON.stringify(data, null, 2);
 }

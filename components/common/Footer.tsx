@@ -63,10 +63,16 @@ export function Footer() {
                 {footerNav
                   .filter((item: any) => {
                     // Filter by active status
-                    if (!item.is_active) return false;
-                    // Filter by dev-only status
-                    if (item.devOnly && process.env.NODE_ENV !== "development")
+                    if (!item.is_active) {
                       return false;
+                    }
+                    // Filter by dev-only status
+                    if (
+                      item.devOnly &&
+                      process.env.NODE_ENV !== "development"
+                    ) {
+                      return false;
+                    }
                     return true;
                   })
                   .map((item: any) => (
