@@ -1,15 +1,15 @@
 "use server";
 
-import { isEmailServiceConfigured } from "@/lib/email-service";
-import { delay } from "@/lib/delay";
+import {
+  isEmailServiceConfigured,
+  sendEmail,
+  type EmailMessage,
+} from "@/lib/email-service";
 import type { FormState } from "@/types/forms";
 
 export async function submitContactForm(
   formData: FormData
 ): Promise<FormState> {
-  // Simulate processing delay (skipped in test environment)
-  await delay(500);
-
   // Extract form data
   const name = formData.get("name") as string;
   const email = formData.get("email") as string;
@@ -49,15 +49,32 @@ export async function submitContactForm(
     };
   }
 
-  // Email service is available
-  // TODO: Implement actual email sending logic
-  // - Send email via SMTP using nodemailer or similar
-  // - Store submission in database
-  // - Rate limiting
-  // - Spam protection
+  // Email service is available - send the email
+  // The delay is now encapsulated in the sendEmail service
+  // In tests, the email service can be mocked to avoid delays
+  const emailMessage: EmailMessage = {
+    from: process.env.SMTP_FROM || "noreply@example.com",
+    to: process.env.SMTP_TO || "contact@example.com",
+    subject: `Contact Form Submission from ${name}`,
+    text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
+    html: `<p><strong>Name:</strong> ${name}</p><p><strong>Email:</strong> ${email}</p><p><strong>Message:</strong></p><p>${message.replace(/\n/g, "<br>")}</p>`,
+  };
 
-  // For now, simulate successful email sending
-  // In the future, this would actually send the email
+  const emailResult = await sendEmail(emailMessage);
+
+  if (!emailResult.success) {
+    return {
+      success: true,
+      emailSent: false,
+      message:
+        "There was an error sending your message. Please try again later or use the direct email link above.",
+    };
+  }
+
+  // Email sent successfully
+  // TODO: Store submission in database for record-keeping
+  // TODO: Implement rate limiting and spam protection
+
   return {
     success: true,
     emailSent: true,

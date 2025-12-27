@@ -16,14 +16,17 @@ vi.mock("fs", () => ({
 vi.mock("path", async (importOriginal) => {
   const actual = await importOriginal<typeof import("path")>();
   const mockJoin = vi.fn((...args: string[]) => args.join("/"));
-  return {
+  // path module has both default export and named exports
+  const pathModule = {
     ...actual,
-    default: {
-      ...actual.default,
-      join: mockJoin,
-    },
     join: mockJoin,
   };
+  // Add default export for ES module import
+  (pathModule as any).default = {
+    ...actual,
+    join: mockJoin,
+  };
+  return pathModule;
 });
 
 describe("policy-loader", () => {

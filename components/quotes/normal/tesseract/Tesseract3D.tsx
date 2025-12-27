@@ -197,8 +197,8 @@ function PlanetaryNode({
     }
   });
 
-  // Convert hex color to RGB
-  const hexToRgb = (hex: string) => {
+  // Convert hex color to RGB tuple
+  const hexToRgb = (hex: string): [number, number, number] => {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return result
       ? [
@@ -206,7 +206,7 @@ function PlanetaryNode({
           parseInt(result[2], 16) / 255,
           parseInt(result[3], 16) / 255,
         ]
-      : [1, 1, 1];
+      : ([1, 1, 1] as [number, number, number]);
   };
 
   const rgb = hexToRgb(color);

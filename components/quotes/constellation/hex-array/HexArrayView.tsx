@@ -18,7 +18,7 @@ import { useSurgeSpawner } from "./useSurgeSpawner";
 import { SurgePath } from "./SurgePath";
 import { ACTIVE_COLORS } from "./constants";
 import { useQuoteViewStore } from "../../store/useQuoteViewStore";
-import { quotes, core, accents } from "@/constants/theme";
+import { quotes as quoteColors, core, accents } from "@/constants/theme";
 
 interface HexArrayViewProps {
   quotes: Quote[];
@@ -704,17 +704,17 @@ export function HexArrayView({ quotes }: HexArrayViewProps) {
 
   // Styling constants - easy to tweak
   const MODAL_STYLES = {
-    backgroundColor: quotes.modal.background,
+    backgroundColor: quoteColors.modal.background,
     backdropBlur: "12px",
-    borderColor: quotes.modal.border,
+    borderColor: quoteColors.modal.border,
     borderWidth: "1px",
     borderRadius: "12px",
     padding: "28px",
     margin: "24px",
     minWidth: "320px",
     maxWidth: "480px",
-    titleColor: quotes.modal.title,
-    textColor: quotes.modal.text,
+    titleColor: quoteColors.modal.title,
+    textColor: quoteColors.modal.text,
     titleSize: "text-2xl",
     textSize: "text-base",
   } as const;

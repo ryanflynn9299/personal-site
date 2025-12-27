@@ -66,10 +66,9 @@ export function TesseractView({ quotes }: TesseractViewProps) {
   const [rotation, setRotation] = useState<[number, number, number]>([0, 0, 0]);
   const feedRef = useRef<HTMLDivElement>(null);
   const tesseractRef = useRef<HTMLDivElement>(null);
-  const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const sectionRefs = useRef<(HTMLElement | null)[]>([]);
   const isScrollingRef = useRef(false);
   const isRotatingRef = useRef(false);
-
 
   // Calculate rotation from category index
   const getRotationForCategory = useCallback(

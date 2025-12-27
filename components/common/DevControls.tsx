@@ -22,8 +22,13 @@ export function DevControls() {
   const pathname = usePathname();
   const [isCollapsed, setIsCollapsed] = useState(false);
 
-  // Only show in development
-  if (process.env.NODE_ENV !== "development") {
+  // Only show in development (not in test/e2e environments)
+  if (
+    process.env.NODE_ENV !== "development" ||
+    process.env.PLAYWRIGHT_TEST === "true" ||
+    (typeof window !== "undefined" &&
+      (window as any).__PLAYWRIGHT_TEST__ === true)
+  ) {
     return null;
   }
 
@@ -75,6 +80,10 @@ function CollapsibleControls({
       className="fixed bottom-4 right-4 z-50 w-[280px]"
       initial={false}
       layout
+      style={{
+        // When collapsed, don't intercept pointer events except on the button
+        pointerEvents: isCollapsed ? "none" : "auto",
+      }}
     >
       <motion.div
         layout
@@ -111,6 +120,10 @@ function CollapsibleControls({
               onClick={onToggle}
               className="flex w-full items-center justify-between text-slate-300 transition-colors hover:bg-slate-800/50 rounded"
               aria-label="Expand controls"
+              style={{
+                // Re-enable pointer events on the button itself when collapsed
+                pointerEvents: "auto",
+              }}
             >
               <motion.span
                 initial={{ opacity: 0 }}

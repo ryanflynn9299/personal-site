@@ -1,10 +1,25 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, act } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { ContactPageClient } from "@/components/contact/ContactPageClient";
 import * as contactAction from "@/app/actions/contact";
 
-// Mock the server action
+// Mock the email service to avoid delays in tests
+// This ensures sendEmail returns immediately without any delay
+vi.mock("@/lib/email-service", () => ({
+  isEmailServiceConfigured: vi.fn(() => true),
+  sendEmail: vi.fn().mockResolvedValue({
+    success: true,
+    messageId: "test-message-id",
+  }),
+}));
+
+// Also mock the delay function to ensure no delays in tests
+vi.mock("@/lib/delay", () => ({
+  delay: vi.fn().mockResolvedValue(undefined),
+}));
+
+// Mock the server action - must resolve immediately for fast tests
 vi.mock("@/app/actions/contact", () => ({
   submitContactForm: vi.fn(),
 }));
@@ -67,8 +82,9 @@ describe("ContactPageClient", () => {
   });
 
   it("submits form with valid data", async () => {
-    const user = userEvent.setup();
+    const user = userEvent.setup({ delay: null });
     const mockSubmit = vi.mocked(contactAction.submitContactForm);
+    // Resolve immediately - no async delay
     mockSubmit.mockResolvedValue({
       success: true,
       emailSent: true,
@@ -77,22 +93,25 @@ describe("ContactPageClient", () => {
 
     render(<ContactPageClient emailServiceAvailable={true} />);
 
-    await user.type(screen.getByPlaceholderText("Your Name"), "John Doe");
-    await user.type(
-      screen.getByPlaceholderText("Your Email"),
-      "john@example.com"
-    );
-    await user.type(
-      screen.getByPlaceholderText("Your Message"),
-      "Hello, this is a test message"
-    );
+    // Use faster input methods - skipClick is not needed, delay: null is enough
+    const nameInput = screen.getByPlaceholderText("Your Name");
+    const emailInput = screen.getByPlaceholderText("Your Email");
+    const messageInput = screen.getByPlaceholderText("Your Message");
+
+    await user.type(nameInput, "John Doe");
+    await user.type(emailInput, "john@example.com");
+    await user.type(messageInput, "Hello, this is a test message");
 
     const submitButton = screen.getByRole("button", { name: /send message/i });
     await user.click(submitButton);
 
-    await waitFor(() => {
-      expect(mockSubmit).toHaveBeenCalledTimes(1);
-    });
+    // Action should be called immediately
+    await waitFor(
+      () => {
+        expect(mockSubmit).toHaveBeenCalledTimes(1);
+      },
+      { timeout: 100 }
+    );
 
     // Check that FormData was passed correctly
     const callArgs = mockSubmit.mock.calls[0][0];
@@ -100,7 +119,7 @@ describe("ContactPageClient", () => {
   });
 
   it("displays error message when form submission fails", async () => {
-    const user = userEvent.setup();
+    const user = userEvent.setup({ delay: null });
     const mockSubmit = vi.mocked(contactAction.submitContactForm);
 
     render(<ContactPageClient emailServiceAvailable={true} />);
@@ -110,21 +129,21 @@ describe("ContactPageClient", () => {
     const submitButton = screen.getByRole("button", { name: /send message/i });
     await user.click(submitButton);
 
-    // HTML5 validation should prevent submission, so action should NOT be called
-    await waitFor(
-      () => {
-        expect(mockSubmit).not.toHaveBeenCalled();
-      },
-      { timeout: 1000 }
-    );
+    // HTML5 validation should prevent submission immediately, so action should NOT be called
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 10));
+    });
+
+    expect(mockSubmit).not.toHaveBeenCalled();
 
     // Form should still be visible (HTML5 validation shows browser tooltip, not our error)
     expect(screen.getByPlaceholderText("Your Name")).toBeInTheDocument();
   });
 
   it("displays server-side error message when validation fails", async () => {
-    const user = userEvent.setup();
+    const user = userEvent.setup({ delay: null });
     const mockSubmit = vi.mocked(contactAction.submitContactForm);
+    // Resolve immediately - no async delay
     mockSubmit.mockResolvedValue({
       success: false,
       error: "All fields are required",
@@ -134,15 +153,13 @@ describe("ContactPageClient", () => {
 
     // Fill form with valid data that will pass HTML5 validation
     // but server will return an error (simulating server-side validation failure)
-    await user.type(screen.getByPlaceholderText("Your Name"), "John Doe");
-    await user.type(
-      screen.getByPlaceholderText("Your Email"),
-      "john@example.com"
-    );
-    await user.type(
-      screen.getByPlaceholderText("Your Message"),
-      "Test message"
-    );
+    const nameInput = screen.getByPlaceholderText("Your Name");
+    const emailInput = screen.getByPlaceholderText("Your Email");
+    const messageInput = screen.getByPlaceholderText("Your Message");
+
+    await user.type(nameInput, "John Doe");
+    await user.type(emailInput, "john@example.com");
+    await user.type(messageInput, "Test message");
 
     const submitButton = screen.getByRole("button", { name: /send message/i });
     await user.click(submitButton);
@@ -153,7 +170,7 @@ describe("ContactPageClient", () => {
         expect(mockSubmit).toHaveBeenCalledTimes(1);
         expect(screen.getByText("All fields are required")).toBeInTheDocument();
       },
-      { timeout: 3000 }
+      { timeout: 100 }
     );
 
     // Verify form is still visible (not hidden) when there's an error
@@ -161,8 +178,9 @@ describe("ContactPageClient", () => {
   });
 
   it("displays success message when email is sent", async () => {
-    const user = userEvent.setup();
+    const user = userEvent.setup({ delay: null });
     const mockSubmit = vi.mocked(contactAction.submitContactForm);
+    // Resolve immediately - no async delay
     mockSubmit.mockResolvedValue({
       success: true,
       emailSent: true,
@@ -171,32 +189,34 @@ describe("ContactPageClient", () => {
 
     render(<ContactPageClient emailServiceAvailable={true} />);
 
-    await user.type(screen.getByPlaceholderText("Your Name"), "John Doe");
-    await user.type(
-      screen.getByPlaceholderText("Your Email"),
-      "john@example.com"
-    );
-    await user.type(
-      screen.getByPlaceholderText("Your Message"),
-      "Test message"
-    );
+    const nameInput = screen.getByPlaceholderText("Your Name");
+    const emailInput = screen.getByPlaceholderText("Your Email");
+    const messageInput = screen.getByPlaceholderText("Your Message");
+
+    await user.type(nameInput, "John Doe");
+    await user.type(emailInput, "john@example.com");
+    await user.type(messageInput, "Test message");
 
     const submitButton = screen.getByRole("button", { name: /send message/i });
     await user.click(submitButton);
 
-    await waitFor(() => {
-      expect(
-        screen.getByText("Message Sent Successfully!")
-      ).toBeInTheDocument();
-      expect(
-        screen.getByText("Thank you for your message!")
-      ).toBeInTheDocument();
-    });
+    await waitFor(
+      () => {
+        expect(
+          screen.getByText("Message Sent Successfully!")
+        ).toBeInTheDocument();
+        expect(
+          screen.getByText("Thank you for your message!")
+        ).toBeInTheDocument();
+      },
+      { timeout: 100 }
+    );
   });
 
   it("displays warning when email service is unavailable", async () => {
-    const user = userEvent.setup();
+    const user = userEvent.setup({ delay: null });
     const mockSubmit = vi.mocked(contactAction.submitContactForm);
+    // Resolve immediately - no async delay
     mockSubmit.mockResolvedValue({
       success: true,
       emailSent: false,
@@ -205,30 +225,32 @@ describe("ContactPageClient", () => {
 
     render(<ContactPageClient emailServiceAvailable={false} />);
 
-    await user.type(screen.getByPlaceholderText("Your Name"), "John Doe");
-    await user.type(
-      screen.getByPlaceholderText("Your Email"),
-      "john@example.com"
-    );
-    await user.type(
-      screen.getByPlaceholderText("Your Message"),
-      "Test message"
-    );
+    const nameInput = screen.getByPlaceholderText("Your Name");
+    const emailInput = screen.getByPlaceholderText("Your Email");
+    const messageInput = screen.getByPlaceholderText("Your Message");
+
+    await user.type(nameInput, "John Doe");
+    await user.type(emailInput, "john@example.com");
+    await user.type(messageInput, "Test message");
 
     const submitButton = screen.getByRole("button", { name: /send message/i });
     await user.click(submitButton);
 
-    await waitFor(() => {
-      expect(screen.getByText("Message Cannot Be Sent")).toBeInTheDocument();
-      expect(
-        screen.getByText(/Email service is currently unavailable/)
-      ).toBeInTheDocument();
-    });
+    await waitFor(
+      () => {
+        expect(screen.getByText("Message Cannot Be Sent")).toBeInTheDocument();
+        expect(
+          screen.getByText(/Email service is currently unavailable/)
+        ).toBeInTheDocument();
+      },
+      { timeout: 100 }
+    );
   });
 
   it("allows going back to form after submission", async () => {
-    const user = userEvent.setup();
+    const user = userEvent.setup({ delay: null });
     const mockSubmit = vi.mocked(contactAction.submitContactForm);
+    // Resolve immediately - no async delay
     mockSubmit.mockResolvedValue({
       success: true,
       emailSent: false,
@@ -238,22 +260,23 @@ describe("ContactPageClient", () => {
     render(<ContactPageClient emailServiceAvailable={false} />);
 
     // Fill and submit form
-    await user.type(screen.getByPlaceholderText("Your Name"), "John Doe");
-    await user.type(
-      screen.getByPlaceholderText("Your Email"),
-      "john@example.com"
-    );
-    await user.type(
-      screen.getByPlaceholderText("Your Message"),
-      "Test message"
-    );
+    const nameInput = screen.getByPlaceholderText("Your Name");
+    const emailInput = screen.getByPlaceholderText("Your Email");
+    const messageInput = screen.getByPlaceholderText("Your Message");
+
+    await user.type(nameInput, "John Doe");
+    await user.type(emailInput, "john@example.com");
+    await user.type(messageInput, "Test message");
 
     const submitButton = screen.getByRole("button", { name: /send message/i });
     await user.click(submitButton);
 
-    await waitFor(() => {
-      expect(screen.getByText("Message Cannot Be Sent")).toBeInTheDocument();
-    });
+    await waitFor(
+      () => {
+        expect(screen.getByText("Message Cannot Be Sent")).toBeInTheDocument();
+      },
+      { timeout: 100 }
+    );
 
     // Click go back button
     const goBackButton = screen.getByRole("button", {
@@ -261,9 +284,7 @@ describe("ContactPageClient", () => {
     });
     await user.click(goBackButton);
 
-    // Form should be visible again
-    await waitFor(() => {
-      expect(screen.getByPlaceholderText("Your Name")).toBeInTheDocument();
-    });
+    // Form should be visible again immediately
+    expect(screen.getByPlaceholderText("Your Name")).toBeInTheDocument();
   });
 });

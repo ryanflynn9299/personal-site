@@ -47,21 +47,8 @@ export const defaultMetadata = {
   creator: SITE_AUTHOR,
   publisher: SITE_AUTHOR,
   applicationName: SITE_NAME, // App name for PWA and mobile
-  // Viewport is automatically handled by Next.js, but we can customize if needed
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 5,
-    userScalable: true,
-    // themeColor is set separately below
-  },
-  // Theme color for mobile browsers (matches your dark theme)
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: utils.seo.light },
-    { media: "(prefers-color-scheme: dark)", color: utils.seo.dark }, // slate-900
-  ],
-  // Color scheme for the site
-  colorScheme: "dark light", // Supports both dark and light modes
+  // Note: viewport, themeColor, and colorScheme are now exported separately
+  // via the viewport export in app/layout.tsx
   // Format detection - disable automatic detection of phone numbers, addresses, etc.
   formatDetection: {
     telephone: false,
@@ -114,7 +101,7 @@ export const defaultMetadata = {
       index: true,
       follow: true,
       "max-video-preview": -1,
-      "max-image-preview": "large",
+      "max-image-preview": "large" as const,
       "max-snippet": -1,
     },
   },
@@ -122,7 +109,7 @@ export const defaultMetadata = {
     canonical: SITE_URL,
   },
   // Referrer policy for privacy
-  referrer: "origin-when-cross-origin",
+  referrer: "origin-when-cross-origin" as const,
   // Category for content classification
   category: "portfolio",
 };

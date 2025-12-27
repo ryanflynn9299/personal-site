@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { delay } from "@/lib/delay";
 
 describe("delay", () => {
@@ -32,8 +32,11 @@ describe("delay", () => {
     const originalVitest = process.env.VITEST;
 
     // Temporarily set to production to test actual delay
-    process.env.NODE_ENV = "production";
-    delete process.env.VITEST;
+    // Use vi.stubEnv which is the proper way to modify env in tests
+    vi.stubEnv("NODE_ENV", "production");
+    if (originalVitest) {
+      vi.stubEnv("VITEST", undefined);
+    }
 
     const start = Date.now();
     await delay(50); // Short delay for test speed
@@ -44,9 +47,9 @@ describe("delay", () => {
     expect(elapsed).toBeLessThan(200); // Should complete reasonably quickly
 
     // Restore environment
-    process.env.NODE_ENV = originalEnv;
+    vi.stubEnv("NODE_ENV", originalEnv || "test");
     if (originalVitest) {
-      process.env.VITEST = originalVitest;
+      vi.stubEnv("VITEST", originalVitest);
     }
   });
 });

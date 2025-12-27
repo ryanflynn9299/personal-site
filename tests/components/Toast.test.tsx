@@ -13,7 +13,7 @@ vi.mock("framer-motion", () => ({
 
 describe("Toast", () => {
   const defaultProps = {
-    id: "test-toast",
+    id: 1,
     type: "success" as const,
     title: "Test Title",
     onDismiss: vi.fn(),
@@ -67,7 +67,7 @@ describe("Toast", () => {
       vi.advanceTimersByTime(5000);
     });
 
-    expect(defaultProps.onDismiss).toHaveBeenCalledWith("test-toast");
+    expect(defaultProps.onDismiss).toHaveBeenCalledWith(1);
   });
 
   it("calls onDismiss after custom duration", () => {
@@ -81,7 +81,7 @@ describe("Toast", () => {
     act(() => {
       vi.advanceTimersByTime(1);
     });
-    expect(defaultProps.onDismiss).toHaveBeenCalledWith("test-toast");
+    expect(defaultProps.onDismiss).toHaveBeenCalledWith(1);
   });
 
   it("calls onDismiss when close button is clicked", async () => {
@@ -94,7 +94,7 @@ describe("Toast", () => {
     const closeButton = screen.getByRole("button");
     await user.click(closeButton);
 
-    expect(onDismiss).toHaveBeenCalledWith("test-toast");
+    expect(onDismiss).toHaveBeenCalledWith(1);
   });
 
   it("clears timeout on unmount", () => {

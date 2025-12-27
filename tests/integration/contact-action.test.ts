@@ -2,9 +2,21 @@ import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { submitContactForm } from "@/app/actions/contact";
 import * as emailService from "@/lib/email-service";
 
-// Mock the email service module
+// Mock the email service module to avoid delays in tests
 vi.mock("@/lib/email-service", () => ({
   isEmailServiceConfigured: vi.fn(),
+  sendEmail: vi.fn().mockImplementation(async () => {
+    // Return immediately without delay for tests
+    return {
+      success: true,
+      messageId: `test-message-${Date.now()}`,
+    };
+  }),
+}));
+
+// Mock the delay function to ensure no delays in tests
+vi.mock("@/lib/delay", () => ({
+  delay: vi.fn().mockResolvedValue(undefined),
 }));
 
 describe("submitContactForm", () => {

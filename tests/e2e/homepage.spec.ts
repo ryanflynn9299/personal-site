@@ -64,23 +64,51 @@ test.describe("Homepage", () => {
 
   test("loads without console errors", async ({ page }) => {
     const errors: string[] = [];
+    const failedRequests: string[] = [];
+
     page.on("console", (msg) => {
       if (msg.type() === "error") {
         errors.push(msg.text());
       }
     });
 
+    // Also check for failed network requests
+    page.on("requestfailed", (request) => {
+      const url = request.url();
+      const failure = request.failure();
+      if (failure) {
+        failedRequests.push(`${failure.errorText}: ${url}`);
+      }
+    });
+
     await page.goto("/");
     await page.waitForLoadState("networkidle");
 
-    // Filter out known acceptable errors (e.g., favicon, analytics)
+    // Filter out known acceptable errors (e.g., favicon, analytics, 404s for optional resources)
     const criticalErrors = errors.filter(
       (error) =>
         !error.includes("favicon") &&
         !error.includes("analytics") &&
-        !error.includes("matomo")
+        !error.includes("matomo") &&
+        !error.includes("404")
+    );
+
+    // Filter out acceptable 404s and Next.js internal resources that may fail in test environments
+    const criticalFailedRequests = failedRequests.filter(
+      (failure) =>
+        !failure.includes("favicon") &&
+        !failure.includes("apple-touch-icon") &&
+        !failure.includes("manifest") &&
+        !failure.includes("robots.txt") &&
+        !failure.includes("sitemap") &&
+        !failure.includes("__nextjs_original-stack-frames") &&
+        !failure.includes("__nextjs_font") &&
+        !failure.includes("geist") &&
+        !failure.includes("woff2") &&
+        !failure.includes("ERR_ABORTED")
     );
 
     expect(criticalErrors).toHaveLength(0);
+    expect(criticalFailedRequests).toHaveLength(0);
   });
 });

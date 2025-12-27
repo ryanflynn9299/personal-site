@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Montserrat, Open_Sans, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/common/Header";
@@ -8,6 +8,7 @@ import { ToastProvider } from "@/context/ToastContext";
 import { MatomoProvider } from "@/components/common/MatomoProvider";
 import { DevModeIndicator } from "@/components/common/DevModeIndicator";
 import { DevControls } from "@/components/common/DevControls";
+import { utils } from "@/constants/theme";
 
 // Font configuration according to our design document
 const fontHeading = Montserrat({
@@ -39,6 +40,18 @@ import { defaultMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = {
   ...defaultMetadata,
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: utils.seo.light },
+    { media: "(prefers-color-scheme: dark)", color: utils.seo.dark }, // slate-900
+  ],
+  colorScheme: "dark light", // Supports both dark and light modes
 };
 
 export default function RootLayout({

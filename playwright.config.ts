@@ -31,12 +31,18 @@ export default defineConfig({
   ],
 
   webServer: {
-    command: "npm run dev",
+    // Use wrapper script to filter non-critical ECONNRESET errors
+    command: "node scripts/dev-server-e2e.js",
     url: "http://localhost:3000",
     reuseExistingServer: !process.env.CI,
+    timeout: 120 * 1000, // 2 minutes for server to start
+    stdout: "ignore", // Suppress stdout to reduce noise
+    stderr: "pipe", // Keep stderr for actual errors (filtered by wrapper script)
     env: {
       // Suppress noisy warnings during E2E tests
       PLAYWRIGHT_TEST_BASE_URL: "http://localhost:3000",
+      // Hide DevControls in e2e tests
+      PLAYWRIGHT_TEST: "true",
     },
   },
 });
