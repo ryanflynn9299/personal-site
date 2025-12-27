@@ -169,16 +169,23 @@ export function PseudoMarkdownRenderer({
           ),
 
           // Images
-          img: ({ node: _node, ...props }: any) => (
-            <Image
-              src={props.src || ""}
-              alt={props.alt || ""}
-              width={800}
-              height={600}
-              className="rounded-lg my-4 max-w-full h-auto border border-slate-700"
-              unoptimized={props.src?.startsWith("http") || false}
-            />
-          ),
+          img: ({ node: _node, ...props }: any) => {
+            // Type guard: ensure src is a string (not Blob)
+            const imageSrc = typeof props.src === "string" ? props.src : "";
+            if (!imageSrc) {
+              return null;
+            }
+            return (
+              <Image
+                src={imageSrc}
+                alt={props.alt || ""}
+                width={800}
+                height={600}
+                className="rounded-lg my-4 max-w-full h-auto border border-slate-700"
+                unoptimized={imageSrc.startsWith("http")}
+              />
+            );
+          },
 
           // Horizontal rules with constellation line
           hr: ({ node: _node, ..._props }) => (

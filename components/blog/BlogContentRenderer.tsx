@@ -141,16 +141,23 @@ export function BlogContentRenderer({
               <p className="text-slate-300 leading-7 my-4">{children}</p>
             ),
             // Customize image styles
-            img: ({ src, alt }) => (
-              <Image
-                src={src || ""}
-                alt={alt || ""}
-                width={800}
-                height={600}
-                className="rounded-lg my-4 max-w-full h-auto"
-                unoptimized={src?.startsWith("http") || false}
-              />
-            ),
+            img: ({ src, alt }) => {
+              // Type guard: ensure src is a string (not Blob)
+              const imageSrc = typeof src === "string" ? src : "";
+              if (!imageSrc) {
+                return null;
+              }
+              return (
+                <Image
+                  src={imageSrc}
+                  alt={alt || ""}
+                  width={800}
+                  height={600}
+                  className="rounded-lg my-4 max-w-full h-auto"
+                  unoptimized={imageSrc.startsWith("http")}
+                />
+              );
+            },
           }}
         >
           {content}
@@ -230,16 +237,23 @@ export function BlogContentRenderer({
             p: ({ children }) => (
               <p className="text-slate-300 leading-7 my-4">{children}</p>
             ),
-            img: ({ src, alt }) => (
-              <Image
-                src={src || ""}
-                alt={alt || ""}
-                width={800}
-                height={600}
-                className="rounded-lg my-4 max-w-full h-auto"
-                unoptimized={src?.startsWith("http") || false}
-              />
-            ),
+            img: ({ src, alt }) => {
+              // Type guard: ensure src is a string (not Blob)
+              const imageSrc = typeof src === "string" ? src : "";
+              if (!imageSrc) {
+                return null;
+              }
+              return (
+                <Image
+                  src={imageSrc}
+                  alt={alt || ""}
+                  width={800}
+                  height={600}
+                  className="rounded-lg my-4 max-w-full h-auto"
+                  unoptimized={imageSrc.startsWith("http")}
+                />
+              );
+            },
           }}
         >
           {content}
