@@ -8,7 +8,8 @@ import React, {
   useCallback,
 } from "react";
 import { AnimatePresence } from "framer-motion";
-import { Toast, ToastProps } from "@/components/ui/Toast";
+import { Toast } from "@/components/primitives/Toast";
+import type { ToastProps } from "@/types/components";
 
 type ToastOptions = Omit<ToastProps, "id" | "onDismiss">;
 

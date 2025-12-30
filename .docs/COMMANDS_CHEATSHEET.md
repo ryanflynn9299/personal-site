@@ -50,6 +50,19 @@ npm run start
 | `npm run type-check`   | TypeScript type checking                    | Before committing     |
 | `npm run validate`     | Run all checks (type-check + lint + eslint) | Pre-commit validation |
 
+### Testing
+
+| Command                  | Purpose                             | When to Use              |
+| ------------------------ | ----------------------------------- | ------------------------ |
+| `npm run test`           | Run unit tests once                 | Before committing, CI/CD |
+| `npm run test:watch`     | Run unit tests in watch mode        | During development       |
+| `npm run test:ui`        | Run unit tests with interactive UI  | Debugging tests          |
+| `npm run test:coverage`  | Run unit tests with coverage report | Check test coverage      |
+| `npm run test:e2e`       | Run end-to-end tests                | Before deployment, CI/CD |
+| `npm run test:e2e:ui`    | Run E2E tests with interactive UI   | Debugging E2E tests      |
+| `npm run test:e2e:debug` | Run E2E tests in debug mode         | Step-through debugging   |
+| `npm run test:all`       | Run both unit and E2E tests         | Complete test suite      |
+
 ### Maintenance
 
 | Command           | Purpose                                    | When to Use              |
@@ -483,6 +496,24 @@ docker network inspect backend-net
 npm run analyze
 ```
 
+### Code Coverage
+
+```bash
+# Generate coverage report
+npm run test:coverage
+
+# View coverage report (HTML)
+open output/coverage/index.html
+# or
+npx serve output/coverage
+```
+
+**Coverage Reports Location**: `output/coverage/`
+
+- **Text**: Terminal output (summary)
+- **JSON**: `output/coverage/coverage-summary.json`
+- **HTML**: `output/coverage/index.html` (interactive)
+
 ### Log Analysis
 
 ```bash
@@ -759,6 +790,16 @@ npm run format                 # Format code (same as lint:fix)
 npm run format:check           # Check formatting (same as lint)
 npm run type-check             # Check TypeScript
 npm run validate               # Run all checks
+
+# Testing
+npm run test                   # Run unit tests
+npm run test:watch             # Run tests in watch mode
+npm run test:ui                # Run tests with UI
+npm run test:coverage          # Run tests with coverage
+npm run test:e2e               # Run E2E tests
+npm run test:e2e:ui            # Run E2E tests with UI
+npm run test:e2e:debug         # Run E2E tests in debug mode
+npm run test:all               # Run all tests
 
 # Docker
 docker compose up -d           # Start all services

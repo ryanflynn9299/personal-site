@@ -1,35 +1,18 @@
-/* These are the essential Tailwind directives. They instruct the Tailwind
-  engine to inject its base styles, component classes, and utility classes.
-  They MUST be at the top of the file.
-*/
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/*
-  This is the correct way to apply base layer styles and define global
-  CSS variables in a Tailwind project.
-*/
 @layer base {
   :root {
-    /* Define CSS variables for our color palette from the design document. */
-    --color-background: 239 68% 68%; /* hsl(203 89% 53%) - A [slug], we will use classes */
-    --color-foreground: 222 47% 11%; /* hsl(215 28% 17%) - A [slug], we will use classes */
+    --color-background: 239 68% 68%;
+    --color-foreground: 222 47% 11%;
   }
 
-  /* The body tag is the best place to set default text color and background color.
-    However, the idiomatic Next.js + Tailwind approach is to do this via classes
-    on the <html> or <body> tag in layout.tsx.
-    
-    We can set the default font-family here using the CSS variables that
-    will be provided by the `next/font` instances in the layout file.
-  */
   body {
     font-family: var(--font-sans), sans-serif;
-
-    /* Create a background vignette effect, undo by removing these two lines and replace bg-slate-900
-      in { layout.tsx -> <body /> }*/
-    background-color: #0f172a; /* Fallback color */
+    /* Theme colors: core.background.primary (#0f172a) and core.background.secondary (#1e293b) */
+    /* See: constants/theme.ts */
+    background-color: #0f172a;
     background-image: radial-gradient(ellipse at top, #1e293b, #0f172a);
   }
 
@@ -41,13 +24,20 @@
   h6 {
     font-family: var(--font-heading), sans-serif;
   }
+
+  .font-inter {
+    font-family: var(--font-inter), sans-serif;
+  }
+
+  .font-mono {
+    font-family: var(--font-mono), monospace;
+  }
 }
 
 .timeline-item:last-child .timeline-line {
   display: none;
 }
 
-/* === Starfield Background Animation for 404 Page === */
 @keyframes move-stars {
   from {
     background-position: 0 0;
@@ -69,6 +59,8 @@
   background: transparent;
 }
 
+/* Star colors: stars.medium (#e2e8f0), stars.bright (#f8fafc), stars.dim (#94a3b8) */
+/* See: constants/theme.ts */
 .stars-1 {
   background-image:
     radial-gradient(1px 1px at 20px 30px, #e2e8f0, rgba(0, 0, 0, 0)),
@@ -105,9 +97,82 @@
   background-size: 400px 400px;
   animation: move-stars 100s linear infinite;
 }
-/* === END Starfield Background Animation for 404 Page === */
 
-/* Custom animations for various effects throughout the site */
+/* Constellation view stars - minimal motion */
+.stars-constellation {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  background: transparent;
+}
+
+.stars-constellation-1 {
+  background-image:
+    radial-gradient(1px 1px at 20px 30px, #e2e8f0, rgba(0, 0, 0, 0)),
+    radial-gradient(1px 1px at 40px 70px, #f8fafc, rgba(0, 0, 0, 0)),
+    radial-gradient(1px 1px at 50px 160px, #e2e8f0, rgba(0, 0, 0, 0)),
+    radial-gradient(1px 1px at 90px 40px, #94a3b8, rgba(0, 0, 0, 0)),
+    radial-gradient(2px 2px at 130px 80px, #f8fafc, rgba(0, 0, 0, 0)),
+    radial-gradient(1px 1px at 160px 120px, #94a3b8, rgba(0, 0, 0, 0));
+  background-repeat: repeat;
+  background-size: 200px 200px;
+  animation: move-stars-constellation 1000s linear infinite;
+}
+
+.stars-constellation-2 {
+  background-image:
+    radial-gradient(1px 1px at 10px 90px, #e2e8f0, rgba(0, 0, 0, 0)),
+    radial-gradient(2px 2px at 30px 110px, #f8fafc, rgba(0, 0, 0, 0)),
+    radial-gradient(2px 2px at 80px 20px, #e2e8f0, rgba(0, 0, 0, 0)),
+    radial-gradient(1px 1px at 120px 140px, #94a3b8, rgba(0, 0, 0, 0)),
+    radial-gradient(1px 1px at 150px 190px, #f8fafc, rgba(0, 0, 0, 0)),
+    radial-gradient(2px 2px at 180px 60px, #94a3b8, rgba(0, 0, 0, 0));
+  background-repeat: repeat;
+  background-size: 300px 300px;
+  animation: move-stars-constellation 1200s linear infinite;
+}
+
+.stars-constellation-3 {
+  background-image:
+    radial-gradient(2px 2px at 50px 50px, #f8fafc, rgba(0, 0, 0, 0)),
+    radial-gradient(3px 3px at 100px 100px, #f8fafc, rgba(0, 0, 0, 0)),
+    radial-gradient(2px 2px at 200px 150px, #e2e8f0, rgba(0, 0, 0, 0)),
+    radial-gradient(1px 1px at 250px 90px, #94a3b8, rgba(0, 0, 0, 0));
+  background-repeat: repeat;
+  background-size: 400px 400px;
+  animation: move-stars-constellation 1500s linear infinite;
+}
+
+@keyframes move-stars-constellation {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: -2000px 1000px;
+  }
+}
+
+@keyframes menuBubbleDeploy {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.menu-bubble-animation {
+  animation: menuBubbleDeploy 0.2s ease-out;
+  transform-origin: top right;
+}
+
 @keyframes slow-spin {
   from {
     transform: rotate(0deg);
@@ -123,10 +188,8 @@
   }
 }
 
-/* === CMDK Command Palette Styling === */
 [cmdk-dialog-overlay] {
   @apply fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-sm;
-  /*@apply fixed inset-0 z-50 bg-black/75 backdrop-blur-lg;*/
 }
 
 [cmdk-dialog] {
@@ -147,7 +210,7 @@
 
 [cmdk-item] {
   @apply flex cursor-pointer select-none items-start rounded-md p-3 transition-colors;
-  content-visibility: auto; /* Performance optimization for long lists */
+  content-visibility: auto;
 }
 
 [cmdk-item][aria-selected="true"] {
@@ -166,4 +229,104 @@
   @apply transition-all duration-300;
   filter: blur(2px) brightness(50%) saturate(80%);
   transform: scale(0.99);
+}
+
+.policies-tab-active {
+  position: relative;
+  --glow-intensity-min: 0.4;
+  --glow-intensity-max: 0.8;
+  --glow-blur-min: 8px;
+  --glow-blur-max: 16px;
+  animation: tab-border-glow 2s ease-in-out infinite;
+}
+
+@keyframes tab-border-glow {
+  0%,
+  100% {
+    box-shadow:
+      0 0 var(--glow-blur-min) currentColor,
+      inset 0 0 var(--glow-blur-min) currentColor;
+  }
+  50% {
+    box-shadow:
+      0 0 var(--glow-blur-max) currentColor,
+      inset 0 0 calc(var(--glow-blur-max) * 0.75) currentColor;
+  }
+}
+
+.pseudo-markdown-editor {
+  transition: all 0.3s ease;
+}
+
+.pseudo-markdown-editor:hover {
+  border-color: rgba(148, 163, 184, 0.4);
+}
+
+.space-icon-header {
+  animation: icon-float 3s ease-in-out infinite;
+}
+
+@keyframes icon-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+}
+
+.space-icon-header svg {
+  filter: drop-shadow(0 0 4px currentColor);
+  animation: icon-pulse 2s ease-in-out infinite;
+}
+
+@keyframes icon-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    filter: drop-shadow(0 0 4px currentColor);
+  }
+  50% {
+    opacity: 0.9;
+    filter: drop-shadow(0 0 8px currentColor);
+  }
+}
+
+.space-bullet-list li {
+  transition: all 0.2s ease;
+}
+
+.space-bullet-list li:hover {
+  transform: translateX(4px);
+}
+
+.space-bullet-list li svg {
+  filter: drop-shadow(0 0 2px currentColor);
+  animation: bullet-twinkle 2s ease-in-out infinite;
+}
+
+@keyframes bullet-twinkle {
+  0%,
+  100% {
+    opacity: 1;
+    filter: drop-shadow(0 0 2px currentColor);
+  }
+  50% {
+    opacity: 0.7;
+    filter: drop-shadow(0 0 4px currentColor);
+  }
+}
+
+.pseudo-markdown-editor a svg {
+  filter: drop-shadow(0 0 2px currentColor);
+  transition: filter 0.2s ease;
+}
+
+.pseudo-markdown-editor a:hover svg {
+  filter: drop-shadow(0 0 6px currentColor);
+}
+
+.document-transition {
+  will-change: opacity, transform;
 }

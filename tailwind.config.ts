@@ -5,6 +5,17 @@ const config: Config = {
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./lib/**/*.{js,ts,jsx,tsx}",
+  ],
+  safelist: [
+    // Ensure purple color classes are generated for policy themes
+    "text-purple-400",
+    "text-purple-300",
+    "bg-purple-600/20",
+    "border-purple-500/50",
+    "shadow-purple-500/20",
+    "border-purple-500/30",
+    "hover:text-purple-300",
   ],
   theme: {
     extend: {

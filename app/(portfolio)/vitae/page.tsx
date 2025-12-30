@@ -1,14 +1,16 @@
 import type { Metadata } from "next";
-import { Download } from "lucide-react";
+import { Download, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { vitaeData } from "@/data/work_experience";
-import { DownloadButton } from "@/components/DownloadButton";
+import { DownloadButton } from "@/components/common/DownloadButton";
+import { generatePageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = generatePageMetadata({
   title: "Vitae",
   description:
-    "A comprehensive Curriculum Vitae for Ryan Flynn, detailing work experience, projects, skills, and education.",
-};
+    "A comprehensive Curriculum Vitae for Ryan Flynn, detailing work experience, projects, skills, and education. Download the PDF resume or explore online.",
+  path: "/vitae",
+});
 
 // Bullet point colors
 const colorPalette = [
@@ -123,9 +125,22 @@ export default function VitaePage() {
 
         {/* Projects Section */}
         <section>
-          <h2 className="border-b border-slate-700 pb-2 font-heading text-2xl font-semibold text-slate-100">
-            Projects
-          </h2>
+          <div className="flex items-end gap-2 border-b border-slate-700 pb-2">
+            <h2 className="font-heading text-2xl font-semibold text-slate-100">
+              Projects
+            </h2>
+            {process.env.NODE_ENV === "development" && (
+              <Link
+                href="/projects-cabinet"
+                className="group flex items-center gap-1 rounded px-2 py-1 text-sm text-sky-300 transition-colors hover:bg-slate-800 hover:text-sky-300"
+                title="View Project File Cabinet (Dev Only)"
+              >
+                {/*<span className="text-xs">File Cabinet</span>*/}
+                <span className="text-xs font-semibold">More Projects</span>
+                <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-1" />
+              </Link>
+            )}
+          </div>
           {/* FIX 2: The mapping logic is now safe. It uses structured data
                       and will render correctly without runtime errors.
                     */}

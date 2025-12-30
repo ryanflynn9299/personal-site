@@ -11,7 +11,9 @@
 !.yarn/versions
 
 # testing
-/coverage
+/output
+/playwright/.cache
+*.spec.ts.snap
 
 # next.js
 /.next/
@@ -37,6 +39,8 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env
+# .env.example is intentionally committed - it contains no secrets
+!.env.example
 
 # vercel
 .vercel
@@ -44,3 +48,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# npm (project uses pnpm)
+package-lock.json

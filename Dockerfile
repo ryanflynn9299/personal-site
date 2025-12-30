@@ -6,8 +6,8 @@
 # -----------------------------------------------------------------------------
 FROM node:20-alpine AS builder
 
-# Install pnpm globally within this build stage
-RUN npm install -g pnpm
+# Enable Corepack to use pnpm (respects packageManager field in package.json)
+RUN corepack enable && corepack prepare pnpm@10.0.0 --activate
 
 # Set the working directory
 WORKDIR /app

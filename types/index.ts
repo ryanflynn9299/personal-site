@@ -1,3 +1,10 @@
+// Re-export all types for convenience
+export * from "./components";
+export * from "./forms";
+export * from "./animations";
+export * from "./policies";
+export * from "./data";
+
 // This is the clean, frontend-facing Post type (already exists)
 export interface Post {
   id: string;
@@ -9,6 +16,11 @@ export interface Post {
   publish_date: string;
   feature_image: { id: number; filename: string } | null; // This will be a full URL
   content: string;
+  /**
+   * Optional content format. If not provided, will be auto-detected.
+   * Can be "markdown", "html", "plaintext", or "auto"
+   */
+  content_format?: "markdown" | "html" | "plaintext" | "auto";
   tags: string[];
 }
 

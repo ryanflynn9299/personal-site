@@ -1,0 +1,325 @@
+name: CI
+
+on:
+  push:
+    # Production branches - always run CI on every push
+    # Development branch - TEMPORARILY enabled for initial testing/timing data
+    # TODO: After gathering timing data (1-2 weeks), remove 'dev-main' from this list
+    #       It will still run on PRs to dev-main (see pull_request below)
+    #       To remove: change to: branches: [main, master]
+    branches: [main, master, dev-main]
+  pull_request:
+    # Run CI on PRs to any of these branches (recommended long-term approach)
+    branches: [main, master, dev-main]
+
+env:
+  # Site URL - Required for Next.js build and SEO
+  NEXT_PUBLIC_SITE_URL: "https://www.ryanflynn.org"
+  
+  # Directus URLs - Empty strings are fine (app gracefully handles missing Directus)
+  # These are set to empty to ensure CI works without a database connection
+  DIRECTUS_URL_SERVER_SIDE: ""
+  NEXT_PUBLIC_DIRECTUS_URL: ""
+
+jobs:
+  # Check commit messages for skip patterns
+  check-commit-message:
+    name: Check Commit Message
+    runs-on: ubuntu-latest
+    outputs:
+      skip-all: ${{ steps.check.outputs.skip-all }}
+      skip-lint: ${{ steps.check.outputs.skip-lint }}
+      skip-tests: ${{ steps.check.outputs.skip-tests }}
+      skip-e2e: ${{ steps.check.outputs.skip-e2e }}
+      skip-build: ${{ steps.check.outputs.skip-build }}
+      is-protected-branch: ${{ steps.check.outputs.is-protected-branch }}
+      is-dev-main: ${{ steps.check.outputs.is-dev-main }}
+      run-e2e: ${{ steps.check.outputs.run-e2e }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch full history to check commit messages
+      
+      - name: Check commit message for skip patterns
+        id: check
+        run: |
+          # Determine the branch name (for push events) or base branch (for PR events)
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            BRANCH="${{ github.base_ref }}"
+            COMMIT_MSG="${{ github.event.pull_request.title }} ${{ github.event.pull_request.body }}"
+          else
+            BRANCH="${{ github.ref_name }}"
+            COMMIT_MSG=$(git log -1 --pretty=%B)
+          fi
+          
+          # Check if this is a protected branch (main or master)
+          if [ "$BRANCH" == "main" ] || [ "$BRANCH" == "master" ]; then
+            echo "is-protected-branch=true" >> $GITHUB_OUTPUT
+            echo "is-dev-main=false" >> $GITHUB_OUTPUT
+            echo "✅ Protected branch detected: $BRANCH - E2E tests will always run"
+          elif [ "$BRANCH" == "dev-main" ]; then
+            echo "is-protected-branch=false" >> $GITHUB_OUTPUT
+            echo "is-dev-main=true" >> $GITHUB_OUTPUT
+            echo "ℹ️ dev-main branch detected - E2E tests are opt-in (use [run e2e] to enable)"
+          else
+            echo "is-protected-branch=false" >> $GITHUB_OUTPUT
+            echo "is-dev-main=false" >> $GITHUB_OUTPUT
+            echo "ℹ️ Non-protected branch: $BRANCH - E2E tests run by default"
+          fi
+          
+          # Convert to uppercase for case-insensitive matching
+          COMMIT_MSG_UPPER=$(echo "$COMMIT_MSG" | tr '[:lower:]' '[:upper:]')
+          
+          # Check for skip patterns
+          if echo "$COMMIT_MSG_UPPER" | grep -qE '\[SKIP CI\]|\[CI SKIP\]'; then
+            echo "skip-all=true" >> $GITHUB_OUTPUT
+            echo "⚠️ Skipping entire CI pipeline due to [skip ci] in commit message"
+          else
+            echo "skip-all=false" >> $GITHUB_OUTPUT
+          fi
+          
+          if echo "$COMMIT_MSG_UPPER" | grep -qE '\[SKIP LINT\]|\[SKIP TYPE-CHECK\]'; then
+            echo "skip-lint=true" >> $GITHUB_OUTPUT
+            echo "⚠️ Skipping lint & type-check job due to [skip lint] in commit message"
+          else
+            echo "skip-lint=false" >> $GITHUB_OUTPUT
+          fi
+          
+          if echo "$COMMIT_MSG_UPPER" | grep -qE '\[SKIP TESTS\]|\[SKIP UNIT-TESTS\]'; then
+            echo "skip-tests=true" >> $GITHUB_OUTPUT
+            echo "⚠️ Skipping unit tests job due to [skip tests] in commit message"
+          else
+            echo "skip-tests=false" >> $GITHUB_OUTPUT
+          fi
+          
+          # Check for opt-in pattern [run e2e] or [e2e]
+          if echo "$COMMIT_MSG_UPPER" | grep -qE '\[RUN E2E\]|\[E2E\]'; then
+            echo "run-e2e=true" >> $GITHUB_OUTPUT
+            echo "✅ Opt-in pattern detected: E2E tests will run"
+          else
+            echo "run-e2e=false" >> $GITHUB_OUTPUT
+          fi
+          
+          # For E2E: Logic depends on branch type
+          # Protected branches (main/master): Always run E2E (ignore all patterns)
+          # dev-main: Only run if opt-in pattern [run e2e] is present
+          # Other branches: Run by default, but can be skipped with [skip e2e]
+          if [ "$BRANCH" == "main" ] || [ "$BRANCH" == "master" ]; then
+            # Protected branch: Always run E2E (ignore all patterns)
+            echo "skip-e2e=false" >> $GITHUB_OUTPUT
+            echo "✅ Protected branch: E2E tests will run regardless of patterns"
+          elif [ "$BRANCH" == "dev-main" ]; then
+            # dev-main: Opt-in only (check for [run e2e] pattern)
+            if echo "$COMMIT_MSG_UPPER" | grep -qE '\[RUN E2E\]|\[E2E\]'; then
+              echo "skip-e2e=false" >> $GITHUB_OUTPUT
+              echo "✅ dev-main: E2E tests will run (opt-in pattern detected)"
+            else
+              echo "skip-e2e=true" >> $GITHUB_OUTPUT
+              echo "ℹ️ dev-main: E2E tests skipped by default (use [run e2e] to enable)"
+            fi
+          elif echo "$COMMIT_MSG_UPPER" | grep -qE '\[SKIP E2E\]|\[SKIP E2E-TESTS\]'; then
+            # Other branches: Can be skipped with [skip e2e]
+            echo "skip-e2e=true" >> $GITHUB_OUTPUT
+            echo "⚠️ Skipping E2E tests job due to [skip e2e] in commit message"
+          else
+            # Other branches: Run by default
+            echo "skip-e2e=false" >> $GITHUB_OUTPUT
+          fi
+          
+          if echo "$COMMIT_MSG_UPPER" | grep -qE '\[SKIP BUILD\]'; then
+            echo "skip-build=true" >> $GITHUB_OUTPUT
+            echo "⚠️ Skipping build job due to [skip build] in commit message"
+          else
+            echo "skip-build=false" >> $GITHUB_OUTPUT
+          fi
+
+  lint-and-typecheck:
+    name: Lint & Type Check
+    runs-on: ubuntu-latest
+    needs: check-commit-message
+    if: needs.check-commit-message.outputs.skip-all != 'true' && needs.check-commit-message.outputs.skip-lint != 'true'
+    env:
+      NODE_ENV: "test"
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run Prettier check
+        run: pnpm run lint
+
+      - name: Run ESLint
+        run: pnpm run eslint
+
+      - name: Run TypeScript type check
+        run: pnpm run type-check
+
+  unit-tests:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    needs: check-commit-message
+    if: needs.check-commit-message.outputs.skip-all != 'true' && needs.check-commit-message.outputs.skip-tests != 'true'
+    env:
+      NODE_ENV: "test"
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run unit tests
+        run: pnpm run test
+
+      # Codecov is optional - only uploads if CODECOV_TOKEN secret is set
+      - name: Upload coverage reports
+        uses: codecov/codecov-action@v4
+        if: always()
+        with:
+          files: ./coverage/coverage-final.json
+          fail_ci_if_error: false
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+  e2e-tests:
+    name: E2E Tests
+    runs-on: ubuntu-latest
+    needs: check-commit-message
+    # Always run on protected branches (main/master), otherwise respect skip pattern
+    if: needs.check-commit-message.outputs.skip-all != 'true' && (needs.check-commit-message.outputs.is-protected-branch == 'true' || needs.check-commit-message.outputs.skip-e2e != 'true')
+    env:
+      NODE_ENV: "test"
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install --with-deps
+
+      - name: Run E2E tests
+        run: pnpm run test:e2e
+
+      - name: Upload Playwright report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    needs: check-commit-message
+    if: needs.check-commit-message.outputs.skip-all != 'true' && needs.check-commit-message.outputs.skip-build != 'true'
+    env:
+      NODE_ENV: "production"
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Verify TypeScript is installed
+        run: pnpm exec tsc --version || (echo "TypeScript not found!" && pnpm list typescript && exit 1)
+
+      - name: Build application
+        run: pnpm run build
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: build-artifacts
+          path: .next/
+          retention-days: 1

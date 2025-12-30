@@ -1,323 +1,313 @@
-# Personal Site 3 - Technical Documentation
+# Personal Portfolio Website
 
-## Core Architecture Overview
+![CI Status](https://github.com/ryanflynn9299/personal-site/workflows/CI/badge.svg)
+![Node.js Version](https://img.shields.io/badge/node-%3E%3D20.0.0-brightgreen)
+![pnpm Version](https://img.shields.io/badge/pnpm-10.0.0-orange)
+![Next.js Version](https://img.shields.io/badge/Next.js-16.0.7-black)
+![TypeScript Version](https://img.shields.io/badge/TypeScript-5.5.4-blue)
+![License](https://img.shields.io/badge/license-All%20Rights%20Reserved-red)
+![Test Coverage](https://img.shields.io/badge/coverage-60%25+-green)
 
-This is a **Next.js 14** personal portfolio website built with **TypeScript** and **Tailwind CSS**, using **Directus** as a headless CMS for blog content management.
+A modern, full-stack personal portfolio website built with Next.js, TypeScript, and a headless CMS. This project serves as both a professional showcase and a platform for exploring modern web development practices.
 
-### Technology Stack & Why Each Matters
+## Overview
 
-**Next.js 14** - React framework that handles:
+This is a hobby project designed to effectively communicate information about my work and experience while providing opportunities to experiment with web development in an unstructured, creative format. The site features a blog powered by a headless CMS, interactive quote visualizations, project showcases, and standard portfolio pages—all built with attention to performance, accessibility, and maintainability.
 
-- Server-side rendering (pages load faster)
-- File-based routing (folders = URL paths)
-- Built-in optimization for images, fonts, etc.
-- Production builds and deployment
+The codebase demonstrates practical application of modern React patterns, TypeScript best practices, comprehensive testing strategies, and production-ready deployment configurations.
 
-**TypeScript** - JavaScript with type checking:
+## Architecture
 
-- Catches errors before runtime
-- Better IDE support with autocomplete
-- All `.tsx` files are TypeScript React components
-- Configuration in `tsconfig.json`
+### Framework & Core Technologies
 
-**Tailwind CSS** - Utility-first CSS framework:
+The application is built on **Next.js 16** using the App Router architecture, providing server-side rendering, static site generation, and API routes. The choice of Next.js enables optimal performance through automatic code splitting, image optimization, and efficient data fetching strategies.
 
-- Classes like `bg-slate-900` instead of custom CSS
-- Configuration in `tailwind.config.ts`
-- No separate CSS files needed for styling
+**Key architectural decisions:**
 
-**Directus** - Headless CMS:
+- **App Router**: Leverages React Server Components for improved performance and reduced client-side JavaScript
+- **TypeScript**: Full type safety across the application with strict mode enabled
+- **Component Architecture**: Clear separation between server components (routing, data fetching) and client components (interactivity, animations)
+- **Modular Design**: Feature-based organization with shared primitives, utilities, and common components
 
-- Manages blog posts via admin interface
-- Provides REST API for fetching content
-- SDK handles API calls with type safety
-
-## Project Structure & File Organization
+### Project Structure
 
 ```
-personal-site3/
-├── app/                    # Next.js App Router (v13+)
-│   ├── layout.tsx         # Root layout (wraps all pages)
-│   ├── layout.tsx           # Homepage (/)
-│   ├── globals.css        # Global styles
-│   └── [folders]/         # Each folder = route
-├── components/            # Reusable React components
-├── lib/                   # Utility functions & API calls
-├── public/               # Static assets (images, etc.)
-├── package.json          # Dependencies & scripts
-├── tailwind.config.ts    # Tailwind customization
-├── tsconfig.json         # TypeScript configuration
-└── next.config.ts        # Next.js configuration
+app/                          # Next.js App Router
+├── (portfolio)/             # Public-facing routes
+│   ├── page.tsx             # Homepage
+│   ├── about/               # About page
+│   ├── blog/                # Blog listing and dynamic posts
+│   ├── contact/             # Contact form
+│   ├── vitae/               # Resume/CV page
+│   └── quotes/              # Interactive quote visualizations
+├── (admin)/                 # Admin routes (under development)
+├── actions/                 # Server actions
+└── layout.tsx               # Root layout with metadata
+
+components/                   # React components
+├── primitives/              # Base UI components (Button, Toast, etc.)
+├── sections/                # Reusable page sections
+├── common/                  # Shared utility components
+└── [feature]/               # Feature-specific components
+
+lib/                         # Utilities and services
+├── directus.ts              # CMS client integration
+├── email-service.ts         # Email service abstraction
+├── seo.ts                   # SEO metadata management
+└── utils.ts                 # General utilities
+
+tests/                       # Test suite
+├── unit/                    # Unit tests (Vitest)
+├── components/              # Component tests
+├── integration/             # Integration tests
+└── e2e/                     # End-to-end tests (Playwright)
 ```
 
-### Key Files Explained
+### Technology Stack
 
-**`app/layout.tsx`** - The wrapper for every page:
+**Core Framework:**
 
-- Loads fonts (Montserrat, Open Sans)
-- Sets up HTML structure
-- Includes Header and Footer components
-- Defines site metadata (title, description)
+- Next.js 16.1.1 (App Router, Turbopack)
+- React 19.2.1
+- TypeScript 5.5.4
 
-**`package.json`** - Project configuration:
+**Styling & UI:**
 
-- Lists all dependencies (libraries used)
-- Defines scripts (`npm run dev`, `npm run build`, etc.)
-- Version information
+- Tailwind CSS 3.4.17 (utility-first CSS)
+- Framer Motion 12.19.1 (animations)
+- Radix UI (accessible primitives)
+- Custom design system with consistent color palettes and typography
 
-**`tailwind.config.ts`** - Styling configuration:
+**Content Management:**
 
-- Custom color palette (slate, sky colors)
-- Font family definitions
-- Responsive breakpoints
+- Directus 16.1.0 (headless CMS for blog content)
+- React Markdown with rehype/remark plugins for content rendering
 
-## Development Workflow
+**State Management:**
 
-### Prerequisites
+- Zustand (lightweight state management for client-side state)
+- React Context (toast notifications, theme)
 
-- **Node.js** installed (JavaScript runtime)
-- **npm** (package manager, comes with Node.js)
+**Animation Libraries:**
 
-#### Upgrading Node.js and npm (Homebrew)
+- Framer Motion (React component animations)
+- GSAP 3.13.0 (advanced timeline-based animations)
+- Three.js (WebGL-based 3D visualizations)
 
-**Check current versions:**
+**Testing:**
+
+- Vitest (unit and integration tests)
+- React Testing Library (component testing)
+- Playwright (end-to-end testing)
+- MSW (Mock Service Worker for API mocking)
+
+**Development Tools:**
+
+- ESLint 9.39.2 (code quality)
+- Prettier (code formatting)
+- TypeScript (type checking)
+- pnpm 10.0.0 (package management)
+
+## Key Features & Implementation
+
+### Blog System
+
+The blog is powered by Directus CMS, providing a headless content management solution. Blog posts are fetched server-side at build time for static generation, with dynamic routes for individual posts. The implementation includes:
+
+- Server-side data fetching with proper error handling
+- Markdown and HTML content rendering with sanitization
+- SEO optimization with structured data (JSON-LD)
+- Image optimization using Next.js Image component
+- Content format detection (markdown, HTML, plaintext)
+
+### Interactive Quote Visualizations
+
+A sophisticated quote display system with multiple visualization modes:
+
+- **Normal Mode**: Traditional list views with variants (Mission Control, Tesseract 3D)
+- **Constellation Mode**: Interactive WebGL visualizations (Constellation, Solar System, Hex Array)
+- State management via Zustand for view mode and variant selection
+- Responsive design with mobile-optimized layouts
+- Keyboard navigation and accessibility features
+
+### Contact Form
+
+Server action-based contact form with:
+
+- Client-side validation
+- Server-side processing with error handling
+- Email service abstraction (configurable backend)
+- Toast notifications for user feedback
+- Rate limiting considerations
+
+### Project Showcase
+
+Interactive project display with:
+
+- File cabinet visualization component
+- Modal-based project details
+- Category-based organization
+- Responsive grid layouts
+
+## Development Practices
+
+### Testing Strategy
+
+The project maintains a comprehensive testing suite:
+
+- **Unit Tests**: Utility functions, pure logic, and data transformations
+- **Component Tests**: React components with user interaction testing
+- **Integration Tests**: Server actions, API integrations, and data flow
+- **E2E Tests**: Critical user journeys across multiple browsers (Chromium, Firefox, WebKit)
+
+Test coverage focuses on user-facing behavior and critical paths rather than exhaustive edge cases, maintaining a balance between thoroughness and maintainability.
+
+### Code Quality
+
+- **TypeScript**: Strict mode enabled with comprehensive type definitions
+- **ESLint**: Custom configuration with Next.js, React, and TypeScript rules
+- **Prettier**: Consistent code formatting
+- **Pre-commit Validation**: Automated checks for type errors, linting, and formatting
+
+### CI/CD Pipeline
+
+GitHub Actions workflow includes:
+
+- Linting and type checking
+- Unit and integration test execution
+- End-to-end test suite (Playwright)
+- Production build verification
+- Automated dependency caching for faster builds
+
+The pipeline runs on all pushes and pull requests, ensuring code quality before merging.
+
+### Performance Optimizations
+
+- **Image Optimization**: Next.js Image component with automatic format conversion and lazy loading
+- **Code Splitting**: Automatic route-based code splitting
+- **Static Generation**: Blog posts and static pages pre-rendered at build time
+- **Server Components**: Reduced client-side JavaScript bundle size
+- **Turbopack**: Faster development builds and hot module replacement
+
+## Build & Deployment
+
+### Development
 
 ```bash
-node --version
-npm --version
+# Install dependencies
+pnpm install
+
+# Start development server (Turbopack)
+pnpm run dev
+
+# Run type checking
+pnpm run type-check
+
+# Run tests
+pnpm run test
+pnpm run test:e2e
 ```
 
-**Upgrade to latest versions:**
+### Production Build
+
+The application builds to a standalone output optimized for containerized deployment:
 
 ```bash
-# Update Homebrew first
-brew update
-
-# Upgrade Node.js to latest version
-brew upgrade node
-
-# Update npm to latest version
-npm install -g npm@latest
-
-# Verify installations
-node -v
-npm -v
+pnpm run build
 ```
 
-**Install specific versions:**
+The build process:
 
-```bash
-# Install specific Node.js version (e.g., Node.js 20 LTS)
-brew install node@20
+- Compiles TypeScript
+- Optimizes images and assets
+- Generates static pages where possible
+- Creates server-side rendering bundles
+- Outputs to `.next/standalone` for Docker deployment
 
-# Or use nvm (Node Version Manager) for more control
-brew install nvm
-nvm install 20
-nvm use 20
+### Docker Deployment
 
-# Install specific npm version
-npm install -g npm@10.8.1
-```
+The project includes Docker configuration for containerized deployment:
 
-**Recommended versions for this project:**
+- Multi-stage Dockerfile for optimized image size
+- Docker Compose setup for local development with CMS
+- Standalone Next.js output mode for production containers
 
-- **Node.js**: 18.17+ (LTS recommended: 20.x or 22.x)
-- **npm**: 9.8+ (comes with Node.js, can be upgraded separately)
+### Environment Configuration
 
-**Note**: This project uses Next.js 15, which requires Node.js 18.17 or later. For best compatibility, use Node.js 20 LTS or later.
+The application uses environment variables for configuration:
 
-### Daily Development Commands
+- CMS connection settings (Directus)
+- Email service configuration
+- Analytics (optional Matomo integration)
+- Site metadata and URLs
 
-```bash
-# Install dependencies (run once, or when package.json changes)
-npm install
+The application gracefully handles missing optional services, allowing it to function with core features even when external services aren't configured.
 
-# Start development server (auto-reloads on changes)
-npm run dev
-# Site runs at http://localhost:3000
+## Technical Highlights
 
-# Check for code formatting (Prettier)
-npm run lint
+### Type Safety
 
-# Check for code quality issues (ESLint)
-npm run eslint
+Comprehensive TypeScript usage throughout:
 
-# Build for production
-npm run build
+- Strict type checking enabled
+- Custom type definitions for all data structures
+- Type-safe API client integration
+- Proper handling of nullable/optional values
 
-# Run production build locally
-npm run start
-```
+### Component Architecture
 
-### Making Changes
+Clear separation of concerns:
 
-1. **Styling**: Use Tailwind classes in JSX
-   - `className="bg-slate-900 text-white p-4"`
-   - Colors defined in `tailwind.config.ts`
+- **Server Components**: Data fetching, metadata generation, static content
+- **Client Components**: Interactivity, animations, browser APIs
+- **Shared Primitives**: Reusable base components with consistent APIs
+- **Feature Components**: Domain-specific components organized by feature
 
-2. **New Pages**: Create folders in `app/`
-   - `app/about/layout.tsx` → `/about` URL
-   - `app/blog/[slug]/layout.tsx` → `/blog/any-slug` URL
+### State Management
 
-3. **Components**: Create in `components/`
-   - Export as `export function ComponentName() {}`
-   - Import as `import { ComponentName } from "@/components/ComponentName"`
+Appropriate state management for different use cases:
 
-4. **API Calls**: Add to `lib/` folder
-   - Use Directus SDK for CMS data
-   - Handle errors with try/catch
+- React Server Components for server-side state
+- React hooks for component-local state
+- Zustand for cross-component client state
+- React Context for application-wide UI state (toasts)
 
-## Content Management (Directus)
+### Accessibility
 
-### Environment Setup
+Accessibility considerations:
 
-Create `.env.local` file:
+- Semantic HTML structure
+- ARIA labels where appropriate
+- Keyboard navigation support
+- Screen reader considerations
+- Focus management
 
-```
-NEXT_PUBLIC_DIRECTUS_URL=your-directus-instance-url
-```
+### SEO
 
-### Blog Post Structure
+Built-in SEO optimizations:
 
-Posts in Directus must have these fields:
+- Dynamic metadata generation per page
+- Structured data (JSON-LD) for blog posts
+- Sitemap generation
+- Robots.txt configuration
+- Open Graph and Twitter Card support
 
-- `id` (string)
-- `status` ('published' | 'draft' | 'archived')
-- `title` (string)
-- `slug` (string) - URL-friendly version
-- `publish_date` (string)
-- `summary` (string)
-- `content` (string) - HTML content
-- `feature_image` (optional image)
-- `author` (relation to users)
+## Project Philosophy
 
-### API Functions
+This project balances practical engineering with creative exploration. It demonstrates:
 
-Located in `lib/directus.ts`:
+- **Production-Ready Practices**: Testing, CI/CD, type safety, error handling
+- **Modern Tooling**: Latest stable versions of frameworks and libraries
+- **Maintainability**: Clear structure, documentation, and consistent patterns
+- **Performance Awareness**: Optimization strategies without premature optimization
+- **Learning Through Practice**: Experimentation with new technologies and patterns
 
-- `getPublishedPosts()` - Fetch all published posts
-- `getPostBySlug(slug)` - Fetch single post by URL slug
+The codebase is structured to be understandable by others (and my future self) while allowing flexibility for experimentation and iteration.
 
-## Deployment & Production
+## License
 
-### Build Process
-
-```bash
-npm run build
-```
-
-This creates `.next/` folder with optimized files.
-
-### Environment Variables
-
-Production needs:
-
-- `NEXT_PUBLIC_DIRECTUS_URL` - Your Directus instance URL
-
-### Hosting Options
-
-- **Vercel** (recommended for Next.js)
-- **Netlify**
-- Any Node.js hosting service
-
-## Common Tasks & Solutions
-
-### Adding New Dependencies
-
-```bash
-npm install package-name
-# For TypeScript types:
-npm install @types/package-name --save-dev
-```
-
-### Styling Patterns
-
-- Dark theme: `bg-slate-900 text-slate-200`
-- Accent colors: `text-sky-400`, `bg-sky-600`
-- Typography: `font-heading` (Montserrat), `font-sans` (Open Sans)
-
-### TypeScript Errors
-
-- Missing types: Install `@types/package-name`
-- Import errors: Check file paths use `@/` prefix
-- API errors: Ensure Directus schema matches interface definitions
-
-### Performance Optimization
-
-- Images: Use Next.js `<Image>` component
-- Fonts: Already optimized with `next/font/google`
-- CSS: Tailwind purges unused styles automatically
-
-## Troubleshooting
-
-### Development Server Won't Start
-
-1. Delete `node_modules/` and `.next/`
-2. Run `npm install`
-3. Run `npm run dev`
-
-### Build Failures
-
-- Check TypeScript errors: `npm run type-check`
-- Check formatting: `npm run lint`
-- Check code quality: `npm run eslint`
-- Verify all imports are correct
-- Ensure environment variables are set
-
-### Styling Issues
-
-- Check Tailwind classes are spelled correctly
-- Verify custom colors in `tailwind.config.ts`
-- Use browser dev tools to inspect applied styles
-
-## Future Enhancement Areas
-
-### Content
-
-- Add more post fields (tags, categories)
-- Implement search functionality
-- Add pagination for blog posts
-
-### Features
-
-- Contact form
-- Newsletter signup
-- Social media integration
-- Comments system
-
-### Performance
-
-- Image optimization
-- Caching strategies
-- SEO improvements
-
-### Technical
-
-- Add testing framework
-- Implement CI/CD pipeline
-- Add analytics tracking
+Private project - not intended for public use or distribution.
 
 ---
 
-## Quick Reference
-
-**Start Development**: `npm run dev`
-**Build for Production**: `npm run build`
-**Component Path**: `@/components/ComponentName`
-**Styling**: Tailwind classes in `className`
-**CMS**: Directus at `process.env.NEXT_PUBLIC_DIRECTUS_URL`
-**Routes**: Folders in `app/` directory
-
-```
-
-
-This README is structured to give you the foundational knowledge first, then drill down into specifics. The hierarchical approach means you can quickly understand what technologies are involved and why, then dive into the practical details of development and deployment.
-
-The key insight here is that this is a modern React-based website where:
-- **Next.js** handles the framework and routing
-- **TypeScript** provides type safety
-- **Tailwind** handles all styling
-- **Directus** manages your blog content
-
-Everything is configured to work together, so you can focus on content and features rather than setup and configuration.
-```
+_This README provides a technical overview of the project structure and implementation. For setup instructions or detailed development guidelines, see the project's internal documentation._

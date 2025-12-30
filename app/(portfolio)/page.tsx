@@ -1,18 +1,26 @@
-import { TechStack3 } from "@/components/home/TechStack3";
+import type { Metadata } from "next";
+import { TechStack3 } from "@/components/sections/TechStack3";
+import { FinalCTA } from "@/components/sections/FinalCTA";
+import { AboutMe2 } from "@/components/sections/AboutMe2";
+import { ProjectCarousel } from "@/components/sections/ProjectCarousel";
+import { HeroSection } from "@/components/sections/HeroSection";
+import { BlogHighlight4 } from "@/components/sections/BlogHighlight4";
+import { generatePageMetadata } from "@/lib/seo";
 
-import { FinalCTA } from "@/components/home/FinalCTA";
-import { AboutMe2 } from "@/components/home/AboutMe2";
-import { ProjectCarousel } from "@/components/home/ProjectCarousel";
-import { HeroSection } from "@/components/home/HeroSection";
-import { BlogHighlight4 } from "@/components/home/BlogHighlight4";
+export const metadata: Metadata = generatePageMetadata({
+  title: "Ryan Flynn | Software Engineer & Tech Enthusiast",
+  description:
+    "Portfolio of Ryan Flynn - Software Engineer, Tech Enthusiast. Explore projects, read blog posts, and learn about my journey in technology.",
+  path: "/",
+});
 
 /* Unused swappable components */
-import { AboutMe1 } from "@/components/home/AboutMe1";
-import { FeaturedProjects } from "@/components/home/FeaturedProjects";
-import { TechStack } from "@/components/home/TechStack";
-import { TechStack2 } from "@/components/home/TechStack2";
-import { BentoGrid } from "@/components/ui/MagicBento3";
-import { BlogHighlight } from "@/components/home/BlogHighlight";
+// import { AboutMe1 } from "@/components/sections/AboutMe1";
+// import { FeaturedProjects } from "@/components/sections/FeaturedProjects";
+// import { TechStack } from "@/components/sections/TechStack";
+// import { TechStack2 } from "@/components/sections/TechStack2";
+// import { BentoGrid } from "@/components/sections/MagicBento3";
+// import { BlogHighlight } from "@/components/sections/BlogHighlight";
 // import {EditorialBlogHighlight3} from "@/components/home/editorial-blog";
 
 export default function HomePage() {

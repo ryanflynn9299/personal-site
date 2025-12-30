@@ -1,14 +1,20 @@
 import { MetadataRoute } from "next";
+import { SITE_URL } from "@/lib/seo";
 
 export default function robots(): MetadataRoute.Robots {
-  const URL = "https://your-domain.com"; // Replace with your actual domain
-
   return {
-    rules: {
-      userAgent: "*",
-      allow: "/",
-      disallow: "/admin/", // Example: disallow crawling of a potential admin panel
-    },
-    sitemap: `${URL}/sitemap.xml`,
+    rules: [
+      {
+        userAgent: "*",
+        allow: "/",
+        disallow: ["/admin/", "/dashboard/", "/api/"],
+      },
+      {
+        userAgent: "Googlebot",
+        allow: "/",
+        disallow: ["/admin/", "/dashboard/", "/api/"],
+      },
+    ],
+    sitemap: `${SITE_URL}/sitemap.xml`,
   };
 }

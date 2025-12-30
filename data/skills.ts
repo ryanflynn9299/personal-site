@@ -1,4 +1,4 @@
-import { Code, Database, Cloud, Cog, PenTool, Bot } from "lucide-react";
+import { Code, Database, Cloud, PenTool, Bot } from "lucide-react";
 
 export const techCategories = [
   {
