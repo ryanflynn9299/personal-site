@@ -13,12 +13,14 @@ interface QuoteViewState {
   activeNormalVariant: NormalVariant;
   activeConstellationVariant: ConstellationVariant;
   hexSurgeEnabled: boolean;
+  isZoomed: boolean;
   hexSurgeTriggerCallback: (() => void) | null;
   cometTriggerCallback: (() => void) | null;
   setViewMode: (mode: ViewMode) => void;
   setActiveNormalVariant: (variant: NormalVariant) => void;
   setActiveConstellationVariant: (variant: ConstellationVariant) => void;
   setHexSurgeEnabled: (enabled: boolean) => void;
+  setIsZoomed: (zoomed: boolean) => void;
   setHexSurgeTriggerCallback: (callback: (() => void) | null) => void;
   setCometTriggerCallback: (callback: (() => void) | null) => void;
   triggerHexSurge: () => void;
@@ -34,6 +36,7 @@ const defaultState = {
   activeNormalVariant: "mission_control" as NormalVariant,
   activeConstellationVariant: "constellation" as ConstellationVariant,
   hexSurgeEnabled: true,
+  isZoomed: false,
   hexSurgeTriggerCallback: null as (() => void) | null,
   cometTriggerCallback: null as (() => void) | null,
 };
@@ -76,6 +79,7 @@ export const useQuoteViewStore = create<QuoteViewState>()(
       setActiveConstellationVariant: (variant) =>
         set({ activeConstellationVariant: variant }),
       setHexSurgeEnabled: (enabled) => set({ hexSurgeEnabled: enabled }),
+      setIsZoomed: (zoomed) => set({ isZoomed: zoomed }),
       setHexSurgeTriggerCallback: (callback) =>
         set({ hexSurgeTriggerCallback: callback }),
       setCometTriggerCallback: (callback) =>

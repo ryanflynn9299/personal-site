@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
+import { X } from "lucide-react";
 import type { Entity } from "../types";
 import { QuoteCard } from "./QuoteCard";
 
@@ -27,8 +28,11 @@ export function CommandConsole({
           animate={{ y: 0 }}
           exit={{ y: "100%" }}
           transition={{ type: "spring", stiffness: 200, damping: 25 }}
-          className="absolute bottom-0 left-0 right-0 z-50 h-[70vh] overflow-hidden rounded-t-2xl border-t-2 border-slate-700 bg-slate-900/95 backdrop-blur-xl"
+          className="absolute bottom-0 left-0 right-0 z-[120] overflow-hidden rounded-t-2xl border-t-2 border-slate-700 bg-slate-900/95 backdrop-blur-xl"
+          onClick={(e) => e.stopPropagation()} // Prevent background click from closing when clicking console
           style={{
+            top: "280px", // Start below the zoomed entity view (adjusted for increased planet spacing)
+            height: "calc(100vh - 280px)", // Fill remaining space
             borderTopColor: selectedEntity.color,
           }}
         >
@@ -53,14 +57,24 @@ export function CommandConsole({
             </div>
             <button
               onClick={onClose}
-              className="rounded-lg border border-slate-700 bg-slate-800 px-4 py-2 font-mono text-sm text-slate-300 transition-colors hover:bg-slate-700"
+              className="group flex items-center rounded-full border border-slate-600 bg-slate-800
+                         text-slate-300 transition-colors duration-300 ease-in-out 
+                         hover:border-sky-300/50 hover:bg-slate-700
+                         w-10 h-10 p-2.5 hover:w-auto hover:pl-3 hover:pr-3 hover:py-2.5"
             >
-              CLOSE
+              <div className="overflow-hidden transition-[max-width] duration-300 ease-in-out group-hover:max-w-[100px] max-w-0">
+                <span className="whitespace-nowrap pr-2 font-mono text-sm">
+                  Close
+                </span>
+              </div>
+              <div className="flex-1 flex items-center justify-center group-hover:flex-none">
+                <X className="h-5 w-5 flex-shrink-0" />
+              </div>
             </button>
           </div>
 
           {/* Masonry Grid of Quotes */}
-          <div className="h-[calc(70vh-80px)] overflow-y-auto p-6">
+          <div className="h-[calc(100%-80px)] overflow-y-auto p-6">
             <div className="mx-auto grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
               {selectedEntity.quotes.map((quote) => (
                 <QuoteCard

@@ -35,7 +35,7 @@ export function ViewDevControls() {
 
   return (
     <div
-      className="fixed bottom-4 right-4 z-[100] rounded-lg border border-slate-700/50 bg-slate-900/95 shadow-lg backdrop-blur-sm transition-all duration-300"
+      className="fixed bottom-4 right-4 z-[104] rounded-lg border border-slate-700/50 bg-slate-900/95 shadow-lg backdrop-blur-sm transition-all duration-300"
       style={{
         height: isExpanded ? "auto" : `${collapsedHeight}px`,
         padding: isExpanded ? "1.5rem" : "0.625rem 1rem",

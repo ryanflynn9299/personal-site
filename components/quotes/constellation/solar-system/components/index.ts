@@ -7,3 +7,5 @@ export { CometTooltip } from "./CometTooltip";
 export { Comet } from "./Comet";
 export { QuoteCard } from "./QuoteCard";
 export { CommandConsole } from "./CommandConsole";
+export { ZoomedEntityView } from "./ZoomedEntityView";
+export { BlurredBackground } from "./BlurredBackground";

@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { useQuoteViewStore } from "./store/useQuoteViewStore";
 import type { Quote } from "@/app/(portfolio)/quotes/config";
 import { MissionControlView } from "./normal/mission-control/MissionControlView";
@@ -17,8 +18,17 @@ interface QuoteViewRendererProps {
  * Maps variant names to their corresponding view components.
  */
 export function QuoteViewRenderer({ quotes }: QuoteViewRendererProps) {
-  const { viewMode, activeNormalVariant, activeConstellationVariant } =
-    useQuoteViewStore();
+  const {
+    viewMode,
+    activeNormalVariant,
+    activeConstellationVariant,
+    setIsZoomed,
+  } = useQuoteViewStore();
+
+  // Reset zoomed state when view changes
+  useEffect(() => {
+    setIsZoomed(false);
+  }, [viewMode, activeNormalVariant, activeConstellationVariant, setIsZoomed]);
 
   // Normal mode variants
   if (viewMode === "normal") {

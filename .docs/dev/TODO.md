@@ -19,13 +19,18 @@ _Start here - these are the most important items to tackle next_
 - [x] Finish sitemap and robots.ts
 - [ ] Figure out scalability for blog
 - [ ] Make client-primary
-- [ ] Consolidate colors
+- [x] Consolidate colors
 - [ ] Flesh out project file cabinet idea
 - [ ] make about page UX optimized
 - [ ] add christmas mode
 - [ ] Fix planet featured view
 - [ ] Enable SEO for blogs in lib/seo.ts
 - [ ] Finish quotes page and make final selection
+- [ ] See my latest LinkedIn posts??
+- [ ] establish baseline code coverage
+- [ ] pre-commit check script (validate, test, compare coverage, build)
+- [ ] add coverage check to main branch
+- [ ] clean up command output directories (check build out too)
 
 ---
 
@@ -60,14 +65,17 @@ _Start here - these are the most important items to tackle next_
 
 ### Performance & SEO
 
-- [ ] Optimize images with Next.js Image component
+- [x] Optimize images with Next.js Image component
 - [ ] Add proper meta tags for social sharing
 - [ ] Implement structured data for blog posts
 - [ ] Set up Google Analytics or similar
 
 ### Development & Infrastructure
 
-- [ ] Create deployment pipeline (CI/CD)
+- [x] Create deployment pipeline (CI/CD)
+- [x] Complete successful CI run
+- [ ] Set up VSCode server and connect cursor for remote development pipeline
+- [ ] Set up remote teardown command
 - [ ] Set up error monitoring (Sentry)
 - [ ] Create backup strategy for content
 - [ ] Review and optimize bundle size
@@ -78,12 +86,12 @@ _Start here - these are the most important items to tackle next_
 ### Interactive Elements & UI Components
 
 - [ ] Star border from react bits
-- [ ] Magic bento react bits
+- [x] Magic bento react bits
 - [ ] Tilted card react bits
 - [ ] Animate navbar
 - [ ] Spotlight card react bits
 - [ ] Dark veil or aurora react bits
-- [ ] Dot grid background
+- [x] Dot grid background
 - [ ] Decrypted text react bits
 
 ### Integrations
@@ -93,6 +101,7 @@ _Start here - these are the most important items to tackle next_
 - [ ] Implement Twitter/X card previews
 - [ ] Connect with email marketing service
 - [ ] Add calendar booking integration (maybe Calendly)
+- [ ] Add twilio for build notis
 
 ### Advanced Features
 
@@ -187,7 +196,7 @@ _Recently completed items (for reference)_
 
 ## 📝 Notes
 
-- Last organized: 2025-01-XX
+- Last organized: 2026-01-XX
 - Focus on Next Actions section for immediate work
 - Move items to Completed section when done
 - Archive old completed items periodically

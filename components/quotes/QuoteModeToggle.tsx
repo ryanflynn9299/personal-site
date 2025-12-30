@@ -21,7 +21,7 @@ const MODAL_STYLES = {
 } as const;
 
 export function QuoteModeToggle({ className = "" }: { className?: string }) {
-  const { viewMode, setViewMode } = useQuoteViewStore();
+  const { viewMode, setViewMode, isZoomed } = useQuoteViewStore();
 
   const isNormalMode = viewMode === "normal";
 
@@ -31,7 +31,7 @@ export function QuoteModeToggle({ className = "" }: { className?: string }) {
 
   return (
     <div
-      className={`pointer-events-auto absolute right-0 top-0 z-10 ${className}`}
+      className={`pointer-events-auto absolute right-0 top-0 z-[104] ${className}`}
       style={{
         backgroundColor: MODAL_STYLES.backgroundColor,
         backdropFilter: `blur(${MODAL_STYLES.backdropBlur})`,
@@ -40,6 +40,8 @@ export function QuoteModeToggle({ className = "" }: { className?: string }) {
         borderRadius: MODAL_STYLES.borderRadius,
         padding: MODAL_STYLES.padding,
         margin: MODAL_STYLES.margin,
+        opacity: isZoomed ? 0.3 : 1,
+        transition: "opacity 0.6s ease-out",
       }}
     >
       <div className="flex items-center justify-end gap-4">

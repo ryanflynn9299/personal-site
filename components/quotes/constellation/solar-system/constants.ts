@@ -51,7 +51,7 @@ export const COMET_OFFSCREEN_MARGIN = 100; // Margin for off-screen cleanup (px)
 export const COMET_SPEED_MEAN = 0.5; // Mean speed for normal distribution
 export const COMET_SPEED_STD_DEV = 0.15; // Standard deviation for normal distribution
 export const COMET_SPEED_MIN = 0.2; // Minimum speed (clamped)
-export const COMET_SPEED_MAX = 0.8; // Maximum speed (clamped)
+export const COMET_SPEED_MAX = 0.56; // Maximum speed (clamped) - reduced by 30% from 0.8
 
 // Visual configuration
 export const ROCKET_COLORS = ["red", "blue", "green", "purple"] as const;

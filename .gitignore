@@ -11,9 +11,7 @@
 !.yarn/versions
 
 # testing
-/coverage
-/test-results
-/playwright-report
+/output
 /playwright/.cache
 *.spec.ts.snap
 

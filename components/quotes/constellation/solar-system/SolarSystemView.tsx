@@ -13,6 +13,8 @@ import { Entity as EntityComponent } from "./components/Entity";
 import { OrbitLine } from "./components/OrbitLine";
 import { Comet } from "./components/Comet";
 import { CommandConsole } from "./components/CommandConsole";
+import { ZoomedEntityView } from "./components/ZoomedEntityView";
+import { BlurredBackground } from "./components/BlurredBackground";
 import { TOOLTIP_HIDE_DELAY } from "./constants";
 
 export function SolarSystemView({ quotes }: SolarSystemViewProps) {
@@ -21,11 +23,15 @@ export function SolarSystemView({ quotes }: SolarSystemViewProps) {
     [quotes]
   );
   const [selectedEntity, setSelectedEntity] = useState<Entity | null>(null);
-  const [isZoomed, setIsZoomed] = useState(false);
   const [isConsoleOpen, setIsConsoleOpen] = useState(false);
+  const { isZoomed, setIsZoomed } = useQuoteViewStore();
   const [panState, setPanState] = useState({ x: 0, y: 0, scale: 1 });
   const [hoveredEntityId, setHoveredEntityId] = useState<string | null>(null);
   const [hoveredCometId, setHoveredCometId] = useState<string | null>(null);
+  const [initialEntityPosition, setInitialEntityPosition] = useState<{
+    x: number;
+    y: number;
+  } | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const animationFrameRef = useRef<number | undefined>(undefined);
   const tooltipHideTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -68,50 +74,49 @@ export function SolarSystemView({ quotes }: SolarSystemViewProps) {
       return;
     }
 
+    // Get the current position of the entity relative to container
+    const position = getEntityPosition(entity, containerRef);
     const rect = containerRef.current.getBoundingClientRect();
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
 
-    // Calculate entity position in original coordinate system (elliptical with eccentricity)
-    const { x: entityX, y: entityY } = getEntityClickPosition(
-      entity,
-      containerRef
-    );
+    // Convert to absolute screen coordinates for animation
+    // Account for container's position on screen and the orrery's translateY offset (-60px)
+    const screenX = rect.left + position.x;
+    const screenY = rect.top + position.y - 60; // Account for translateY: -60px on orrery
 
-    // Target position: top-center of screen
-    const targetX = centerX;
-    const targetY = 100; // Top of viewport
-    const targetScale = 2.5;
+    setInitialEntityPosition({
+      x: screenX,
+      y: screenY,
+    });
 
-    // Calculate pan values to move entity to target
-    const panX = targetX - centerX - (entityX - centerX) * targetScale;
-    const panY = targetY - centerY - (entityY - centerY) * targetScale;
-
-    // Set selected entity
+    // Set selected entity and zoom state
     setSelectedEntity(entity);
     setIsZoomed(true);
 
-    // Animate pan and zoom
+    // Fade out the orrery by scaling it down and moving it
+    // The actual entity will be shown via ZoomedEntityView
     setPanState({
-      x: panX,
-      y: panY,
-      scale: targetScale,
+      x: 0,
+      y: 0,
+      scale: 0.3, // Scale down the orrery to fade it into background
     });
 
-    // Open console after animation
+    // Open console after animation completes
     setTimeout(() => {
       setIsConsoleOpen(true);
-    }, 600);
+    }, 800); // Slightly longer to allow fly-in animation to complete
   };
 
   // Handle close
   const handleClose = () => {
     setIsConsoleOpen(false);
+    // Start reverse animation by setting isZoomed to false
+    setIsZoomed(false);
+    // Clear state after reverse animation completes
     setTimeout(() => {
       setSelectedEntity(null);
-      setIsZoomed(false);
+      setInitialEntityPosition(null);
       setPanState({ x: 0, y: 0, scale: 1 });
-    }, 300);
+    }, 600); // Match animation duration
   };
 
   // Handle entity hover with delay
@@ -159,15 +164,38 @@ export function SolarSystemView({ quotes }: SolarSystemViewProps) {
         <div className="stars-constellation stars-constellation-3"></div>
       </div>
 
-      {/* Modal Title */}
-      <QuoteModalTitle
-        title="My Quotes"
-        description={
-          <>
-            <p>Click on any celestial body to view its quotes.</p>
-            <p>Orbits are tilted for a 3D perspective view.</p>
-          </>
-        }
+      {/* Modal Title - blurred behind background when zoomed */}
+      <div
+        className="absolute left-0 top-0 z-[104]"
+        style={{
+          opacity: isZoomed ? 0.3 : 1,
+          transition: "opacity 0.6s ease-out",
+        }}
+      >
+        <QuoteModalTitle
+          title="My Quotes"
+          description={
+            <>
+              <p>Click on any celestial body to view its quotes.</p>
+              <p>Orbits are tilted for a 3D perspective view.</p>
+            </>
+          }
+        />
+      </div>
+
+      {/* Blurred Background Overlay - fades in when zoomed, fades out when closing */}
+      <BlurredBackground
+        isVisible={isZoomed}
+        color={selectedEntity?.color}
+        animationDelay={isZoomed ? 0.3 : 0} // Start fading in after planet starts moving, fade out immediately when closing
+        onClose={handleClose}
+      />
+
+      {/* Zoomed Entity View - shows entity at center top when zoomed */}
+      <ZoomedEntityView
+        entity={selectedEntity}
+        isVisible={isZoomed}
+        initialPosition={initialEntityPosition}
       />
 
       {/* Orrery Canvas - Category 1 (Focal) Entities */}
@@ -179,6 +207,7 @@ export function SolarSystemView({ quotes }: SolarSystemViewProps) {
           scale: panState.scale,
           transformOrigin: "center center",
           translateY: "-60px",
+          opacity: isZoomed ? 0.2 : 1, // Fade out orrery when zoomed
         }}
         transition={{
           type: "spring",
@@ -224,112 +253,136 @@ export function SolarSystemView({ quotes }: SolarSystemViewProps) {
 
       {/* Category 2: Comets - z-30 entities */}
       {/* May render above Category 1 entities, tooltips below Category 1 tooltips */}
-      {comets.map((comet) => (
-        <Comet
-          key={comet.id}
-          comet={comet}
-          onHover={() => setHoveredCometId(comet.id)}
-          onHoverEnd={() => setHoveredCometId(null)}
-        />
-      ))}
+      {/* Hide comets when zoomed for cleaner view */}
+      {!isZoomed &&
+        comets.map((comet) => (
+          <Comet
+            key={comet.id}
+            comet={comet}
+            onHover={() => setHoveredCometId(comet.id)}
+            onHoverEnd={() => setHoveredCometId(null)}
+          />
+        ))}
 
       {/* Category 1 Tooltips Layer - z-100, rendered after all entities */}
       {/* All Category 1 tooltips in same stacking context, above everything */}
-      <motion.div
-        className="absolute inset-0 pointer-events-none z-[100]"
-        style={{
-          x: panState.x,
-          y: panState.y,
-          scale: panState.scale,
-          transformOrigin: "center center",
-          translateY: "-60px",
-        }}
-        transition={{
-          type: "spring",
-          stiffness: 100,
-          damping: 20,
-        }}
-      >
-        {sunEntity && hoveredEntityId === sunEntity.id && (
-          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-            <div
-              className="absolute bottom-full left-0 -translate-x-1/2 mb-2 w-72 p-4 bg-slate-900/95 border-2 rounded-lg shadow-xl backdrop-blur-xl"
-              style={{
-                borderColor: sunEntity.color,
-                left: "50%",
-              }}
-            >
-              <p
-                className="text-sm font-semibold text-slate-50 mb-2"
-                style={{
-                  color: sunEntity.color,
-                }}
-              >
-                {sunEntity.name}
-              </p>
-              <p className="text-xs text-slate-400 font-mono mb-2">0.0 AU</p>
-              <p className="text-xs text-slate-300 leading-relaxed">
-                Click to explore more quotes
-              </p>
-            </div>
-          </div>
-        )}
-        {entities.map((entity) => {
-          if (hoveredEntityId !== entity.id) {
-            return null;
-          }
-          const position = getEntityPosition(entity, containerRef);
-          const auDistance = (entity.orbitRadius / 15).toFixed(1);
-
-          return (
-            <div
-              key={`tooltip-${entity.id}`}
-              className="absolute"
-              style={{
-                left: position.x,
-                top: position.y,
-                transform: "translate(-50%, -50%)",
-              }}
-            >
+      {!isZoomed && (
+        <motion.div
+          className="absolute inset-0 pointer-events-none z-[100]"
+          style={{
+            x: panState.x,
+            y: panState.y,
+            scale: panState.scale,
+            transformOrigin: "center center",
+            translateY: "-60px",
+          }}
+          transition={{
+            type: "spring",
+            stiffness: 100,
+            damping: 20,
+          }}
+        >
+          {sunEntity && hoveredEntityId === sunEntity.id && (
+            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
               <div
                 className="absolute bottom-full left-0 -translate-x-1/2 mb-2 w-72 p-4 bg-slate-900/95 border-2 rounded-lg shadow-xl backdrop-blur-xl"
                 style={{
-                  borderColor: entity.color,
+                  borderColor: sunEntity.color,
+                  left: "50%",
                 }}
               >
                 <p
                   className="text-sm font-semibold text-slate-50 mb-2"
                   style={{
-                    color: entity.color,
+                    color: sunEntity.color,
                   }}
                 >
-                  {entity.name}
+                  {sunEntity.name}
                 </p>
-                <p className="text-xs text-slate-400 font-mono mb-2">
-                  {auDistance} AU
-                </p>
+                <p className="text-xs text-slate-400 font-mono mb-2">0.0 AU</p>
                 <p className="text-xs text-slate-300 leading-relaxed">
                   Click to explore more quotes
                 </p>
               </div>
             </div>
-          );
-        })}
-      </motion.div>
+          )}
+          {entities.map((entity) => {
+            if (hoveredEntityId !== entity.id) {
+              return null;
+            }
+            const position = getEntityPosition(entity, containerRef);
+            const auDistance = (entity.orbitRadius / 15).toFixed(1);
+
+            return (
+              <div
+                key={`tooltip-${entity.id}`}
+                className="absolute"
+                style={{
+                  left: position.x,
+                  top: position.y,
+                  transform: "translate(-50%, -50%)",
+                }}
+              >
+                <div
+                  className="absolute bottom-full left-0 -translate-x-1/2 mb-2 w-72 p-4 bg-slate-900/95 border-2 rounded-lg shadow-xl backdrop-blur-xl"
+                  style={{
+                    borderColor: entity.color,
+                  }}
+                >
+                  <p
+                    className="text-sm font-semibold text-slate-50 mb-2"
+                    style={{
+                      color: entity.color,
+                    }}
+                  >
+                    {entity.name}
+                  </p>
+                  <p className="text-xs text-slate-400 font-mono mb-2">
+                    {auDistance} AU
+                  </p>
+                  <p className="text-xs text-slate-300 leading-relaxed">
+                    Click to explore more quotes
+                  </p>
+                </div>
+              </div>
+            );
+          })}
+        </motion.div>
+      )}
 
       {/* Category 2 Tooltips Layer - z-90, rendered after Category 1 tooltips */}
       {/* All Category 2 tooltips in same stacking context, below Category 1 tooltips */}
-      <div className="absolute inset-0 pointer-events-none z-[90]">
-        {comets.map((comet) => {
-          if (hoveredCometId !== comet.id) {
-            return null;
-          }
-
-          // Don't show tooltip if no quote (production) or show "No quotes available" in dev
-          if (!comet.quote) {
-            // In dev mode, show "No quotes available", in prod show nothing
-            if (process.env.NODE_ENV !== "development") {
+      {!isZoomed && (
+        <div className="absolute inset-0 pointer-events-none z-[90]">
+          {comets.map((comet) => {
+            if (hoveredCometId !== comet.id) {
               return null;
+            }
+
+            // Don't show tooltip if no quote (production) or show "No quotes available" in dev
+            if (!comet.quote) {
+              // In dev mode, show "No quotes available", in prod show nothing
+              if (process.env.NODE_ENV !== "development") {
+                return null;
+              }
+
+              return (
+                <div
+                  key={`tooltip-${comet.id}`}
+                  className="absolute"
+                  style={{
+                    left: `${comet.x}px`,
+                    top: `${comet.y}px`,
+                    transform: "translate(-50%, -50%)",
+                  }}
+                >
+                  <div className="absolute bottom-full left-0 -translate-x-1/2 mb-2 w-64 p-3 bg-slate-900/95 border border-slate-700 rounded-lg shadow-xl">
+                    <p className="text-xs text-slate-200 leading-relaxed">
+                      No quotes available
+                    </p>
+                  </div>
+                </div>
+              );
             }
 
             return (
@@ -344,39 +397,21 @@ export function SolarSystemView({ quotes }: SolarSystemViewProps) {
               >
                 <div className="absolute bottom-full left-0 -translate-x-1/2 mb-2 w-64 p-3 bg-slate-900/95 border border-slate-700 rounded-lg shadow-xl">
                   <p className="text-xs text-slate-200 leading-relaxed">
-                    No quotes available
+                    {comet.quote.text}
                   </p>
+                  {(comet.quote.author || comet.quote.source) && (
+                    <p className="mt-2 text-xs text-slate-400 font-mono">
+                      {comet.quote.author && `— ${comet.quote.author}`}
+                      {comet.quote.author && comet.quote.source && " • "}
+                      {comet.quote.source}
+                    </p>
+                  )}
                 </div>
               </div>
             );
-          }
-
-          return (
-            <div
-              key={`tooltip-${comet.id}`}
-              className="absolute"
-              style={{
-                left: `${comet.x}px`,
-                top: `${comet.y}px`,
-                transform: "translate(-50%, -50%)",
-              }}
-            >
-              <div className="absolute bottom-full left-0 -translate-x-1/2 mb-2 w-64 p-3 bg-slate-900/95 border border-slate-700 rounded-lg shadow-xl">
-                <p className="text-xs text-slate-200 leading-relaxed">
-                  {comet.quote.text}
-                </p>
-                {(comet.quote.author || comet.quote.source) && (
-                  <p className="mt-2 text-xs text-slate-400 font-mono">
-                    {comet.quote.author && `— ${comet.quote.author}`}
-                    {comet.quote.author && comet.quote.source && " • "}
-                    {comet.quote.source}
-                  </p>
-                )}
-              </div>
-            </div>
-          );
-        })}
-      </div>
+          })}
+        </div>
+      )}
 
       {/* Command Console Drawer */}
       <CommandConsole

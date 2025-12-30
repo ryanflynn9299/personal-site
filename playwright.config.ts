@@ -1,4 +1,14 @@
 import { defineConfig, devices } from "@playwright/test";
+import { mkdirSync } from "fs";
+import { join } from "path";
+
+// Ensure output directory exists
+const outputDir = join(process.cwd(), "output");
+try {
+  mkdirSync(outputDir, { recursive: true });
+} catch (error) {
+  // Directory might already exist, ignore
+}
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -9,7 +19,8 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
-  reporter: "html",
+  reporter: [["html", { outputFolder: "output/playwright-report" }], ["list"]],
+  outputDir: "output/test-results",
   use: {
     baseURL: "http://localhost:3000",
     trace: "on-first-retry",
