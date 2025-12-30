@@ -4,39 +4,66 @@
 
 _Start here - these are the most important items to tackle next_
 
-- [ ] Add professional headshot/profile images
-- [ ] images for about page
-- [ ] Organize and slightly refine vitae details
-- [ ] Fix missing author from Directus call
-- [ ] Add navigation between blog posts (prev/next)
-- [ ] connect counter to database
-- [ ] Add loading states/screens for API calls
+### Before Next promotion
+
 - [x] Fix slug in metadata
 - [x] Design and implement quotes page
-- [ ] Ensure responsive design works on mobile devices
-- [ ] Consider removing `dangerouslyAllowsSVGs` from next.config.ts
-- [ ] Update site metadata (title, description, favicon)
+- [x] Fix planet featured view
+- [x] Consider removing `dangerouslyAllowsSVGs` from next.config.ts
 - [x] Finish sitemap and robots.ts
-- [ ] Figure out scalability for blog
-- [ ] Make client-primary
 - [x] Consolidate colors
+- [x] clean up command output directories (check build out too)
+
+### Next promotion
+
+- [ ] Configure secrets for dev mode/local testing
+- [ ] Fix missing author from Directus call
+- [ ] Organize and slightly refine vitae details
+- [ ] connect counter to database
+- [ ] Add navigation between blog posts (prev/next)
+- [ ] Add loading states/screens for API calls
+- [ ] Update site metadata (title, description, favicon)
+- [ ] Make client-primary
 - [ ] Flesh out project file cabinet idea
+- [ ] establish baseline code coverage
+- [ ] add coverage check to main branch
+- [ ] pre-commit check script (validate, test, compare coverage, build)
+- [ ] Establish CD pipeline
+
+### Before Launch - After UI reviewers
+
+- [ ] Add professional headshot/profile images
+- [ ] images for about page
+- [ ] Ensure responsive design works on mobile devices
+- [ ] Figure out scalability for blog
+- [ ] Add pagination for blog listing page
 - [ ] make about page UX optimized
-- [ ] add christmas mode
-- [ ] Fix planet featured view
-- [ ] Enable SEO for blogs in lib/seo.ts
 - [ ] Finish quotes page and make final selection
 - [ ] See my latest LinkedIn posts??
-- [ ] establish baseline code coverage
-- [ ] pre-commit check script (validate, test, compare coverage, build)
-- [ ] add coverage check to main branch
-- [ ] clean up command output directories (check build out too)
+- [ ] Enable SEO for blogs in lib/seo.ts
+- [ ] Versioning system/methodology
+
+### First promote after launch
+
+- [ ] Add author bio section for posts (with popup card)
+- [ ] Add "Back to top" button for long pages
+- [ ] Matomo analytics page on dashboard
+- [ ] Set up VSCode server and connect cursor for remote development pipeline
+- [ ] Set up remote teardown command
+- [ ] add slug hashing
+
+### After Launch (Future)
+
+- [ ] add christmas mode
+- [ ] Add twilio for build notis
+- [ ] Create backup strategy for content
+- [ ] Review and optimize bundle size
 
 ---
 
 ## 🐛 Bug Fixes
 
-- [ ] UNABLE_TO_GET_ISSUER_CERT_LOCALLY (SSL certificate issue)
+- [x] UNABLE_TO_GET_ISSUER_CERT_LOCALLY (SSL certificate issue)
 
 ---
 
@@ -45,40 +72,33 @@ _Start here - these are the most important items to tackle next_
 ### Content & Features
 
 - [ ] Add blog post categories/tags system
-- [ ] Add pagination for blog listing page
 - [ ] Create draft preview functionality
 - [ ] Add blog post excerpt/summary display
 - [ ] Add code syntax highlighting for technical posts (terminal theme)
 - [ ] Implement table of contents for long posts
 - [ ] Add related posts suggestions
 - [ ] Create post series/collections
-- [ ] Add author bio section for posts (with popup card)
 
 ### User Experience
 
 - [ ] Implement smooth scrolling navigation
 - [ ] Add reading time estimates for blog posts
 - [ ] Create breadcrumb navigation
-- [ ] Add "Back to top" button for long pages
-- [ ] Improve toasts styling and limit
-- [ ] Stylize toasts to space theme
+- [x] Improve toasts styling and limit
+- [x] Stylize toasts to space theme
 
 ### Performance & SEO
 
 - [x] Optimize images with Next.js Image component
 - [ ] Add proper meta tags for social sharing
-- [ ] Implement structured data for blog posts
-- [ ] Set up Google Analytics or similar
+- [x] Implement structured data for blog posts
+- [x] Set up Google Analytics or similar
 
 ### Development & Infrastructure
 
 - [x] Create deployment pipeline (CI/CD)
 - [x] Complete successful CI run
-- [ ] Set up VSCode server and connect cursor for remote development pipeline
-- [ ] Set up remote teardown command
 - [ ] Set up error monitoring (Sentry)
-- [ ] Create backup strategy for content
-- [ ] Review and optimize bundle size
 - [ ] Audit accessibility compliance
 - [ ] Refactor repetitive code patterns
 - [ ] Set up automated testing (Jest/Cypress)
@@ -118,6 +138,7 @@ _Start here - these are the most important items to tackle next_
 ### Documentation
 
 - [ ] Create UI style guide for consistent design
+- [ ] Consolidate and refine documentation
 - [ ] Write deployment instructions
 - [ ] Document Directus schema and relationships
 - [ ] Create troubleshooting guide

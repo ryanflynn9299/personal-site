@@ -1,5 +1,12 @@
 import type { NextConfig } from "next";
 
+// Bundle Analyzer (optional - install with: pnpm add -D @next/bundle-analyzer)
+// Uncomment when @next/bundle-analyzer is installed
+// import bundleAnalyzer from "@next/bundle-analyzer";
+// const withBundleAnalyzer = bundleAnalyzer({
+//   enabled: process.env.ANALYZE === "true",
+// });
+
 const nextConfig: NextConfig = {
   // 1. This is the fix for your Docker build error
   output: "standalone",
@@ -50,8 +57,10 @@ const nextConfig: NextConfig = {
         pathname: "/assets/**", // Allow all images from the assets endpoint
       },
     ],
-    dangerouslyAllowSVG: true,
+    dangerouslyAllowSVG: false,
   },
 };
 
+// Uncomment when @next/bundle-analyzer is installed
+// export default withBundleAnalyzer(nextConfig);
 export default nextConfig;
