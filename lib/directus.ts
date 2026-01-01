@@ -1,11 +1,14 @@
 import { createDirectus, readItems, rest } from "@directus/sdk";
 import { Post } from "@/types";
-import log from "./logger";
+import { createLogger } from "./logger";
 import {
   isDirectusEnabled,
   getDirectusUrl as getDirectusUrlFromEnv,
   env,
 } from "./env";
+
+const log = createLogger("ALL");
+const devLog = createLogger("DEV");
 
 /**
  * Error types for better error handling and debugging
@@ -239,26 +242,65 @@ export async function getPublishedPosts(): Promise<{
     return { status: "error", posts: [] };
   }
 
+  const directusUrl = getDirectusUrl();
+  const requestStartTime = Date.now();
+
   try {
-    const posts = await (directus as any).request(
-      (readItems as any)("blogs", {
-        fields: [
-          "id",
-          "title",
-          "summary",
-          "author",
-          "status",
-          "slug",
-          "publication_date",
-          "feature_image",
-          "blog_tags",
-          "content",
-        ],
-        filter: {
-          status: { _eq: "published" },
+    const requestParams = {
+      collection: "blogs",
+      fields: [
+        "id",
+        "title",
+        "summary",
+        "author",
+        "status",
+        "slug",
+        "publication_date",
+        "feature_image",
+        "blog_tags",
+        "content",
+      ],
+      filter: {
+        status: { _eq: "published" },
+      },
+      sort: ["-publication_date"],
+    };
+
+    // Log service call initiation (dev only)
+    devLog.info(
+      {
+        service: "Directus",
+        operation: "getPublishedPosts",
+        url: directusUrl,
+        request: {
+          collection: requestParams.collection,
+          fields: requestParams.fields,
+          filter: requestParams.filter,
+          sort: requestParams.sort,
         },
-        sort: ["-publication_date"],
-      })
+      },
+      "Initiating Directus service call: getPublishedPosts"
+    );
+
+    const posts = await (directus as any).request(
+      (readItems as any)(requestParams.collection, requestParams)
+    );
+
+    const requestDuration = Date.now() - requestStartTime;
+
+    // Log successful service call response (dev only)
+    devLog.info(
+      {
+        service: "Directus",
+        operation: "getPublishedPosts",
+        url: directusUrl,
+        response: {
+          status: "success",
+          postCount: posts?.length || 0,
+          durationMs: requestDuration,
+        },
+      },
+      "Directus service call completed: getPublishedPosts"
     );
 
     // Handle empty response
@@ -325,6 +367,24 @@ export async function getPublishedPosts(): Promise<{
     };
   } catch (error) {
     const errorInfo = classifyDirectusError(error);
+    const requestDuration = Date.now() - requestStartTime;
+
+    // Log service call error (dev only)
+    devLog.error(
+      {
+        service: "Directus",
+        operation: "getPublishedPosts",
+        url: directusUrl,
+        error: {
+          type: errorInfo.type,
+          message: errorInfo.message,
+          statusCode: errorInfo.statusCode,
+          durationMs: requestDuration,
+        },
+      },
+      "Directus service call failed: getPublishedPosts"
+    );
+
     // In production/live-dev, service errors are real errors
     if (env.treatServiceErrorsAsReal) {
       log.error(
@@ -401,31 +461,69 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
     return null;
   }
 
+  const directusUrl = getDirectusUrl();
+  const requestStartTime = Date.now();
+
   try {
+    const requestParams = {
+      collection: "blogs",
+      filter: {
+        _and: [{ slug: { _eq: slug } }, { status: { _eq: "published" } }],
+      },
+      limit: 1,
+      fields: [
+        "id",
+        "title",
+        "summary",
+        "author",
+        "slug",
+        "publication_date",
+        "status",
+        "feature_image",
+        "blog_tags",
+        "content",
+      ],
+    };
+
+    // Log service call initiation (dev only)
+    devLog.info(
+      {
+        service: "Directus",
+        operation: "getPostBySlug",
+        url: directusUrl,
+        request: {
+          collection: requestParams.collection,
+          slug,
+          filter: requestParams.filter,
+          limit: requestParams.limit,
+          fields: requestParams.fields,
+        },
+      },
+      "Initiating Directus service call: getPostBySlug"
+    );
+
     // Use readItems with a limit of 1. This is the standard way to fetch
     // an item by a secondary unique key (like a slug).
     const posts = await (directus as any).request(
-      (readItems as any)("blogs", {
-        // We use a logical AND to ensure both conditions are met.
-        filter: {
-          _and: [{ slug: { _eq: slug } }, { status: { _eq: "published" } }],
+      (readItems as any)(requestParams.collection, requestParams)
+    );
+
+    const requestDuration = Date.now() - requestStartTime;
+
+    // Log successful service call response (dev only)
+    devLog.info(
+      {
+        service: "Directus",
+        operation: "getPostBySlug",
+        url: directusUrl,
+        response: {
+          status: posts && posts.length > 0 ? "found" : "not_found",
+          postCount: posts?.length || 0,
+          durationMs: requestDuration,
         },
-        // We only need the first result that matches.
-        limit: 1,
-        // Specify all fields needed for the full 'Post' type.
-        fields: [
-          "id",
-          "title",
-          "summary",
-          "author",
-          "slug",
-          "publication_date",
-          "status",
-          "feature_image",
-          "blog_tags",
-          "content",
-        ],
-      })
+        slug,
+      },
+      "Directus service call completed: getPostBySlug"
     );
 
     // If the response is empty, no post was found. Return null.
@@ -483,6 +581,24 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
     return transformedPost;
   } catch (error) {
     const errorInfo = classifyDirectusError(error);
+    const requestDuration = Date.now() - requestStartTime;
+
+    // Log service call error (dev only)
+    devLog.error(
+      {
+        service: "Directus",
+        operation: "getPostBySlug",
+        url: directusUrl,
+        error: {
+          type: errorInfo.type,
+          message: errorInfo.message,
+          statusCode: errorInfo.statusCode,
+          durationMs: requestDuration,
+        },
+        slug,
+      },
+      "Directus service call failed: getPostBySlug"
+    );
 
     // For "not_found" errors, we can return null without logging as an error
     // since this is an expected case (post doesn't exist)

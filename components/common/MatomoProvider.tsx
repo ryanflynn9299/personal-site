@@ -2,6 +2,9 @@
 
 import { Matomo } from "./Matomo";
 import { env } from "@/lib/env";
+import { createLogger } from "@/lib/logger";
+
+const log = createLogger("ALL");
 
 /**
  * Client-side wrapper for Matomo analytics
@@ -19,14 +22,10 @@ export function MatomoProvider() {
     matomoUrl === "DISABLED" ||
     siteId === "DISABLED"
   ) {
-    // Only log in development, and not in test/CI environments
-    const shouldLog = env.isDevelopment && !env.isTest;
-
-    if (shouldLog) {
-      console.warn(
-        "Matomo analytics not configured. Set NEXT_PUBLIC_MATOMO_URL and NEXT_PUBLIC_MATOMO_SITE_ID"
-      );
-    }
+    // Log warning about missing Matomo configuration
+    log.warn(
+      "Matomo analytics not configured. Set NEXT_PUBLIC_MATOMO_URL and NEXT_PUBLIC_MATOMO_SITE_ID"
+    );
     return null;
   }
 

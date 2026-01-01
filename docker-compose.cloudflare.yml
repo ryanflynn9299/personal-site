@@ -1,0 +1,83 @@
+# ==============================================================================
+# Docker Compose for Cloudflare Tunnel (cloudflared)
+#
+# This file provides a Cloudflare Tunnel service that can expose your local
+# services through Cloudflare's network without opening ports.
+#
+# Services:
+#   - ps-cloudflared: Cloudflare Tunnel service
+#
+# Usage:
+#   1. Set up a Cloudflare Tunnel:
+#      - Go to Cloudflare Zero Trust dashboard
+#      - Create a tunnel and get the tunnel token
+#      - Or create a config file at ./cloudflare/config.yml
+#
+#   2. Set environment variables in .env:
+#      - CLOUDFLARE_TUNNEL_TOKEN (for token-based auth)
+#      - Or use config file at ./cloudflare/config.yml
+#
+#   3. Run with main compose file:
+#      docker compose -f docker-compose.yml -f docker-compose.cloudflare.yml up -d
+#
+#   4. Or run standalone:
+#      docker compose -f docker-compose.cloudflare.yml up -d
+#
+# Configuration Options:
+#   - Token-based: Set CLOUDFLARE_TUNNEL_TOKEN in .env
+#   - Config-based: Create ./cloudflare/config.yml with tunnel config
+#   - Both: Token takes precedence if both are set
+# ==============================================================================
+version: '3.9'
+
+services:
+  # Cloudflare Tunnel Service
+  ps-cloudflared:
+    container_name: ps-cloudflared
+    image: cloudflare/cloudflared:latest
+    restart: unless-stopped
+    # cloudflared will use TUNNEL_TOKEN if set, otherwise use config.yml
+    # Token-based auth: Set CLOUDFLARE_TUNNEL_TOKEN in .env
+    # Config-based auth: Create ./cloudflare/config.yml
+    command: tunnel run
+    environment:
+      # Token-based authentication (recommended)
+      # Get token from Cloudflare Zero Trust dashboard
+      # If set, this takes precedence over config file
+      - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN:-}
+    volumes:
+      # Config file-based authentication (alternative to token)
+      # Create ./cloudflare/config.yml with your tunnel configuration
+      # Only used if TUNNEL_TOKEN is not set
+      - ./cloudflare/config.yml:/etc/cloudflared/config.yml:ro
+      # Persistent tunnel credentials (created automatically)
+      - cloudflared-data:/etc/cloudflared
+    networks:
+      - backend-net
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    healthcheck:
+      # Check if cloudflared process is running
+      test: ["CMD", "cloudflared", "tunnel", "info"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    # Optional: Add labels for easier management
+    labels:
+      - "com.ryanflynn.service=cloudflared"
+      - "com.ryanflynn.description=Cloudflare Tunnel Service"
+
+# Use the same network as the main docker-compose.yml
+networks:
+  backend-net:
+    external: true # Assumes backend-net network exists from main compose file
+
+# Persistent volume for cloudflared credentials and state
+volumes:
+  cloudflared-data:
+    name: ps-cloudflared-data
+

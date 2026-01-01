@@ -1,14 +1,21 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 
-// Mock pino logger to avoid issues with tracingChannel
-vi.mock("@/lib/logger", () => ({
-  default: {
+// Mock logger to avoid issues with tracingChannel and console output
+vi.mock("@/lib/logger", () => {
+  const mockLogger = {
     info: vi.fn(),
     warn: vi.fn(),
     error: vi.fn(),
     debug: vi.fn(),
-  },
-}));
+  };
+  return {
+    createLogger: vi.fn(() => mockLogger),
+    log: mockLogger,
+    prodLog: mockLogger,
+    devLog: mockLogger,
+    default: mockLogger,
+  };
+});
 
 describe("isDirectusConfigured", () => {
   beforeEach(() => {

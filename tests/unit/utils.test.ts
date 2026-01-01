@@ -1,6 +1,23 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { cn, getBlogPostUrl } from "@/lib/utils";
 
+// Mock logger to avoid console output during tests
+vi.mock("@/lib/logger", () => {
+  const mockLogger = {
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn(),
+    debug: vi.fn(),
+  };
+  return {
+    createLogger: vi.fn(() => mockLogger),
+    log: mockLogger,
+    prodLog: mockLogger,
+    devLog: mockLogger,
+    default: mockLogger,
+  };
+});
+
 describe("cn", () => {
   it("merges class names correctly", () => {
     expect(cn("foo", "bar")).toBe("foo bar");
@@ -45,14 +62,8 @@ describe("cn", () => {
 });
 
 describe("getBlogPostUrl", () => {
-  let consoleErrorSpy: ReturnType<typeof vi.spyOn>;
-
   beforeEach(() => {
-    consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-  });
-
-  afterEach(() => {
-    consoleErrorSpy.mockRestore();
+    vi.clearAllMocks();
   });
 
   it("returns correct URL for valid slug", () => {
@@ -80,29 +91,23 @@ describe("getBlogPostUrl", () => {
     expect(getBlogPostUrl("   ")).toBe("/blog");
   });
 
-  it("logs error in development mode for invalid slug", () => {
-    // Set to offline-dev mode (development mode)
-    vi.stubEnv("APP_MODE", "offline-dev");
-    vi.stubEnv("NODE_ENV", "development");
+  it("logs error for invalid slug using logger", async () => {
+    // Import the mocked logger module
+    const loggerModule = await import("@/lib/logger");
+    const mockLog = vi.mocked(loggerModule.log);
+
+    // Clear any previous calls
+    vi.clearAllMocks();
 
     getBlogPostUrl(null);
-    expect(consoleErrorSpy).toHaveBeenCalledWith(
-      expect.stringContaining("[getBlogPostUrl]"),
-      null,
-      expect.stringContaining("Falling back to /blog")
+
+    // Verify logger.error was called with appropriate arguments
+    expect(mockLog.error).toHaveBeenCalledWith(
+      expect.objectContaining({
+        slug: null,
+        fallback: "/blog",
+      }),
+      expect.stringContaining("[getBlogPostUrl]")
     );
-
-    vi.unstubAllEnvs();
-  });
-
-  it("does not log error in production mode", () => {
-    // Set to production mode
-    vi.stubEnv("APP_MODE", "production");
-    vi.stubEnv("NODE_ENV", "production");
-
-    getBlogPostUrl(null);
-    expect(consoleErrorSpy).not.toHaveBeenCalled();
-
-    vi.unstubAllEnvs();
   });
 });

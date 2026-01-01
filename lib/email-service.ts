@@ -10,7 +10,10 @@
 
 import { delay } from "./delay";
 import { isEmailServiceEnabled, env } from "./env";
-import log from "./logger";
+import { createLogger } from "./logger";
+
+const log = createLogger("ALL");
+const devLog = createLogger("DEV");
 
 /**
  * Email sending result
@@ -118,6 +121,28 @@ export async function sendEmail(
     };
   }
 
+  const requestStartTime = Date.now();
+
+  // Log service call initiation (dev only)
+  devLog.info(
+    {
+      service: "Email",
+      operation: "sendEmail",
+      request: {
+        to: _message.to,
+        from: _message.from,
+        subject: _message.subject,
+        hasHtml: !!_message.html,
+        textLength: _message.text.length,
+      },
+      smtp: {
+        host: env.smtp.host,
+        port: env.smtp.port,
+      },
+    },
+    "Initiating email service call: sendEmail"
+  );
+
   try {
     // Simulate network/processing delay (500ms)
     // In production, this represents actual SMTP communication time
@@ -151,11 +176,51 @@ export async function sendEmail(
 
     // For now, simulate successful email sending
     // In the future, this will actually send the email
-    return {
+    const result = {
       success: true,
       messageId: `mock-${Date.now()}`,
     };
+
+    const requestDuration = Date.now() - requestStartTime;
+
+    // Log successful service call response (dev only)
+    devLog.info(
+      {
+        service: "Email",
+        operation: "sendEmail",
+        response: {
+          status: "success",
+          messageId: result.messageId,
+          durationMs: requestDuration,
+        },
+        request: {
+          to: _message.to,
+          subject: _message.subject,
+        },
+      },
+      "Email service call completed: sendEmail"
+    );
+
+    return result;
   } catch (error) {
+    const requestDuration = Date.now() - requestStartTime;
+
+    // Log service call error (dev only)
+    devLog.error(
+      {
+        service: "Email",
+        operation: "sendEmail",
+        error: {
+          message: error instanceof Error ? error.message : "Unknown error",
+          durationMs: requestDuration,
+        },
+        request: {
+          to: _message.to,
+          subject: _message.subject,
+        },
+      },
+      "Email service call failed: sendEmail"
+    );
     return {
       success: false,
       error:

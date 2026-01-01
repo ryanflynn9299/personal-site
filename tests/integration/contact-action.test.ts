@@ -2,6 +2,23 @@ import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { submitContactForm } from "@/app/actions/contact";
 import * as emailService from "@/lib/email-service";
 
+// Mock logger to avoid console output during tests
+vi.mock("@/lib/logger", () => {
+  const mockLogger = {
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn(),
+    debug: vi.fn(),
+  };
+  return {
+    createLogger: vi.fn(() => mockLogger),
+    log: mockLogger,
+    prodLog: mockLogger,
+    devLog: mockLogger,
+    default: mockLogger,
+  };
+});
+
 // Mock the email service module to avoid delays in tests
 vi.mock("@/lib/email-service", () => ({
   isEmailServiceConfigured: vi.fn(),

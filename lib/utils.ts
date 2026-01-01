@@ -1,6 +1,9 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { env } from "./env";
+import { createLogger } from "./logger";
+
+const log = createLogger("ALL");
 
 /**
  * A utility function to conditionally join class names together.
@@ -35,14 +38,14 @@ export function cn(...inputs: ClassValue[]): string {
 export function getBlogPostUrl(slug: string | null | undefined): string {
   // Validate slug exists and is non-empty
   if (!slug || typeof slug !== "string" || slug.trim() === "") {
-    // Log error in development to catch data issues early
-    if (env.isDevelopment) {
-      console.error(
-        "[getBlogPostUrl] Invalid slug provided:",
+    // Log error to catch data issues early
+    log.error(
+      {
         slug,
-        "Falling back to /blog"
-      );
-    }
+        fallback: "/blog",
+      },
+      "[getBlogPostUrl] Invalid slug provided, falling back to /blog"
+    );
     // Return blog index as fallback to prevent broken links
     return "/blog";
   }

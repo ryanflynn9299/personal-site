@@ -1,5 +1,22 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 
+// Mock logger to avoid console output during tests
+vi.mock("@/lib/logger", () => {
+  const mockLogger = {
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn(),
+    debug: vi.fn(),
+  };
+  return {
+    createLogger: vi.fn(() => mockLogger),
+    log: mockLogger,
+    prodLog: mockLogger,
+    devLog: mockLogger,
+    default: mockLogger,
+  };
+});
+
 describe("isEmailServiceConfigured", () => {
   beforeEach(() => {
     vi.clearAllMocks();

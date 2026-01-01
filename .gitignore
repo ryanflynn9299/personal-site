@@ -42,6 +42,12 @@ yarn-error.log*
 # .env.example is intentionally committed - it contains no secrets
 !.env.example
 
+# cloudflare tunnel config (contains sensitive credentials)
+cloudflare/config.yml
+cloudflare/credentials.json
+# Allow example files to be committed
+!cloudflare/*.example
+
 # vercel
 .vercel
 

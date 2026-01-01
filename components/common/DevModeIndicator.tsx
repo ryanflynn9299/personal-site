@@ -30,7 +30,9 @@ export function DevModeIndicator() {
       <div className="container mx-auto flex flex-col items-center justify-center gap-1 text-center sm:flex-row sm:gap-2 sm:text-sm relative">
         <div className="flex items-center gap-2">
           <Code className="h-4 w-4 text-amber-400 flex-shrink-0" />
-          <span className="font-bold text-amber-300">{modeLabel} Mode</span>
+          <span className="font-bold text-amber-300">
+            {modeLabel} Mode Active
+          </span>
         </div>
         <span className="hidden text-slate-400 sm:inline">•</span>
         <span className="text-xs text-slate-400 sm:text-sm">

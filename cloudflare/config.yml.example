@@ -1,0 +1,42 @@
+# ==============================================================================
+# Cloudflare Tunnel Configuration Example
+#
+# This is an example configuration file for Cloudflare Tunnel.
+# Copy this to config.yml and customize for your setup.
+#
+# Documentation: https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/configuration/
+# ==============================================================================
+
+# Tunnel ID (get from Cloudflare Zero Trust dashboard)
+tunnel: YOUR_TUNNEL_ID
+
+# Credentials file (auto-generated when using cloudflared login)
+credentials-file: /etc/cloudflared/credentials.json
+
+# Ingress rules - define which services to tunnel
+ingress:
+  # Frontend service (Next.js)
+  - hostname: www.ryanflynn.org
+    service: http://ps-frontend:3000
+
+  # Directus CMS (optional - only if you want to expose it publicly)
+  # - hostname: cms.ryanflynn.org
+  #   service: http://ps-directus:8055
+
+  # Matomo Analytics (optional - only if you want to expose it publicly)
+  # - hostname: analytics.ryanflynn.org
+  #   service: http://ps-matomo:8181
+
+  # Catch-all rule (must be last)
+  - service: http_status:404
+
+# Optional: Logging configuration
+# logLevel: info
+# logFile: /var/log/cloudflared.log
+
+# Optional: Metrics configuration
+# metrics: 0.0.0.0:9090
+
+# Optional: Grace period for connections (seconds)
+# gracePeriod: 30s
+
