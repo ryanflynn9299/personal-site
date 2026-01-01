@@ -81,8 +81,8 @@ describe("getBlogPostUrl", () => {
   });
 
   it("logs error in development mode for invalid slug", () => {
-    const originalEnv = process.env.NODE_ENV;
-    // Use vi.stubEnv which is the proper way to modify env in tests
+    // Set to offline-dev mode (development mode)
+    vi.stubEnv("APP_MODE", "offline-dev");
     vi.stubEnv("NODE_ENV", "development");
 
     getBlogPostUrl(null);
@@ -92,17 +92,17 @@ describe("getBlogPostUrl", () => {
       expect.stringContaining("Falling back to /blog")
     );
 
-    vi.stubEnv("NODE_ENV", originalEnv || "test");
+    vi.unstubAllEnvs();
   });
 
   it("does not log error in production mode", () => {
-    const originalEnv = process.env.NODE_ENV;
-    // Use vi.stubEnv which is the proper way to modify env in tests
+    // Set to production mode
+    vi.stubEnv("APP_MODE", "production");
     vi.stubEnv("NODE_ENV", "production");
 
     getBlogPostUrl(null);
     expect(consoleErrorSpy).not.toHaveBeenCalled();
 
-    vi.stubEnv("NODE_ENV", originalEnv || "test");
+    vi.unstubAllEnvs();
   });
 });

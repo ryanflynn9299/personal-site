@@ -22,12 +22,13 @@ vi.mock("@/lib/delay", () => ({
 describe("submitContactForm", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    // Reset NODE_ENV to test using Vitest's stubEnv utility
+    // Set test mode - services are disabled in test mode
+    vi.stubEnv("APP_MODE", "test");
     vi.stubEnv("NODE_ENV", "test");
   });
 
   afterEach(() => {
-    // Restore original NODE_ENV after each test
+    // Restore original environment after each test
     vi.unstubAllEnvs();
   });
 
@@ -68,7 +69,8 @@ describe("submitContactForm", () => {
     expect(result.success).toBe(true);
   });
 
-  it("handles missing email service in development", async () => {
+  it("handles missing email service in offline-dev mode", async () => {
+    vi.stubEnv("APP_MODE", "offline-dev");
     vi.stubEnv("NODE_ENV", "development");
     vi.mocked(emailService.isEmailServiceConfigured).mockReturnValue(false);
 
@@ -81,10 +83,11 @@ describe("submitContactForm", () => {
 
     expect(result.success).toBe(true);
     expect(result.emailSent).toBe(false);
-    expect(result.message).toContain("Email service is not configured");
+    expect(result.message).toContain("offline dev mode");
   });
 
-  it("handles missing email service in production", async () => {
+  it("handles missing email service in production (returns error)", async () => {
+    vi.stubEnv("APP_MODE", "production");
     vi.stubEnv("NODE_ENV", "production");
     vi.mocked(emailService.isEmailServiceConfigured).mockReturnValue(false);
 
@@ -95,9 +98,9 @@ describe("submitContactForm", () => {
 
     const result = await submitContactForm(formData);
 
-    expect(result.success).toBe(true);
-    expect(result.emailSent).toBe(false);
-    expect(result.message).toContain("Email service is currently unavailable");
+    // In production, missing service is a real error
+    expect(result.success).toBe(false);
+    expect(result.error).toContain("Email service is not configured");
   });
 
   it("returns success when email service is configured", async () => {

@@ -5,6 +5,7 @@ import {
   sendEmail,
   type EmailMessage,
 } from "@/lib/email-service";
+import { env } from "@/lib/env";
 import type { FormState } from "@/types/forms";
 
 export async function submitContactForm(
@@ -34,18 +35,35 @@ export async function submitContactForm(
 
   // Check if email service is configured
   const emailServiceAvailable = isEmailServiceConfigured();
-  const isDev = process.env.NODE_ENV === "development";
+  const isProduction = env.isProduction;
+  const isLiveDev = env.isLiveDev;
+  const isOfflineDev = env.isOfflineDev;
 
   if (!emailServiceAvailable) {
-    // Email service is not available
-    // Return success state but indicate email was not sent
-    // IMPORTANT: Make it clear that messages are NOT being saved or stored
+    // In production/live-dev: This is a real error
+    if (isProduction || isLiveDev) {
+      return {
+        success: false,
+        error:
+          "Email service is not configured. This is a configuration error. Please check your SMTP settings.",
+      };
+    }
+
+    // In offline-dev: Informational message
+    if (isOfflineDev) {
+      return {
+        success: true,
+        emailSent: false,
+        message:
+          "Services are disabled in offline dev mode. Set APP_MODE=live-dev to enable email delivery.",
+      };
+    }
+
+    // Fallback (should not happen)
     return {
       success: true,
       emailSent: false,
-      message: isDev
-        ? "Email service is not configured, so your message cannot and will not be sent. No message has been saved or stored. Please use the direct email link above or configure SMTP environment variables to enable email delivery."
-        : "Email service is currently unavailable, so your message cannot and will not be sent. No message has been saved or stored. Please try again later or use the direct email link above.",
+      message: "Email service is currently unavailable.",
     };
   }
 

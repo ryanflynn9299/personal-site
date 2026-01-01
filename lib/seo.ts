@@ -3,9 +3,10 @@
  * Centralized SEO settings for consistent metadata across the site
  */
 
+import { env } from "./env";
+
 // Base URL configuration - use environment variable if available, otherwise default
-export const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://www.ryanflynn.org";
+export const SITE_URL = env.siteUrl;
 
 // Feature flags for SEO
 export const ENABLE_BLOG_SEO = false; // Set to true when blog has meaningful content

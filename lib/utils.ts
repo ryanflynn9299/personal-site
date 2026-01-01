@@ -1,5 +1,6 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { env } from "./env";
 
 /**
  * A utility function to conditionally join class names together.
@@ -35,7 +36,7 @@ export function getBlogPostUrl(slug: string | null | undefined): string {
   // Validate slug exists and is non-empty
   if (!slug || typeof slug !== "string" || slug.trim() === "") {
     // Log error in development to catch data issues early
-    if (process.env.NODE_ENV === "development") {
+    if (env.isDevelopment) {
       console.error(
         "[getBlogPostUrl] Invalid slug provided:",
         slug,

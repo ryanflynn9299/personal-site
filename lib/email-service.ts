@@ -9,6 +9,8 @@
  */
 
 import { delay } from "./delay";
+import { isEmailServiceEnabled, env } from "./env";
+import log from "./logger";
 
 /**
  * Email sending result
@@ -32,7 +34,11 @@ export interface EmailMessage {
 
 /**
  * Checks if email service is configured and available.
- * Returns true if all required SMTP environment variables are set with non-placeholder values.
+ * Uses the centralized environment configuration system.
+ *
+ * Policy:
+ * - production/live-dev: SMTP MUST be configured (returns false if not = error condition)
+ * - offline-dev/test: Always returns false (services disabled, no calls made)
  *
  * Required variables:
  * - SMTP_HOST: SMTP server hostname
@@ -47,41 +53,29 @@ export interface EmailMessage {
  * @returns {boolean} True if email service is properly configured, false otherwise
  */
 export function isEmailServiceConfigured(): boolean {
-  const smtpHost = process.env.SMTP_HOST;
-  const smtpPort = process.env.SMTP_PORT;
-  const smtpFrom = process.env.SMTP_FROM;
-  const smtpTo = process.env.SMTP_TO;
+  // In offline-dev and test, services are disabled - return false immediately
+  if (!env.connectToServices) {
+    return false;
+  }
 
-  // Check if all required variables are set, not empty, and not placeholder values
-  const hasHost =
-    smtpHost &&
-    smtpHost.trim() !== "" &&
-    !smtpHost.includes("your-") && // Exclude placeholder text
-    smtpHost !== "localhost" && // Exclude default placeholder
-    smtpHost !== "smtp.example.com"; // Exclude example placeholder
+  // In production and live-dev, check if email service is actually configured
+  const enabled = isEmailServiceEnabled();
 
-  const hasPort =
-    smtpPort &&
-    smtpPort.trim() !== "" &&
-    !isNaN(Number(smtpPort)) && // Must be a valid number
-    Number(smtpPort) > 0; // Must be positive
+  // If services should be connected but email is not configured, log error
+  if (env.treatServiceErrorsAsReal && !enabled) {
+    log.error(
+      {
+        mode: env.mode,
+        host: env.smtp.host,
+        port: env.smtp.port,
+        from: env.smtp.from,
+        to: env.smtp.to,
+      },
+      "Email service is not configured but is required in production/live-dev mode"
+    );
+  }
 
-  const hasFrom =
-    smtpFrom &&
-    smtpFrom.trim() !== "" &&
-    smtpFrom.includes("@") && // Must be a valid email format
-    !smtpFrom.includes("your-") && // Exclude placeholder text
-    smtpFrom !== "contact@example.com"; // Exclude example placeholder
-
-  const hasTo =
-    smtpTo &&
-    smtpTo.trim() !== "" &&
-    smtpTo.includes("@") && // Must be a valid email format
-    !smtpTo.includes("your-") && // Exclude placeholder text
-    smtpTo !== "your-email@example.com"; // Exclude example placeholder
-
-  // All required variables must be present and valid
-  return !!(hasHost && hasPort && hasFrom && hasTo);
+  return enabled;
 }
 
 /**
@@ -97,8 +91,27 @@ export function isEmailServiceConfigured(): boolean {
 export async function sendEmail(
   _message: EmailMessage
 ): Promise<EmailSendResult> {
+  // In offline-dev and test, services are disabled - return error immediately
+  if (!env.connectToServices) {
+    return {
+      success: false,
+      error: "Email service is disabled in offline-dev/test mode",
+    };
+  }
+
   // Check if email service is configured
   if (!isEmailServiceConfigured()) {
+    // In production/live-dev, this is a real error
+    if (env.treatServiceErrorsAsReal) {
+      log.error(
+        {
+          mode: env.mode,
+          messageTo: _message.to,
+          messageSubject: _message.subject,
+        },
+        "CRITICAL: Attempted to send email but service not configured in production/live-dev mode"
+      );
+    }
     return {
       success: false,
       error: "Email service is not configured",

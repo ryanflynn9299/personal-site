@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render } from "@testing-library/react";
 import { JsonLd } from "@/components/common/JsonLd";
 import type { Post } from "@/types";
@@ -9,6 +9,31 @@ vi.mock("@/lib/seo", () => ({
   SITE_AUTHOR: "Ryan Flynn",
   ENABLE_BLOG_SEO: true, // Enable for tests
 }));
+
+// Mock the env module to ensure it reads from process.env at runtime
+// The env.directus.publicUrl property is set at module load time, so we need to
+// intercept access to make it read from process.env dynamically
+vi.mock("@/lib/env", async () => {
+  const actual = await vi.importActual<typeof import("@/lib/env")>("@/lib/env");
+  // Create a Proxy that intercepts access to the directus property
+  // to read from process.env at runtime instead of module load time
+  return {
+    ...actual,
+    env: new Proxy(actual.env, {
+      get(target, prop) {
+        // Intercept directus property to read from process.env dynamically
+        if (prop === "directus") {
+          return {
+            serverUrl: process.env.DIRECTUS_URL_SERVER_SIDE,
+            publicUrl: process.env.NEXT_PUBLIC_DIRECTUS_URL,
+          };
+        }
+        // For all other properties (including getters), access normally
+        return Reflect.get(target, prop, target);
+      },
+    }),
+  };
+});
 
 describe("JsonLd", () => {
   const mockPost: Post = {
@@ -34,6 +59,15 @@ describe("JsonLd", () => {
     ...mockPost,
     feature_image: null,
   };
+
+  beforeEach(() => {
+    // Set a default Directus URL for all tests
+    vi.stubEnv("NEXT_PUBLIC_DIRECTUS_URL", "https://api.testdomain.com");
+  });
+
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
 
   it("renders a script tag with type application/ld+json", () => {
     const { container } = render(<JsonLd post={mockPost} />);
@@ -98,7 +132,8 @@ describe("JsonLd", () => {
   });
 
   it("includes image URL when feature_image is present", () => {
-    vi.stubEnv("NEXT_PUBLIC_DIRECTUS_URL", "https://api.example.com");
+    // The URL is already set in beforeEach, but ensure it's set for this test
+    vi.stubEnv("NEXT_PUBLIC_DIRECTUS_URL", "https://api.testdomain.com");
 
     const { container } = render(<JsonLd post={mockPost} />);
     const script = container.querySelector(
@@ -109,8 +144,7 @@ describe("JsonLd", () => {
     expect(jsonLd.image).toBeDefined();
     expect(jsonLd.image["@type"]).toBe("ImageObject");
     expect(jsonLd.image.url).toContain("/assets/123");
-
-    vi.unstubAllEnvs();
+    expect(jsonLd.image.url).toBe("https://api.testdomain.com/assets/123");
   });
 
   it("excludes image when feature_image is null", () => {

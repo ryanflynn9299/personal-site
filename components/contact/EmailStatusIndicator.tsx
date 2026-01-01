@@ -2,6 +2,7 @@
 
 import { AlertCircle } from "lucide-react";
 import { useState } from "react";
+import { env } from "@/lib/env";
 
 /**
  * Email Status Indicator Component
@@ -30,10 +31,13 @@ export function EmailStatusIndicatorWithStatus({
     return null;
   }
 
-  const isDev = process.env.NODE_ENV === "development";
-  const tooltipText = isDev
-    ? "Email service not configured. Emails will not be sent. Set SMTP environment variables to enable email delivery."
-    : "Email service is currently unavailable. Emails will not be sent.";
+  const isDev = env.isDevelopment;
+  const isOfflineDev = env.isOfflineDev;
+  const tooltipText = isOfflineDev
+    ? "Services are disabled in offline dev mode. Set APP_MODE=live-dev to enable email delivery."
+    : isDev
+      ? "Email service not configured. Emails will not be sent. Set SMTP environment variables to enable email delivery."
+      : "Email service is currently unavailable. Emails will not be sent.";
 
   return (
     <div className="relative inline-flex items-center">

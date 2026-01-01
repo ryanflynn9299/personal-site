@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import type { Quote } from "@/app/(portfolio)/quotes/config";
 import type { Comet } from "./types";
+import { env } from "@/lib/env";
 import {
   ROCKET_COLORS,
   COMET_INITIAL_COUNT,
@@ -68,10 +69,9 @@ export function useComets(
         y: 0,
         vx: 0,
         vy: 0,
-        quote:
-          process.env.NODE_ENV === "development"
-            ? { id: "default", text: "No quotes available" }
-            : null,
+        quote: env.devModeUI
+          ? { id: "default", text: "No quotes available" }
+          : null,
         iconType: "rocket" as const,
         rotation: 0,
         color: "blue",
@@ -121,11 +121,11 @@ export function useComets(
       vy = Math.sin(angle) * speed;
     }
 
-    // Pick a random quote, or use default if none available (only in dev mode)
+    // Pick a random quote, or use default if none available (only in dev mode UI)
     const randomQuote =
       quotes.length > 0
         ? quotes[Math.floor(Math.random() * quotes.length)]
-        : process.env.NODE_ENV === "development"
+        : env.devModeUI
           ? { id: "default", text: "No quotes available" }
           : null; // No quote in production
 

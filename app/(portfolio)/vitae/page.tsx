@@ -4,6 +4,7 @@ import Link from "next/link";
 import { vitaeData } from "@/data/work_experience";
 import { DownloadButton } from "@/components/common/DownloadButton";
 import { generatePageMetadata } from "@/lib/seo";
+import { env } from "@/lib/env";
 
 export const metadata: Metadata = generatePageMetadata({
   title: "Vitae",
@@ -129,7 +130,7 @@ export default function VitaePage() {
             <h2 className="font-heading text-2xl font-semibold text-slate-100">
               Projects
             </h2>
-            {process.env.NODE_ENV === "development" && (
+            {env.devModeUI && (
               <Link
                 href="/projects-cabinet"
                 className="group flex items-center gap-1 rounded px-2 py-1 text-sm text-sky-300 transition-colors hover:bg-slate-800 hover:text-sky-300"

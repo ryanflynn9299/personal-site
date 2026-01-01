@@ -1,4 +1,5 @@
 import pino from "pino";
+import { env } from "./env";
 
 // Fix for thread-stream worker.js error in Next.js/Docker
 // pino-pretty uses thread-stream which doesn't work well in Next.js bundling
@@ -12,14 +13,12 @@ const isBrowser = typeof window !== "undefined";
 // between production and development settings.
 const pinoOptions: pino.LoggerOptions = {
   // Set the minimum log level.
-  level: process.env.NODE_ENV === "production" ? "info" : "debug",
+  level: env.isProduction ? "info" : "debug",
 
   // Only use pino-pretty transport if explicitly enabled AND not in browser
   // This avoids thread-stream worker thread issues in Next.js/Docker
   transport:
-    !isBrowser &&
-    process.env.NODE_ENV !== "production" &&
-    process.env.ENABLE_PINO_PRETTY === "true"
+    !isBrowser && !env.isProduction && env.logger.enablePinoPretty
       ? {
           target: "pino-pretty",
           options: {
