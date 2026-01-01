@@ -16,6 +16,10 @@ _Start here - these are the most important items to tackle next_
 
 ### Next promotion
 
+- [ ] Script for .env sync
+- [ ] Deep dive on Matomo
+- [ ] Add a config for production quotes setup
+- [ ] Formalize dev mode (with and without services)
 - [ ] Configure secrets for dev mode/local testing
 - [ ] Fix missing author from Directus call
 - [ ] Organize and slightly refine vitae details
@@ -28,6 +32,9 @@ _Start here - these are the most important items to tackle next_
 - [ ] establish baseline code coverage
 - [ ] add coverage check to main branch
 - [ ] pre-commit check script (validate, test, compare coverage, build)
+- [ ] Improve pre-commit checks for PR (PR naming conventions, etc)
+- [ ] Reduce build time for PR pipeline
+- [ ] Mandatory approvers to master/main
 - [ ] Establish CD pipeline
 
 ### Before Launch - After UI reviewers
@@ -42,6 +49,7 @@ _Start here - these are the most important items to tackle next_
 - [ ] See my latest LinkedIn posts??
 - [ ] Enable SEO for blogs in lib/seo.ts
 - [ ] Versioning system/methodology
+- [ ] Implement Terms and Privacy Policies wrt Matomo analytics
 
 ### First promote after launch
 
