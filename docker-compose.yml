@@ -14,7 +14,7 @@
 #   - Configure NPM to route traffic to:
 #     - http://ps-frontend:3000 (Frontend)
 #     - http://ps-directus:8055 (Directus)
-#     - http://ps-matomo:80 (Matomo)
+#     - http://ps-matomo:8181 (Matomo)
 #   - Run: docker compose up -d
 # ==============================================================================
 version: '3.9'
@@ -52,12 +52,13 @@ services:
         max-size: "10m"
         max-file: "3"
     healthcheck:
-      # This check assumes your Next.js app serves on port 3000.
-      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      # Internal health check endpoint - only accessible from within container
+      # Uses Node.js (available in image) instead of curl/wget for reliability
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/api/health', (r) => { process.exit(r.statusCode === 200 ? 0 : 1) }).on('error', () => process.exit(1))"]
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 10s # Give Next.js time to build/start
+      start_period: 30s # Give Next.js time to build/start (increased for reliability)
 
   # 2. Backend Service (Directus)
   ps-directus:
@@ -176,9 +177,11 @@ services:
     container_name: ps-matomo
     restart: unless-stopped
     expose:
-      - "80" # Matomo runs on port 80 internally
+      - "8181" # Matomo runs on port 8181 internally
     volumes:
       - matomo-app-data:/var/www/html
+      # Mount custom Apache ports config to change Listen from 80 to 8181
+      - ./matomo-config/apache-port-8181.conf:/etc/apache2/ports.conf:ro
     environment:
       - MATOMO_DATABASE_ADAPTER=mysql
       - MATOMO_DATABASE_HOST=ps-matomo-db
@@ -192,7 +195,7 @@ services:
         condition: service_healthy
     logging: *default-logging
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://127.0.0.1:80"]
+      test: ["CMD", "curl", "-f", "http://127.0.0.1:8181"]
       interval: 30s
       timeout: 10s
       retries: 5

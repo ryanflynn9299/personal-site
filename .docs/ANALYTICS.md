@@ -125,10 +125,12 @@ To view custom events in Matomo:
 
 Matomo runs as part of the Docker Compose stack:
 
-- **`ps-matomo`** - Matomo application container (port 80 internally)
+- **`ps-matomo`** - Matomo application container (port 8181 internally)
 - **`ps-matomo-db`** - MariaDB database for Matomo data storage
 
 Both services are on the `backend-net` network and start automatically with `docker compose up -d`.
+
+**Note**: Matomo is configured to run on port 8181 instead of 80 to avoid port conflicts (ports 80 and 8080 are typically in use). When configuring Nginx Proxy Manager, route traffic to `http://ps-matomo:8181`.
 
 ## Troubleshooting
 
