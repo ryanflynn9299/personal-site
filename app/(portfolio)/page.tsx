@@ -14,6 +14,9 @@ export const metadata: Metadata = generatePageMetadata({
   path: "/",
 });
 
+// Revalidate the page every hour to fetch new blog posts
+export const revalidate = 3600;
+
 /* Unused swappable components */
 // import { AboutMe1 } from "@/components/sections/AboutMe1";
 // import { FeaturedProjects } from "@/components/sections/FeaturedProjects";
@@ -23,7 +26,7 @@ export const metadata: Metadata = generatePageMetadata({
 // import { BlogHighlight } from "@/components/sections/BlogHighlight";
 // import {EditorialBlogHighlight3} from "@/components/home/editorial-blog";
 
-export default function HomePage() {
+export default async function HomePage() {
   return (
     // Remove the outer container to allow sections to have full-width backgrounds.
     <>
