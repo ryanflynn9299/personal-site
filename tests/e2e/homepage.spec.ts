@@ -84,13 +84,17 @@ test.describe("Homepage", () => {
     await page.goto("/");
     await page.waitForLoadState("networkidle");
 
-    // Filter out known acceptable errors (e.g., favicon, analytics, 404s for optional resources)
+    // Filter out known acceptable errors (e.g., favicon, analytics, 404s for optional resources, fonts)
     const criticalErrors = errors.filter(
       (error) =>
         !error.includes("favicon") &&
         !error.includes("analytics") &&
         !error.includes("matomo") &&
-        !error.includes("404")
+        !error.includes("404") &&
+        !error.includes("downloadable font") &&
+        !error.includes("__nextjs_font") &&
+        !error.includes("geist") &&
+        !error.includes("woff2")
     );
 
     // Filter out acceptable 404s and Next.js internal resources that may fail in test environments

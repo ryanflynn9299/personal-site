@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import { useQuoteViewStore } from "@/components/quotes/store/useQuoteViewStore";
 import { useDevControlsStore } from "./store/useDevControlsStore";
+import { env } from "@/lib/env";
 import type {
   NormalVariant,
   ConstellationVariant,
@@ -22,23 +23,9 @@ export function DevControls() {
   const pathname = usePathname();
   const [isCollapsed, setIsCollapsed] = useState(false);
 
-  // Completely disable during testing (not a core feature)
-  // Check multiple indicators to ensure it's disabled in all test environments
-  const isTestEnvironment =
-    // Server-side test indicators
-    process.env.NODE_ENV === "test" ||
-    process.env.PLAYWRIGHT_TEST === "true" ||
-    process.env.VITEST === "true" ||
-    // Client-side test indicators (NEXT_PUBLIC_ prefix required for client components)
-    process.env.NEXT_PUBLIC_PLAYWRIGHT_TEST === "true" ||
-    process.env.NEXT_PUBLIC_VITEST === "true" ||
-    // Window-level indicators (fallback for runtime checks)
-    (typeof window !== "undefined" &&
-      ((window as any).__PLAYWRIGHT_TEST__ === true ||
-        (window as any).__VITEST__ === true));
-
-  // Only show in development, never in test/e2e environments
-  if (process.env.NODE_ENV !== "development" || isTestEnvironment) {
+  // Only show if dev mode UI is enabled and not in test mode
+  // Dev mode UI can be toggled independently of service connectivity
+  if (!env.devModeUI || env.isTest) {
     return null;
   }
 

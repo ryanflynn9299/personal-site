@@ -1,6 +1,14 @@
 import { createDirectus, readItems, rest } from "@directus/sdk";
 import { Post } from "@/types";
-import log from "./logger";
+import { createLogger } from "./logger";
+import {
+  isDirectusEnabled,
+  getDirectusUrl as getDirectusUrlFromEnv,
+  env,
+} from "./env";
+
+const log = createLogger("ALL");
+const devLog = createLogger("DEV");
 
 /**
  * Error types for better error handling and debugging
@@ -23,52 +31,43 @@ export interface DirectusErrorInfo {
 
 /**
  * Checks if Directus is configured and available.
- * Returns true if both required environment variables are set with non-placeholder values.
+ * Uses the centralized environment configuration system.
  *
- * In dev mode without .env file, these will be undefined or use placeholder values.
+ * Policy:
+ * - production/live-dev: Directus MUST be configured (returns false if not = error condition)
+ * - offline-dev/test: Always returns false (services disabled, no calls made)
  */
 export function isDirectusConfigured(): boolean {
-  const serverUrl = process.env.DIRECTUS_URL_SERVER_SIDE;
-  const publicUrl = process.env.NEXT_PUBLIC_DIRECTUS_URL;
+  // In offline-dev and test, services are disabled - return false immediately
+  if (!env.connectToServices) {
+    return false;
+  }
 
-  // Check if both URLs are set, not empty, and not placeholder values
-  const hasServerUrl =
-    serverUrl &&
-    serverUrl.trim() !== "" &&
-    !serverUrl.includes("your-") && // Exclude placeholder text
-    serverUrl !== "http://ps-directus:8055"; // Default from .env.example
+  // In production and live-dev, check if Directus is actually configured
+  const enabled = isDirectusEnabled();
 
-  const hasPublicUrl =
-    publicUrl &&
-    publicUrl.trim() !== "" &&
-    !publicUrl.includes("your-") && // Exclude placeholder text
-    publicUrl !== "http://localhost:8055"; // Default from .env.example
+  // If services should be connected but Directus is not configured, log error
+  if (env.treatServiceErrorsAsReal && !enabled) {
+    log.error(
+      {
+        mode: env.mode,
+        serverUrl: env.directus.serverUrl,
+        publicUrl: env.directus.publicUrl,
+      },
+      "Directus is not configured but is required in production/live-dev mode"
+    );
+  }
 
-  return !!(hasServerUrl && hasPublicUrl);
+  return enabled;
 }
 
 /**
  * Determines the correct Directus URL based on the runtime environment.
- * Returns null if Directus is not configured (graceful degradation).
+ * Returns null if Directus is not configured or services are disabled.
+ * Uses the centralized environment configuration system.
  */
 const getDirectusUrl = (): string | null => {
-  // Check if we are on the server-side (e.g., SSR, API Routes, getStaticProps).
-  if (typeof window === "undefined") {
-    const serverUrl = process.env.DIRECTUS_URL_SERVER_SIDE;
-    // Use default placeholder if not set (for dev mode)
-    if (!serverUrl || serverUrl === "http://ps-directus:8055") {
-      return null;
-    }
-    return serverUrl;
-  }
-
-  // We are on the client (browser). This MUST be a NEXT_PUBLIC_ variable.
-  const publicUrl = process.env.NEXT_PUBLIC_DIRECTUS_URL;
-  // Use default placeholder if not set (for dev mode)
-  if (!publicUrl || publicUrl === "http://localhost:8055") {
-    return null;
-  }
-  return publicUrl;
+  return getDirectusUrlFromEnv();
 };
 
 /**
@@ -83,11 +82,11 @@ function _getAssetURL(fileId: string | null | undefined): string | null {
     return null;
   }
   // Use the public URL directly. Ensure this var is set.
-  const publicUrl = process.env.NEXT_PUBLIC_DIRECTUS_URL;
+  const publicUrl = getDirectusUrlFromEnv();
   if (!publicUrl) {
     log.error(
       { fileId },
-      "Cannot create asset URL: NEXT_PUBLIC_DIRECTUS_URL is not set"
+      "Cannot create asset URL: Directus is not configured or services are disabled"
     );
     return null;
   }
@@ -167,25 +166,45 @@ function classifyDirectusError(error: unknown): DirectusErrorInfo {
   };
 }
 
-// Create the Directus client instance only if configured.
-// This module will be loaded *separately* by the server and the client.
-// - On the server, getDirectusUrl() will return the internal URL.
-// - On the client, getDirectusUrl() will return the public URL.
-// If not configured, directus will be null and functions will return error status.
+// Create the Directus client instance only if configured and services are enabled.
+// Policy:
+// - production/live-dev: Client created if configured, errors if not configured
+// - offline-dev/test: Client is NEVER created (no service calls)
 // Using 'any' type due to complex Directus SDK typing - type safety is maintained via runtime checks
 let directus: any = null;
 
 try {
-  const url = getDirectusUrl();
-  if (url) {
-    directus = createDirectus(url).with(rest());
+  // Only create client if services should be connected
+  if (env.connectToServices) {
+    const url = getDirectusUrl();
+    if (url) {
+      directus = createDirectus(url).with(rest());
+    } else if (env.treatServiceErrorsAsReal) {
+      // In production/live-dev, missing URL is an error
+      log.error(
+        {
+          mode: env.mode,
+          serverUrl: env.directus.serverUrl,
+          publicUrl: env.directus.publicUrl,
+        },
+        "CRITICAL: Directus URL not available but required in production/live-dev mode"
+      );
+    }
   }
+  // In offline-dev/test, directus remains null (no service calls)
 } catch (error) {
-  // Log client initialization errors for debugging
-  log.error(
-    { error, url: getDirectusUrl() },
-    "Failed to initialize Directus client"
-  );
+  // Log client initialization errors
+  if (env.treatServiceErrorsAsReal) {
+    log.error(
+      { error, mode: env.mode, url: getDirectusUrl() },
+      "CRITICAL: Failed to initialize Directus client in production/live-dev mode"
+    );
+  } else {
+    log.error(
+      { error, url: getDirectusUrl() },
+      "Failed to initialize Directus client"
+    );
+  }
   directus = null;
 }
 
@@ -200,32 +219,88 @@ export async function getPublishedPosts(): Promise<{
   status: "success" | "error";
   posts: Post[];
 }> {
-  // Check if Directus is configured
-  if (!isDirectusConfigured() || !directus) {
-    log.warn("Directus not configured, returning empty posts list");
+  // In offline-dev and test, services are disabled - return empty immediately
+  if (!env.connectToServices) {
     return { status: "error", posts: [] };
   }
 
-  try {
-    const posts = await (directus as any).request(
-      (readItems as any)("blogs", {
-        fields: [
-          "id",
-          "title",
-          "summary",
-          "author",
-          "status",
-          "slug",
-          "publication_date",
-          "feature_image",
-          "blog_tags",
-          "content",
-        ],
-        filter: {
-          status: { _eq: "published" },
+  // Check if Directus is configured
+  if (!isDirectusConfigured() || !directus) {
+    // In production/live-dev, this is a real error - log it
+    if (env.treatServiceErrorsAsReal) {
+      log.error(
+        {
+          mode: env.mode,
+          directusConfigured: isDirectusConfigured(),
+          directusClientExists: !!directus,
         },
-        sort: ["-publication_date"],
-      })
+        "Failed to fetch posts: Directus not configured in production/live-dev mode"
+      );
+    } else {
+      log.warn("Directus not configured, returning empty posts list");
+    }
+    return { status: "error", posts: [] };
+  }
+
+  const directusUrl = getDirectusUrl();
+  const requestStartTime = Date.now();
+
+  try {
+    const requestParams = {
+      collection: "blogs",
+      fields: [
+        "id",
+        "title",
+        "summary",
+        "author",
+        "status",
+        "slug",
+        "publication_date",
+        "feature_image",
+        "blog_tags",
+        "content",
+      ],
+      filter: {
+        status: { _eq: "published" },
+      },
+      sort: ["-publication_date"],
+    };
+
+    // Log service call initiation (dev only)
+    devLog.info(
+      {
+        service: "Directus",
+        operation: "getPublishedPosts",
+        url: directusUrl,
+        request: {
+          collection: requestParams.collection,
+          fields: requestParams.fields,
+          filter: requestParams.filter,
+          sort: requestParams.sort,
+        },
+      },
+      "Initiating Directus service call: getPublishedPosts"
+    );
+
+    const posts = await (directus as any).request(
+      (readItems as any)(requestParams.collection, requestParams)
+    );
+
+    const requestDuration = Date.now() - requestStartTime;
+
+    // Log successful service call response (dev only)
+    devLog.info(
+      {
+        service: "Directus",
+        operation: "getPublishedPosts",
+        url: directusUrl,
+        response: {
+          status: "success",
+          postCount: posts?.length || 0,
+          durationMs: requestDuration,
+        },
+      },
+      "Directus service call completed: getPublishedPosts"
     );
 
     // Handle empty response
@@ -292,15 +367,47 @@ export async function getPublishedPosts(): Promise<{
     };
   } catch (error) {
     const errorInfo = classifyDirectusError(error);
-    log.error(
+    const requestDuration = Date.now() - requestStartTime;
+
+    // Log service call error (dev only)
+    devLog.error(
       {
-        error: errorInfo.originalError,
-        errorType: errorInfo.type,
-        statusCode: errorInfo.statusCode,
-        message: errorInfo.message,
+        service: "Directus",
+        operation: "getPublishedPosts",
+        url: directusUrl,
+        error: {
+          type: errorInfo.type,
+          message: errorInfo.message,
+          statusCode: errorInfo.statusCode,
+          durationMs: requestDuration,
+        },
       },
-      "Failed to fetch published posts from Directus"
+      "Directus service call failed: getPublishedPosts"
     );
+
+    // In production/live-dev, service errors are real errors
+    if (env.treatServiceErrorsAsReal) {
+      log.error(
+        {
+          error: errorInfo.originalError,
+          errorType: errorInfo.type,
+          statusCode: errorInfo.statusCode,
+          message: errorInfo.message,
+          mode: env.mode,
+        },
+        "CRITICAL: Failed to fetch published posts from Directus in production/live-dev mode"
+      );
+    } else {
+      log.error(
+        {
+          error: errorInfo.originalError,
+          errorType: errorInfo.type,
+          statusCode: errorInfo.statusCode,
+          message: errorInfo.message,
+        },
+        "Failed to fetch published posts from Directus"
+      );
+    }
     return { status: "error", posts: [] };
   }
 }
@@ -330,37 +437,93 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
     return null;
   }
 
-  // Check if Directus is configured
-  if (!isDirectusConfigured() || !directus) {
-    log.warn("Directus not configured, cannot fetch post by slug");
+  // In offline-dev and test, services are disabled - return null immediately
+  if (!env.connectToServices) {
     return null;
   }
 
+  // Check if Directus is configured
+  if (!isDirectusConfigured() || !directus) {
+    // In production/live-dev, this is a real error - log it
+    if (env.treatServiceErrorsAsReal) {
+      log.error(
+        {
+          mode: env.mode,
+          slug,
+          directusConfigured: isDirectusConfigured(),
+          directusClientExists: !!directus,
+        },
+        "Failed to fetch post by slug: Directus not configured in production/live-dev mode"
+      );
+    } else {
+      log.warn("Directus not configured, cannot fetch post by slug");
+    }
+    return null;
+  }
+
+  const directusUrl = getDirectusUrl();
+  const requestStartTime = Date.now();
+
   try {
+    const requestParams = {
+      collection: "blogs",
+      filter: {
+        _and: [{ slug: { _eq: slug } }, { status: { _eq: "published" } }],
+      },
+      limit: 1,
+      fields: [
+        "id",
+        "title",
+        "summary",
+        "author",
+        "slug",
+        "publication_date",
+        "status",
+        "feature_image",
+        "blog_tags",
+        "content",
+      ],
+    };
+
+    // Log service call initiation (dev only)
+    devLog.info(
+      {
+        service: "Directus",
+        operation: "getPostBySlug",
+        url: directusUrl,
+        request: {
+          collection: requestParams.collection,
+          slug,
+          filter: requestParams.filter,
+          limit: requestParams.limit,
+          fields: requestParams.fields,
+        },
+      },
+      "Initiating Directus service call: getPostBySlug"
+    );
+
     // Use readItems with a limit of 1. This is the standard way to fetch
     // an item by a secondary unique key (like a slug).
     const posts = await (directus as any).request(
-      (readItems as any)("blogs", {
-        // We use a logical AND to ensure both conditions are met.
-        filter: {
-          _and: [{ slug: { _eq: slug } }, { status: { _eq: "published" } }],
+      (readItems as any)(requestParams.collection, requestParams)
+    );
+
+    const requestDuration = Date.now() - requestStartTime;
+
+    // Log successful service call response (dev only)
+    devLog.info(
+      {
+        service: "Directus",
+        operation: "getPostBySlug",
+        url: directusUrl,
+        response: {
+          status: posts && posts.length > 0 ? "found" : "not_found",
+          postCount: posts?.length || 0,
+          durationMs: requestDuration,
         },
-        // We only need the first result that matches.
-        limit: 1,
-        // Specify all fields needed for the full 'Post' type.
-        fields: [
-          "id",
-          "title",
-          "summary",
-          "author",
-          "slug",
-          "publication_date",
-          "status",
-          "feature_image",
-          "blog_tags",
-          "content",
-        ],
-      })
+        slug,
+      },
+      "Directus service call completed: getPostBySlug"
     );
 
     // If the response is empty, no post was found. Return null.
@@ -418,6 +581,24 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
     return transformedPost;
   } catch (error) {
     const errorInfo = classifyDirectusError(error);
+    const requestDuration = Date.now() - requestStartTime;
+
+    // Log service call error (dev only)
+    devLog.error(
+      {
+        service: "Directus",
+        operation: "getPostBySlug",
+        url: directusUrl,
+        error: {
+          type: errorInfo.type,
+          message: errorInfo.message,
+          statusCode: errorInfo.statusCode,
+          durationMs: requestDuration,
+        },
+        slug,
+      },
+      "Directus service call failed: getPostBySlug"
+    );
 
     // For "not_found" errors, we can return null without logging as an error
     // since this is an expected case (post doesn't exist)
@@ -429,17 +610,31 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
       return null;
     }
 
-    // For other errors, log as error
-    log.error(
-      {
-        slug,
-        error: errorInfo.originalError,
-        errorType: errorInfo.type,
-        statusCode: errorInfo.statusCode,
-        message: errorInfo.message,
-      },
-      "Failed to fetch post by slug"
-    );
+    // For other errors, log as error (critical in production/live-dev)
+    if (env.treatServiceErrorsAsReal) {
+      log.error(
+        {
+          slug,
+          error: errorInfo.originalError,
+          errorType: errorInfo.type,
+          statusCode: errorInfo.statusCode,
+          message: errorInfo.message,
+          mode: env.mode,
+        },
+        "CRITICAL: Failed to fetch post by slug from Directus in production/live-dev mode"
+      );
+    } else {
+      log.error(
+        {
+          slug,
+          error: errorInfo.originalError,
+          errorType: errorInfo.type,
+          statusCode: errorInfo.statusCode,
+          message: errorInfo.message,
+        },
+        "Failed to fetch post by slug"
+      );
+    }
 
     // Return null on any unexpected error to prevent the page from crashing.
     return null;

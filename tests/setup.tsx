@@ -4,6 +4,14 @@ import { afterEach, beforeAll, afterAll, vi } from "vitest";
 import React from "react";
 import { server } from "./mocks/server";
 
+// Set test mode for environment configuration
+// This ensures services are disabled and test context is established
+// Note: NODE_ENV is read-only, but APP_MODE can be set
+if (typeof process !== "undefined") {
+  process.env.APP_MODE = "test";
+  // NODE_ENV is automatically set to "test" by vitest
+}
+
 // Setup MSW server
 beforeAll(() => server.listen({ onUnhandledRequest: "error" }));
 afterEach(() => {

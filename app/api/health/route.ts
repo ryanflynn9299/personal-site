@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
 import { isInternalRequest } from "@/lib/ip-validation";
+import { createLogger } from "@/lib/logger";
+
+const log = createLogger("ALL");
 
 /**
  * Internal Health Check Endpoint
@@ -120,7 +123,7 @@ export async function GET(request: Request) {
   } catch (error) {
     // SECURITY: Don't leak error details
     // Log server-side but return generic error
-    console.error("Health check error:", error);
+    log.error({ error }, "Health check error");
 
     return NextResponse.json(
       { error: "Internal Server Error" },

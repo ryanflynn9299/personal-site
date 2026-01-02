@@ -6,6 +6,9 @@ import { Sparkles } from "lucide-react";
 import Counter from "@/components/primitives/misc/Counter";
 import { incrementCounter } from "@/app/actions/counter";
 import { core } from "@/constants/theme";
+import { createLogger } from "@/lib/logger";
+
+const log = createLogger("ALL");
 
 const SESSION_STORAGE_KEY = "contact_counter_clicked";
 const QUIRKY_MESSAGES = [
@@ -56,7 +59,7 @@ export function FunCounter() {
         QUIRKY_MESSAGES[Math.floor(Math.random() * QUIRKY_MESSAGES.length)];
       setMessage(randomMessage);
     } catch (error) {
-      console.error("Failed to increment counter:", error);
+      log.error({ error }, "Failed to increment counter");
       setMessage("Oops! Something went wrong. But hey, you tried! 💪");
     } finally {
       setIsLoading(false);

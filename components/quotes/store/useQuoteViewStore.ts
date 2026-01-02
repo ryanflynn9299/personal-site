@@ -2,6 +2,7 @@
 
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
+import { env } from "@/lib/env";
 import type {
   ViewMode,
   NormalVariant,
@@ -48,13 +49,13 @@ const noOpStorage = {
   removeItem: () => {},
 };
 
-// Check if we're in development environment (at runtime)
+// Check if we should persist state (use dev mode UI toggle)
 const getStorage = () => {
   if (typeof window === "undefined") {
     return noOpStorage;
   }
-  const isDev = process.env.NODE_ENV === "development";
-  return isDev ? localStorage : noOpStorage;
+  // Only persist in development modes with dev UI enabled
+  return env.devModeUI ? localStorage : noOpStorage;
 };
 
 export const useQuoteViewStore = create<QuoteViewState>()(

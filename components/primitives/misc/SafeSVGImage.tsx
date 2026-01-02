@@ -34,6 +34,9 @@ import {
   SVGTrustLevel,
   type SVGTrustLevel as SVGTrustLevelType,
 } from "@/lib/svg-security";
+import { createLogger } from "@/lib/logger";
+
+const log = createLogger("ALL");
 
 interface SafeSVGImageProps {
   src: string;
@@ -94,7 +97,7 @@ export function SafeSVGImage({
         const sanitized = sanitizeSVGByTrustLevel(svgContent, level);
 
         if (!sanitized) {
-          console.warn(`[SafeSVGImage] SVG validation failed for: ${src}`);
+          log.warn({ src }, "[SafeSVGImage] SVG validation failed");
           setIsValid(false);
           if (fallback) {
             setSafeSrc(fallback);
@@ -107,7 +110,7 @@ export function SafeSVGImage({
         setSafeSrc(dataUrl);
         setIsValid(true);
       } catch (error) {
-        console.error(`[SafeSVGImage] Error sanitizing SVG:`, error);
+        log.error({ error, src }, "[SafeSVGImage] Error sanitizing SVG");
         setIsValid(false);
         if (fallback) {
           setSafeSrc(fallback);

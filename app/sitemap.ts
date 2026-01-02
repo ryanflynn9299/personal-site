@@ -1,6 +1,9 @@
 import { MetadataRoute } from "next";
 import { SITE_URL, ENABLE_BLOG_SEO } from "@/lib/seo";
 import { getPublishedPosts, isDirectusConfigured } from "@/lib/directus";
+import { createLogger } from "@/lib/logger";
+
+const log = createLogger("ALL");
 
 /**
  * Generates the sitemap.xml file for the website.
@@ -92,7 +95,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       }
     } catch (error) {
       // Log error but don't fail sitemap generation
-      console.error("Error fetching posts for sitemap:", error);
+      log.error({ error }, "Error fetching posts for sitemap");
     }
   }
 

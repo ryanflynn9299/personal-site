@@ -12,6 +12,7 @@ import { ServiceUnavailableWithDevMode } from "@/components/common/DevModeIndica
 import { BlogContentRenderer } from "@/components/blog/BlogContentRenderer";
 import { Post } from "@/types";
 import { SITE_URL, ENABLE_BLOG_SEO } from "@/lib/seo";
+import { env } from "@/lib/env";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -49,9 +50,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const postUrl = `${SITE_URL}/blog/${post.slug}`;
   const authorName = `${post.author.first_name} ${post.author.last_name}`;
-  const imageUrl = post.feature_image
-    ? `${process.env.NEXT_PUBLIC_DIRECTUS_URL}/assets/${post.feature_image.id}`
-    : undefined;
+  const imageUrl =
+    post.feature_image && env.directus.publicUrl
+      ? `${env.directus.publicUrl}/assets/${post.feature_image.id}`
+      : undefined;
 
   return {
     title: post.title,
@@ -102,8 +104,9 @@ export async function generateStaticParams() {
 }
 
 export default async function BlogPostPage({ params }: Props) {
-  // Check if Directus is configured
-  if (!isDirectusConfigured()) {
+  // In production/live-dev, Directus must be configured (real error if not)
+  // In offline-dev/test, we still check for posts (will return null, then show 404)
+  if (!isDirectusConfigured() && env.treatServiceErrorsAsReal) {
     return (
       <div className="container mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
         <ServiceUnavailableWithDevMode />
@@ -126,9 +129,10 @@ export default async function BlogPostPage({ params }: Props) {
     }
   );
 
-  const imageUrl = post.feature_image
-    ? `${process.env.NEXT_PUBLIC_DIRECTUS_URL}/assets/${post.feature_image.id}`
-    : null;
+  const imageUrl =
+    post.feature_image && env.directus.publicUrl
+      ? `${env.directus.publicUrl}/assets/${post.feature_image.id}`
+      : null;
 
   return (
     <>

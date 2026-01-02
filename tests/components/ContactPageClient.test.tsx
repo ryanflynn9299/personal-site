@@ -4,6 +4,23 @@ import userEvent from "@testing-library/user-event";
 import { ContactPageClient } from "@/components/contact/ContactPageClient";
 import * as contactAction from "@/app/actions/contact";
 
+// Mock logger to avoid console output during tests
+vi.mock("@/lib/logger", () => {
+  const mockLogger = {
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn(),
+    debug: vi.fn(),
+  };
+  return {
+    createLogger: vi.fn(() => mockLogger),
+    log: mockLogger,
+    prodLog: mockLogger,
+    devLog: mockLogger,
+    default: mockLogger,
+  };
+});
+
 // Mock the email service to avoid delays in tests
 // This ensures sendEmail returns immediately without any delay
 vi.mock("@/lib/email-service", () => ({

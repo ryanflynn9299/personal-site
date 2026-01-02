@@ -3,6 +3,9 @@
 import { useState, useCallback } from "react";
 import type { Quote } from "@/app/(portfolio)/quotes/config";
 import { Check, Copy } from "lucide-react";
+import { createLogger } from "@/lib/logger";
+
+const log = createLogger("ALL");
 
 interface MissionControlViewProps {
   quotes: Quote[];
@@ -30,7 +33,7 @@ export function MissionControlView({ quotes }: MissionControlViewProps) {
       setTimeout(() => setCopiedId(null), 2000);
     } catch (err) {
       // Fallback for older browsers
-      console.error("Failed to copy:", err);
+      log.error({ error: err }, "Failed to copy quote to clipboard");
     }
   }, []);
 

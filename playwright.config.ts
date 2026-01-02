@@ -50,6 +50,8 @@ export default defineConfig({
     stdout: "ignore", // Suppress stdout to reduce noise
     stderr: "pipe", // Keep stderr for actual errors (filtered by wrapper script)
     env: {
+      // Set test mode - services will be disabled automatically
+      APP_MODE: "test",
       // Suppress noisy warnings during E2E tests
       PLAYWRIGHT_TEST_BASE_URL: "http://localhost:3000",
       // Hide DevControls in e2e tests (server-side)

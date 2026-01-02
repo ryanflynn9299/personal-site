@@ -19,7 +19,7 @@ _Start here - these are the most important items to tackle next_
 - [ ] Script for .env sync
 - [ ] Deep dive on Matomo
 - [ ] Add a config for production quotes setup
-- [ ] Formalize dev mode (with and without services)
+- [x] Formalize dev mode (with and without services)
 - [ ] Configure secrets for dev mode/local testing
 - [ ] Fix missing author from Directus call
 - [ ] Organize and slightly refine vitae details
@@ -36,6 +36,14 @@ _Start here - these are the most important items to tackle next_
 - [ ] Reduce build time for PR pipeline
 - [ ] Mandatory approvers to master/main
 - [ ] Establish CD pipeline
+- [ ] global logging
+- [ ] cloudflared
+- [ ] clean up dev tooling
+  - [ ] make component selection work
+  - [ ] clean up styling
+  - [ ] hide by default
+  - [ ] disable in config
+- [ ] Remove unused components
 
 ### Before Launch - After UI reviewers
 
@@ -50,6 +58,7 @@ _Start here - these are the most important items to tackle next_
 - [ ] Enable SEO for blogs in lib/seo.ts
 - [ ] Versioning system/methodology
 - [ ] Implement Terms and Privacy Policies wrt Matomo analytics
+- [ ] clean up eslint warnings
 
 ### First promote after launch
 

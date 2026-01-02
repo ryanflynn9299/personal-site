@@ -3,6 +3,7 @@
 import Link from "next/link";
 // import { usePathname } from "next/navigation";
 import { Github, Linkedin, Twitter } from "lucide-react";
+import { env } from "@/lib/env";
 
 const socialLinks = [
   {
@@ -66,11 +67,8 @@ export function Footer() {
                     if (!item.is_active) {
                       return false;
                     }
-                    // Filter by dev-only status
-                    if (
-                      item.devOnly &&
-                      process.env.NODE_ENV !== "development"
-                    ) {
+                    // Filter by dev-only status (use dev mode UI toggle)
+                    if (item.devOnly && !env.devModeUI) {
                       return false;
                     }
                     return true;
@@ -91,7 +89,7 @@ export function Footer() {
                     </li>
                   ))}
                 {/* Dev-only link */}
-                {process.env.NODE_ENV === "development" && (
+                {env.devModeUI && (
                   <li>
                     <Link
                       href="/projects-cabinet"

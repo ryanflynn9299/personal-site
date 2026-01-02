@@ -1,5 +1,6 @@
 import { Post } from "@/types";
 import { SITE_URL, SITE_AUTHOR, ENABLE_BLOG_SEO } from "@/lib/seo";
+import { env } from "@/lib/env";
 
 interface JsonLdProps {
   post: Post;
@@ -29,9 +30,10 @@ export function JsonLd({ post }: JsonLdProps) {
   const postUrl = `${baseUrl}/blog/${post.slug}`;
 
   // Construct the featured image URL if available
-  const imageUrl = post.feature_image
-    ? `${process.env.NEXT_PUBLIC_DIRECTUS_URL}/assets/${post.feature_image.id}`
-    : undefined;
+  const imageUrl =
+    post.feature_image && env.directus.publicUrl
+      ? `${env.directus.publicUrl}/assets/${post.feature_image.id}`
+      : undefined;
 
   // Format dates to ISO 8601 format (required by Schema.org)
   const datePublished = new Date(post.publish_date).toISOString();

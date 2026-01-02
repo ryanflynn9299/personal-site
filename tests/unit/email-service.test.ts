@@ -1,68 +1,97 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
-import { isEmailServiceConfigured } from "@/lib/email-service";
+
+// Mock logger to avoid console output during tests
+vi.mock("@/lib/logger", () => {
+  const mockLogger = {
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn(),
+    debug: vi.fn(),
+  };
+  return {
+    createLogger: vi.fn(() => mockLogger),
+    log: mockLogger,
+    prodLog: mockLogger,
+    devLog: mockLogger,
+    default: mockLogger,
+  };
+});
 
 describe("isEmailServiceConfigured", () => {
-  const originalEnv = process.env;
-
   beforeEach(() => {
+    vi.clearAllMocks();
+    // Set to live-dev mode to enable service checks
+    vi.stubEnv("APP_MODE", "live-dev");
+    // Ensure NODE_ENV is set (not production to avoid production mode)
+    vi.stubEnv("NODE_ENV", "development");
+    // Reset modules to ensure env object is recreated with new env vars
     vi.resetModules();
-    process.env = { ...originalEnv };
   });
 
   afterEach(() => {
-    process.env = originalEnv;
+    vi.unstubAllEnvs();
   });
 
-  it("returns false when no environment variables are set", () => {
-    delete process.env.SMTP_HOST;
-    delete process.env.SMTP_PORT;
-    delete process.env.SMTP_FROM;
-    delete process.env.SMTP_TO;
+  it("returns false when no environment variables are set", async () => {
+    vi.stubEnv("SMTP_HOST", "");
+    vi.stubEnv("SMTP_PORT", "");
+    vi.stubEnv("SMTP_FROM", "");
+    vi.stubEnv("SMTP_TO", "");
 
+    const { isEmailServiceConfigured } = await import("@/lib/email-service");
     expect(isEmailServiceConfigured()).toBe(false);
   });
 
-  it("returns false when required variables are missing", () => {
-    process.env.SMTP_HOST = "smtp.example.com";
-    process.env.SMTP_PORT = "587";
+  it("returns false when required variables are missing", async () => {
+    // Use non-placeholder host
+    vi.stubEnv("SMTP_HOST", "smtp.testdomain.com");
+    vi.stubEnv("SMTP_PORT", "587");
     // Missing SMTP_FROM and SMTP_TO
 
+    const { isEmailServiceConfigured } = await import("@/lib/email-service");
     expect(isEmailServiceConfigured()).toBe(false);
   });
 
-  it("returns false when variables contain placeholder values", () => {
-    process.env.SMTP_HOST = "your-smtp-host";
-    process.env.SMTP_PORT = "587";
-    process.env.SMTP_FROM = "your-email@example.com";
-    process.env.SMTP_TO = "your-email@example.com";
+  it("returns false when variables contain placeholder values", async () => {
+    vi.stubEnv("SMTP_HOST", "your-smtp-host");
+    vi.stubEnv("SMTP_PORT", "587");
+    vi.stubEnv("SMTP_FROM", "your-email@example.com");
+    vi.stubEnv("SMTP_TO", "your-email@example.com");
 
+    const { isEmailServiceConfigured } = await import("@/lib/email-service");
     expect(isEmailServiceConfigured()).toBe(false);
   });
 
-  it("returns false when port is invalid", () => {
-    process.env.SMTP_HOST = "smtp.example.com";
-    process.env.SMTP_PORT = "invalid";
-    process.env.SMTP_FROM = "sender@example.com";
-    process.env.SMTP_TO = "recipient@example.com";
+  it("returns false when port is invalid", async () => {
+    // Use non-placeholder host
+    vi.stubEnv("SMTP_HOST", "smtp.testdomain.com");
+    vi.stubEnv("SMTP_PORT", "invalid");
+    vi.stubEnv("SMTP_FROM", "sender@testdomain.com");
+    vi.stubEnv("SMTP_TO", "recipient@testdomain.com");
 
+    const { isEmailServiceConfigured } = await import("@/lib/email-service");
     expect(isEmailServiceConfigured()).toBe(false);
   });
 
-  it("returns false when email addresses are invalid", () => {
-    process.env.SMTP_HOST = "smtp.example.com";
-    process.env.SMTP_PORT = "587";
-    process.env.SMTP_FROM = "not-an-email";
-    process.env.SMTP_TO = "also-not-an-email";
+  it("returns false when email addresses are invalid", async () => {
+    // Use non-placeholder host
+    vi.stubEnv("SMTP_HOST", "smtp.testdomain.com");
+    vi.stubEnv("SMTP_PORT", "587");
+    vi.stubEnv("SMTP_FROM", "not-an-email");
+    vi.stubEnv("SMTP_TO", "also-not-an-email");
 
+    const { isEmailServiceConfigured } = await import("@/lib/email-service");
     expect(isEmailServiceConfigured()).toBe(false);
   });
 
-  it("returns true when all required variables are properly configured", () => {
-    process.env.SMTP_HOST = "smtp.gmail.com";
-    process.env.SMTP_PORT = "587";
-    process.env.SMTP_FROM = "sender@example.com";
-    process.env.SMTP_TO = "recipient@example.com";
+  it("returns true when all required variables are properly configured", async () => {
+    vi.stubEnv("SMTP_HOST", "smtp.gmail.com");
+    vi.stubEnv("SMTP_PORT", "587");
+    // Email addresses with example.com are fine (only specific placeholders are rejected)
+    vi.stubEnv("SMTP_FROM", "sender@testdomain.com");
+    vi.stubEnv("SMTP_TO", "recipient@testdomain.com");
 
+    const { isEmailServiceConfigured } = await import("@/lib/email-service");
     expect(isEmailServiceConfigured()).toBe(true);
   });
 
