@@ -17,15 +17,19 @@ _Start here - these are the most important items to tackle next_
 ### Next promotion
 
 - [ ] Script for .env sync
-- [ ] Deep dive on Matomo
-- [ ] Add a config for production quotes setup
-- [x] Formalize dev mode (with and without services)
+
 - [ ] Configure secrets for dev mode/local testing
+- [ ] cloudflared
+
+- [ ] Deep dive on Matomo
 - [ ] Fix missing author from Directus call
-- [ ] Organize and slightly refine vitae details
 - [ ] connect counter to database
 - [ ] Add navigation between blog posts (prev/next)
 - [ ] Add loading states/screens for API calls
+
+- [x] Add a config for production quotes setup
+- [x] Formalize dev mode (with and without services)
+- [ ] Organize and slightly refine vitae details
 - [ ] Update site metadata (title, description, favicon)
 - [ ] Make client-primary
 - [ ] Flesh out project file cabinet idea
@@ -36,8 +40,7 @@ _Start here - these are the most important items to tackle next_
 - [ ] Reduce build time for PR pipeline
 - [ ] Mandatory approvers to master/main
 - [ ] Establish CD pipeline
-- [ ] global logging
-- [ ] cloudflared
+- [x] global logging
 - [ ] clean up dev tooling
   - [ ] make component selection work
   - [ ] clean up styling

@@ -3,6 +3,7 @@
 import React from "react";
 import { useQuoteViewStore } from "./store/useQuoteViewStore";
 import { quotes } from "@/constants/theme";
+import { env } from "@/lib/env";
 
 const MODAL_STYLES = {
   backgroundColor: quotes.modal.background,
@@ -22,10 +23,13 @@ const MODAL_STYLES = {
 
 export function QuoteModeToggle({ className = "" }: { className?: string }) {
   const { viewMode, setViewMode, isZoomed } = useQuoteViewStore();
+  const isProduction = env.isProduction;
 
   const isNormalMode = viewMode === "normal";
 
   const handleToggle = () => {
+    // In production, mode switching is still allowed (between normal and constellation)
+    // but variant switching within each mode is locked
     setViewMode(isNormalMode ? "constellation" : "normal");
   };
 

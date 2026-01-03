@@ -2,10 +2,15 @@
 
 import { useState, useEffect } from "react";
 import { useQuoteViewStore } from "./store/useQuoteViewStore";
+import { env } from "@/lib/env";
 import type {
   NormalVariant,
   ConstellationVariant,
 } from "@/app/(portfolio)/quotes/config";
+import {
+  PRODUCTION_QUOTE_CONFIG,
+  isVariantAllowedInProduction,
+} from "@/app/(portfolio)/quotes/production-config";
 
 export function ViewDevControls() {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -21,8 +26,14 @@ export function ViewDevControls() {
     setHexSurgeEnabled,
   } = useQuoteViewStore();
 
+  const isProduction = env.isProduction;
   const isHexArraySelected =
     viewMode === "constellation" && activeConstellationVariant === "hex_array";
+
+  // Hide dev controls in production
+  if (isProduction) {
+    return null;
+  }
 
   // Notify ShapeTestControls when this expands/collapses
   useEffect(() => {
@@ -88,22 +99,40 @@ export function ViewDevControls() {
             <div className="mb-4">
               <label className="mb-1 block text-xs text-slate-400">
                 Normal Variant
+                {isProduction && (
+                  <span className="ml-2 text-xs text-amber-400">
+                    (Production: {PRODUCTION_QUOTE_CONFIG.normalVariant})
+                  </span>
+                )}
               </label>
               <div className="flex flex-col gap-1">
                 {(["mission_control", "tesseract"] as NormalVariant[]).map(
-                  (variant) => (
-                    <button
-                      key={variant}
-                      onClick={() => setActiveNormalVariant(variant)}
-                      className={`rounded px-2 py-1 text-left text-xs transition-colors ${
-                        activeNormalVariant === variant
-                          ? "bg-purple-600 text-white"
-                          : "bg-slate-700 text-slate-300 hover:bg-slate-600"
-                      }`}
-                    >
-                      {variant.replace("_", " ")}
-                    </button>
-                  )
+                  (variant) => {
+                    const isProductionVariant =
+                      isProduction &&
+                      variant === PRODUCTION_QUOTE_CONFIG.normalVariant;
+                    return (
+                      <button
+                        key={variant}
+                        onClick={() => setActiveNormalVariant(variant)}
+                        disabled={isProduction && !isProductionVariant}
+                        className={`rounded px-2 py-1 text-left text-xs transition-colors ${
+                          activeNormalVariant === variant
+                            ? "bg-purple-600 text-white"
+                            : isProduction && !isProductionVariant
+                              ? "bg-slate-800 text-slate-500 cursor-not-allowed opacity-50"
+                              : "bg-slate-700 text-slate-300 hover:bg-slate-600"
+                        }`}
+                      >
+                        {variant.replace("_", " ")}
+                        {isProductionVariant && (
+                          <span className="ml-2 text-xs text-amber-400">
+                            (Prod)
+                          </span>
+                        )}
+                      </button>
+                    );
+                  }
                 )}
               </div>
             </div>
@@ -114,6 +143,11 @@ export function ViewDevControls() {
             <div className="mb-4">
               <label className="mb-1 block text-xs text-slate-400">
                 Constellation Variant
+                {isProduction && (
+                  <span className="ml-2 text-xs text-amber-400">
+                    (Production: {PRODUCTION_QUOTE_CONFIG.constellationVariant})
+                  </span>
+                )}
               </label>
               <div className="flex flex-col gap-1">
                 {(
@@ -122,19 +156,32 @@ export function ViewDevControls() {
                     "solar_system",
                     "hex_array",
                   ] as ConstellationVariant[]
-                ).map((variant) => (
-                  <button
-                    key={variant}
-                    onClick={() => setActiveConstellationVariant(variant)}
-                    className={`rounded px-2 py-1 text-left text-xs transition-colors ${
-                      activeConstellationVariant === variant
-                        ? "bg-purple-600 text-white"
-                        : "bg-slate-700 text-slate-300 hover:bg-slate-600"
-                    }`}
-                  >
-                    {variant.replace("_", " ")}
-                  </button>
-                ))}
+                ).map((variant) => {
+                  const isProductionVariant =
+                    isProduction &&
+                    variant === PRODUCTION_QUOTE_CONFIG.constellationVariant;
+                  return (
+                    <button
+                      key={variant}
+                      onClick={() => setActiveConstellationVariant(variant)}
+                      disabled={isProduction && !isProductionVariant}
+                      className={`rounded px-2 py-1 text-left text-xs transition-colors ${
+                        activeConstellationVariant === variant
+                          ? "bg-purple-600 text-white"
+                          : isProduction && !isProductionVariant
+                            ? "bg-slate-800 text-slate-500 cursor-not-allowed opacity-50"
+                            : "bg-slate-700 text-slate-300 hover:bg-slate-600"
+                      }`}
+                    >
+                      {variant.replace("_", " ")}
+                      {isProductionVariant && (
+                        <span className="ml-2 text-xs text-amber-400">
+                          (Prod)
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
               </div>
             </div>
           )}

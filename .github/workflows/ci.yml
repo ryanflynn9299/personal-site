@@ -3,13 +3,10 @@ name: CI
 on:
   push:
     # Production branches - always run CI on every push
-    # Development branch - TEMPORARILY enabled for initial testing/timing data
-    # TODO: After gathering timing data (1-2 weeks), remove 'dev-main' from this list
-    #       It will still run on PRs to dev-main (see pull_request below)
-    #       To remove: change to: branches: [main, master]
-    branches: [main, master, dev-main]
+    # dev-main removed to save CI minutes - validation happens via PRs instead
+    branches: [main, master]
   pull_request:
-    # Run CI on PRs to any of these branches (recommended long-term approach)
+    # Run CI on PRs to any of these branches (validates before merge)
     branches: [main, master, dev-main]
 
 env:
@@ -20,6 +17,11 @@ env:
   # These are set to empty to ensure CI works without a database connection
   DIRECTUS_URL_SERVER_SIDE: ""
   NEXT_PUBLIC_DIRECTUS_URL: ""
+
+# Cancel in-progress runs when a new commit is pushed to the same branch/PR
+concurrency:
+  group: ci-${{ github.ref }}-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: true
 
 jobs:
   # Check commit messages for skip patterns
@@ -278,8 +280,14 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
-    needs: check-commit-message
-    if: needs.check-commit-message.outputs.skip-all != 'true' && needs.check-commit-message.outputs.skip-build != 'true'
+    # Build depends on all test jobs and commit message check - only runs if tests pass
+    needs: [check-commit-message, lint-and-typecheck, unit-tests, e2e-tests]
+    # Build on production branches (main/master) or on PRs (to validate before merge)
+    # Skip if commit message contains [skip build] or [skip ci]
+    if: |
+      (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' || github.event_name == 'pull_request') &&
+      needs.check-commit-message.outputs.skip-all != 'true' &&
+      needs.check-commit-message.outputs.skip-build != 'true'
     env:
       NODE_ENV: "production"
     steps:
