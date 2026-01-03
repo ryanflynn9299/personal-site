@@ -7,10 +7,7 @@ import type {
   NormalVariant,
   ConstellationVariant,
 } from "@/app/(portfolio)/quotes/config";
-import {
-  PRODUCTION_QUOTE_CONFIG,
-  isVariantAllowedInProduction,
-} from "@/app/(portfolio)/quotes/production-config";
+import { PRODUCTION_QUOTE_CONFIG } from "@/app/(portfolio)/quotes/production-config";
 
 export function ViewDevControls() {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -30,17 +27,21 @@ export function ViewDevControls() {
   const isHexArraySelected =
     viewMode === "constellation" && activeConstellationVariant === "hex_array";
 
+  // Notify ShapeTestControls when this expands/collapses
+  // Must be called before any early returns to satisfy React Hooks rules
+  useEffect(() => {
+    // Only dispatch event if not in production (component won't render anyway)
+    if (!isProduction) {
+      window.dispatchEvent(
+        new CustomEvent("viewDevControlsExpanded", { detail: { isExpanded } })
+      );
+    }
+  }, [isExpanded, isProduction]);
+
   // Hide dev controls in production
   if (isProduction) {
     return null;
   }
-
-  // Notify ShapeTestControls when this expands/collapses
-  useEffect(() => {
-    window.dispatchEvent(
-      new CustomEvent("viewDevControlsExpanded", { detail: { isExpanded } })
-    );
-  }, [isExpanded]);
 
   const collapsedHeight = 60; // Approximate collapsed height
 
