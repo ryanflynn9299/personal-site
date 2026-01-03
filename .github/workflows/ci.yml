@@ -354,36 +354,159 @@ jobs:
         run: |
           echo "Checking for coverage file after download..."
           echo "Current directory: $(pwd)"
-          echo "Looking for coverage-summary.json..."
+          mkdir -p output/coverage
           
-          # Check in multiple possible locations
+          # Check for coverage-summary.json (Vitest format) in multiple locations
           if [ -f "output/coverage/coverage-summary.json" ]; then
-            echo "✅ Found at output/coverage/coverage-summary.json"
-            COVERAGE_PATH="output/coverage/coverage-summary.json"
+            echo "✅ Found coverage-summary.json at output/coverage/coverage-summary.json"
+            COVERAGE_FILE="output/coverage/coverage-summary.json"
           elif [ -f "coverage-report/coverage-summary.json" ]; then
-            echo "✅ Found at coverage-report/coverage-summary.json"
-            mkdir -p output/coverage
+            echo "✅ Found coverage-summary.json at coverage-report/coverage-summary.json"
             cp coverage-report/coverage-summary.json output/coverage/
-            COVERAGE_PATH="output/coverage/coverage-summary.json"
+            COVERAGE_FILE="output/coverage/coverage-summary.json"
           elif [ -f "coverage-summary.json" ]; then
-            echo "✅ Found at coverage-summary.json"
-            mkdir -p output/coverage
+            echo "✅ Found coverage-summary.json at root"
             cp coverage-summary.json output/coverage/
-            COVERAGE_PATH="output/coverage/coverage-summary.json"
+            COVERAGE_FILE="output/coverage/coverage-summary.json"
+          # Check for coverage-final.json (Istanbul format) and convert it
+          elif [ -f "coverage-final.json" ]; then
+            echo "⚠️ Found coverage-final.json (Istanbul format), converting to coverage-summary.json..."
+            node -e "
+              const fs = require('fs');
+              const cov = require('./coverage-final.json');
+              
+              let statements = { total: 0, covered: 0 };
+              let branches = { total: 0, covered: 0 };
+              let functions = { total: 0, covered: 0 };
+              let lines = { total: 0, covered: 0 };
+              
+              Object.values(cov).forEach(file => {
+                if (file && typeof file === 'object' && Array.isArray(file.s)) {
+                  // s, b, f, l are arrays where each element represents coverage
+                  // 0 = not covered, >0 = covered
+                  const s = file.s || [];
+                  const b = file.b || [];
+                  const f = file.f || [];
+                  const l = file.l || [];
+                  
+                  statements.total += s.length;
+                  statements.covered += s.filter(v => v > 0).length;
+                  branches.total += b.length;
+                  branches.covered += b.filter(v => v > 0).length;
+                  functions.total += f.length;
+                  functions.covered += f.filter(v => v > 0).length;
+                  lines.total += l.length;
+                  lines.covered += l.filter(v => v > 0).length;
+                }
+              });
+              
+              const summary = {
+                total: {
+                  statements: {
+                    total: statements.total,
+                    covered: statements.covered,
+                    skipped: 0,
+                    pct: statements.total > 0 ? parseFloat((statements.covered / statements.total * 100).toFixed(2)) : 0
+                  },
+                  branches: {
+                    total: branches.total,
+                    covered: branches.covered,
+                    skipped: 0,
+                    pct: branches.total > 0 ? parseFloat((branches.covered / branches.total * 100).toFixed(2)) : 0
+                  },
+                  functions: {
+                    total: functions.total,
+                    covered: functions.covered,
+                    skipped: 0,
+                    pct: functions.total > 0 ? parseFloat((functions.covered / functions.total * 100).toFixed(2)) : 0
+                  },
+                  lines: {
+                    total: lines.total,
+                    covered: lines.covered,
+                    skipped: 0,
+                    pct: lines.total > 0 ? parseFloat((lines.covered / lines.total * 100).toFixed(2)) : 0
+                  }
+                }
+              };
+              
+              fs.writeFileSync('output/coverage/coverage-summary.json', JSON.stringify(summary, null, 2));
+              console.log('✅ Converted coverage-final.json to coverage-summary.json');
+            "
+            COVERAGE_FILE="output/coverage/coverage-summary.json"
+          elif [ -f "output/coverage/coverage-final.json" ]; then
+            echo "⚠️ Found coverage-final.json in output/coverage, converting..."
+            node -e "
+              const fs = require('fs');
+              const cov = require('./output/coverage/coverage-final.json');
+              
+              let statements = { total: 0, covered: 0 };
+              let branches = { total: 0, covered: 0 };
+              let functions = { total: 0, covered: 0 };
+              let lines = { total: 0, covered: 0 };
+              
+              Object.values(cov).forEach(file => {
+                if (file && typeof file === 'object' && Array.isArray(file.s)) {
+                  const s = file.s || [];
+                  const b = file.b || [];
+                  const f = file.f || [];
+                  const l = file.l || [];
+                  
+                  statements.total += s.length;
+                  statements.covered += s.filter(v => v > 0).length;
+                  branches.total += b.length;
+                  branches.covered += b.filter(v => v > 0).length;
+                  functions.total += f.length;
+                  functions.covered += f.filter(v => v > 0).length;
+                  lines.total += l.length;
+                  lines.covered += l.filter(v => v > 0).length;
+                }
+              });
+              
+              const summary = {
+                total: {
+                  statements: {
+                    total: statements.total,
+                    covered: statements.covered,
+                    skipped: 0,
+                    pct: statements.total > 0 ? parseFloat((statements.covered / statements.total * 100).toFixed(2)) : 0
+                  },
+                  branches: {
+                    total: branches.total,
+                    covered: branches.covered,
+                    skipped: 0,
+                    pct: branches.total > 0 ? parseFloat((branches.covered / branches.total * 100).toFixed(2)) : 0
+                  },
+                  functions: {
+                    total: functions.total,
+                    covered: functions.covered,
+                    skipped: 0,
+                    pct: functions.total > 0 ? parseFloat((functions.covered / functions.total * 100).toFixed(2)) : 0
+                  },
+                  lines: {
+                    total: lines.total,
+                    covered: lines.covered,
+                    skipped: 0,
+                    pct: lines.total > 0 ? parseFloat((lines.covered / lines.total * 100).toFixed(2)) : 0
+                  }
+                }
+              };
+              
+              fs.writeFileSync('output/coverage/coverage-summary.json', JSON.stringify(summary, null, 2));
+              console.log('✅ Converted coverage-final.json to coverage-summary.json');
+            "
+            COVERAGE_FILE="output/coverage/coverage-summary.json"
           else
             echo "❌ Coverage report not found!"
-            echo "Searching for any JSON files..."
-            find . -name "coverage-summary.json" -o -name "*.json" | head -10 || echo "No JSON files found"
+            echo "Searching for coverage files..."
+            find . -name "coverage*.json" | head -10 || echo "No coverage JSON files found"
             echo ""
             echo "Directory structure:"
-            ls -la . || true
-            echo ""
-            echo "output/ directory:"
-            ls -la output/ 2>/dev/null || echo "output/ doesn't exist"
+            ls -la . | head -20 || true
             exit 1
           fi
           
-          echo "Using coverage file: $COVERAGE_PATH"
+          echo "Using coverage file: $COVERAGE_FILE"
+          echo "File exists: $([ -f "$COVERAGE_FILE" ] && echo 'yes' || echo 'no')"
 
       - name: Check coverage threshold (60%)
         if: steps.should-check.outputs.should-check == 'true'
