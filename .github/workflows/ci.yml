@@ -235,9 +235,19 @@ jobs:
           if [ -f "output/coverage/coverage-summary.json" ]; then
             echo "✅ Coverage report found at output/coverage/coverage-summary.json"
             echo "File size: $(wc -c < output/coverage/coverage-summary.json) bytes"
+            echo "First 20 lines of coverage-summary.json:"
+            head -20 output/coverage/coverage-summary.json || true
           else
             echo "⚠️ coverage-summary.json not found, checking for other coverage files..."
             find output/coverage -type f -name "*.json" || echo "No JSON files found"
+            
+            # Check for coverage-final.json
+            if [ -f "output/coverage/coverage-final.json" ]; then
+              echo "Found coverage-final.json, showing structure:"
+              echo "File size: $(wc -c < output/coverage/coverage-final.json) bytes"
+              echo "First file key in coverage-final.json:"
+              node -e "const cov = require('./output/coverage/coverage-final.json'); const keys = Object.keys(cov); console.log('Keys:', keys.slice(0, 5)); if (keys.length > 0) { const firstFile = cov[keys[0]]; console.log('First file structure:', Object.keys(firstFile)); console.log('Has s array:', Array.isArray(firstFile.s)); }" || true
+            fi
           fi
 
       - name: Upload coverage artifact
@@ -261,8 +271,9 @@ jobs:
   e2e-tests:
     name: E2E Tests
     runs-on: ubuntu-latest
-    # Run after type check passes, in parallel with unit tests
-    needs: [check-commit-message, lint-and-typecheck]
+    # Run after type check, unit tests, and coverage check pass
+    # This ensures e2e tests don't run if unit tests or coverage fail
+    needs: [check-commit-message, lint-and-typecheck, unit-tests, coverage-check]
     # Always run on protected branches (main/master), otherwise respect skip pattern
     if: needs.check-commit-message.outputs.skip-all != 'true' && (needs.check-commit-message.outputs.is-protected-branch == 'true' || needs.check-commit-message.outputs.skip-e2e != 'true')
     env:
@@ -375,30 +386,47 @@ jobs:
               const fs = require('fs');
               const cov = require('./coverage-final.json');
               
+              console.log('Coverage-final.json keys:', Object.keys(cov).slice(0, 5));
+              console.log('Total files:', Object.keys(cov).length);
+              
               let statements = { total: 0, covered: 0 };
               let branches = { total: 0, covered: 0 };
               let functions = { total: 0, covered: 0 };
               let lines = { total: 0, covered: 0 };
               
-              Object.values(cov).forEach(file => {
-                if (file && typeof file === 'object' && Array.isArray(file.s)) {
-                  // s, b, f, l are arrays where each element represents coverage
-                  // 0 = not covered, >0 = covered
-                  const s = file.s || [];
-                  const b = file.b || [];
-                  const f = file.f || [];
-                  const l = file.l || [];
+              let processedFiles = 0;
+              Object.values(cov).forEach((file, idx) => {
+                if (file && typeof file === 'object') {
+                  // Istanbul format: s, b, f, l are arrays
+                  // Each element: 0 = not covered, >0 = covered (number indicates how many times covered)
+                  const s = Array.isArray(file.s) ? file.s : [];
+                  const b = Array.isArray(file.b) ? file.b : [];
+                  const f = Array.isArray(file.f) ? file.f : [];
+                  const l = Array.isArray(file.l) ? file.l : [];
+                  
+                  if (s.length > 0 || b.length > 0 || f.length > 0 || l.length > 0) {
+                    processedFiles++;
+                    if (processedFiles <= 3) {
+                      console.log(\`File \${idx}: s=\${s.length}, b=\${b.length}, f=\${f.length}, l=\${l.length}\`);
+                    }
+                  }
                   
                   statements.total += s.length;
-                  statements.covered += s.filter(v => v > 0).length;
+                  statements.covered += s.filter(v => v !== undefined && v !== null && v > 0).length;
                   branches.total += b.length;
-                  branches.covered += b.filter(v => v > 0).length;
+                  branches.covered += b.filter(v => v !== undefined && v !== null && v > 0).length;
                   functions.total += f.length;
-                  functions.covered += f.filter(v => v > 0).length;
+                  functions.covered += f.filter(v => v !== undefined && v !== null && v > 0).length;
                   lines.total += l.length;
-                  lines.covered += l.filter(v => v > 0).length;
+                  lines.covered += l.filter(v => v !== undefined && v !== null && v > 0).length;
                 }
               });
+              
+              console.log(\`Processed \${processedFiles} files with coverage data\`);
+              console.log(\`Statements: \${statements.covered}/\${statements.total}\`);
+              console.log(\`Branches: \${branches.covered}/\${branches.total}\`);
+              console.log(\`Functions: \${functions.covered}/\${functions.total}\`);
+              console.log(\`Lines: \${lines.covered}/\${lines.total}\`);
               
               const summary = {
                 total: {
@@ -431,6 +459,7 @@ jobs:
               
               fs.writeFileSync('output/coverage/coverage-summary.json', JSON.stringify(summary, null, 2));
               console.log('✅ Converted coverage-final.json to coverage-summary.json');
+              console.log('Lines coverage:', summary.total.lines.pct + '%');
             "
             COVERAGE_FILE="output/coverage/coverage-summary.json"
           elif [ -f "output/coverage/coverage-final.json" ]; then
@@ -439,28 +468,45 @@ jobs:
               const fs = require('fs');
               const cov = require('./output/coverage/coverage-final.json');
               
+              console.log('Coverage-final.json keys:', Object.keys(cov).slice(0, 5));
+              console.log('Total files:', Object.keys(cov).length);
+              
               let statements = { total: 0, covered: 0 };
               let branches = { total: 0, covered: 0 };
               let functions = { total: 0, covered: 0 };
               let lines = { total: 0, covered: 0 };
               
-              Object.values(cov).forEach(file => {
-                if (file && typeof file === 'object' && Array.isArray(file.s)) {
-                  const s = file.s || [];
-                  const b = file.b || [];
-                  const f = file.f || [];
-                  const l = file.l || [];
+              let processedFiles = 0;
+              Object.values(cov).forEach((file, idx) => {
+                if (file && typeof file === 'object') {
+                  const s = Array.isArray(file.s) ? file.s : [];
+                  const b = Array.isArray(file.b) ? file.b : [];
+                  const f = Array.isArray(file.f) ? file.f : [];
+                  const l = Array.isArray(file.l) ? file.l : [];
+                  
+                  if (s.length > 0 || b.length > 0 || f.length > 0 || l.length > 0) {
+                    processedFiles++;
+                    if (processedFiles <= 3) {
+                      console.log(\`File \${idx}: s=\${s.length}, b=\${b.length}, f=\${f.length}, l=\${l.length}\`);
+                    }
+                  }
                   
                   statements.total += s.length;
-                  statements.covered += s.filter(v => v > 0).length;
+                  statements.covered += s.filter(v => v !== undefined && v !== null && v > 0).length;
                   branches.total += b.length;
-                  branches.covered += b.filter(v => v > 0).length;
+                  branches.covered += b.filter(v => v !== undefined && v !== null && v > 0).length;
                   functions.total += f.length;
-                  functions.covered += f.filter(v => v > 0).length;
+                  functions.covered += f.filter(v => v !== undefined && v !== null && v > 0).length;
                   lines.total += l.length;
-                  lines.covered += l.filter(v => v > 0).length;
+                  lines.covered += l.filter(v => v !== undefined && v !== null && v > 0).length;
                 }
               });
+              
+              console.log(\`Processed \${processedFiles} files with coverage data\`);
+              console.log(\`Statements: \${statements.covered}/\${statements.total}\`);
+              console.log(\`Branches: \${branches.covered}/\${branches.total}\`);
+              console.log(\`Functions: \${functions.covered}/\${functions.total}\`);
+              console.log(\`Lines: \${lines.covered}/\${lines.total}\`);
               
               const summary = {
                 total: {
@@ -493,6 +539,7 @@ jobs:
               
               fs.writeFileSync('output/coverage/coverage-summary.json', JSON.stringify(summary, null, 2));
               console.log('✅ Converted coverage-final.json to coverage-summary.json');
+              console.log('Lines coverage:', summary.total.lines.pct + '%');
             "
             COVERAGE_FILE="output/coverage/coverage-summary.json"
           else
@@ -518,10 +565,27 @@ jobs:
             exit 1
           fi
           
+          # Debug: Show file structure
+          echo "=== Coverage file structure (first 50 lines) ==="
+          head -50 "$COVERAGE_FILE" || cat "$COVERAGE_FILE"
+          echo ""
+          
           # Extract coverage percentage and check threshold using Node.js
           node -e "
-            const cov = require('./$COVERAGE_FILE');
-            const coverage = cov.total.lines.pct;
+            const fs = require('fs');
+            const cov = JSON.parse(fs.readFileSync('$COVERAGE_FILE', 'utf8'));
+            
+            // Debug: Show what we're reading
+            console.log('Coverage object keys:', Object.keys(cov));
+            if (cov.total) {
+              console.log('Total keys:', Object.keys(cov.total));
+              console.log('Lines object:', JSON.stringify(cov.total.lines, null, 2));
+            } else {
+              console.log('⚠️ No total property found! Full structure:');
+              console.log(JSON.stringify(cov, null, 2).substring(0, 500));
+            }
+            
+            const coverage = cov.total?.lines?.pct ?? 0;
             const threshold = 60;
             
             if (coverage < threshold) {
@@ -534,10 +598,10 @@ jobs:
           "
           
           # Also show other metrics
-          STATEMENTS=$(node -e "const cov = require('./$COVERAGE_FILE'); console.log(cov.total.statements.pct)")
-          BRANCHES=$(node -e "const cov = require('./$COVERAGE_FILE'); console.log(cov.total.branches.pct)")
-          FUNCTIONS=$(node -e "const cov = require('./$COVERAGE_FILE'); console.log(cov.total.functions.pct)")
-          COVERAGE=$(node -e "const cov = require('./$COVERAGE_FILE'); console.log(cov.total.lines.pct)")
+          STATEMENTS=$(node -e "const cov = require('./$COVERAGE_FILE'); console.log(cov.total?.statements?.pct ?? 0)")
+          BRANCHES=$(node -e "const cov = require('./$COVERAGE_FILE'); console.log(cov.total?.branches?.pct ?? 0)")
+          FUNCTIONS=$(node -e "const cov = require('./$COVERAGE_FILE'); console.log(cov.total?.functions?.pct ?? 0)")
+          COVERAGE=$(node -e "const cov = require('./$COVERAGE_FILE'); console.log(cov.total?.lines?.pct ?? 0)")
           
           echo ""
           echo "Coverage Breakdown:"
@@ -554,7 +618,8 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
-    # Build depends on type check, test jobs, and coverage check (when applicable)
+    # Build depends on type check, all test jobs (unit, e2e), and coverage check
+    # e2e-tests now depends on coverage-check, so e2e won't run if unit tests or coverage fail
     # coverage-check only runs on PRs to main/master or merges to main/master
     needs: [check-commit-message, lint-and-typecheck, unit-tests, e2e-tests, coverage-check]
     # Build on production branches (main/master) or on PRs (to validate before merge)
