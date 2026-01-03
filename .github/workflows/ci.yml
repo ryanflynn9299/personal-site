@@ -219,6 +219,27 @@ jobs:
       - name: Run unit tests with coverage
         run: pnpm run test:coverage
 
+      - name: Verify coverage report exists
+        if: always()
+        run: |
+          echo "Checking for coverage files..."
+          if [ ! -d "output/coverage" ]; then
+            echo "⚠️ Coverage directory not found!"
+            echo "Creating output/coverage directory..."
+            mkdir -p output/coverage
+          fi
+          
+          echo "Contents of output/coverage/:"
+          ls -la output/coverage/ || echo "Directory is empty or doesn't exist"
+          
+          if [ -f "output/coverage/coverage-summary.json" ]; then
+            echo "✅ Coverage report found at output/coverage/coverage-summary.json"
+            echo "File size: $(wc -c < output/coverage/coverage-summary.json) bytes"
+          else
+            echo "⚠️ coverage-summary.json not found, checking for other coverage files..."
+            find output/coverage -type f -name "*.json" || echo "No JSON files found"
+          fi
+
       - name: Upload coverage artifact
         uses: actions/upload-artifact@v4
         if: always()
@@ -226,6 +247,7 @@ jobs:
           name: coverage-report
           path: output/coverage/
           retention-days: 7
+          if-no-files-found: warn
 
       # Codecov is optional - only uploads if CODECOV_TOKEN secret is set
       - name: Upload coverage to Codecov
@@ -324,19 +346,58 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: coverage-report
-          path: output/coverage/
+          path: ./
+          fail-on-error: false
+
+      - name: Verify coverage file exists
+        if: steps.should-check.outputs.should-check == 'true'
+        run: |
+          echo "Checking for coverage file after download..."
+          echo "Current directory: $(pwd)"
+          echo "Looking for coverage-summary.json..."
+          
+          # Check in multiple possible locations
+          if [ -f "output/coverage/coverage-summary.json" ]; then
+            echo "✅ Found at output/coverage/coverage-summary.json"
+            COVERAGE_PATH="output/coverage/coverage-summary.json"
+          elif [ -f "coverage-report/coverage-summary.json" ]; then
+            echo "✅ Found at coverage-report/coverage-summary.json"
+            mkdir -p output/coverage
+            cp coverage-report/coverage-summary.json output/coverage/
+            COVERAGE_PATH="output/coverage/coverage-summary.json"
+          elif [ -f "coverage-summary.json" ]; then
+            echo "✅ Found at coverage-summary.json"
+            mkdir -p output/coverage
+            cp coverage-summary.json output/coverage/
+            COVERAGE_PATH="output/coverage/coverage-summary.json"
+          else
+            echo "❌ Coverage report not found!"
+            echo "Searching for any JSON files..."
+            find . -name "coverage-summary.json" -o -name "*.json" | head -10 || echo "No JSON files found"
+            echo ""
+            echo "Directory structure:"
+            ls -la . || true
+            echo ""
+            echo "output/ directory:"
+            ls -la output/ 2>/dev/null || echo "output/ doesn't exist"
+            exit 1
+          fi
+          
+          echo "Using coverage file: $COVERAGE_PATH"
 
       - name: Check coverage threshold (60%)
         if: steps.should-check.outputs.should-check == 'true'
         run: |
-          if [ ! -f "output/coverage/coverage-summary.json" ]; then
-            echo "❌ Coverage report not found!"
+          COVERAGE_FILE="output/coverage/coverage-summary.json"
+          
+          if [ ! -f "$COVERAGE_FILE" ]; then
+            echo "❌ Coverage file not found at $COVERAGE_FILE"
             exit 1
           fi
           
           # Extract coverage percentage and check threshold using Node.js
           node -e "
-            const cov = require('./output/coverage/coverage-summary.json');
+            const cov = require('./$COVERAGE_FILE');
             const coverage = cov.total.lines.pct;
             const threshold = 60;
             
@@ -350,9 +411,10 @@ jobs:
           "
           
           # Also show other metrics
-          STATEMENTS=$(node -e "const cov = require('./output/coverage/coverage-summary.json'); console.log(cov.total.statements.pct)")
-          BRANCHES=$(node -e "const cov = require('./output/coverage/coverage-summary.json'); console.log(cov.total.branches.pct)")
-          FUNCTIONS=$(node -e "const cov = require('./output/coverage/coverage-summary.json'); console.log(cov.total.functions.pct)")
+          STATEMENTS=$(node -e "const cov = require('./$COVERAGE_FILE'); console.log(cov.total.statements.pct)")
+          BRANCHES=$(node -e "const cov = require('./$COVERAGE_FILE'); console.log(cov.total.branches.pct)")
+          FUNCTIONS=$(node -e "const cov = require('./$COVERAGE_FILE'); console.log(cov.total.functions.pct)")
+          COVERAGE=$(node -e "const cov = require('./$COVERAGE_FILE'); console.log(cov.total.lines.pct)")
           
           echo ""
           echo "Coverage Breakdown:"
