@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
 import { PseudoMarkdownRenderer } from "@/components/common/PseudoMarkdownRenderer";
 import { getPolicyColorTheme } from "@/lib/policy-colors";
+import { useHasMounted } from "@/lib/hooks/useHasMounted";
 import type { PolicyMetadata } from "@/types/policies";
 
 // Ensure Tailwind generates these classes: text-purple-400 text-sky-400 bg-purple-600/20 bg-sky-600/20 border-purple-500/50 border-sky-500/50
@@ -22,6 +23,7 @@ interface PoliciesPageProps {
 }
 
 export function PoliciesPage({ policies, initialTab }: PoliciesPageProps) {
+  const hasMounted = useHasMounted();
   const router = useRouter();
   const searchParams = useSearchParams();
   const contentRef = useRef<HTMLDivElement>(null);
@@ -193,21 +195,30 @@ export function PoliciesPage({ policies, initialTab }: PoliciesPageProps) {
                 role="tabpanel"
                 aria-labelledby={`policy-tab-${activePolicyId}`}
               >
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={activePolicyId}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    transition={{ duration: 0.3 }}
-                    className="document-transition"
-                  >
+                {!hasMounted ? (
+                  <div className="document-transition">
                     <PseudoMarkdownRenderer
                       content={activePolicy.content}
                       themeColor={activeTheme}
                     />
-                  </motion.div>
-                </AnimatePresence>
+                  </div>
+                ) : (
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={activePolicyId}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      transition={{ duration: 0.3 }}
+                      className="document-transition"
+                    >
+                      <PseudoMarkdownRenderer
+                        content={activePolicy.content}
+                        themeColor={activeTheme}
+                      />
+                    </motion.div>
+                  </AnimatePresence>
+                )}
               </div>
             </div>
           </main>

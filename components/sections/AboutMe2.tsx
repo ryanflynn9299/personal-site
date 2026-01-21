@@ -3,33 +3,51 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/primitives/Button";
 import Link from "next/link";
-import Image from "next/image";
+import { ImageWithSkeleton } from "@/components/primitives/ImageWithSkeleton";
+import { useHasMounted } from "@/lib/hooks/useHasMounted";
 
 {
   /* About Me Snippet - Option 2: Split-Layout with Image */
 }
 export function AboutMe2() {
+  const hasMounted = useHasMounted();
+
   return (
     <section className="py-8 md:py-24 border-t border-slate-800">
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 items-center gap-12 md:grid-cols-2 md:gap-16">
           {/* Image Column */}
-          <div className="relative order-first md:order-last">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true, amount: 0.5 }}
-              transition={{ duration: 0.5 }}
-            >
-              <Image
-                // Replace with a professional-looking photo of yourself
-                src="/images/6858504.png"
-                alt="Placeholder: A professional headshot"
-                width={500}
-                height={500}
-                className="rounded-lg object-cover shadow-2xl shadow-slate-950/50"
-              />
-            </motion.div>
+          <div className="relative order-first md:order-last flex justify-center">
+            {hasMounted ? (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true, amount: 0.5 }}
+                transition={{ duration: 0.5 }}
+              >
+                <ImageWithSkeleton
+                  // Replace with a professional-looking photo of yourself
+                  src="/images/6858504.png"
+                  alt="Illustration of a professional headshot"
+                  width={500}
+                  height={500}
+                  className="mx-auto rounded-lg object-cover shadow-2xl shadow-slate-950/50"
+                  priority
+                />
+              </motion.div>
+            ) : (
+              <div>
+                <ImageWithSkeleton
+                  // Replace with a professional-looking photo of yourself
+                  src="/images/6858504.png"
+                  alt="Illustration of a professional headshot"
+                  width={500}
+                  height={500}
+                  className="mx-auto rounded-lg object-cover shadow-2xl shadow-slate-950/50"
+                  priority
+                />
+              </div>
+            )}
           </div>
 
           {/* Text Column */}

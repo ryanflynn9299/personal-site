@@ -61,7 +61,7 @@ describe("PostCard", () => {
 
   it("renders feature image when available", () => {
     render(<PostCard post={mockPost} />);
-    const image = screen.getByAltText("Alt text");
+    const image = screen.getByAltText("Test Blog Post");
     expect(image).toBeInTheDocument();
     expect(image).toHaveAttribute(
       "src",
@@ -71,7 +71,7 @@ describe("PostCard", () => {
 
   it("does not render image when feature_image is null", () => {
     render(<PostCard post={mockPostWithoutImage} />);
-    const image = screen.queryByAltText("Alt text");
+    const image = screen.queryByAltText("Test Blog Post");
     expect(image).not.toBeInTheDocument();
   });
 

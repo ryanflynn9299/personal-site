@@ -17,33 +17,38 @@ _Start here - these are the most important items to tackle next_
 ### Next promotion
 
 - [ ] Script for .env sync
-- [ ] Deep dive on Matomo
-- [ ] Add a config for production quotes setup
-- [x] Formalize dev mode (with and without services)
+
 - [ ] Configure secrets for dev mode/local testing
+- [ ] cloudflared
+
+- [ ] Deep dive on Matomo
 - [ ] Fix missing author from Directus call
-- [ ] Organize and slightly refine vitae details
 - [ ] connect counter to database
 - [ ] Add navigation between blog posts (prev/next)
 - [ ] Add loading states/screens for API calls
+
+- [x] Add a config for production quotes setup
+- [x] Formalize dev mode (with and without services)
+- [ ] Organize and slightly refine vitae details
 - [ ] Update site metadata (title, description, favicon)
 - [ ] Make client-primary
 - [ ] Flesh out project file cabinet idea
-- [ ] establish baseline code coverage
-- [ ] add coverage check to main branch
+- [x] establish baseline code coverage - 70%
+- [x] add coverage check to main branch
 - [ ] pre-commit check script (validate, test, compare coverage, build)
 - [ ] Improve pre-commit checks for PR (PR naming conventions, etc)
-- [ ] Reduce build time for PR pipeline
+- [x] Reduce build time for PR pipeline
 - [ ] Mandatory approvers to master/main
 - [ ] Establish CD pipeline
-- [ ] global logging
-- [ ] cloudflared
-- [ ] clean up dev tooling
+- [x] global logging
+- [ ] clean up dev tooling (controls)
   - [ ] make component selection work
   - [ ] clean up styling
   - [ ] hide by default
   - [ ] disable in config
 - [ ] Remove unused components
+- [ ] hide main page element until title text renders
+- [ ] audit hydration errors and fixes
 
 ### Before Launch - After UI reviewers
 
@@ -75,6 +80,8 @@ _Start here - these are the most important items to tackle next_
 - [ ] Add twilio for build notis
 - [ ] Create backup strategy for content
 - [ ] Review and optimize bundle size
+- [ ] Audit and improve comments
+- [ ] Clean up patchy code
 
 ---
 

@@ -2,27 +2,23 @@ name: CI
 
 on:
   push:
-    # Production branches - always run CI on every push
-    # Development branch - TEMPORARILY enabled for initial testing/timing data
-    # TODO: After gathering timing data (1-2 weeks), remove 'dev-main' from this list
-    #       It will still run on PRs to dev-main (see pull_request below)
-    #       To remove: change to: branches: [main, master]
-    branches: [main, master, dev-main]
+    branches: [main, master]
   pull_request:
-    # Run CI on PRs to any of these branches (recommended long-term approach)
     branches: [main, master, dev-main]
 
 env:
-  # Site URL - Required for Next.js build and SEO
   NEXT_PUBLIC_SITE_URL: "https://www.ryanflynn.org"
-  
-  # Directus URLs - Empty strings are fine (app gracefully handles missing Directus)
-  # These are set to empty to ensure CI works without a database connection
   DIRECTUS_URL_SERVER_SIDE: ""
   NEXT_PUBLIC_DIRECTUS_URL: ""
 
+concurrency:
+  group: ci-${{ github.ref }}-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: true
+
 jobs:
-  # Check commit messages for skip patterns
+  # ============================================================================
+  # Job 1: Parse commit message for skip patterns and determine branch context
+  # ============================================================================
   check-commit-message:
     name: Check Commit Message
     runs-on: ubuntu-latest
@@ -36,15 +32,14 @@ jobs:
       is-dev-main: ${{ steps.check.outputs.is-dev-main }}
       run-e2e: ${{ steps.check.outputs.run-e2e }}
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Fetch full history to check commit messages
-      
-      - name: Check commit message for skip patterns
+          fetch-depth: 0
+
+      - name: Parse commit message
         id: check
         run: |
-          # Determine the branch name (for push events) or base branch (for PR events)
+          # Determine branch and commit message
           if [ "${{ github.event_name }}" == "pull_request" ]; then
             BRANCH="${{ github.base_ref }}"
             COMMIT_MSG="${{ github.event.pull_request.title }} ${{ github.event.pull_request.body }}"
@@ -53,220 +48,363 @@ jobs:
             COMMIT_MSG=$(git log -1 --pretty=%B)
           fi
           
-          # Check if this is a protected branch (main or master)
+          # Determine branch type
           if [ "$BRANCH" == "main" ] || [ "$BRANCH" == "master" ]; then
             echo "is-protected-branch=true" >> $GITHUB_OUTPUT
             echo "is-dev-main=false" >> $GITHUB_OUTPUT
-            echo "✅ Protected branch detected: $BRANCH - E2E tests will always run"
           elif [ "$BRANCH" == "dev-main" ]; then
             echo "is-protected-branch=false" >> $GITHUB_OUTPUT
             echo "is-dev-main=true" >> $GITHUB_OUTPUT
-            echo "ℹ️ dev-main branch detected - E2E tests are opt-in (use [run e2e] to enable)"
           else
             echo "is-protected-branch=false" >> $GITHUB_OUTPUT
             echo "is-dev-main=false" >> $GITHUB_OUTPUT
-            echo "ℹ️ Non-protected branch: $BRANCH - E2E tests run by default"
           fi
           
-          # Convert to uppercase for case-insensitive matching
+          # Check for skip patterns (case-insensitive)
           COMMIT_MSG_UPPER=$(echo "$COMMIT_MSG" | tr '[:lower:]' '[:upper:]')
           
-          # Check for skip patterns
-          if echo "$COMMIT_MSG_UPPER" | grep -qE '\[SKIP CI\]|\[CI SKIP\]'; then
-            echo "skip-all=true" >> $GITHUB_OUTPUT
-            echo "⚠️ Skipping entire CI pipeline due to [skip ci] in commit message"
-          else
-            echo "skip-all=false" >> $GITHUB_OUTPUT
-          fi
+          # Skip patterns
+          echo "$COMMIT_MSG_UPPER" | grep -qE '\[SKIP CI\]|\[CI SKIP\]' && echo "skip-all=true" >> $GITHUB_OUTPUT || echo "skip-all=false" >> $GITHUB_OUTPUT
+          echo "$COMMIT_MSG_UPPER" | grep -qE '\[SKIP LINT\]|\[SKIP TYPE-CHECK\]' && echo "skip-lint=true" >> $GITHUB_OUTPUT || echo "skip-lint=false" >> $GITHUB_OUTPUT
+          echo "$COMMIT_MSG_UPPER" | grep -qE '\[SKIP TESTS\]|\[SKIP UNIT-TESTS\]' && echo "skip-tests=true" >> $GITHUB_OUTPUT || echo "skip-tests=false" >> $GITHUB_OUTPUT
+          echo "$COMMIT_MSG_UPPER" | grep -qE '\[SKIP BUILD\]' && echo "skip-build=true" >> $GITHUB_OUTPUT || echo "skip-build=false" >> $GITHUB_OUTPUT
+          echo "$COMMIT_MSG_UPPER" | grep -qE '\[RUN E2E\]|\[E2E\]' && echo "run-e2e=true" >> $GITHUB_OUTPUT || echo "run-e2e=false" >> $GITHUB_OUTPUT
           
-          if echo "$COMMIT_MSG_UPPER" | grep -qE '\[SKIP LINT\]|\[SKIP TYPE-CHECK\]'; then
-            echo "skip-lint=true" >> $GITHUB_OUTPUT
-            echo "⚠️ Skipping lint & type-check job due to [skip lint] in commit message"
-          else
-            echo "skip-lint=false" >> $GITHUB_OUTPUT
-          fi
-          
-          if echo "$COMMIT_MSG_UPPER" | grep -qE '\[SKIP TESTS\]|\[SKIP UNIT-TESTS\]'; then
-            echo "skip-tests=true" >> $GITHUB_OUTPUT
-            echo "⚠️ Skipping unit tests job due to [skip tests] in commit message"
-          else
-            echo "skip-tests=false" >> $GITHUB_OUTPUT
-          fi
-          
-          # Check for opt-in pattern [run e2e] or [e2e]
-          if echo "$COMMIT_MSG_UPPER" | grep -qE '\[RUN E2E\]|\[E2E\]'; then
-            echo "run-e2e=true" >> $GITHUB_OUTPUT
-            echo "✅ Opt-in pattern detected: E2E tests will run"
-          else
-            echo "run-e2e=false" >> $GITHUB_OUTPUT
-          fi
-          
-          # For E2E: Logic depends on branch type
-          # Protected branches (main/master): Always run E2E (ignore all patterns)
-          # dev-main: Only run if opt-in pattern [run e2e] is present
-          # Other branches: Run by default, but can be skipped with [skip e2e]
+          # E2E skip logic: protected branches always run, dev-main is opt-in, others default on
           if [ "$BRANCH" == "main" ] || [ "$BRANCH" == "master" ]; then
-            # Protected branch: Always run E2E (ignore all patterns)
             echo "skip-e2e=false" >> $GITHUB_OUTPUT
-            echo "✅ Protected branch: E2E tests will run regardless of patterns"
           elif [ "$BRANCH" == "dev-main" ]; then
-            # dev-main: Opt-in only (check for [run e2e] pattern)
-            if echo "$COMMIT_MSG_UPPER" | grep -qE '\[RUN E2E\]|\[E2E\]'; then
-              echo "skip-e2e=false" >> $GITHUB_OUTPUT
-              echo "✅ dev-main: E2E tests will run (opt-in pattern detected)"
-            else
-              echo "skip-e2e=true" >> $GITHUB_OUTPUT
-              echo "ℹ️ dev-main: E2E tests skipped by default (use [run e2e] to enable)"
-            fi
+            echo "$COMMIT_MSG_UPPER" | grep -qE '\[RUN E2E\]|\[E2E\]' && echo "skip-e2e=false" >> $GITHUB_OUTPUT || echo "skip-e2e=true" >> $GITHUB_OUTPUT
           elif echo "$COMMIT_MSG_UPPER" | grep -qE '\[SKIP E2E\]|\[SKIP E2E-TESTS\]'; then
-            # Other branches: Can be skipped with [skip e2e]
             echo "skip-e2e=true" >> $GITHUB_OUTPUT
-            echo "⚠️ Skipping E2E tests job due to [skip e2e] in commit message"
           else
-            # Other branches: Run by default
             echo "skip-e2e=false" >> $GITHUB_OUTPUT
-          fi
-          
-          if echo "$COMMIT_MSG_UPPER" | grep -qE '\[SKIP BUILD\]'; then
-            echo "skip-build=true" >> $GITHUB_OUTPUT
-            echo "⚠️ Skipping build job due to [skip build] in commit message"
-          else
-            echo "skip-build=false" >> $GITHUB_OUTPUT
           fi
 
+  # ============================================================================
+  # Job 2: Code quality checks (linting and type checking)
+  # ============================================================================
   lint-and-typecheck:
     name: Lint & Type Check
     runs-on: ubuntu-latest
     needs: check-commit-message
     if: needs.check-commit-message.outputs.skip-all != 'true' && needs.check-commit-message.outputs.skip-lint != 'true'
-    env:
-      NODE_ENV: "test"
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '20'
-
-      - name: Enable Corepack
-        run: corepack enable
-
-      - name: Get pnpm store directory
-        shell: bash
-        run: |
-          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
-
-      - name: Setup pnpm cache
-        uses: actions/cache@v4
+      - run: corepack enable
+      - name: Get pnpm store path
+        id: store-path
+        run: echo "path=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
+      - uses: actions/cache@v4
         with:
-          path: ${{ env.STORE_PATH }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-store-
+          path: ${{ steps.store-path.outputs.path }}
+          key: pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: pnpm-store-
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run lint
+      - run: pnpm run eslint
+      - run: pnpm run type-check
 
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Run Prettier check
-        run: pnpm run lint
-
-      - name: Run ESLint
-        run: pnpm run eslint
-
-      - name: Run TypeScript type check
-        run: pnpm run type-check
-
+  # ============================================================================
+  # Job 3: Unit tests with coverage
+  # ============================================================================
   unit-tests:
     name: Unit Tests
     runs-on: ubuntu-latest
-    needs: check-commit-message
+    needs: [check-commit-message, lint-and-typecheck]
     if: needs.check-commit-message.outputs.skip-all != 'true' && needs.check-commit-message.outputs.skip-tests != 'true'
     env:
       NODE_ENV: "test"
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '20'
-
-      - name: Enable Corepack
-        run: corepack enable
-
-      - name: Get pnpm store directory
-        shell: bash
-        run: |
-          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
-
-      - name: Setup pnpm cache
-        uses: actions/cache@v4
+      - run: corepack enable
+      - name: Get pnpm store path
+        id: store-path
+        run: echo "path=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
+      - uses: actions/cache@v4
         with:
-          path: ${{ env.STORE_PATH }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-store-
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Run unit tests
-        run: pnpm run test
-
-      # Codecov is optional - only uploads if CODECOV_TOKEN secret is set
-      - name: Upload coverage reports
+          path: ${{ steps.store-path.outputs.path }}
+          key: pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: pnpm-store-
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run test:coverage
+      - name: Verify coverage files generated
+        if: always()
+        run: |
+          echo "Checking coverage output directory..."
+          ls -la output/coverage/ || echo "output/coverage/ doesn't exist"
+          echo ""
+          echo "Coverage files found:"
+          find output/coverage -name "*.json" -o -name "*.html" 2>/dev/null | head -10 || echo "No coverage files found"
+      - name: Upload coverage artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-report
+          path: output/coverage/
+          retention-days: 7
+          if-no-files-found: warn
+      - name: Upload to Codecov
         uses: codecov/codecov-action@v4
         if: always()
         with:
-          files: ./coverage/coverage-final.json
+          files: output/coverage/coverage-summary.json
           fail_ci_if_error: false
           token: ${{ secrets.CODECOV_TOKEN }}
 
+  # ============================================================================
+  # Job 4: Coverage threshold validation (only on PRs to main/master)
+  # ============================================================================
+  coverage-check:
+    name: Coverage Check
+    runs-on: ubuntu-latest
+    needs: [check-commit-message, unit-tests]
+    if: needs.check-commit-message.outputs.skip-all != 'true' && needs.check-commit-message.outputs.skip-tests != 'true'
+    steps:
+      - name: Determine if check required
+        id: should-check
+        run: |
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            [ "${{ github.base_ref }}" == "main" ] || [ "${{ github.base_ref }}" == "master" ] && echo "should-check=true" >> $GITHUB_OUTPUT || echo "should-check=false" >> $GITHUB_OUTPUT
+          elif [ "${{ github.event_name }}" == "push" ]; then
+            [ "${{ github.ref }}" == "refs/heads/main" ] || [ "${{ github.ref }}" == "refs/heads/master" ] && echo "should-check=true" >> $GITHUB_OUTPUT || echo "should-check=false" >> $GITHUB_OUTPUT
+          else
+            echo "should-check=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Download coverage artifact
+        if: steps.should-check.outputs.should-check == 'true'
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-report
+          path: ./
+
+      - name: Find and convert coverage file
+        if: steps.should-check.outputs.should-check == 'true'
+        run: |
+          mkdir -p output/coverage
+          COVERAGE_FILE="output/coverage/coverage-summary.json"
+          
+          # Function to convert Istanbul format to Vitest summary format
+          convert_coverage() {
+            local source_file="$1"
+            echo "⚠️ Converting $source_file (Istanbul format) to coverage-summary.json..."
+            
+            node -e "
+              const fs = require('fs');
+              const cov = require('./$source_file');
+              
+              let statements = { total: 0, covered: 0 };
+              let branches = { total: 0, covered: 0 };
+              let functions = { total: 0, covered: 0 };
+              let lines = { total: 0, covered: 0 };
+              
+              Object.values(cov).forEach(file => {
+                if (file && typeof file === 'object') {
+                  const s = Array.isArray(file.s) ? file.s : [];
+                  const b = Array.isArray(file.b) ? file.b : [];
+                  const f = Array.isArray(file.f) ? file.f : [];
+                  const l = Array.isArray(file.l) ? file.l : [];
+                  
+                  statements.total += s.length;
+                  statements.covered += s.filter(v => v !== undefined && v !== null && v > 0).length;
+                  branches.total += b.length;
+                  branches.covered += b.filter(v => v !== undefined && v !== null && v > 0).length;
+                  functions.total += f.length;
+                  functions.covered += f.filter(v => v !== undefined && v !== null && v > 0).length;
+                  lines.total += l.length;
+                  lines.covered += l.filter(v => v !== undefined && v !== null && v > 0).length;
+                }
+              });
+              
+              if (statements.total === 0 && branches.total === 0 && functions.total === 0 && lines.total === 0) {
+                console.error('❌ ERROR: coverage-final.json contains no coverage data!');
+                process.exit(1);
+              }
+              
+              const summary = {
+                total: {
+                  statements: {
+                    total: statements.total,
+                    covered: statements.covered,
+                    skipped: 0,
+                    pct: statements.total > 0 ? parseFloat((statements.covered / statements.total * 100).toFixed(2)) : 0
+                  },
+                  branches: {
+                    total: branches.total,
+                    covered: branches.covered,
+                    skipped: 0,
+                    pct: branches.total > 0 ? parseFloat((branches.covered / branches.total * 100).toFixed(2)) : 0
+                  },
+                  functions: {
+                    total: functions.total,
+                    covered: functions.covered,
+                    skipped: 0,
+                    pct: functions.total > 0 ? parseFloat((functions.covered / functions.total * 100).toFixed(2)) : 0
+                  },
+                  lines: {
+                    total: lines.total,
+                    covered: lines.covered,
+                    skipped: 0,
+                    pct: lines.total > 0 ? parseFloat((lines.covered / lines.total * 100).toFixed(2)) : 0
+                  }
+                }
+              };
+              
+              fs.writeFileSync('output/coverage/coverage-summary.json', JSON.stringify(summary, null, 2));
+              console.log('✅ Converted to coverage-summary.json');
+              console.log('Lines coverage:', summary.total.lines.pct + '%');
+            " || exit 1
+          }
+          
+          # Search for coverage files in all possible locations
+          FOUND_FILE=""
+          
+          # Check for coverage-summary.json (preferred format)
+          for path in "output/coverage/coverage-summary.json" "coverage-report/coverage-summary.json" "coverage-summary.json"; do
+            if [ -f "$path" ]; then
+              if [ "$path" != "output/coverage/coverage-summary.json" ]; then
+                cp "$path" output/coverage/coverage-summary.json
+              fi
+              echo "✅ Found coverage-summary.json at $path"
+              FOUND_FILE="output/coverage/coverage-summary.json"
+              break
+            fi
+          done
+          
+          # If not found, check for coverage-final.json (Istanbul format)
+          if [ -z "$FOUND_FILE" ]; then
+            for path in "coverage-final.json" "coverage-report/coverage-final.json" "output/coverage/coverage-final.json"; do
+              if [ -f "$path" ]; then
+                convert_coverage "$path"
+                FOUND_FILE="output/coverage/coverage-summary.json"
+                break
+              fi
+            done
+          fi
+          
+          # Final check - search recursively
+          if [ -z "$FOUND_FILE" ]; then
+            echo "⚠️ Coverage file not in expected locations, searching recursively..."
+            FOUND_PATH=$(find . -name "coverage-final.json" -o -name "coverage-summary.json" 2>/dev/null | head -1)
+            if [ -n "$FOUND_PATH" ]; then
+              if [[ "$FOUND_PATH" == *"coverage-final.json" ]]; then
+                convert_coverage "$FOUND_PATH"
+                FOUND_FILE="output/coverage/coverage-summary.json"
+              else
+                cp "$FOUND_PATH" output/coverage/coverage-summary.json
+                FOUND_FILE="output/coverage/coverage-summary.json"
+              fi
+            fi
+          fi
+          
+          # Validate file exists
+          if [ -z "$FOUND_FILE" ] || [ ! -f "$FOUND_FILE" ]; then
+            echo "❌ Coverage file not found after search!"
+            echo "Searched locations:"
+            echo "  - output/coverage/coverage-summary.json"
+            echo "  - coverage-report/coverage-summary.json"
+            echo "  - coverage-summary.json"
+            echo "  - coverage-final.json"
+            echo "  - coverage-report/coverage-final.json"
+            echo "  - output/coverage/coverage-final.json"
+            echo ""
+            echo "Files found in current directory:"
+            find . -name "coverage*.json" 2>/dev/null | head -10 || echo "No coverage files found"
+            echo ""
+            echo "Directory contents:"
+            ls -la . | head -20
+            exit 1
+          fi
+          
+          echo "COVERAGE_FILE=$FOUND_FILE" >> $GITHUB_ENV
+          echo "✅ Coverage file ready at $FOUND_FILE"
+
+      - name: Validate and check coverage threshold
+        if: steps.should-check.outputs.should-check == 'true'
+        env:
+          COVERAGE_FILE: ${{ env.COVERAGE_FILE }}
+        run: |
+          THRESHOLD=60
+          
+          # Use the file found in previous step
+          COVERAGE_FILE="${COVERAGE_FILE:-output/coverage/coverage-summary.json}"
+          
+          if [ ! -f "$COVERAGE_FILE" ]; then
+            echo "❌ Coverage file not found at $COVERAGE_FILE"
+            echo "Current directory: $(pwd)"
+            echo "Files in output/coverage/:"
+            ls -la output/coverage/ 2>/dev/null || echo "Directory doesn't exist"
+            exit 1
+          fi
+          
+          echo "Using coverage file: $COVERAGE_FILE"
+          
+          node -e "
+            const fs = require('fs');
+            const cov = require('./$COVERAGE_FILE');
+            const linesTotal = cov.total?.lines?.total ?? 0;
+            const linesPct = cov.total?.lines?.pct ?? 0;
+            
+            if (linesTotal === 0 && linesPct === 0) {
+              console.error('❌ ERROR: Coverage file contains no data!');
+              console.error('Coverage was not collected during test execution.');
+              process.exit(1);
+            }
+            
+            if (linesPct < $THRESHOLD) {
+              console.error('❌ Coverage is ' + linesPct + '%, but minimum is $THRESHOLD%');
+              console.error('Please add more tests to increase coverage.');
+              process.exit(1);
+            }
+            
+            console.log('✅ Coverage: ' + linesPct + '% (minimum: $THRESHOLD%)');
+            console.log('Statements: ' + (cov.total?.statements?.pct ?? 0) + '%');
+            console.log('Branches: ' + (cov.total?.branches?.pct ?? 0) + '%');
+            console.log('Functions: ' + (cov.total?.functions?.pct ?? 0) + '%');
+            console.log('Lines: ' + linesPct + '%');
+          "
+
+      - name: Skip message
+        if: steps.should-check.outputs.should-check != 'true'
+        run: echo "ℹ️ Coverage check skipped for this branch/event"
+
+  # ============================================================================
+  # Job 5: End-to-end tests
+  # ============================================================================
   e2e-tests:
     name: E2E Tests
     runs-on: ubuntu-latest
-    needs: check-commit-message
-    # Always run on protected branches (main/master), otherwise respect skip pattern
-    if: needs.check-commit-message.outputs.skip-all != 'true' && (needs.check-commit-message.outputs.is-protected-branch == 'true' || needs.check-commit-message.outputs.skip-e2e != 'true')
+    needs: [check-commit-message, lint-and-typecheck, unit-tests, coverage-check]
+    if: |
+      needs.check-commit-message.outputs.skip-all != 'true' &&
+      (needs.check-commit-message.outputs.is-protected-branch == 'true' || 
+       needs.check-commit-message.outputs.skip-e2e != 'true')
     env:
       NODE_ENV: "test"
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '20'
-
-      - name: Enable Corepack
-        run: corepack enable
-
-      - name: Get pnpm store directory
-        shell: bash
-        run: |
-          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
-
-      - name: Setup pnpm cache
-        uses: actions/cache@v4
+      - run: corepack enable
+      - name: Get pnpm store path
+        id: store-path
+        run: echo "path=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
+      - uses: actions/cache@v4
         with:
-          path: ${{ env.STORE_PATH }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-store-
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Install Playwright browsers
-        run: pnpm exec playwright install --with-deps
-
-      - name: Run E2E tests
-        run: pnpm run test:e2e
-
+          path: ${{ steps.store-path.outputs.path }}
+          key: pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: pnpm-store-
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install --with-deps
+      - run: pnpm run test:e2e
       - name: Upload Playwright report
         uses: actions/upload-artifact@v4
         if: always()
@@ -275,47 +413,36 @@ jobs:
           path: playwright-report/
           retention-days: 30
 
+  # ============================================================================
+  # Job 6: Production build
+  # ============================================================================
   build:
     name: Build
     runs-on: ubuntu-latest
-    needs: check-commit-message
-    if: needs.check-commit-message.outputs.skip-all != 'true' && needs.check-commit-message.outputs.skip-build != 'true'
+    needs: [check-commit-message, lint-and-typecheck, unit-tests, e2e-tests, coverage-check]
+    if: |
+      (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' || github.event_name == 'pull_request') &&
+      needs.check-commit-message.outputs.skip-all != 'true' &&
+      needs.check-commit-message.outputs.skip-build != 'true'
     env:
       NODE_ENV: "production"
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '20'
-
-      - name: Enable Corepack
-        run: corepack enable
-
-      - name: Get pnpm store directory
-        shell: bash
-        run: |
-          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
-
-      - name: Setup pnpm cache
-        uses: actions/cache@v4
+      - run: corepack enable
+      - name: Get pnpm store path
+        id: store-path
+        run: echo "path=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
+      - uses: actions/cache@v4
         with:
-          path: ${{ env.STORE_PATH }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-store-
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Verify TypeScript is installed
-        run: pnpm exec tsc --version || (echo "TypeScript not found!" && pnpm list typescript && exit 1)
-
-      - name: Build application
-        run: pnpm run build
-
+          path: ${{ steps.store-path.outputs.path }}
+          key: pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: pnpm-store-
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec tsc --version || (echo "TypeScript not found!" && pnpm list typescript && exit 1)
+      - run: pnpm run build
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         if: always()

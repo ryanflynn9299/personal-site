@@ -7,6 +7,7 @@ import Counter from "@/components/primitives/misc/Counter";
 import { incrementCounter } from "@/app/actions/counter";
 import { core } from "@/constants/theme";
 import { createLogger } from "@/lib/logger";
+import { useHasMounted } from "@/lib/hooks/useHasMounted";
 
 const log = createLogger("ALL");
 
@@ -20,6 +21,7 @@ const QUIRKY_MESSAGES = [
 ];
 
 export function FunCounter() {
+  const hasMounted = useHasMounted();
   const [count, setCount] = useState<number | null>(null);
   const [hasClicked, setHasClicked] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -27,13 +29,14 @@ export function FunCounter() {
 
   // Check if user has already clicked in this session
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const clicked = sessionStorage.getItem(SESSION_STORAGE_KEY);
-      if (clicked === "true") {
-        setHasClicked(true);
-      }
+    if (!hasMounted || typeof window === "undefined") {
+      return;
     }
-  }, []);
+    const clicked = sessionStorage.getItem(SESSION_STORAGE_KEY);
+    if (clicked === "true") {
+      setHasClicked(true);
+    }
+  }, [hasMounted]);
 
   const handleClick = async () => {
     if (hasClicked || isLoading) {
@@ -65,6 +68,35 @@ export function FunCounter() {
       setIsLoading(false);
     }
   };
+
+  if (!hasMounted) {
+    return (
+      <div className="mt-8 rounded-lg border border-slate-700 bg-slate-800/50 p-6 backdrop-blur-sm">
+        <div className="flex items-center gap-2 mb-4">
+          <Sparkles className="h-5 w-5 text-sky-300" />
+          <h3 className="font-semibold text-slate-200">
+            Useless Counter Challenge
+          </h3>
+        </div>
+        <p className="text-sm text-slate-400 mb-4">
+          Click the button below to increment a counter for absolutely no reason.
+          It&apos;s stored in a database somewhere (or will be, eventually). One
+          click per session, because even randomness needs rules.
+        </p>
+        <div className="flex flex-col items-center gap-4">
+          <div className="h-16 flex items-center justify-center">
+            <span className="text-4xl font-bold text-slate-600">---</span>
+          </div>
+          <button
+            disabled
+            className="px-6 py-3 rounded-lg font-medium bg-slate-700 text-slate-500 cursor-not-allowed"
+          >
+            Click Me (For Science!)
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <motion.div

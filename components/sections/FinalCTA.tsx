@@ -1,10 +1,33 @@
 "use client";
 
-import { motion } from "framer-motion";
 import Link from "next/link";
 import { Button } from "@/components/primitives/Button";
+import { SectionHeader } from "@/components/sections/SectionHeader";
+import { motion } from "framer-motion";
+import { useHasMounted } from "@/lib/hooks/useHasMounted";
 
 export function FinalCTA() {
+  const hasMounted = useHasMounted();
+
+  if (!hasMounted) {
+    return (
+      <section className="py-16 md:py-24 border-t border-slate-800">
+        <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
+          <SectionHeader
+            title="Let's Build Something Together"
+            subtitle="I'm always open to discussing new projects, creative ideas, or opportunities to be part of an ambitious vision."
+            titleClassName="tracking-tight"
+          />
+          <div className="mt-8">
+            <Button asChild size="lg">
+              <Link href="/contact">Get in Touch</Link>
+            </Button>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <motion.section
       className="py-16 md:py-24 border-t border-slate-800"
@@ -14,13 +37,11 @@ export function FinalCTA() {
       transition={{ duration: 0.7 }}
     >
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
-        <h2 className="font-heading text-3xl font-bold tracking-tight text-slate-50 sm:text-4xl">
-          Let's Build Something Together
-        </h2>
-        <p className="mx-auto mt-6 max-w-2xl text-lg text-slate-300">
-          I'm always open to discussing new projects, creative ideas, or
-          opportunities to be part of an ambitious vision.
-        </p>
+        <SectionHeader
+          title="Let's Build Something Together"
+          subtitle="I'm always open to discussing new projects, creative ideas, or opportunities to be part of an ambitious vision."
+          titleClassName="tracking-tight"
+        />
         <div className="mt-8">
           <Button asChild size="lg">
             <Link href="/contact">Get in Touch</Link>

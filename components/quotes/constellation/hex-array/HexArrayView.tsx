@@ -568,12 +568,18 @@ export function HexArrayView({ quotes }: HexArrayViewProps) {
     x: number;
     y: number;
   } | null>(null);
+  const [isMounted, setIsMounted] = useState(false);
 
   // Get hex surge controls from store
   const hexSurgeEnabled = useQuoteViewStore((state) => state.hexSurgeEnabled);
   const setHexSurgeTriggerCallback = useQuoteViewStore(
     (state) => state.setHexSurgeTriggerCallback
   );
+
+  // Track mount state to prevent hydration mismatches
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   // Update dimensions on mount and resize
   useEffect(() => {
@@ -663,8 +669,9 @@ export function HexArrayView({ quotes }: HexArrayViewProps) {
   };
 
   // Calculate modal position - place close to tile, never off-screen
-  const getModalStyle = (): React.CSSProperties => {
-    if (!modalPosition || typeof window === "undefined") {
+  // Use useMemo to prevent hydration mismatches by only calculating on client after mount
+  const modalStyle = useMemo((): React.CSSProperties => {
+    if (!modalPosition || !isMounted || typeof window === "undefined") {
       return { display: "none" };
     }
 
@@ -715,7 +722,7 @@ export function HexArrayView({ quotes }: HexArrayViewProps) {
       left: `${modalX}px`,
       top: `${modalY}px`,
     };
-  };
+  }, [modalPosition, isMounted]);
 
   // Hex path with gap accounted for - hex size reduced to create gap between tiles
   const hexPath = getHexPath(HEX_SIZE - GAP);
@@ -862,7 +869,7 @@ export function HexArrayView({ quotes }: HexArrayViewProps) {
             }}
             className="pointer-events-auto z-50 min-w-[400px] max-w-[600px] rounded-lg border-2 border-slate-700 bg-slate-900/95 backdrop-blur-xl p-8 shadow-2xl"
             style={{
-              ...getModalStyle(),
+              ...modalStyle,
               borderColor: selectedTile.color
                 ? ACTIVE_COLORS[selectedTile.color]
                 : accents.cyan,

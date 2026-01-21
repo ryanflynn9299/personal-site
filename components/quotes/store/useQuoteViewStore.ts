@@ -8,6 +8,10 @@ import type {
   NormalVariant,
   ConstellationVariant,
 } from "@/app/(portfolio)/quotes/config";
+import {
+  PRODUCTION_QUOTE_CONFIG,
+  isVariantAllowedInProduction,
+} from "@/app/(portfolio)/quotes/production-config";
 
 interface QuoteViewState {
   viewMode: ViewMode;
@@ -31,16 +35,28 @@ interface QuoteViewState {
 // Storage key for localStorage
 const STORAGE_KEY = "quote-view-state";
 
-// Default state
-const defaultState = {
-  viewMode: "normal" as ViewMode,
-  activeNormalVariant: "mission_control" as NormalVariant,
-  activeConstellationVariant: "constellation" as ConstellationVariant,
-  hexSurgeEnabled: true,
-  isZoomed: false,
-  hexSurgeTriggerCallback: null as (() => void) | null,
-  cometTriggerCallback: null as (() => void) | null,
+// Get initial state based on environment
+// In production, use production config; otherwise use defaults
+const getInitialState = () => {
+  const isProduction = env.isProduction;
+
+  return {
+    viewMode: "normal" as ViewMode,
+    activeNormalVariant: (isProduction
+      ? PRODUCTION_QUOTE_CONFIG.normalVariant
+      : "mission_control") as NormalVariant,
+    activeConstellationVariant: (isProduction
+      ? PRODUCTION_QUOTE_CONFIG.constellationVariant
+      : "constellation") as ConstellationVariant,
+    hexSurgeEnabled: true,
+    isZoomed: false,
+    hexSurgeTriggerCallback: null as (() => void) | null,
+    cometTriggerCallback: null as (() => void) | null,
+  };
 };
+
+// Default state
+const defaultState = getInitialState();
 
 // Create a no-op storage for production (doesn't persist)
 const noOpStorage = {
@@ -60,32 +76,68 @@ const getStorage = () => {
 
 export const useQuoteViewStore = create<QuoteViewState>()(
   persist(
-    (set, get) => ({
-      ...defaultState,
-      triggerHexSurge: () => {
-        const state = get();
-        if (state.hexSurgeTriggerCallback) {
-          state.hexSurgeTriggerCallback();
-        }
-      },
-      triggerComet: () => {
-        const state = get();
-        if (state.cometTriggerCallback) {
-          state.cometTriggerCallback();
-        }
-      },
-      setViewMode: (mode) => set({ viewMode: mode }),
-      setActiveNormalVariant: (variant) =>
-        set({ activeNormalVariant: variant }),
-      setActiveConstellationVariant: (variant) =>
-        set({ activeConstellationVariant: variant }),
-      setHexSurgeEnabled: (enabled) => set({ hexSurgeEnabled: enabled }),
-      setIsZoomed: (zoomed) => set({ isZoomed: zoomed }),
-      setHexSurgeTriggerCallback: (callback) =>
-        set({ hexSurgeTriggerCallback: callback }),
-      setCometTriggerCallback: (callback) =>
-        set({ cometTriggerCallback: callback }),
-    }),
+    (set, get) => {
+      const isProduction = env.isProduction;
+
+      return {
+        ...defaultState,
+        triggerHexSurge: () => {
+          const state = get();
+          if (state.hexSurgeTriggerCallback) {
+            state.hexSurgeTriggerCallback();
+          }
+        },
+        triggerComet: () => {
+          const state = get();
+          if (state.cometTriggerCallback) {
+            state.cometTriggerCallback();
+          }
+        },
+        setViewMode: (mode: ViewMode) => {
+          // In production, only allow switching between the two configured modes
+          // This is allowed since both modes are configured for production
+          if (isProduction) {
+            // In production, we can switch between normal and constellation
+            // but the variants are locked
+            set({ viewMode: mode });
+          } else {
+            // In dev, allow any mode
+            set({ viewMode: mode });
+          }
+        },
+        setActiveNormalVariant: (variant: NormalVariant) => {
+          // In production, only allow the configured variant
+          if (isProduction) {
+            if (isVariantAllowedInProduction(variant, "normal")) {
+              set({ activeNormalVariant: variant });
+            }
+            // Silently ignore invalid variants in production
+          } else {
+            // In dev, allow any variant
+            set({ activeNormalVariant: variant });
+          }
+        },
+        setActiveConstellationVariant: (variant: ConstellationVariant) => {
+          // In production, only allow the configured variant
+          if (isProduction) {
+            if (isVariantAllowedInProduction(variant, "constellation")) {
+              set({ activeConstellationVariant: variant });
+            }
+            // Silently ignore invalid variants in production
+          } else {
+            // In dev, allow any variant
+            set({ activeConstellationVariant: variant });
+          }
+        },
+        setHexSurgeEnabled: (enabled: boolean) =>
+          set({ hexSurgeEnabled: enabled }),
+        setIsZoomed: (zoomed: boolean) => set({ isZoomed: zoomed }),
+        setHexSurgeTriggerCallback: (callback: (() => void) | null) =>
+          set({ hexSurgeTriggerCallback: callback }),
+        setCometTriggerCallback: (callback: (() => void) | null) =>
+          set({ cometTriggerCallback: callback }),
+      };
+    },
     {
       name: STORAGE_KEY,
       // Only persist in development environment
@@ -97,6 +149,21 @@ export const useQuoteViewStore = create<QuoteViewState>()(
         activeConstellationVariant: state.activeConstellationVariant,
         hexSurgeEnabled: state.hexSurgeEnabled,
       }),
+      // In production, merge persisted state with production config to enforce restrictions
+      merge: (persistedState: any, currentState: any) => {
+        if (env.isProduction) {
+          // Override with production config in production
+          return {
+            ...currentState,
+            ...persistedState,
+            activeNormalVariant: PRODUCTION_QUOTE_CONFIG.normalVariant,
+            activeConstellationVariant:
+              PRODUCTION_QUOTE_CONFIG.constellationVariant,
+          };
+        }
+        // In dev, use persisted state as normal
+        return { ...currentState, ...persistedState };
+      },
     }
   )
 );

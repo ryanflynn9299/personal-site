@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { Code, AlertCircle } from "lucide-react";
 import { env, isDirectusEnabled } from "@/lib/env";
 
@@ -10,16 +11,25 @@ import { env, isDirectusEnabled } from "@/lib/env";
  * Only displays in development modes (live-dev or offline-dev).
  */
 export function DevModeIndicator() {
+  // Use state to prevent hydration mismatch
+  const [modeLabel, setModeLabel] = useState<string>("Offline Dev");
+  const [serviceStatus, setServiceStatus] =
+    useState<string>("Services offline");
+  const [isDevelopment, setIsDevelopment] = useState<boolean>(false);
+
+  // Set values after mount to ensure server and client match
+  useEffect(() => {
+    setIsDevelopment(env.isDevelopment);
+    setModeLabel(env.isLiveDev ? "Live Dev" : "Offline Dev");
+    setServiceStatus(
+      isDirectusEnabled() ? "Services connected" : "Services offline"
+    );
+  }, []);
+
   // Only show in development modes
-  if (!env.isDevelopment) {
+  if (!isDevelopment) {
     return null;
   }
-
-  const directusEnabled = isDirectusEnabled();
-  const modeLabel = env.isLiveDev ? "Live Dev" : "Offline Dev";
-  const serviceStatus = directusEnabled
-    ? "Services connected"
-    : "Services offline";
 
   return (
     <div className="border-b border-amber-500/20 px-4 py-2 relative z-10">

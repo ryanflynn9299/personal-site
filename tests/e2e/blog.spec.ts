@@ -12,14 +12,20 @@ test.describe("Blog Page", () => {
   });
 
   test("shows blog posts or empty state", async ({ page }) => {
-    // Wait for page to load
-    await page.waitForLoadState("networkidle");
-
-    // Either shows blog posts or an empty/unavailable state
+    // Wait for DOM to be ready
+    await page.waitForLoadState("domcontentloaded");
+    
+    // Wait for either blog posts or empty state to appear
     const postCards = page.locator("article, [class*='post'], [class*='card']");
     const emptyStateText = page.getByText(
       /no posts|check back soon|content service|problem connecting/i
     );
+
+    // Wait for one of these to be visible
+    await Promise.race([
+      expect(postCards.first()).toBeVisible({ timeout: 2000 }).catch(() => {}),
+      expect(emptyStateText.first()).toBeVisible({ timeout: 2000 }).catch(() => {}),
+    ]);
 
     // One of these should be visible
     const hasPostCards = (await postCards.count()) > 0;
@@ -32,11 +38,13 @@ test.describe("Blog Page", () => {
   });
 
   test("blog post cards are clickable", async ({ page }) => {
-    // Wait for page to load
-    await page.waitForLoadState("networkidle");
-
-    // Find any post link
+    // Wait for DOM to be ready
+    await page.waitForLoadState("domcontentloaded");
+    
+    // Wait for post links to be available
     const postLinks = page.locator('a[href*="/blog/"]');
+    await postLinks.first().waitFor({ state: "attached", timeout: 2000 }).catch(() => {});
+    
     const count = await postLinks.count();
 
     if (count > 0) {
@@ -46,8 +54,8 @@ test.describe("Blog Page", () => {
 
       await firstPost.click();
 
-      // Should navigate to post page
-      await expect(page).toHaveURL(new RegExp(href || "/blog/"));
+      // Should navigate to post page - wait for URL change
+      await expect(page).toHaveURL(new RegExp(href || "/blog/"), { timeout: 2000 });
     }
   });
 
@@ -78,24 +86,24 @@ test.describe("Blog Post Page", () => {
     const errorText = page.getByText(
       /not found|404|lost in space|content service|problem connecting/i
     );
-    await expect(errorText.first()).toBeVisible({ timeout: 5000 });
+    await expect(errorText.first()).toBeVisible({ timeout: 2000 });
   });
 
   test("blog post page has correct structure", async ({ page }) => {
     // First get a valid post slug from the blog page
     await page.goto("/blog");
-    await page.waitForLoadState("networkidle");
+    await page.waitForLoadState("domcontentloaded");
 
     const postLinks = page.locator('a[href*="/blog/"]');
+    await postLinks.first().waitFor({ state: "attached", timeout: 2000 }).catch(() => {});
     const count = await postLinks.count();
 
     if (count > 0) {
       // Navigate to first post
       await postLinks.first().click();
-      await page.waitForLoadState("networkidle");
-
-      // Check for article structure
-      await expect(page.getByRole("article")).toBeVisible();
+      
+      // Wait for article to appear instead of networkidle
+      await expect(page.getByRole("article")).toBeVisible({ timeout: 2000 });
 
       // Check for title
       await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
@@ -104,19 +112,22 @@ test.describe("Blog Post Page", () => {
 
   test("blog post has back navigation", async ({ page }) => {
     await page.goto("/blog");
-    await page.waitForLoadState("networkidle");
+    await page.waitForLoadState("domcontentloaded");
 
     const postLinks = page.locator('a[href*="/blog/"]');
+    await postLinks.first().waitFor({ state: "attached", timeout: 2000 }).catch(() => {});
     const count = await postLinks.count();
 
     if (count > 0) {
       // Navigate to first post
       await postLinks.first().click();
-      await page.waitForLoadState("networkidle");
+      
+      // Wait for article to appear
+      await expect(page.getByRole("article")).toBeVisible({ timeout: 2000 });
 
       // Should be able to navigate back
       await page.goBack();
-      await expect(page).toHaveURL(/\/blog\/?$/);
+      await expect(page).toHaveURL(/\/blog\/?$/, { timeout: 2000 });
     }
   });
 });

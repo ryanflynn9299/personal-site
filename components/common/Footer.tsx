@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 // import { usePathname } from "next/navigation";
 import { Github, Linkedin, Twitter } from "lucide-react";
@@ -42,6 +43,28 @@ export function Footer() {
   // const pathname = usePathname();
   // const isProjectsCabinetPage = pathname === "/projects-cabinet";
 
+  // Use state to track dev mode UI to prevent hydration mismatches
+  // Initialize to false to match server-side default, then update after hydration
+  const [devModeUI, setDevModeUI] = useState(false);
+
+  useEffect(() => {
+    // Update dev mode UI after hydration to match client-side value
+    setDevModeUI(env.devModeUI);
+  }, []);
+
+  // Filter footer nav items
+  const filteredNavItems = footerNav.filter((item: any) => {
+    // Filter by active status
+    if (!item.is_active) {
+      return false;
+    }
+    // Filter by dev-only status (use dev mode UI toggle)
+    if (item.devOnly && !devModeUI) {
+      return false;
+    }
+    return true;
+  });
+
   return (
     <footer className="border-t border-slate-700 bg-slate-800 relative z-10">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
@@ -61,35 +84,23 @@ export function Footer() {
                 Navigate
               </h4>
               <ul className="mt-4 space-y-2">
-                {footerNav
-                  .filter((item: any) => {
-                    // Filter by active status
-                    if (!item.is_active) {
-                      return false;
-                    }
-                    // Filter by dev-only status (use dev mode UI toggle)
-                    if (item.devOnly && !env.devModeUI) {
-                      return false;
-                    }
-                    return true;
-                  })
-                  .map((item: any) => (
-                    <li key={item.href}>
-                      <Link
-                        href={item.href}
-                        className="flex items-center gap-2 text-base text-slate-300 hover:text-sky-300"
-                      >
-                        <span>{item.name}</span>
-                        {item.devOnly && (
-                          <span className="rounded bg-amber-500/20 px-1.5 py-0.5 text-xs text-amber-400">
-                            DEV
-                          </span>
-                        )}
-                      </Link>
-                    </li>
-                  ))}
+                {filteredNavItems.map((item: any) => (
+                  <li key={item.href}>
+                    <Link
+                      href={item.href}
+                      className="flex items-center gap-2 text-base text-slate-300 hover:text-sky-300"
+                    >
+                      <span>{item.name}</span>
+                      {item.devOnly && (
+                        <span className="rounded bg-amber-500/20 px-1.5 py-0.5 text-xs text-amber-400">
+                          DEV
+                        </span>
+                      )}
+                    </Link>
+                  </li>
+                ))}
                 {/* Dev-only link */}
-                {env.devModeUI && (
+                {devModeUI && (
                   <li>
                     <Link
                       href="/projects-cabinet"
@@ -149,7 +160,8 @@ export function Footer() {
         </div>
         <div className="mt-8 border-t border-slate-700 pt-8 text-center text-sm text-slate-500">
           <p>
-            &copy; {new Date().getFullYear()} Ryan Flynn. All rights reserved.
+            &copy; {new Date().getUTCFullYear()} Ryan Flynn. All rights
+            reserved.
           </p>
         </div>
       </div>

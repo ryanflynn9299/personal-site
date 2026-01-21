@@ -5,7 +5,7 @@ import {
 } from "@/lib/directus";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import Image from "next/image";
+import { ImageWithSkeleton } from "@/components/primitives/ImageWithSkeleton";
 import { JsonLd } from "@/components/common/JsonLd";
 import { BlogPostTracker } from "@/components/blog/BlogPostTracker";
 import { ServiceUnavailableWithDevMode } from "@/components/common/DevModeIndicator";
@@ -13,6 +13,7 @@ import { BlogContentRenderer } from "@/components/blog/BlogContentRenderer";
 import { Post } from "@/types";
 import { SITE_URL, ENABLE_BLOG_SEO } from "@/lib/seo";
 import { env } from "@/lib/env";
+import { formatDate } from "@/lib/utils";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -120,14 +121,11 @@ export default async function BlogPostPage({ params }: Props) {
     notFound();
   }
 
-  const formattedDate = new Date(post.publish_date).toLocaleDateString(
-    "en-US",
-    {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    }
-  );
+  const formattedDate = formatDate(post.publish_date, {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
 
   const imageUrl =
     post.feature_image && env.directus.publicUrl
@@ -154,7 +152,7 @@ export default async function BlogPostPage({ params }: Props) {
 
         {imageUrl && (
           <div className="relative my-8 h-64 w-full overflow-hidden rounded-lg md:h-96">
-            <Image
+            <ImageWithSkeleton
               src={imageUrl}
               alt={post.title}
               fill

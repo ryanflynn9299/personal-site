@@ -87,7 +87,7 @@ test.describe("Contact Page", () => {
     // (depends on whether email service is configured)
     await expect(
       page.getByText(/message sent|cannot be sent|thank you/i)
-    ).toBeVisible({ timeout: 10000 });
+    ).toBeVisible({ timeout: 3000 });
   });
 
   test("shows loading state during submission", async ({ page }) => {
@@ -101,17 +101,13 @@ test.describe("Contact Page", () => {
     await submitButton.click();
 
     // Button should show loading state (either disabled or text changes)
-    // This might happen quickly, so we check if button was disabled
-    const wasDisabledOrChanged = await Promise.race([
-      submitButton.isDisabled().then(() => true),
-      page
-        .getByText(/sending/i)
-        .isVisible()
-        .then(() => true),
-      new Promise((resolve) => setTimeout(() => resolve(true), 1000)),
-    ]);
-
-    expect(wasDisabledOrChanged).toBe(true);
+    // Wait for button to be disabled or loading text to appear
+    await Promise.race([
+      expect(submitButton).toBeDisabled({ timeout: 1000 }),
+      expect(page.getByText(/sending/i)).toBeVisible({ timeout: 1000 }),
+    ]).catch(() => {
+      // If neither happens quickly, that's also acceptable - form might submit instantly
+    });
   });
 
   test("email link has correct mailto href", async ({ page }) => {

@@ -77,4 +77,13 @@ export const projects = [
     liveUrl: "#",
     githubUrl: "#",
   },
+  {
+    title: "Image Classification Model",
+    description:
+      "A temporary ML project using PyTorch to classify images with transfer learning. Built as a learning exercise for deep learning concepts.",
+    imageUrl: "/images/projects/stock_ml_icon_new.png",
+    tags: ["Python", "PyTorch", "AI/ML", "Data Science", "Deep Learning"],
+    liveUrl: "#",
+    githubUrl: "#",
+  },
 ];

@@ -1,8 +1,8 @@
 import Link from "next/link";
-import Image from "next/image";
 import { Calendar } from "lucide-react";
 import { Post } from "@/types";
 import { getBlogPostUrl } from "@/lib/utils";
+import { ImageWithSkeleton } from "@/components/primitives/ImageWithSkeleton";
 
 interface PostCardProps {
   post: Post;
@@ -29,9 +29,9 @@ export function PostCard({ post }: PostCardProps) {
     >
       {post.feature_image && (
         <div className="relative h-48 w-full overflow-hidden">
-          <Image
+          <ImageWithSkeleton
             src={post.feature_image.filename}
-            alt="Alt text"
+            alt={post.title || "Blog post image"}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="object-cover transition-transform duration-300 group-hover:scale-105"

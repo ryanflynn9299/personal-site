@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
@@ -21,11 +21,21 @@ import type {
  */
 export function DevControls() {
   const pathname = usePathname();
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   // Only show if dev mode UI is enabled and not in test mode
   // Dev mode UI can be toggled independently of service connectivity
   if (!env.devModeUI || env.isTest) {
+    return null;
+  }
+
+  // Don't render during SSR to prevent hydration mismatches
+  if (!isMounted) {
     return null;
   }
 
@@ -72,18 +82,26 @@ function CollapsibleControls({
   title: string;
   children: React.ReactNode;
 }) {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   return (
     <motion.div
       className="fixed bottom-4 right-4 z-50 w-[280px]"
       initial={false}
-      layout
+      {...(isMounted && { layout: true })}
+      suppressHydrationWarning
       style={{
         // When collapsed, don't intercept pointer events except on the button
-        pointerEvents: isCollapsed ? "none" : "auto",
+        // Only set pointerEvents after mount to prevent hydration mismatches
+        pointerEvents: isMounted ? (isCollapsed ? "none" : "auto") : "auto",
       }}
     >
       <motion.div
-        layout
+        {...(isMounted && { layout: true })}
         className="w-full rounded-lg border border-slate-700/50 bg-slate-900/95 backdrop-blur-sm shadow-lg overflow-hidden"
         animate={{
           scale: isCollapsed ? 1 : 1,
@@ -100,7 +118,7 @@ function CollapsibleControls({
         {isCollapsed ? (
           // Collapsed state: thin bar
           <motion.div
-            layout
+            {...(isMounted && { layout: true })}
             initial={false}
             animate={{
               padding: "0.625rem 1rem", // py-2.5 px-4
@@ -145,7 +163,7 @@ function CollapsibleControls({
         ) : (
           // Expanded state: full controls
           <motion.div
-            layout
+            {...(isMounted && { layout: true })}
             initial={false}
             animate={{
               padding: "1.5rem", // p-6
