@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { CheckCircle, AlertTriangle, Info, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useHasMounted } from "@/lib/hooks/useHasMounted";
 import type { ToastProps } from "@/types/components";
 import { toastBaseClasses, toastTypeClasses } from "@/constants/ui";
 
@@ -21,6 +22,8 @@ export function Toast({
   duration = 5000,
   onDismiss,
 }: ToastProps) {
+  const hasMounted = useHasMounted();
+
   useEffect(() => {
     const timer = setTimeout(() => {
       onDismiss(id);
@@ -28,6 +31,26 @@ export function Toast({
 
     return () => clearTimeout(timer);
   }, [id, duration, onDismiss]);
+
+  if (!hasMounted) {
+    return (
+      <div className={cn(toastBaseClasses, toastTypeClasses[type], "mt-4")}>
+      <div className="flex items-start gap-4">
+        <div className="flex-shrink-0">{toastIcons[type]}</div>
+        <div className="flex-1">
+          <p className="font-semibold text-slate-50">{title}</p>
+          {message && <p className="mt-1 text-sm text-slate-300">{message}</p>}
+        </div>
+        <button
+          onClick={() => onDismiss(id)}
+          className="flex-shrink-0 text-slate-400 hover:text-white"
+        >
+          <X className="h-5 w-5" />
+        </button>
+      </div>
+    </div>
+  );
+  }
 
   return (
     <motion.div

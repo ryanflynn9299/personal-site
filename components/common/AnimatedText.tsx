@@ -2,12 +2,19 @@
 
 import { motion, Variants } from "framer-motion";
 import type { AnimatedTextProps } from "@/types/components";
+import { useHasMounted } from "@/lib/hooks/useHasMounted";
 
 export function AnimatedText({
   text,
   animationType = "stagger-words",
   className,
 }: AnimatedTextProps) {
+  const hasMounted = useHasMounted();
+
+  if (!hasMounted) {
+    return <h1 className={className}>{text}</h1>;
+  }
+
   // --- Animation Variation 1: Staggered Fade-In by Words ---
   if (animationType === "stagger-words") {
     const words = text.split(" ");
@@ -48,7 +55,7 @@ export function AnimatedText({
 
   // --- Animation Variation 2: Cascade In by Letters ---
   if (animationType === "cascade-letters") {
-    const letters = Array.from(text);
+    const words = text.split(" ");
     const container = {
       hidden: { opacity: 0 },
       visible: (i = 1) => ({
@@ -66,11 +73,26 @@ export function AnimatedText({
         initial="hidden"
         animate="visible"
         className={className}
+        aria-label={text}
       >
-        {letters.map((letter, index) => (
-          <motion.span variants={child} key={index}>
-            {letter === " " ? "\u00A0" : letter}
-          </motion.span>
+        {words.map((word, wordIndex) => (
+          <span
+            key={`${word}-${wordIndex}`}
+            className={`inline-flex whitespace-nowrap${
+              wordIndex < words.length - 1 ? " mr-[0.25em]" : ""
+            }`}
+          >
+            {Array.from(word).map((letter, letterIndex) => (
+              <motion.span
+                variants={child}
+                key={`${wordIndex}-${letterIndex}`}
+                aria-hidden="true"
+                className="inline-block"
+              >
+                {letter}
+              </motion.span>
+            ))}
+          </span>
         ))}
       </motion.h1>
     );

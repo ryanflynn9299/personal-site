@@ -9,7 +9,7 @@ export function HeroSection() {
         <AnimatedText
           text="Building Digital Experiences"
           animationType="cascade-letters" // Options: "stagger-words", "cascade-letters", "decode"
-          className="font-heading text-4xl font-bold tracking-tight text-slate-50 sm:text-5xl md:text-6xl"
+          className="mx-auto max-w-3xl text-balance font-heading text-4xl font-bold leading-tight tracking-tight text-slate-50 sm:text-5xl md:text-6xl"
         />
         {/*<h1 className="font-heading text-4xl font-bold tracking-tight text-slate-50 sm:text-5xl md:text-6xl">*/}
         {/*    Building Digital Experiences*/}

@@ -12,23 +12,35 @@ import { FileText } from "lucide-react";
 import { Dialog } from "radix-ui";
 import { ServiceUnavailable } from "@/components/common/ServiceUnavailable";
 import { trackBlogSearch } from "@/components/common/Matomo";
+import { useBlogPosts } from "@/lib/hooks/useBlogPosts";
+import { BlogPostListSkeleton } from "@/components/blog/BlogPostListSkeleton";
+import { useHasMounted } from "@/lib/hooks/useHasMounted";
 
 interface BlogPageClientProps {
-  status: "success" | "error";
-  posts: Post[];
+  // Optional initial data for SSR (not used in client-side mode)
+  initialPosts?: Post[];
+  initialStatus?: "success" | "error";
 }
 
-export function BlogPageClient({ posts, status }: BlogPageClientProps) {
+export function BlogPageClient({
+  initialPosts,
+  initialStatus,
+}: BlogPageClientProps = {}) {
+  // Note: initialPosts and initialStatus are kept for backward compatibility
+  // but are not used since we now fetch client-side
+  const { posts, status } = useBlogPosts();
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [, startTransition] = useTransition();
   const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const lastTrackedQueryRef = useRef<string>("");
 
+  const hasMounted = useHasMounted();
+
   // React 19: Use useSyncExternalStore for keyboard shortcut handling
   // This provides better performance and avoids unnecessary re-renders
   useEffect(() => {
-    if (typeof window === "undefined") {
+    if (!hasMounted || typeof window === "undefined") {
       return;
     }
 
@@ -41,7 +53,7 @@ export function BlogPageClient({ posts, status }: BlogPageClientProps) {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
+  }, [hasMounted]);
 
   // React 19: Track search queries with debouncing and useTransition for better UX
   // useTransition allows the UI to remain responsive during search tracking
@@ -79,6 +91,11 @@ export function BlogPageClient({ posts, status }: BlogPageClientProps) {
 
   // Select what to render in the component
   const renderContent = () => {
+    // Show skeleton while loading
+    if (status === "loading") {
+      return <BlogPostListSkeleton count={6} />;
+    }
+
     // If there's an error, show the service unavailable message
     if (status === "error") {
       return <ServiceUnavailable />;

@@ -1,63 +1,34 @@
+"use client";
+
 import Link from "next/link";
-import { getPublishedPosts, isDirectusConfigured } from "@/lib/directus";
 import { ArrowRight } from "lucide-react";
 import { ServiceUnavailableWithDevMode } from "@/components/common/DevModeIndicator";
+import { formatDate } from "@/lib/utils";
+import { useBlogPosts } from "@/lib/hooks/useBlogPosts";
+import { BlogHighlightSkeleton } from "./BlogHighlightSkeleton";
+import { SectionHeader } from "@/components/sections/SectionHeader";
 
 // 2x2 Horizontal Grid of Recent Blog Posts
-export async function BlogHighlight4() {
-  // Check if Directus is configured before attempting to fetch
-  if (!isDirectusConfigured()) {
-    return (
-      <section className="py-20 md:py-28 border-t border-slate-800">
-        <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h2 className="font-heading text-3xl font-bold text-slate-50">
-              Recent Writings
-            </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-lg text-slate-400">
-              A few posts from my recent endeavors to document my learnings and
-              organize my thoughts.
-            </p>
-          </div>
-          <div className="mt-16 lg:max-w-5xl lg:mx-auto">
-            <ServiceUnavailableWithDevMode />
-          </div>
-          <div className="mt-16 text-center">
-            <Link
-              href="/blog"
-              className="group inline-flex items-center text-lg font-medium text-sky-300 transition-colors hover:text-sky-200"
-            >
-              <span>Explore All Articles</span>
-              <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-2" />
-            </Link>
-          </div>
-        </div>
-      </section>
-    );
-  }
-
-  // Fetch all posts and take only the latest four for the 2x2 grid.
-  const { status, posts } = await getPublishedPosts();
+export function BlogHighlight4() {
+  const { posts, status } = useBlogPosts();
   const latestPosts = posts.slice(0, 4);
 
   return (
     <section className="py-20 md:py-28 border-t border-slate-800">
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="text-center">
-          {/* UPDATED: New, more professional and grounded copy */}
-          <h2 className="font-heading text-3xl font-bold text-slate-50">
-            Recent Writings
-          </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-slate-400">
-            A few posts from my recent endeavors to document my learnings and
-            organize my thoughts.
-          </p>
-        </div>
+        <SectionHeader
+          title="Recent Writings"
+          subtitle="A few posts from my recent endeavors to document my learnings and organize my thoughts."
+          subtitleClassName="text-slate-400"
+        />
 
         {/* The 2x2 Grid Layout */}
         {/* --- NEW: Conditional Rendering Logic --- */}
         <div className="mt-16">
-          {status === "error" ? (
+          {status === "loading" ? (
+            // Show skeleton while loading
+            <BlogHighlightSkeleton />
+          ) : status === "error" ? (
             // If the service is down or fetch failed, render the error component
             <div className="lg:max-w-5xl lg:mx-auto">
               <ServiceUnavailableWithDevMode />
@@ -94,14 +65,11 @@ export async function BlogHighlight4() {
 
 // A new, text-focused PostCard component for this section
 function PostCard({ post }: { post: any }) {
-  const formattedDate = new Date(post.publish_date).toLocaleDateString(
-    "en-US",
-    {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-    }
-  );
+  const formattedDate = formatDate(post.publish_date, {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
 
   return (
     <Link

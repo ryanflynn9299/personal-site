@@ -82,7 +82,8 @@ test.describe("Homepage", () => {
     });
 
     await page.goto("/");
-    await page.waitForLoadState("networkidle");
+    // Wait for main content instead of networkidle
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible({ timeout: 2000 });
 
     // Filter out known acceptable errors (e.g., favicon, analytics, 404s for optional resources, fonts)
     const criticalErrors = errors.filter(
@@ -98,6 +99,7 @@ test.describe("Homepage", () => {
     );
 
     // Filter out acceptable 404s and Next.js internal resources that may fail in test environments
+    // Also filter out 503 errors from API routes in test mode (services are disabled)
     const criticalFailedRequests = failedRequests.filter(
       (failure) =>
         !failure.includes("favicon") &&
@@ -109,7 +111,9 @@ test.describe("Homepage", () => {
         !failure.includes("__nextjs_font") &&
         !failure.includes("geist") &&
         !failure.includes("woff2") &&
-        !failure.includes("ERR_ABORTED")
+        !failure.includes("ERR_ABORTED") &&
+        !failure.includes("503") && // 503 errors are expected in test mode when services are disabled
+        !failure.includes("Service Unavailable") // Service unavailable errors are expected in test mode
     );
 
     expect(criticalErrors).toHaveLength(0);

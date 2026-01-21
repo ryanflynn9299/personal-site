@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { Menu, X, Atom } from "lucide-react";
+import { useHasMounted } from "@/lib/hooks/useHasMounted";
 
 const navItems = [
   { name: "Home", href: "/" },
@@ -35,20 +36,27 @@ const HomeIcon = () => {
 };
 
 export function Header() {
+  const hasMounted = useHasMounted();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Close mobile menu when route changes
   useEffect(() => {
+    if (!hasMounted) {
+      return;
+    }
     const handleRouteChange = () => {
       setMobileMenuOpen(false);
     };
     // Listen for navigation events
     window.addEventListener("popstate", handleRouteChange);
     return () => window.removeEventListener("popstate", handleRouteChange);
-  }, []);
+  }, [hasMounted]);
 
   // Prevent body scroll when mobile menu is open
   useEffect(() => {
+    if (!hasMounted) {
+      return;
+    }
     if (mobileMenuOpen) {
       document.body.style.overflow = "hidden";
     } else {
@@ -57,10 +65,13 @@ export function Header() {
     return () => {
       document.body.style.overflow = "";
     };
-  }, [mobileMenuOpen]);
+  }, [hasMounted, mobileMenuOpen]);
 
   // Close menu on escape key
   useEffect(() => {
+    if (!hasMounted) {
+      return;
+    }
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape" && mobileMenuOpen) {
         setMobileMenuOpen(false);
@@ -68,7 +79,7 @@ export function Header() {
     };
     window.addEventListener("keydown", handleEscape);
     return () => window.removeEventListener("keydown", handleEscape);
-  }, [mobileMenuOpen]);
+  }, [hasMounted, mobileMenuOpen]);
 
   return (
     <>

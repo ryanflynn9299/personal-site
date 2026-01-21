@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { getPublishedPosts } from "@/lib/directus";
 import { ArrowRight } from "lucide-react";
-import { getBlogPostUrl } from "@/lib/utils";
+import { getBlogPostUrl, formatDate } from "@/lib/utils";
 
 // Simple list of recent blog posts
 export async function BlogHighlight() {
@@ -58,14 +58,11 @@ export async function BlogHighlight() {
 
 // A reusable PostCard component specifically for this section
 function PostCard({ post, isFeatured }: { post: any; isFeatured: boolean }) {
-  const formattedDate = new Date(post.publish_date).toLocaleDateString(
-    "en-US",
-    {
-      month: "long",
-      day: "numeric",
-      year: "numeric",
-    }
-  );
+  const formattedDate = formatDate(post.publish_date, {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
 
   return (
     <Link

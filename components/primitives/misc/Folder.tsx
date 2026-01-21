@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { folder as folderColors } from "@/constants/theme";
 
 interface FolderProps {
@@ -6,6 +6,11 @@ interface FolderProps {
   size?: number;
   items?: React.ReactNode[];
   className?: string;
+  onKeyDown?: (e: React.KeyboardEvent) => void;
+  ariaExpanded?: boolean;
+  ariaLabel?: string;
+  onOpenChange?: (isOpen: boolean) => void;
+  defaultOpen?: boolean;
 }
 
 const darkenColor = (hex: string, percent: number): string => {
@@ -34,6 +39,11 @@ const Folder: React.FC<FolderProps> = ({
   size = 1,
   items = [],
   className = "",
+  onKeyDown,
+  ariaExpanded,
+  ariaLabel,
+  onOpenChange,
+  defaultOpen = false,
 }) => {
   const maxItems = 3;
   const actualItems = items.slice(0, maxItems);
@@ -55,51 +65,76 @@ const Folder: React.FC<FolderProps> = ({
     papers.push(null, null, null);
   }
 
-  const [open, setOpen] = useState(false);
-  const [paperOffsets, setPaperOffsets] = useState<{ x: number; y: number }[]>(
-    Array.from({ length: maxItems }, () => ({ x: 0, y: 0 }))
-  );
+  const [open, setOpen] = useState(defaultOpen);
+  const [hoveredPaper, setHoveredPaper] = useState<number | null>(null);
+  const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const lastHoveredRef = useRef<number | null>(null);
 
   const folderBackColor = darkenColor(color, 0.08);
   const paper1 = folderColors.paper.dark1;
   const paper2 = folderColors.paper.dark2;
   const paper3 = folderColors.paper.light;
 
+  // Sync open state with parent component
+  useEffect(() => {
+    if (onOpenChange) {
+      onOpenChange(open);
+    }
+  }, [open, onOpenChange]);
+
   const handleClick = () => {
     setOpen((prev) => !prev);
-    if (open) {
-      setPaperOffsets(Array.from({ length: maxItems }, () => ({ x: 0, y: 0 })));
+  };
+
+  const handleKeyDownInternal = (e: React.KeyboardEvent) => {
+    // Handle Enter and Space to toggle folder
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      handleClick();
+    }
+    // Pass other keys to parent handler (for arrow navigation)
+    if (onKeyDown) {
+      onKeyDown(e);
     }
   };
 
-  const handlePaperMouseMove = (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    index: number
-  ) => {
-    if (!open) {
-      return;
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (hoverTimeoutRef.current) {
+        clearTimeout(hoverTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  const handlePaperMouseEnter = (index: number) => {
+    // Clear any pending timeout to prevent bouncing between cards
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current);
+      hoverTimeoutRef.current = null;
     }
-    const rect = e.currentTarget.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
-    const offsetX = (e.clientX - centerX) * 0.15;
-    const offsetY = (e.clientY - centerY) * 0.15;
-    setPaperOffsets((prev) => {
-      const newOffsets = [...prev];
-      newOffsets[index] = { x: offsetX, y: offsetY };
-      return newOffsets;
-    });
+
+    // Only update if it's actually a different card to prevent unnecessary re-renders
+    if (hoveredPaper !== index) {
+      setHoveredPaper(index);
+      lastHoveredRef.current = index;
+    }
   };
 
-  const handlePaperMouseLeave = (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    index: number
-  ) => {
-    setPaperOffsets((prev) => {
-      const newOffsets = [...prev];
-      newOffsets[index] = { x: 0, y: 0 };
-      return newOffsets;
-    });
+  const handlePaperMouseLeave = (index: number) => {
+    // Only start timeout if this is the currently hovered card
+    // This prevents bouncing when mouse moves between cards
+    if (hoveredPaper === index) {
+      // Add 500ms delay before reverting to neutral state
+      hoverTimeoutRef.current = setTimeout(() => {
+        // Double-check that we're still not hovering any card before clearing
+        if (hoveredPaper === index) {
+          setHoveredPaper(null);
+          lastHoveredRef.current = null;
+        }
+        hoverTimeoutRef.current = null;
+      }, 500);
+    }
   };
 
   const folderStyle: React.CSSProperties = {
@@ -112,17 +147,54 @@ const Folder: React.FC<FolderProps> = ({
 
   const scaleStyle = { transform: `scale(${size})` };
 
-  const getOpenTransform = (index: number) => {
-    if (index === 0) {
-      return "translate(-120%, -70%) rotate(-15deg)";
+  // Calculate radial direction and distance for each card position
+  // This works for all configurations (1, 2, or 3 cards) by using the actual array position
+  const getRadialOffset = (arrayIndex: number, isHovered: boolean) => {
+    // Base positions relative to folder center for each possible array position
+    // These represent where cards appear when the folder is open
+    const basePositions: {
+      [key: number]: { x: number; y: number; angle: number };
+    } = {
+      0: { x: -120, y: -70, angle: -15 }, // Top left (first card in 3-card or 2-card config)
+      1: { x: 10, y: -70, angle: 15 }, // Top right (middle card in 3-card, or only card in 1-card config)
+      2: { x: -50, y: -100, angle: 5 }, // Top center (third card in 3-card or 2-card config)
+    };
+
+    const pos = basePositions[arrayIndex];
+    if (!pos) {
+      return { x: 0, y: 0, rotate: 0 };
     }
-    if (index === 1) {
-      return "translate(10%, -70%) rotate(15deg)";
+
+    // Calculate radial direction from folder center (0, 0) to card position
+    // Normalize the vector to get direction
+    const distance = Math.sqrt(pos.x * pos.x + pos.y * pos.y);
+
+    // Avoid division by zero
+    if (distance === 0) {
+      return { x: pos.x, y: pos.y, rotate: pos.angle };
     }
-    if (index === 2) {
-      return "translate(-50%, -100%) rotate(5deg)";
-    }
-    return "";
+
+    const normalizedX = pos.x / distance;
+    const normalizedY = pos.y / distance;
+
+    // On hover, move further in the radial direction (outward from folder center)
+    // Use a percentage of the base distance for consistent movement
+    const hoverOffsetPercent = isHovered ? 0.25 : 0; // 25% further out
+    const hoverOffset = distance * hoverOffsetPercent;
+    const offsetX = normalizedX * hoverOffset;
+    const offsetY = normalizedY * hoverOffset;
+
+    return {
+      x: pos.x + offsetX,
+      y: pos.y + offsetY,
+      rotate: pos.angle,
+    };
+  };
+
+  const getOpenTransform = (arrayIndex: number) => {
+    const isHovered = hoveredPaper === arrayIndex;
+    const offset = getRadialOffset(arrayIndex, isHovered);
+    return `translate(${offset.x}%, ${offset.y}%) rotate(${offset.rotate}deg)`;
   };
 
   return (
@@ -134,8 +206,13 @@ const Folder: React.FC<FolderProps> = ({
         style={{
           ...folderStyle,
           transform: open ? "translateY(-8px)" : undefined,
+          transition: "transform 0.2s ease-in",
         }}
         onClick={handleClick}
+        onKeyDown={handleKeyDownInternal}
+        aria-expanded={ariaExpanded !== undefined ? ariaExpanded : open}
+        aria-label={ariaLabel}
+        tabIndex={-1}
       >
         <div
           className="relative w-[100px] h-[80px] rounded-tl-0 rounded-tr-[10px] rounded-br-[10px] rounded-bl-[10px]"
@@ -162,9 +239,7 @@ const Folder: React.FC<FolderProps> = ({
               sizeClasses = open ? "w-[90%] h-[80%]" : "w-[90%] h-[60%]";
             }
 
-            const transformStyle = open
-              ? `${getOpenTransform(i)} translate(${paperOffsets[i].x}px, ${paperOffsets[i].y}px)`
-              : undefined;
+            const transformStyle = open ? getOpenTransform(i) : undefined;
 
             // Clone the item and update its index prop to match the position (i)
             const itemWithCorrectIndex =
@@ -181,12 +256,10 @@ const Folder: React.FC<FolderProps> = ({
             return (
               <div
                 key={i}
-                onMouseMove={(e) => handlePaperMouseMove(e, i)}
-                onMouseLeave={(e) => handlePaperMouseLeave(e, i)}
-                className={`absolute z-20 bottom-[10%] left-1/2 transition-all duration-300 ease-in-out ${
-                  !open
-                    ? "transform -translate-x-1/2 translate-y-[10%] group-hover:translate-y-0"
-                    : "hover:scale-110"
+                onMouseEnter={() => handlePaperMouseEnter(i)}
+                onMouseLeave={() => handlePaperMouseLeave(i)}
+                className={`absolute z-20 bottom-[10%] left-1/2 transition-all duration-500 ease-out ${
+                  !open ? "transform -translate-x-1/2 translate-y-[10%]" : ""
                 } ${sizeClasses}`}
                 style={{
                   ...(!open ? {} : { transform: transformStyle }),

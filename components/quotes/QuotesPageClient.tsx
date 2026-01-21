@@ -1,13 +1,34 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
+import dynamic from "next/dynamic";
 import { useQuoteViewStore } from "./store/useQuoteViewStore";
-import { QuoteViewRenderer } from "./QuoteViewRenderer";
 import { QuoteModeToggle } from "./QuoteModeToggle";
 import { dummyQuotes } from "@/data/quotes";
 import { hyperspeedVariants } from "@/components/primitives/misc/hyperspeed-transition";
+import { useHasMounted } from "@/lib/hooks/useHasMounted";
+
+// Lazy load QuoteViewRenderer as it contains heavy 3D components (Three.js)
+const QuoteViewRenderer = dynamic(
+  () =>
+    import("./QuoteViewRenderer").then((mod) => ({
+      default: mod.QuoteViewRenderer,
+    })),
+  {
+    ssr: false, // 3D components require client-side rendering
+    loading: () => (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="text-center">
+          <div className="mb-4 h-8 w-8 animate-spin rounded-full border-4 border-slate-600 border-t-sky-400 mx-auto" />
+          <p className="text-slate-400">Loading quotes view...</p>
+        </div>
+      </div>
+    ),
+  }
+);
 
 export function QuotesPageClient() {
+  const hasMounted = useHasMounted();
   const { viewMode, activeNormalVariant, activeConstellationVariant } =
     useQuoteViewStore();
 
@@ -16,6 +37,17 @@ export function QuotesPageClient() {
   const viewKey = `${viewMode}-${
     viewMode === "normal" ? activeNormalVariant : activeConstellationVariant
   }`;
+
+  if (!hasMounted) {
+    return (
+      <div className="relative min-h-screen overflow-hidden">
+        <QuoteModeToggle />
+        <div className="relative">
+          <QuoteViewRenderer quotes={dummyQuotes} />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="relative min-h-screen overflow-hidden">

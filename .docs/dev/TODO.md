@@ -47,6 +47,8 @@ _Start here - these are the most important items to tackle next_
   - [ ] hide by default
   - [ ] disable in config
 - [ ] Remove unused components
+- [ ] hide main page element until title text renders
+- [ ] audit hydration errors and fixes
 
 ### Before Launch - After UI reviewers
 
@@ -78,6 +80,8 @@ _Start here - these are the most important items to tackle next_
 - [ ] Add twilio for build notis
 - [ ] Create backup strategy for content
 - [ ] Review and optimize bundle size
+- [ ] Audit and improve comments
+- [ ] Clean up patchy code
 
 ---
 
