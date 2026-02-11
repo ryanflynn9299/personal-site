@@ -8,13 +8,18 @@
 ![License](https://img.shields.io/badge/license-All%20Rights%20Reserved-red)
 ![Test Coverage](https://img.shields.io/badge/coverage-60%25+-green)
 
-A modern, full-stack personal portfolio website built with Next.js, TypeScript, and a headless CMS. This project serves as both a professional showcase and a platform for exploring modern web development practices.
+A modern, full-stack personal web application built with Next.js, TypeScript, and a headless CMS.
+
+> **Note:** This project is currently a work in progress.
 
 ## Overview
 
-This is a hobby project designed to effectively communicate information about my work and experience while providing opportunities to experiment with web development in an unstructured, creative format. The site features a blog powered by a headless CMS, interactive quote visualizations, project showcases, and standard portfolio pages—all built with attention to performance, accessibility, and maintainability.
+This project represents my personal corner of the internet—a dedicated space to curate my work, share thoughts, and experiment with new technologies. It serves two primary purposes:
 
-The codebase demonstrates practical application of modern React patterns, TypeScript best practices, comprehensive testing strategies, and production-ready deployment configurations.
+1.  **A Professional Showcase**: Communicating my background, experience, and projects in a clear, accessible format.
+2.  **A Technical Playground**: A vertically integrated laboratory where I can implement architectural patterns, try new libraries, and refine my understanding of the modern web stack in a production-like environment.
+
+The codebase prioritizes readability, strict type safety, and maintainability to ensure the project can grow and evolve over time.
 
 ## Architecture
 
@@ -39,7 +44,8 @@ app/                          # Next.js App Router
 │   ├── blog/                # Blog listing and dynamic posts
 │   ├── contact/             # Contact form
 │   ├── vitae/               # Resume/CV page
-│   └── quotes/              # Interactive quote visualizations
+│   ├── quotes/              # Interactive quote visualizations
+│   └── projects-cabinet/    # Project showcase
 ├── (admin)/                 # Admin routes (under development)
 ├── actions/                 # Server actions
 └── layout.tsx               # Root layout with metadata
@@ -51,6 +57,7 @@ components/                   # React components
 └── [feature]/               # Feature-specific components
 
 lib/                         # Utilities and services
+├── env.ts                   # Environment configuration & validation
 ├── directus.ts              # CMS client integration
 ├── email-service.ts         # Email service abstraction
 ├── seo.ts                   # SEO metadata management
@@ -60,7 +67,8 @@ tests/                       # Test suite
 ├── unit/                    # Unit tests (Vitest)
 ├── components/              # Component tests
 ├── integration/             # Integration tests
-└── e2e/                     # End-to-end tests (Playwright)
+├── e2e/                     # End-to-end tests (Playwright)
+└── mocks/                   # MSW handlers and setup
 ```
 
 ### Technology Stack
@@ -254,6 +262,11 @@ Comprehensive TypeScript usage throughout:
 - Type-safe API client integration
 - Proper handling of nullable/optional values
 
+### Configuration Management
+
+- **Centralized Environment Handling**: All environment variables are accessed through a typed interface (`lib/env.ts`) which validates configuration at runtime.
+- **Mode-Based Logic**: Explicit handling for different application states (Production, Live-Dev, Offline-Dev, Test) to ensure safety across environments.
+
 ### Component Architecture
 
 Clear separation of concerns:
@@ -304,9 +317,7 @@ This project balances practical engineering with creative exploration. It demons
 
 The codebase is structured to be understandable by others (and my future self) while allowing flexibility for experimentation and iteration.
 
-## License
 
-Private project - not intended for public use or distribution.
 
 ---
 

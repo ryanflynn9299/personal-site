@@ -149,30 +149,9 @@ export async function sendEmail(
     // In tests, this service should be mocked to return immediately
     await delay(500);
 
-    // TODO: Implement actual email sending using nodemailer or similar
-    // Example implementation:
-    // const transporter = nodemailer.createTransport({
-    //   host: process.env.SMTP_HOST,
-    //   port: Number(process.env.SMTP_PORT),
-    //   secure: process.env.SMTP_PORT === "465",
-    //   auth: process.env.SMTP_USER ? {
-    //     user: process.env.SMTP_USER,
-    //     pass: process.env.SMTP_PASS,
-    //   } : undefined,
-    // });
-    //
-    // const info = await transporter.sendMail({
-    //   from: message.from,
-    //   to: message.to,
-    //   subject: message.subject,
-    //   text: message.text,
-    //   html: message.html,
-    // });
-    //
-    // return {
-    //   success: true,
-    //   messageId: info.messageId,
-    // };
+    // TODO: Integrate SMTP provider (e.g. Nodemailer or Resend)
+    // - Configure transporter with auth from env vars
+    // - Handle connection timeouts and retries
 
     // For now, simulate successful email sending
     // In the future, this will actually send the email

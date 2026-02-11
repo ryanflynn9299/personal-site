@@ -187,6 +187,9 @@ export const env = {
   directus: {
     serverUrl: process.env.DIRECTUS_URL_SERVER_SIDE,
     publicUrl: process.env.NEXT_PUBLIC_DIRECTUS_URL,
+    useCloudflareTunnel: process.env.USE_CLOUDFLARE_TUNNEL === "true",
+    cloudflareClientId: process.env.CF_ACCESS_CLIENT_ID,
+    cloudflareClientSecret: process.env.CF_ACCESS_CLIENT_SECRET,
   },
 
   /**
@@ -260,6 +263,13 @@ export function isDirectusEnabled(): boolean {
   // Only check URLs if services should be connected (production/live-dev)
   const hasServerUrl = isServiceUrlConfigured(env.directus.serverUrl);
   const hasPublicUrl = isServiceUrlConfigured(env.directus.publicUrl);
+
+  // If Cloudflare tunnel is enabled, we also need the access credentials
+  if (env.directus.useCloudflareTunnel && env.mode === "live-dev") {
+    const hasClientId = !!env.directus.cloudflareClientId;
+    const hasClientSecret = !!env.directus.cloudflareClientSecret;
+    return hasServerUrl && hasPublicUrl && hasClientId && hasClientSecret;
+  }
 
   return hasServerUrl && hasPublicUrl;
 }

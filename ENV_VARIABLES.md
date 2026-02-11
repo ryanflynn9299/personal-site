@@ -99,6 +99,11 @@ DIRECTUS_URL_SERVER_SIDE=http://ps-directus:8055
 
 # Public URL for client-side requests (must be accessible from browser)
 NEXT_PUBLIC_DIRECTUS_URL=http://localhost:8055
+
+# Cloudflare Access (for dev tunnel, only in live-dev mode)
+USE_CLOUDFLARE_TUNNEL=false
+CF_ACCESS_CLIENT_ID=your-client-id
+CF_ACCESS_CLIENT_SECRET=your-client-secret
 ```
 
 ### SMTP Email

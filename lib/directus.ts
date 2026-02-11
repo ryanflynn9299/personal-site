@@ -178,7 +178,43 @@ try {
   if (env.connectToServices) {
     const url = getDirectusUrl();
     if (url) {
-      directus = createDirectus(url).with(rest());
+      // Configuration for Cloudflare Access if enabled (only in dev mode)
+      const isDevMode = env.mode === "live-dev";
+      const useTunnel = env.directus.useCloudflareTunnel && isDevMode;
+
+      if (useTunnel) {
+        log.info(
+          { clientId: env.directus.cloudflareClientId },
+          "Initializing Directus with Cloudflare Access headers"
+        );
+
+        // Inject headers via custom fetch
+        const cloudflareFetch = (input: RequestInfo | URL, init?: RequestInit) => {
+          const headers = new Headers(init?.headers);
+          if (env.directus.cloudflareClientId) {
+            headers.set("CF-Access-Client-Id", env.directus.cloudflareClientId);
+          }
+          if (env.directus.cloudflareClientSecret) {
+            headers.set(
+              "CF-Access-Client-Secret",
+              env.directus.cloudflareClientSecret
+            );
+          }
+
+          return fetch(input, {
+            ...init,
+            headers,
+          });
+        };
+
+        directus = createDirectus(url, {
+          globals: {
+            fetch: cloudflareFetch as any,
+          },
+        }).with(rest());
+      } else {
+        directus = createDirectus(url).with(rest());
+      }
     } else if (env.treatServiceErrorsAsReal) {
       // In production/live-dev, missing URL is an error
       log.error(
