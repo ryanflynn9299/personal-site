@@ -10,7 +10,7 @@
 
 A modern, full-stack personal web application built with Next.js, TypeScript, and a headless CMS.
 
-> **Note:** This project is currently a work in progress.
+> **Note:** This project is currently a work in progress. The domain to access the site is currently unavailable while I'm performing maintenance to the server I host it on. It should be completely updated, online and available later this month. I will then distribute the link to anyone interested. Thank you for your patience
 
 ## Overview
 
