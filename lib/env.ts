@@ -43,6 +43,7 @@ function getAppMode(): AppMode {
     process.env.NODE_ENV === "test" ||
     process.env.VITEST === "true" ||
     process.env.PLAYWRIGHT_TEST === "true" ||
+    process.env.NEXT_PUBLIC_PLAYWRIGHT_TEST === "true" ||
     process.env.CI === "true";
 
   if (isTest) {

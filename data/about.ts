@@ -21,6 +21,20 @@ export interface AboutPageData {
     content: string;
     image: string;
   };
+  ctaSection: {
+    vitae: {
+      title: string;
+      description: string;
+      linkText: string;
+      href: string;
+    };
+    contact: {
+      title: string;
+      description: string;
+      linkText: string;
+      href: string;
+    };
+  };
 }
 
 export interface Value {
@@ -40,24 +54,40 @@ export const aboutPage: AboutPageData = {
       "commitment to user-centric design. I strive to write code that is not only functional " +
       "but also clean, maintainable, and elegant. A lifelong learning zealot, I struggle to " +
       "satiate my desire to learn every software tool out there.",
-    image: "https://placehold.co/600x400/0f172a/7dd3fc", // Placeholder
+    image: "/images/about_page/ryan_antarctica.jpg",
   },
   sectionTwo: {
+    title: "Project Work",
+    content:
+      "My project work stems from a strong drive to solve practical problems with technology. I enjoy taking on exploratory projects that let me delve into new concepts and emerging tech, always aiming to build effective solutions. " +
+      "I sometimes leverage Large Language Models (LLMs) in my work, primarily for exploring new topics, surmounting blockages on complex topics, and significantly accelerating development cycles. I focus on applying these tools strategically to improve problem-solving and efficiency within my projects. " +
+      "No matter the project or the tools I'm using, I stick to industry-standard tools and robust coding practices. I write code that is clean, maintainable, and performs well, making sure that all my projects, even the most experimental ones, are built on a solid and professional foundation.",
+    image: "/images/about_page/california_scenery.jpg",
+  },
+  sectionThree: {
     title: "Interests & Hobbies",
     content:
       "When I'm not at my keyboard, you can find me exploring the great outdoors, " +
       "shredding the ski slopes, or finding new eats around New England. I'm endlessly " +
       "curious about the world and love to travel the world, from Canada and California " +
       "to Chile and Antarctica. Recently, I've read some interesting books like Zero to One by Peter Thiel and The Pragmatic Programmer by Andrew Hunt and David Thomas, which have inspired me to think differently about technology and software development. ",
-    image: "https://placehold.co/600x400/0f172a/e2e8f0", // Placeholder
+    image: "/images/about_page/skis.jpg",
   },
-  sectionThree: {
-    title: "Project Work",
-    content:
-      "My project work stems from a strong drive to solve practical problems with technology. I enjoy taking on exploratory projects that let me delve into new concepts and emerging tech, always aiming to build effective solutions. " +
-      "I sometimes leverage Large Language Models (LLMs) in my work, primarily for exploring new topics, surmounting blockages on complex topics, and significantly accelerating development cycles. I focus on applying these tools strategically to improve problem-solving and efficiency within my projects. " +
-      "No matter the project or the tools I'm using, I stick to industry-standard tools and robust coding practices. I write code that is clean, maintainable, and performs well, making sure that all my projects, even the most experimental ones, are built on a solid and professional foundation.",
-    image: "https://placehold.co/600x400/0f172a/7dd3fc", // Placeholder
+  ctaSection: {
+    vitae: {
+      title: "View My Vitae",
+      description:
+        "See a detailed timeline of my professional experience and accomplishments.",
+      linkText: "Read Vitae",
+      href: "/vitae",
+    },
+    contact: {
+      title: "Get in Touch",
+      description:
+        "Have a project in mind or just want to say hi? I'd love to hear from you.",
+      linkText: "Contact Me",
+      href: "/contact",
+    },
   },
 };
 

@@ -189,7 +189,10 @@ try {
         );
 
         // Inject headers via custom fetch
-        const cloudflareFetch = (input: RequestInfo | URL, init?: RequestInit) => {
+        const cloudflareFetch = (
+          input: RequestInfo | URL,
+          init?: RequestInit
+        ) => {
           const headers = new Headers(init?.headers);
           if (env.directus.cloudflareClientId) {
             headers.set("CF-Access-Client-Id", env.directus.cloudflareClientId);
@@ -288,7 +291,8 @@ export async function getPublishedPosts(): Promise<{
         "id",
         "title",
         "summary",
-        "author",
+        "author.first_name",
+        "author.last_name",
         "status",
         "slug",
         "publication_date",
@@ -511,7 +515,8 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
         "id",
         "title",
         "summary",
-        "author",
+        "author.first_name",
+        "author.last_name",
         "slug",
         "publication_date",
         "status",

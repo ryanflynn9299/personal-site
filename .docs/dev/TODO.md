@@ -17,27 +17,26 @@ _Start here - these are the most important items to tackle next_
 ### Next promotion
 
 - [ ] Script for .env sync
+- [ ] Add About page CTA(s)
 - [ ] Deep dive on Matomo
-- [ ] Add a config for production quotes setup
+- [x] Add a config for production quotes setup
 - [x] Formalize dev mode (with and without services)
 - [ ] Configure secrets for dev mode/local testing
 - [ ] Fix missing author from Directus call
 - [ ] Organize and slightly refine vitae details
 - [ ] connect counter to database
 - [ ] Add navigation between blog posts (prev/next)
-- [ ] Add loading states/screens for API calls
+- [x] Add loading states/screens for API calls
 - [ ] Update site metadata (title, description, favicon)
-- [ ] Make client-primary
+- [x] Make client-primary
 - [ ] Flesh out project file cabinet idea
-- [ ] establish baseline code coverage
-- [ ] add coverage check to main branch
+- [x] establish baseline code coverage
 - [ ] pre-commit check script (validate, test, compare coverage, build)
 - [ ] Improve pre-commit checks for PR (PR naming conventions, etc)
 - [ ] Reduce build time for PR pipeline
-- [ ] Mandatory approvers to master/main
-- [ ] Establish CD pipeline
-- [ ] global logging
-- [ ] cloudflared
+- [x] Mandatory approvers to master/main
+- [x] global logging
+- [x] cloudflared
 - [ ] clean up dev tooling
   - [ ] make component selection work
   - [ ] clean up styling
@@ -48,7 +47,7 @@ _Start here - these are the most important items to tackle next_
 ### Before Launch - After UI reviewers
 
 - [ ] Add professional headshot/profile images
-- [ ] images for about page
+- [x] images for about page
 - [ ] Ensure responsive design works on mobile devices
 - [ ] Figure out scalability for blog
 - [ ] Add pagination for blog listing page
@@ -59,6 +58,7 @@ _Start here - these are the most important items to tackle next_
 - [ ] Versioning system/methodology
 - [ ] Implement Terms and Privacy Policies wrt Matomo analytics
 - [ ] clean up eslint warnings
+- [ ] add coverage check to main branch
 
 ### First promote after launch
 
@@ -72,9 +72,15 @@ _Start here - these are the most important items to tackle next_
 ### After Launch (Future)
 
 - [ ] add christmas mode
+- [ ] Establish CD pipelinec
 - [ ] Add twilio for build notis
 - [ ] Create backup strategy for content
 - [ ] Review and optimize bundle size
+- [ ] Add photos gallery to About Page
+- [ ] Add some kind of books commentary page or component
+- [ ] Add spotify integration
+- [ ] Add socials links to About page
+- [ ] Add more projects to vitae page
 
 ---
 

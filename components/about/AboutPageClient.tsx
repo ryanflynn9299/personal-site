@@ -4,13 +4,14 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { aboutPage, values } from "@/data/about";
 import { containerVariants, itemVariants } from "@/constants/animations";
+import { AboutCTA } from "@/components/about/AboutCTA";
 
 // --- NEW: The Values Grid Component ---
 function ValuesGrid() {
   return (
     <motion.div
       variants={itemVariants}
-      className="mt-12 grid grid-cols-1 gap-x-8 gap-y-12 md:grid-cols-3"
+      className="mt-8 grid grid-cols-1 gap-x-8 gap-y-16 md:grid-cols-3"
     >
       {values.map((value) => (
         <div
@@ -25,13 +26,18 @@ function ValuesGrid() {
               {value.title}
             </h3>
           </div>
-          <p className="mt-4 text-sm text-slate-400">{value.description}</p>
+          <p className="mt-2 text-sm text-slate-400">{value.description}</p>
         </div>
       ))}
     </motion.div>
   );
 }
 
+{
+  /** TODO: 
+  - ideas: photo gallery, books read, spotify integration, links, CTA to connect,
+  more prominent socials here. */
+}
 export function AboutPageClient() {
   return (
     <motion.div
@@ -49,7 +55,7 @@ export function AboutPageClient() {
         <ValuesGrid />
       </div>
 
-      <div className="mt-16 space-y-24 mb-16">
+      <div className="mt-16 space-y-16 mb-16">
         <motion.section
           variants={itemVariants}
           className="flex flex-col items-center gap-12 md:flex-row"
@@ -65,7 +71,7 @@ export function AboutPageClient() {
           <div className="md:w-1/2">
             <Image
               src={aboutPage.sectionOne.image}
-              alt="A symbolic image of a development philosophy"
+              alt="An image from my gallery"
               width={600}
               height={400}
               className="rounded-lg shadow-lg"
@@ -91,7 +97,7 @@ export function AboutPageClient() {
           <div className="md:w-1/2">
             <Image
               src={aboutPage.sectionTwo.image}
-              alt="A photo representing hobbies like hiking or photography"
+              alt="An image from my gallery"
               width={600}
               height={400}
               className="rounded-lg shadow-lg"
@@ -115,13 +121,34 @@ export function AboutPageClient() {
           <div className="md:w-1/2">
             <Image
               src={aboutPage.sectionThree.image}
-              alt="A symbolic image of a development philosophy"
+              alt="An image from my gallery"
               width={600}
               height={400}
               className="rounded-lg shadow-lg"
             />
           </div>
         </motion.section>
+
+        {/* Section divider line for between sections */}
+        <div className="w-full max-w-lg mx-auto h-px bg-gradient-to-r from-transparent via-slate-700 to-transparent" />
+
+        {/* CTA Section */}
+        <AboutCTA
+          sectionData={{
+            vitae: {
+              title: aboutPage.ctaSection.vitae.title,
+              description: aboutPage.ctaSection.vitae.description,
+              linkText: aboutPage.ctaSection.vitae.linkText,
+              href: aboutPage.ctaSection.vitae.href,
+            },
+            contact: {
+              title: aboutPage.ctaSection.contact.title,
+              description: aboutPage.ctaSection.contact.description,
+              linkText: aboutPage.ctaSection.contact.linkText,
+              href: aboutPage.ctaSection.contact.href,
+            },
+          }}
+        />
       </div>
     </motion.div>
   );

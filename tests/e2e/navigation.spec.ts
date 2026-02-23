@@ -4,17 +4,7 @@ test.describe("Navigation", () => {
   test("navigates from homepage to about page", async ({ page }) => {
     await page.goto("/");
 
-    // Hide DevControls to prevent click interception
-    await page.waitForLoadState("networkidle");
-    await page.evaluate(() => {
-      const devControls = document.querySelectorAll(
-        '[class*="fixed bottom-4 right-4"]'
-      );
-      devControls.forEach((el) => {
-        (el as HTMLElement).style.display = "none";
-        (el as HTMLElement).style.pointerEvents = "none";
-      });
-    });
+    await page.waitForLoadState("load");
 
     // Wait for link to be visible and stable
     const aboutLink = page.getByRole("link", { name: /about/i }).first();
@@ -28,17 +18,7 @@ test.describe("Navigation", () => {
   test("navigates from homepage to blog page", async ({ page }) => {
     await page.goto("/");
 
-    // Hide DevControls to prevent click interception
-    await page.waitForLoadState("networkidle");
-    await page.evaluate(() => {
-      const devControls = document.querySelectorAll(
-        '[class*="fixed bottom-4 right-4"]'
-      );
-      devControls.forEach((el) => {
-        (el as HTMLElement).style.display = "none";
-        (el as HTMLElement).style.pointerEvents = "none";
-      });
-    });
+    await page.waitForLoadState("load");
 
     // Wait for link to be visible and stable
     const blogLink = page.getByRole("link", { name: /blog/i }).first();
@@ -52,17 +32,7 @@ test.describe("Navigation", () => {
   test("navigates from homepage to contact page", async ({ page }) => {
     await page.goto("/");
 
-    // Hide DevControls to prevent click interception
-    await page.waitForLoadState("networkidle");
-    await page.evaluate(() => {
-      const devControls = document.querySelectorAll(
-        '[class*="fixed bottom-4 right-4"]'
-      );
-      devControls.forEach((el) => {
-        (el as HTMLElement).style.display = "none";
-        (el as HTMLElement).style.pointerEvents = "none";
-      });
-    });
+    await page.waitForLoadState("load");
 
     // Wait for link to be visible and stable
     const contactLink = page.getByRole("link", { name: /contact/i }).first();
@@ -124,17 +94,7 @@ test.describe("Navigation", () => {
   test("terms of service link works", async ({ page }) => {
     await page.goto("/");
 
-    // Hide DevControls to prevent click interception
-    await page.waitForLoadState("networkidle");
-    await page.evaluate(() => {
-      const devControls = document.querySelectorAll(
-        '[class*="fixed bottom-4 right-4"]'
-      );
-      devControls.forEach((el) => {
-        (el as HTMLElement).style.display = "none";
-        (el as HTMLElement).style.pointerEvents = "none";
-      });
-    });
+    await page.waitForLoadState("load");
 
     // Scroll to footer
     await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
@@ -145,7 +105,7 @@ test.describe("Navigation", () => {
     if (await termsLink.isVisible()) {
       await termsLink.click();
       // Wait for navigation
-      await page.waitForLoadState("networkidle");
+      await page.waitForLoadState("load");
       await expect(page).toHaveURL(/\/policies\?tab=terms/);
     }
   });
@@ -203,19 +163,7 @@ test.describe("Mobile Navigation", () => {
   test("mobile navigation links work", async ({ page }) => {
     await page.goto("/");
 
-    // Hide DevControls to prevent click interception in e2e tests
-    // Use a more aggressive approach - wait for page load then hide
-    await page.waitForLoadState("networkidle");
-    await page.evaluate(() => {
-      // Hide all dev controls that might intercept clicks
-      const devControls = document.querySelectorAll(
-        '[class*="fixed bottom-4 right-4"]'
-      );
-      devControls.forEach((el) => {
-        (el as HTMLElement).style.display = "none";
-        (el as HTMLElement).style.pointerEvents = "none";
-      });
-    });
+    await page.waitForLoadState("load");
 
     // Open mobile menu if needed
     const menuButton = page.getByRole("button", { name: /toggle navigation/i });

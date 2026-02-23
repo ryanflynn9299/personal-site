@@ -82,7 +82,7 @@ test.describe("Homepage", () => {
     });
 
     await page.goto("/");
-    await page.waitForLoadState("networkidle");
+    await page.waitForLoadState("load");
 
     // Filter out known acceptable errors (e.g., favicon, analytics, 404s for optional resources, fonts)
     const criticalErrors = errors.filter(

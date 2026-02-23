@@ -34,7 +34,7 @@ test.describe("Accessibility", () => {
 
     test(`${pagePath} images have alt text`, async ({ page }) => {
       await page.goto(pagePath);
-      await page.waitForLoadState("networkidle");
+      await page.waitForLoadState("load");
 
       // Get all images
       const images = page.locator("img");
@@ -108,7 +108,7 @@ test.describe("Accessibility", () => {
 
   test("focus is visible on interactive elements", async ({ page }) => {
     await page.goto("/");
-    await page.waitForLoadState("networkidle");
+    await page.waitForLoadState("load");
 
     // Tab to first interactive element - may need multiple tabs to skip skip links
     let focusedElement = null;
@@ -220,7 +220,7 @@ test.describe("Keyboard Navigation", () => {
       await page.keyboard.press("Enter");
 
       // Should navigate (URL might change or stay same if it's anchor link)
-      await page.waitForLoadState("networkidle");
+      await page.waitForLoadState("load");
     }
   });
 

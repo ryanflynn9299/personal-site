@@ -2,6 +2,8 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { FunCounter } from "@/components/contact/FunCounter";
 
+import { shouldShowDevIndicator } from "@/lib/features";
+
 // Mock framer-motion
 vi.mock("framer-motion", () => ({
   motion: {
@@ -22,13 +24,22 @@ vi.mock("@/app/actions/counter", () => ({
   incrementCounter: vi.fn(),
 }));
 
+// Mock feature flags
+vi.mock("@/lib/features", () => ({
+  isFeatureEnabled: vi.fn(() => true),
+  shouldShowDevIndicator: vi.fn(() => false),
+}));
+
 describe("FunCounter", () => {
   beforeEach(() => {
     sessionStorage.clear();
+    // Reset mocks
+    (shouldShowDevIndicator as any).mockReturnValue(false);
   });
 
   afterEach(() => {
     sessionStorage.clear();
+    vi.clearAllMocks();
   });
 
   it("renders the component with title and description", () => {
@@ -56,5 +67,13 @@ describe("FunCounter", () => {
     expect(
       screen.getByText("Already clicked this session!")
     ).toBeInTheDocument();
+  });
+
+  it("shows DEV badge when enabled", () => {
+    // Override mock to show dev indicator
+    (shouldShowDevIndicator as any).mockReturnValue(true);
+
+    render(<FunCounter />);
+    expect(screen.getByText("DEV")).toBeInTheDocument();
   });
 });

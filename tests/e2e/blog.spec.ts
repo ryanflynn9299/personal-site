@@ -13,7 +13,7 @@ test.describe("Blog Page", () => {
 
   test("shows blog posts or empty state", async ({ page }) => {
     // Wait for page to load
-    await page.waitForLoadState("networkidle");
+    await page.waitForLoadState("load");
 
     // Either shows blog posts or an empty/unavailable state
     const postCards = page.locator("article, [class*='post'], [class*='card']");
@@ -33,7 +33,7 @@ test.describe("Blog Page", () => {
 
   test("blog post cards are clickable", async ({ page }) => {
     // Wait for page to load
-    await page.waitForLoadState("networkidle");
+    await page.waitForLoadState("load");
 
     // Find any post link
     const postLinks = page.locator('a[href*="/blog/"]');
@@ -84,7 +84,7 @@ test.describe("Blog Post Page", () => {
   test("blog post page has correct structure", async ({ page }) => {
     // First get a valid post slug from the blog page
     await page.goto("/blog");
-    await page.waitForLoadState("networkidle");
+    await page.waitForLoadState("load");
 
     const postLinks = page.locator('a[href*="/blog/"]');
     const count = await postLinks.count();
@@ -92,7 +92,7 @@ test.describe("Blog Post Page", () => {
     if (count > 0) {
       // Navigate to first post
       await postLinks.first().click();
-      await page.waitForLoadState("networkidle");
+      await page.waitForLoadState("load");
 
       // Check for article structure
       await expect(page.getByRole("article")).toBeVisible();
@@ -104,7 +104,7 @@ test.describe("Blog Post Page", () => {
 
   test("blog post has back navigation", async ({ page }) => {
     await page.goto("/blog");
-    await page.waitForLoadState("networkidle");
+    await page.waitForLoadState("load");
 
     const postLinks = page.locator('a[href*="/blog/"]');
     const count = await postLinks.count();
@@ -112,7 +112,7 @@ test.describe("Blog Post Page", () => {
     if (count > 0) {
       // Navigate to first post
       await postLinks.first().click();
-      await page.waitForLoadState("networkidle");
+      await page.waitForLoadState("load");
 
       // Should be able to navigate back
       await page.goBack();

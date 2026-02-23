@@ -317,8 +317,6 @@ This project balances practical engineering with creative exploration. It demons
 
 The codebase is structured to be understandable by others (and my future self) while allowing flexibility for experimentation and iteration.
 
-
-
 ---
 
 _This README provides a technical overview of the project structure and implementation. For setup instructions or detailed development guidelines, see the project's internal documentation._

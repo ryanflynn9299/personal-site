@@ -7,6 +7,7 @@ import Counter from "@/components/primitives/misc/Counter";
 import { incrementCounter } from "@/app/actions/counter";
 import { core } from "@/constants/theme";
 import { createLogger } from "@/lib/logger";
+import { isFeatureEnabled, shouldShowDevIndicator } from "@/lib/features";
 
 const log = createLogger("ALL");
 
@@ -66,18 +67,31 @@ export function FunCounter() {
     }
   };
 
+  // Feature flag check
+  const isEnabled = isFeatureEnabled("funCounter");
+  const showDevBadge = shouldShowDevIndicator("funCounter");
+
+  if (!isEnabled) {
+    return null;
+  }
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.3 }}
-      className="mt-8 rounded-lg border border-slate-700 bg-slate-800/50 p-6 backdrop-blur-sm"
+      className="mt-8 rounded-lg border border-slate-700 bg-slate-800/50 p-6 backdrop-blur-sm relative overflow-hidden"
     >
       <div className="flex items-center gap-2 mb-4">
         <Sparkles className="h-5 w-5 text-sky-300" />
         <h3 className="font-semibold text-slate-200">
           Useless Counter Challenge
         </h3>
+        {showDevBadge && (
+          <span className="ml-2 rounded bg-amber-500/20 px-1.5 py-0.5 text-xs text-amber-400">
+            DEV
+          </span>
+        )}
       </div>
 
       <p className="text-sm text-slate-400 mb-4">
