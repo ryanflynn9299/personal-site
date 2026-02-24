@@ -18,7 +18,7 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  workers: process.env.CI ? 2 : undefined,
   reporter: [["html", { outputFolder: "output/playwright-report" }], ["list"]],
   outputDir: "output/test-results",
   use: {
@@ -42,13 +42,12 @@ export default defineConfig({
   ],
 
   webServer: {
-    // Use wrapper script to filter non-critical ECONNRESET errors
-    command: "node scripts/dev-server-e2e.js",
+    command: "pnpm run build && pnpm run start",
     url: "http://localhost:3000",
     reuseExistingServer: !process.env.CI,
-    timeout: 120 * 1000, // 2 minutes for server to start
+    timeout: 180 * 1000, // 3 minutes for server to build and start
     stdout: "ignore", // Suppress stdout to reduce noise
-    stderr: "pipe", // Keep stderr for actual errors (filtered by wrapper script)
+    stderr: "pipe", // Keep stderr for actual errors
     env: {
       // Set test mode - services will be disabled automatically
       APP_MODE: "test",
