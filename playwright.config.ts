@@ -42,10 +42,10 @@ export default defineConfig({
   ],
 
   webServer: {
-    command: "node .next/standalone/server.js",
+    command: process.env.CI ? "pnpm run start" : "pnpm run build && pnpm run start",
     url: "http://localhost:3000",
     reuseExistingServer: !process.env.CI,
-    timeout: 60 * 1000, // 1 minute for server to start
+    timeout: process.env.CI ? 60 * 1000 : 180 * 1000,
     stdout: "ignore", // Suppress stdout to reduce noise
     stderr: "pipe", // Keep stderr for actual errors
     env: {
