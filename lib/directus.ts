@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createDirectus, readItems, rest } from "@directus/sdk";
 import { Post } from "@/types";
 import { createLogger } from "./logger";
@@ -6,6 +7,8 @@ import {
   getDirectusUrl as getDirectusUrlFromEnv,
   env,
 } from "./env";
+import { isFeatureEnabled } from "./features";
+import { dummyPosts } from "./dummy-posts";
 
 const log = createLogger("ALL");
 const devLog = createLogger("DEV");
@@ -258,6 +261,12 @@ export async function getPublishedPosts(): Promise<{
   status: "success" | "error";
   posts: Post[];
 }> {
+  // Check for dummy posts flag first
+  if (isFeatureEnabled("offlineDummyBlogs")) {
+    log.info("Returning dummy posts based on offlineDummyBlogs feature flag");
+    return { status: "success", posts: dummyPosts };
+  }
+
   // In offline-dev and test, services are disabled - return empty immediately
   if (!env.connectToServices) {
     return { status: "error", posts: [] };
@@ -477,6 +486,18 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
     return null;
   }
 
+  // Check for dummy posts flag first
+  if (isFeatureEnabled("offlineDummyBlogs")) {
+    const post = dummyPosts.find((p) => p.slug === slug);
+    if (post) {
+      log.info(
+        { slug },
+        "Returning dummy post based on offlineDummyBlogs feature flag"
+      );
+      return post;
+    }
+  }
+
   // In offline-dev and test, services are disabled - return null immediately
   if (!env.connectToServices) {
     return null;
@@ -680,4 +701,51 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
     // Return null on any unexpected error to prevent the page from crashing.
     return null;
   }
+}
+
+/**
+ * Resolves the adjacent posts (previous and next) chronologically relative to
+ * the provided post publish date and ID. This structure cleanly supports any slug format,
+ * including obfuscated IDs.
+ *
+ * @param currentPostDate The ISO date string of the current post.
+ * @param currentPostId The unique ID of the current post (used for tie-breaking exact date matches).
+ * @returns An object containing the 'prev' and 'next' Post records, or null for each if they do not exist.
+ */
+export async function getAdjacentPosts(
+  currentPostDate: string,
+  currentPostId: string
+): Promise<{ prev: Post | null; next: Post | null }> {
+  // Fetch all published posts (this will automatically route to dummy data if flag is toggled)
+  const { status, posts } = await getPublishedPosts();
+
+  if (status === "error" || !posts || posts.length === 0) {
+    return { prev: null, next: null };
+  }
+
+  // Ensure posts are strictly sorted by publication_date descending, then ID descending
+  const sortedPosts = [...posts].sort((a, b) => {
+    const timeDiff =
+      new Date(b.publish_date).getTime() - new Date(a.publish_date).getTime();
+    if (timeDiff !== 0) {return timeDiff;}
+    return b.id.localeCompare(a.id);
+  });
+
+  const currentIndex = sortedPosts.findIndex((p) => p.id === currentPostId);
+
+  if (currentIndex === -1) {
+    return { prev: null, next: null };
+  }
+
+  // Since array is descending (newest first):
+  // The 'previous' chronologically published post in reality is the older one, so the NEXT item in the array.
+  // The 'next' chronologically published post in reality is the newer one, so the PREVIOUS item in the array.
+
+  const prevPost =
+    currentIndex < sortedPosts.length - 1
+      ? sortedPosts[currentIndex + 1]
+      : null;
+  const nextPost = currentIndex > 0 ? sortedPosts[currentIndex - 1] : null;
+
+  return { prev: prevPost, next: nextPost };
 }

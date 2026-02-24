@@ -1,6 +1,7 @@
 import {
   getPostBySlug,
   getPublishedPosts,
+  getAdjacentPosts,
   isDirectusConfigured,
 } from "@/lib/directus";
 import { notFound } from "next/navigation";
@@ -13,6 +14,8 @@ import { BlogContentRenderer } from "@/components/blog/BlogContentRenderer";
 import { Post } from "@/types";
 import { SITE_URL, ENABLE_BLOG_SEO } from "@/lib/seo";
 import { env } from "@/lib/env";
+import { isFeatureEnabled } from "@/lib/features";
+import { BlogPostNavigation } from "@/components/blog/BlogPostNavigation";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -21,7 +24,7 @@ type Props = {
 
 // Generate dynamic metadata for each post
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  if (!isDirectusConfigured()) {
+  if (!isDirectusConfigured() && !isFeatureEnabled("offlineDummyBlogs")) {
     return {
       title: "Service Unavailable",
       description: "Content service is not available",
@@ -92,7 +95,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 // Generate static paths for all published posts at build time
 export async function generateStaticParams() {
-  if (!isDirectusConfigured()) {
+  if (!isDirectusConfigured() && !isFeatureEnabled("offlineDummyBlogs")) {
     return [];
   }
 
@@ -106,7 +109,11 @@ export async function generateStaticParams() {
 export default async function BlogPostPage({ params }: Props) {
   // In production/live-dev, Directus must be configured (real error if not)
   // In offline-dev/test, we still check for posts (will return null, then show 404)
-  if (!isDirectusConfigured() && env.treatServiceErrorsAsReal) {
+  if (
+    !isDirectusConfigured() &&
+    !isFeatureEnabled("offlineDummyBlogs") &&
+    env.treatServiceErrorsAsReal
+  ) {
     return (
       <div className="container mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
         <ServiceUnavailableWithDevMode />
@@ -133,6 +140,8 @@ export default async function BlogPostPage({ params }: Props) {
     post.feature_image && env.directus.publicUrl
       ? `${env.directus.publicUrl}/assets/${post.feature_image.id}`
       : null;
+
+  const { prev, next } = await getAdjacentPosts(post.publish_date, post.id);
 
   return (
     <>
@@ -169,6 +178,8 @@ export default async function BlogPostPage({ params }: Props) {
           content={post.content}
           format={post.content_format || "auto"}
         />
+
+        <BlogPostNavigation prev={prev} next={next} />
       </article>
     </>
   );

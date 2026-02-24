@@ -51,7 +51,7 @@ const DANGEROUS_ELEMENTS = new Set([
 /**
  * Allowed SVG attributes (safe subset)
  */
-const ALLOWED_ATTRIBUTES = new Set([
+export const ALLOWED_ATTRIBUTES = new Set([
   // Core SVG attributes
   "viewBox",
   "width",
@@ -97,7 +97,7 @@ const ALLOWED_ATTRIBUTES = new Set([
 /**
  * Allowed SVG elements (safe subset)
  */
-const ALLOWED_ELEMENTS = new Set([
+export const ALLOWED_ELEMENTS = new Set([
   "svg",
   "g",
   "path",
@@ -154,7 +154,7 @@ export function sanitizeSVG(
     /** Remove href attributes (can contain javascript:) */
     removeHrefs?: boolean;
     /** Strict mode: only allow whitelisted attributes/elements */
-    strict?: boolean;
+    _strict?: boolean;
   } = {}
 ): string | null {
   const {
@@ -162,7 +162,7 @@ export function sanitizeSVG(
     removeScripts = true,
     removeStyles = true,
     removeHrefs = true,
-    strict = false,
+    _strict = false,
   } = options;
 
   if (!svgString || typeof svgString !== "string") {
@@ -356,7 +356,7 @@ export function sanitizeSVGByTrustLevel(
         removeScripts: true,
         removeStyles: false, // Allow styles for validated sources
         removeHrefs: true,
-        strict: false,
+        _strict: false,
       });
 
     case SVGTrustLevel.UNTRUSTED:
@@ -366,7 +366,7 @@ export function sanitizeSVGByTrustLevel(
         removeScripts: true,
         removeStyles: true,
         removeHrefs: true,
-        strict: true,
+        _strict: true,
       });
   }
 }

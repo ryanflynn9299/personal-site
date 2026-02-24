@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getPublishedPosts, isDirectusConfigured } from "@/lib/directus";
+import { isFeatureEnabled } from "@/lib/features";
 import { BlogPageClient } from "@/components/blog/BlogPageClient";
 import { generatePageMetadata, ENABLE_BLOG_SEO } from "@/lib/seo";
 
@@ -24,8 +25,8 @@ export const metadata: Metadata = ENABLE_BLOG_SEO
 export const revalidate = 3600;
 
 export default async function BlogIndexPage() {
-  // Check if Directus is configured before attempting to fetch
-  if (!isDirectusConfigured()) {
+  // Check if Directus is configured or dummy data is forcefully enabled
+  if (!isDirectusConfigured() && !isFeatureEnabled("offlineDummyBlogs")) {
     return <BlogPageClient posts={[]} status="error" />;
   }
 

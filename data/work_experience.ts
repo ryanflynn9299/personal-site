@@ -3,10 +3,11 @@ export const vitaeData = {
     {
       role: "Software Development Engineer II",
       company: "CarGurus",
-      period: "Sept 2025 - Present",
+      period: "Sept 2025 - Jan 2026",
       description: [
-        "Working on dealer intelligence platform to deliver industry leading insights to our partners. More to come soon.",
-        "Giving people the power and tools to reach their destination.",
+        "Worked on dealer intelligence platform to deliver industry leading insights to our partners.",
+        "Contributed to a customer-facing performance insights email within first 90 days, achieving 78% open rate and ~7% CTR",
+        "Implemented backend services and batch pipelines using Java, Snowflake, and AWS, with TypeScript-based UI contributions to support end-to-end email delivery",
       ],
     },
     {
@@ -45,21 +46,28 @@ export const vitaeData = {
   projects: [
     {
       name: "URL Shortener in Golang",
-      link: "https://github.com/your-username/project-phoenix",
+      link: "https://github.com/ryanflynn9299/shaw-ty",
       description:
         "A full-stack, production-ready Bit.ly clone. Includes a fully-featured REST API, custom user authentication, and a sleek UI built with React.",
     },
     {
       name: "Machine Learning Pipeline for Trading and Backtesting",
-      link: "https://github.com/your-username/analytics-dashboard",
+      link: "https://github.com/ryanflynn9299/market-ml",
       description:
         "Proof-of-concept project featuring an LSTM model trained on market data with a custom backtesting engine for signals. Features a live data pipeline and hot-swappable strategy implementations.",
+    },
+    {
+      name: "Commute Data Collection Service",
+      link: "https://github.com/ryanflynn9299/directions-chron",
+      description:
+        "A self-hosted custom Python service that collects commute data between two points from Google Maps API, storing it in a Postgres database for data visualization and analysis.",
     },
   ],
   skills: [
     "Java",
     "Python",
     "SQL",
+    "Spring",
     "Microservices",
     "Git",
     "React",
@@ -69,5 +77,12 @@ export const vitaeData = {
     "Docker",
     "Kubernetes",
     "Typescript",
+    "Snowflake",
+    "Hibernate",
+    "Agile",
+    "AWS",
+    "REST APIs",
+    "Pandas",
+    "Numpy"
   ],
 };

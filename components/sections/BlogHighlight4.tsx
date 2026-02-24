@@ -1,14 +1,16 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Link from "next/link";
 import { getPublishedPosts, isDirectusConfigured } from "@/lib/directus";
 import { ArrowRight } from "lucide-react";
 import { ServiceUnavailableWithDevMode } from "@/components/common/DevModeIndicator";
+import { isFeatureEnabled } from "@/lib/features";
 
 // 2x2 Horizontal Grid of Recent Blog Posts
 export async function BlogHighlight4() {
   // Check if Directus is configured before attempting to fetch
-  if (!isDirectusConfigured()) {
+  if (!isDirectusConfigured() && !isFeatureEnabled("offlineDummyBlogs")) {
     return (
-      <section className="py-20 md:py-28 border-t border-slate-800">
+      <section className="py-16 md:py-24 border-t border-slate-800">
         <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h2 className="font-heading text-3xl font-bold text-slate-50">
@@ -22,7 +24,7 @@ export async function BlogHighlight4() {
           <div className="mt-16 lg:max-w-5xl lg:mx-auto">
             <ServiceUnavailableWithDevMode />
           </div>
-          <div className="mt-16 text-center">
+          <div className="mt-8 text-center">
             <Link
               href="/blog"
               className="group inline-flex items-center text-lg font-medium text-sky-300 transition-colors hover:text-sky-200"
@@ -41,7 +43,7 @@ export async function BlogHighlight4() {
   const latestPosts = posts.slice(0, 4);
 
   return (
-    <section className="py-20 md:py-28 border-t border-slate-800">
+    <section className="py-16 md:py-24 border-t border-slate-800">
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           {/* UPDATED: New, more professional and grounded copy */}
@@ -78,7 +80,7 @@ export async function BlogHighlight4() {
         </div>
 
         {/* The Call to Action */}
-        <div className="mt-16 text-center">
+        <div className="mt-8 text-center">
           <Link
             href="/blog"
             className="group inline-flex items-center text-lg font-medium text-sky-300 transition-colors hover:text-sky-200"

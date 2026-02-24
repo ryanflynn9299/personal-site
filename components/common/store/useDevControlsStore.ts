@@ -4,32 +4,24 @@ import { create } from "zustand";
 
 // Home page controls
 export type HomePageSection =
-  | "aboutMe1"
   | "aboutMe2"
   | "projectCarousel"
-  | "featuredProjects"
-  | "bentoGrid"
-  | "techStack"
   | "techStack2"
   | "techStack3"
-  | "blogHighlight"
+  | "techStack4"
   | "blogHighlight4";
 
 interface HomePageState {
-  selectedAboutMe: "aboutMe1" | "aboutMe2";
-  selectedProjects: "projectCarousel" | "featuredProjects" | "bentoGrid";
-  selectedTechStack: "techStack" | "techStack2" | "techStack3";
-  selectedBlogHighlight: "blogHighlight" | "blogHighlight4";
-  setSelectedAboutMe: (variant: "aboutMe1" | "aboutMe2") => void;
-  setSelectedProjects: (
-    variant: "projectCarousel" | "featuredProjects" | "bentoGrid"
-  ) => void;
+  selectedAboutMe: "aboutMe2";
+  selectedProjects: "projectCarousel";
+  selectedTechStack: "techStack2" | "techStack3" | "techStack4";
+  selectedBlogHighlight: "blogHighlight4";
+  setSelectedAboutMe: (variant: "aboutMe2") => void;
+  setSelectedProjects: (variant: "projectCarousel") => void;
   setSelectedTechStack: (
-    variant: "techStack" | "techStack2" | "techStack3"
+    variant: "techStack2" | "techStack3" | "techStack4"
   ) => void;
-  setSelectedBlogHighlight: (
-    variant: "blogHighlight" | "blogHighlight4"
-  ) => void;
+  setSelectedBlogHighlight: (variant: "blogHighlight4") => void;
 }
 
 // Quotes page controls (from existing store)

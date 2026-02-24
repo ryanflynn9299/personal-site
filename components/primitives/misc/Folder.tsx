@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
 import { folder as folderColors } from "@/constants/theme";
 
@@ -6,6 +7,7 @@ interface FolderProps {
   size?: number;
   items?: React.ReactNode[];
   className?: string;
+  ariaLabel?: string;
 }
 
 const darkenColor = (hex: string, percent: number): string => {
@@ -34,6 +36,7 @@ const Folder: React.FC<FolderProps> = ({
   size = 1,
   items = [],
   className = "",
+  ariaLabel,
 }) => {
   const maxItems = 3;
   const actualItems = items.slice(0, maxItems);
@@ -128,7 +131,7 @@ const Folder: React.FC<FolderProps> = ({
   return (
     <div style={scaleStyle} className={className}>
       <div
-        className={`group relative transition-all duration-200 ease-in cursor-pointer ${
+        className={`group relative transition-all duration-200 ease-in cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:rounded-lg ${
           !open ? "hover:-translate-y-2" : ""
         }`}
         style={{
@@ -136,6 +139,16 @@ const Folder: React.FC<FolderProps> = ({
           transform: open ? "translateY(-8px)" : undefined,
         }}
         onClick={handleClick}
+        role="button"
+        tabIndex={0}
+        aria-expanded={open}
+        aria-label={ariaLabel || "Folder"}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            handleClick();
+          }
+        }}
       >
         <div
           className="relative w-[100px] h-[80px] rounded-tl-0 rounded-tr-[10px] rounded-br-[10px] rounded-bl-[10px]"
@@ -167,7 +180,7 @@ const Folder: React.FC<FolderProps> = ({
               : undefined;
 
             // Clone the item and update its index prop to match the position (i)
-            const itemWithCorrectIndex =
+            const itemWithCorrectProps =
               React.isValidElement(item) &&
               item.props &&
               typeof item.props === "object" &&
@@ -175,6 +188,7 @@ const Folder: React.FC<FolderProps> = ({
               "index" in item.props
                 ? React.cloneElement(item as React.ReactElement<any>, {
                     index: i,
+                    tabIndex: open ? 0 : -1,
                   })
                 : item;
 
@@ -194,7 +208,7 @@ const Folder: React.FC<FolderProps> = ({
                   borderRadius: "10px",
                 }}
               >
-                {itemWithCorrectIndex}
+                {itemWithCorrectProps}
               </div>
             );
           })}

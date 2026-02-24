@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { usePathname } from "next/navigation";
-import { motion } from "framer-motion";
-import { ChevronDown } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ChevronDown, Sparkles } from "lucide-react";
 import { useQuoteViewStore } from "@/components/quotes/store/useQuoteViewStore";
 import { useDevControlsStore } from "./store/useDevControlsStore";
 import { env } from "@/lib/env";
@@ -17,14 +17,14 @@ import type {
  *
  * Route-aware component that shows different controls based on the current page.
  * Available on all pages for testing and development features.
- * Features collapsible functionality with smooth animations.
+ * Features collapsible functionality with premium glassmorphic styling.
  */
 export function DevControls() {
   const pathname = usePathname();
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  // Default to true so it is hidden on load
+  const [isCollapsed, setIsCollapsed] = useState(true);
 
   // Only show if dev mode UI is enabled and not in test mode
-  // Dev mode UI can be toggled independently of service connectivity
   if (!env.devModeUI || env.isTest) {
     return null;
   }
@@ -38,7 +38,7 @@ export function DevControls() {
     title = "View Controls";
   } else if (pathname === "/") {
     ControlsComponent = HomePageControls;
-    title = "Home Page Controls";
+    title = "Home Controls";
   }
 
   // No controls for this route
@@ -59,7 +59,7 @@ export function DevControls() {
 
 /**
  * Collapsible Controls Wrapper
- * Provides collapse/expand functionality with smooth animations
+ * Provides premium collapse/expand functionality with fluid glassmorphism
  */
 function CollapsibleControls({
   isCollapsed,
@@ -74,137 +74,144 @@ function CollapsibleControls({
 }) {
   return (
     <motion.div
-      className="fixed bottom-4 right-4 z-50 w-[280px]"
+      className="fixed bottom-6 right-6 z-50 w-[300px]"
       initial={false}
       layout
       style={{
-        // When collapsed, don't intercept pointer events except on the button
         pointerEvents: isCollapsed ? "none" : "auto",
       }}
     >
       <motion.div
         layout
-        className="w-full rounded-lg border border-slate-700/50 bg-slate-900/95 backdrop-blur-sm shadow-lg overflow-hidden"
-        animate={{
-          scale: isCollapsed ? 1 : 1,
-        }}
+        className="w-full relative overflow-hidden rounded-2xl border border-white/10 bg-black/60 backdrop-blur-xl shadow-2xl ring-1 ring-white/5"
+        animate={{ scale: 1 }}
         transition={{
-          layout: {
-            type: "spring",
-            stiffness: 400,
-            damping: 30,
-          },
+          layout: { type: "spring", stiffness: 400, damping: 30 },
           duration: 0.3,
         }}
       >
-        {isCollapsed ? (
-          // Collapsed state: thin bar
-          <motion.div
-            layout
-            initial={false}
-            animate={{
-              padding: "0.625rem 1rem", // py-2.5 px-4
-            }}
-            transition={{
-              layout: {
-                type: "spring",
-                stiffness: 400,
-                damping: 30,
-              },
-            }}
-          >
-            <button
-              onClick={onToggle}
-              className="flex w-full items-center justify-between text-slate-300 transition-colors hover:bg-slate-800/50 rounded"
-              aria-label="Expand controls"
-              style={{
-                // Re-enable pointer events on the button itself when collapsed
-                pointerEvents: "auto",
-              }}
-            >
-              <motion.span
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.1 }}
-                className="text-xs font-medium font-inter"
-              >
-                {title}
-              </motion.span>
-              <motion.div
-                animate={{ rotate: 180 }}
-                transition={{
-                  type: "spring",
-                  stiffness: 400,
-                  damping: 25,
-                }}
-              >
-                <ChevronDown className="h-4 w-4" />
-              </motion.div>
-            </button>
-          </motion.div>
-        ) : (
-          // Expanded state: full controls
-          <motion.div
-            layout
-            initial={false}
-            animate={{
-              padding: "1.5rem", // p-6
-            }}
-            transition={{
-              layout: {
-                type: "spring",
-                stiffness: 400,
-                damping: 30,
-              },
-            }}
-          >
+        {/* Subtle accent gradient peeking from the top edge */}
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-slate-500/50 to-transparent" />
+
+        <AnimatePresence mode="popLayout" initial={false}>
+          {isCollapsed ? (
+            // Collapsed state: Elegant floating action bar
             <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{
-                delay: 0.1,
-                type: "spring",
-                stiffness: 300,
-                damping: 25,
-              }}
-              className="mb-4 flex items-center justify-between"
+              key="collapsed"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1, padding: "0.75rem 1.25rem" }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
             >
-              <h3 className="text-sm font-semibold text-slate-200 font-inter">
-                {title}
-              </h3>
               <button
                 onClick={onToggle}
-                className="rounded p-1 text-slate-400 transition-colors hover:bg-slate-800 hover:text-slate-200"
-                aria-label="Collapse controls"
+                className="group flex w-full items-center justify-between transition-all"
+                aria-label="Expand controls"
+                style={{ pointerEvents: "auto" }}
               >
+                <div className="flex items-center gap-2 text-slate-300 group-hover:text-white transition-colors">
+                  <Sparkles className="h-4 w-4 text-sky-400 group-hover:text-sky-300 transition-colors" />
+                  <span className="text-xs font-medium font-inter tracking-wide">
+                    {title}
+                  </span>
+                </div>
                 <motion.div
-                  animate={{ rotate: 0 }}
-                  transition={{
-                    type: "spring",
-                    stiffness: 400,
-                    damping: 25,
-                  }}
+                  animate={{ rotate: 180 }}
+                  className="rounded-full bg-white/5 p-1 group-hover:bg-white/10 transition-colors"
+                  transition={{ type: "spring", stiffness: 400, damping: 25 }}
                 >
-                  <ChevronDown className="h-4 w-4" />
+                  <ChevronDown className="h-4 w-4 text-slate-400 group-hover:text-white" />
                 </motion.div>
               </button>
             </motion.div>
+          ) : (
+            // Expanded state: Premium controls panel
             <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{
-                delay: 0.15,
-                type: "spring",
-                stiffness: 300,
-                damping: 25,
-              }}
+              key="expanded"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1, padding: "1.5rem" }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
             >
-              {children}
+              <motion.div
+                initial={{ y: -10, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.1 }}
+                className="mb-5 flex items-center justify-between border-b border-white/10 pb-3"
+              >
+                <div className="flex items-center gap-2">
+                  <div className="flex h-6 w-6 items-center justify-center rounded-md bg-gradient-to-br from-slate-700/50 to-slate-800/50 shadow-sm border border-white/10">
+                    <Sparkles className="h-3 w-3 text-sky-300" />
+                  </div>
+                  <h3 className="text-sm font-semibold text-slate-100 font-inter tracking-wide uppercase mt-0.5">
+                    {title}
+                  </h3>
+                </div>
+
+                <button
+                  onClick={onToggle}
+                  className="rounded-full bg-slate-800/50 p-1.5 text-slate-400 transition-all hover:bg-slate-700 hover:text-white"
+                  aria-label="Collapse controls"
+                >
+                  <motion.div
+                    animate={{ rotate: 0 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                  >
+                    <ChevronDown className="h-4 w-4" />
+                  </motion.div>
+                </button>
+              </motion.div>
+
+              <motion.div
+                initial={{ y: 10, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.15 }}
+                className="custom-scrollbar"
+              >
+                {children}
+              </motion.div>
             </motion.div>
-          </motion.div>
-        )}
+          )}
+        </AnimatePresence>
       </motion.div>
     </motion.div>
+  );
+}
+
+/**
+ * Aesthetic Button for Control Selections
+ */
+function VariantButton({
+  active,
+  onClick,
+  children,
+}: {
+  active: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className={`rounded-lg px-3 py-2 text-left text-xs font-medium transition-all font-inter shadow-sm ${
+        active
+          ? "bg-sky-500/20 text-sky-200 border border-sky-500/30 shadow-sky-500/10"
+          : "bg-white/5 text-slate-300 border border-white/5 hover:bg-white/10 hover:border-white/10 hover:text-white"
+      }`}
+    >
+      {children}
+    </button>
+  );
+}
+
+/**
+ * Section Label Component
+ */
+function SectionLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-slate-500/80 font-inter">
+      {children}
+    </label>
   );
 }
 
@@ -232,69 +239,53 @@ function QuotesControls() {
     activeConstellationVariant === "solar_system";
 
   return (
-    <div className="w-full font-inter">
+    <div className="w-full space-y-5">
       {/* Mode Toggle */}
-      <div className="mb-4">
-        <label className="mb-1 block text-xs text-slate-400 font-inter">
-          Mode
-        </label>
-        <div className="flex gap-2">
-          <button
+      <div>
+        <SectionLabel>Rendering Mode</SectionLabel>
+        <div className="grid grid-cols-2 gap-2">
+          <VariantButton
+            active={viewMode === "normal"}
             onClick={() => setViewMode("normal")}
-            className={`rounded px-3 py-1 text-xs transition-colors font-inter ${
-              viewMode === "normal"
-                ? "bg-blue-600 text-white"
-                : "bg-slate-700 text-slate-300 hover:bg-slate-600"
-            }`}
           >
             Normal
-          </button>
-          <button
+          </VariantButton>
+          <VariantButton
+            active={viewMode === "constellation"}
             onClick={() => setViewMode("constellation")}
-            className={`rounded px-3 py-1 text-xs transition-colors font-inter ${
-              viewMode === "constellation"
-                ? "bg-blue-600 text-white"
-                : "bg-slate-700 text-slate-300 hover:bg-slate-600"
-            }`}
           >
             Constellation
-          </button>
+          </VariantButton>
         </div>
       </div>
 
       {/* Normal Variants */}
       {viewMode === "normal" && (
-        <div className="mb-4">
-          <label className="mb-1 block text-xs text-slate-400 font-inter">
-            Normal Variant
-          </label>
-          <div className="flex flex-col gap-1">
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+          <SectionLabel>Normal Architecture</SectionLabel>
+          <div className="flex flex-col gap-2">
             {(["mission_control", "tesseract"] as NormalVariant[]).map(
               (variant) => (
-                <button
+                <VariantButton
                   key={variant}
+                  active={activeNormalVariant === variant}
                   onClick={() => setActiveNormalVariant(variant)}
-                  className={`rounded px-2 py-1 text-left text-xs transition-colors font-inter capitalize ${
-                    activeNormalVariant === variant
-                      ? "bg-purple-600 text-white"
-                      : "bg-slate-700 text-slate-300 hover:bg-slate-600"
-                  }`}
                 >
-                  {variant.replace("_", " ")}
-                </button>
+                  <span className="capitalize">
+                    {variant.replace("_", " ")}
+                  </span>
+                </VariantButton>
               )
             )}
           </div>
-        </div>
+        </motion.div>
       )}
 
       {/* Constellation Variants */}
       {viewMode === "constellation" && (
-        <div className="mb-4">
-          <label className="mb-1 block text-xs text-slate-400 font-inter">
-            Constellation Variant
-          </label>
-          <div className="flex flex-col gap-1">
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+          <SectionLabel>Constellation Topology</SectionLabel>
+          <div className="flex flex-col gap-2">
             {(
               [
                 "constellation",
@@ -302,68 +293,76 @@ function QuotesControls() {
                 "hex_array",
               ] as ConstellationVariant[]
             ).map((variant) => (
-              <button
+              <VariantButton
                 key={variant}
+                active={activeConstellationVariant === variant}
                 onClick={() => setActiveConstellationVariant(variant)}
-                className={`rounded px-2 py-1 text-left text-xs transition-colors font-inter capitalize ${
-                  activeConstellationVariant === variant
-                    ? "bg-purple-600 text-white"
-                    : "bg-slate-700 text-slate-300 hover:bg-slate-600"
-                }`}
               >
-                {variant.replace("_", " ")}
-              </button>
+                <span className="capitalize">{variant.replace("_", " ")}</span>
+              </VariantButton>
             ))}
           </div>
-        </div>
+        </motion.div>
       )}
 
-      {/* Hex Surge Controls - Only show when hex_array is selected */}
+      {/* Hex Surge Controls */}
       {isHexArraySelected && (
-        <div className="mt-4 border-t border-slate-700/50 pt-4">
-          <div className="mb-3 flex items-center gap-2">
+        <motion.div
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: "auto" }}
+          className="rounded-xl border border-sky-500/20 bg-sky-500/5 p-3"
+        >
+          <div className="mb-3 flex items-center justify-between">
+            <label
+              htmlFor="hex-surge-enabled"
+              className="cursor-pointer text-xs font-medium text-slate-300 font-inter"
+            >
+              Enable Hex Surge
+            </label>
             <input
               type="checkbox"
               id="hex-surge-enabled"
               checked={hexSurgeEnabled}
               onChange={(e) => setHexSurgeEnabled(e.target.checked)}
-              className="h-4 w-4 cursor-pointer rounded border-slate-600 bg-slate-800 text-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-slate-900"
+              className="h-4 w-4 cursor-pointer rounded border-slate-600 bg-black/50 text-sky-500 focus:ring-sky-500/50"
             />
-            <label
-              htmlFor="hex-surge-enabled"
-              className="cursor-pointer text-xs font-medium text-slate-300 font-inter"
-            >
-              Enable hex surge
-            </label>
           </div>
           <button
             onClick={triggerHexSurge}
             disabled={!hexSurgeEnabled}
-            className={`w-full rounded px-3 py-2 text-xs font-medium transition-all font-inter ${
+            className={`w-full rounded-lg px-3 py-2 text-xs font-semibold transition-all font-inter shadow-sm ${
               hexSurgeEnabled
-                ? "bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800"
-                : "cursor-not-allowed bg-slate-700 text-slate-500 opacity-50"
+                ? "bg-sky-600/80 text-white hover:bg-sky-500 active:scale-95 shadow-sky-500/20 border border-sky-500/50"
+                : "cursor-not-allowed bg-slate-800/80 text-slate-500 border border-white/5"
             }`}
           >
-            Trigger Surge
+            Trigger Kinetic Surge
           </button>
-        </div>
+        </motion.div>
       )}
 
-      {/* Comet Trigger Controls - Only show when solar_system is selected */}
+      {/* Comet Trigger Controls */}
       {isSolarSystemSelected && (
-        <div className="mt-4 border-t border-slate-700/50 pt-4">
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
           <button
             onClick={triggerComet}
-            className="w-full rounded px-3 py-2 text-xs font-medium transition-all font-inter bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800"
+            className="w-full rounded-lg bg-gradient-to-r from-orange-500/80 to-red-500/80 hover:from-orange-500 hover:to-red-500 px-3 py-2 text-xs font-semibold text-white shadow-xl shadow-orange-500/20 border border-orange-400/30 transition-all active:scale-95 font-inter"
           >
-            Trigger Comet
+            Summon Comet
           </button>
-        </div>
+        </motion.div>
       )}
     </div>
   );
 }
+
+/**
+ * Formatting util for camelCase rendering
+ */
+const formatVariantName = (variant: string) => {
+  const spaced = variant.replace(/([A-Z])/g, " $1").trim();
+  return spaced.charAt(0).toUpperCase() + spaced.slice(1);
+};
 
 /**
  * Home Page Controls
@@ -381,95 +380,69 @@ function HomePageControls() {
   } = useDevControlsStore();
 
   return (
-    <div className="w-full max-h-[80vh] overflow-y-auto font-inter">
+    <div className="w-full max-h-[65vh] overflow-y-auto pr-1 space-y-6">
       {/* About Me Section */}
-      <div className="mb-4">
-        <label className="mb-1 block text-xs text-slate-400 font-inter">
-          About Me
-        </label>
-        <div className="flex flex-col gap-1">
-          {(["aboutMe1", "aboutMe2"] as const).map((variant) => (
-            <button
+      <div>
+        <SectionLabel>About Me Module</SectionLabel>
+        <div className="flex flex-col gap-2">
+          {(["aboutMe2"] as const).map((variant) => (
+            <VariantButton
               key={variant}
+              active={selectedAboutMe === variant}
               onClick={() => setSelectedAboutMe(variant)}
-              className={`rounded px-2 py-1 text-left text-xs transition-colors ${
-                selectedAboutMe === variant
-                  ? "bg-purple-600 text-white"
-                  : "bg-slate-700 text-slate-300 hover:bg-slate-600"
-              }`}
             >
-              {variant.replace(/([A-Z])/g, " $1").trim()}
-            </button>
+              {formatVariantName(variant)}
+            </VariantButton>
           ))}
         </div>
       </div>
 
       {/* Projects Section */}
-      <div className="mb-4">
-        <label className="mb-1 block text-xs text-slate-400 font-inter">
-          Projects
-        </label>
-        <div className="flex flex-col gap-1">
-          {(["projectCarousel", "featuredProjects", "bentoGrid"] as const).map(
-            (variant) => (
-              <button
-                key={variant}
-                onClick={() => setSelectedProjects(variant)}
-                className={`rounded px-2 py-1 text-left text-xs transition-colors ${
-                  selectedProjects === variant
-                    ? "bg-purple-600 text-white"
-                    : "bg-slate-700 text-slate-300 hover:bg-slate-600"
-                }`}
-              >
-                {variant.replace(/([A-Z])/g, " $1").trim()}
-              </button>
-            )
-          )}
+      <div>
+        <SectionLabel>Projects Showcase</SectionLabel>
+        <div className="flex flex-col gap-2">
+          {(["projectCarousel"] as const).map((variant) => (
+            <VariantButton
+              key={variant}
+              active={selectedProjects === variant}
+              onClick={() => setSelectedProjects(variant)}
+            >
+              {formatVariantName(variant)}
+            </VariantButton>
+          ))}
         </div>
       </div>
 
       {/* Tech Stack Section */}
-      <div className="mb-4">
-        <label className="mb-1 block text-xs text-slate-400 font-inter">
-          Tech Stack
-        </label>
-        <div className="flex flex-col gap-1">
-          {(["techStack", "techStack2", "techStack3"] as const).map(
+      <div>
+        <SectionLabel>Technology Grid</SectionLabel>
+        <div className="flex flex-col gap-2">
+          {(["techStack2", "techStack3", "techStack4"] as const).map(
             (variant) => (
-              <button
+              <VariantButton
                 key={variant}
+                active={selectedTechStack === variant}
                 onClick={() => setSelectedTechStack(variant)}
-                className={`rounded px-2 py-1 text-left text-xs transition-colors ${
-                  selectedTechStack === variant
-                    ? "bg-purple-600 text-white"
-                    : "bg-slate-700 text-slate-300 hover:bg-slate-600"
-                }`}
               >
-                {variant.replace(/([A-Z])/g, " $1").trim()}
-              </button>
+                {formatVariantName(variant)}
+              </VariantButton>
             )
           )}
         </div>
       </div>
 
       {/* Blog Highlight Section */}
-      <div className="mb-4">
-        <label className="mb-1 block text-xs text-slate-400 font-inter">
-          Blog Highlight
-        </label>
-        <div className="flex flex-col gap-1">
-          {(["blogHighlight", "blogHighlight4"] as const).map((variant) => (
-            <button
+      <div>
+        <SectionLabel>Blog Highlighting</SectionLabel>
+        <div className="flex flex-col gap-2">
+          {(["blogHighlight4"] as const).map((variant) => (
+            <VariantButton
               key={variant}
+              active={selectedBlogHighlight === variant}
               onClick={() => setSelectedBlogHighlight(variant)}
-              className={`rounded px-2 py-1 text-left text-xs transition-colors ${
-                selectedBlogHighlight === variant
-                  ? "bg-purple-600 text-white"
-                  : "bg-slate-700 text-slate-300 hover:bg-slate-600"
-              }`}
             >
-              {variant.replace(/([A-Z])/g, " $1").trim()}
-            </button>
+              {formatVariantName(variant)}
+            </VariantButton>
           ))}
         </div>
       </div>

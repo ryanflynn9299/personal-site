@@ -1,9 +1,9 @@
-"use client";
+// Server Component - can use Client Components (MagicBento4) as children
+import { MagicBento4 } from "@/components/sections/MagicBento4";
 
-import { MagicBento2 } from "@/components/sections/MagicBento2";
-
-// Using Reactbits component (no personal details yet)
-export function TechStack2() {
+// An advanced component combining the animations of TechStack2 with the
+// thematic styling, proportions, and interactive grid logic of TechStack3.
+export function TechStack4() {
   return (
     <section className="py-16 md:py-24 border-t border-slate-800 bg-slate-950">
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -15,18 +15,7 @@ export function TechStack2() {
             The tools and technologies I use to bring ideas to life.
           </p>
         </div>
-        <MagicBento2
-          textAutoHide={true}
-          enableStars={false}
-          enableSpotlight={true}
-          enableBorderGlow={true}
-          enableTilt={true}
-          enableMagnetism={true}
-          clickEffect={true}
-          spotlightRadius={300}
-          particleCount={12}
-          glowColor="56, 189, 248"
-        />
+        <MagicBento4 />
       </div>
     </section>
   );

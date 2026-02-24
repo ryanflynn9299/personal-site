@@ -69,7 +69,7 @@ export const defaultMetadata = {
     shortcut: "/favicon.ico",
   },
   // Manifest for PWA (if you create app/manifest.ts)
-  manifest: "/manifest.json", // Will be created as app/manifest.ts
+  // manifest: "/manifest.json", // Will be created as app/manifest.ts
   openGraph: {
     type: "website",
     locale: "en_US",

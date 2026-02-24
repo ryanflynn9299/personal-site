@@ -15,7 +15,7 @@ export function HeroSection() {
         {/*    Building Digital Experiences*/}
         {/*</h1>*/}
         <p className="mx-auto mt-6 max-w-3xl text-lg text-slate-300 md:text-xl">
-          Welcome to my corner of the web. I'm a software engineer specializing
+          Welcome to my corner of the web. I&apos;m a software engineer specializing
           in backend development, passionate about creating performant,
           accessible, and maximally usable applications.
         </p>

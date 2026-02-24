@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * Icon Library Configuration
  * Curated space-themed icons from multiple high-quality icon libraries

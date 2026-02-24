@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { motion, useMotionValue, useSpring } from "framer-motion";
 import type { Entity } from "../types";
 import { EntityShape } from "./EntityShape";
@@ -20,7 +20,6 @@ export function ZoomedEntityView({
   isVisible,
   initialPosition,
 }: ZoomedEntityViewProps) {
-  const [targetPosition, setTargetPosition] = useState({ x: 0, y: 0 });
   const xBase = useMotionValue(0);
   const yBase = useMotionValue(0);
   const scaleBase = useMotionValue(1);

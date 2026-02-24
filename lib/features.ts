@@ -14,11 +14,12 @@ import { env } from "@/lib/env";
 export type FeatureStatus = "production" | "dev-only" | "hidden";
 
 // Define available features here
-export type FeatureKey = "funCounter";
+export type FeatureKey = "funCounter" | "offlineDummyBlogs";
 
 // Feature configuration
 export const features: Record<FeatureKey, FeatureStatus> = {
-  funCounter: "dev-only",
+  funCounter: "hidden",
+  offlineDummyBlogs: "dev-only",
 };
 
 /**

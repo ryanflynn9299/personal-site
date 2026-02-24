@@ -139,6 +139,27 @@ NEXT_PUBLIC_MATOMO_SITE_ID=DISABLED
 ENABLE_PINO_PRETTY=false
 ```
 
+## Syncing Environment Variables
+
+When a new environment variable is added to the project, it will appear in `.env.example`. A script is provided to safely synchronize your local `.env` file with the templates in `.env.example`, generating stubs or copying values natively regardless of your operating system.
+
+```bash
+# Preview what is missing and ask for confirmation to append it
+./scripts/sync-env.sh
+
+# Automatically append missing variables, generating stubs for empty values
+./scripts/sync-env.sh --fix
+
+# View verbose breakdown of exactly what values will be stubbed or copied
+./scripts/sync-env.sh -v
+```
+
+**Key Behaviors:**
+
+- Preserves existing formatting and custom comments in your `.env`.
+- Missing variables are exclusively appended to the bottom section.
+- Automatically hyphenates variable names into stubs when the template is empty (e.g. `MY_VAR=` becomes `MY_VAR=my-var`).
+
 ## Usage Examples
 
 ### Production Deployment

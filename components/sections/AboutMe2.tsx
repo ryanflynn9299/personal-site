@@ -10,7 +10,7 @@ import Image from "next/image";
 }
 export function AboutMe2() {
   return (
-    <section className="py-8 md:py-24 border-t border-slate-800">
+    <section className="py-16 md:py-24 border-t border-slate-800">
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 items-center gap-12 md:grid-cols-2 md:gap-16">
           {/* Image Column */}
@@ -39,7 +39,7 @@ export function AboutMe2() {
             </h2>
             {/* TODO: revise this text */}
             <p className="mt-6 text-lg text-slate-300 leading-relaxed">
-              I'm a software engineer who thrives on turning complex problems
+              I&apos;m a software engineer who thrives on turning complex problems
               into elegant, user-centric solutions. With a foundation in modern
               web technologies and a deep appreciation for clean code, I focus
               on building applications that are both powerful and delightful to

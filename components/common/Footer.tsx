@@ -38,6 +38,19 @@ const footerNav = [
   },
 ];
 
+export interface FooterNavItem {
+  name: string;
+  href: string;
+  is_active?: boolean;
+  devOnly?: boolean;
+}
+
+export interface SocialLink {
+  name: string;
+  href: string;
+  icon: React.ElementType<{ className?: string }>;
+}
+
 export function Footer() {
   // const pathname = usePathname();
   // const isProjectsCabinetPage = pathname === "/projects-cabinet";
@@ -62,7 +75,7 @@ export function Footer() {
               </h4>
               <ul className="mt-4 space-y-2">
                 {footerNav
-                  .filter((item: any) => {
+                  .filter((item: FooterNavItem) => {
                     // Filter by active status
                     if (!item.is_active) {
                       return false;
@@ -73,7 +86,7 @@ export function Footer() {
                     }
                     return true;
                   })
-                  .map((item: any) => (
+                  .map((item: FooterNavItem) => (
                     <li key={item.href}>
                       <Link
                         href={item.href}
@@ -132,7 +145,7 @@ export function Footer() {
                 Connect
               </h4>
               <ul className="mt-4 flex space-x-4">
-                {socialLinks.map((link: any) => (
+                {socialLinks.map((link: SocialLink) => (
                   <li key={link.name}>
                     <a
                       href={link.href}

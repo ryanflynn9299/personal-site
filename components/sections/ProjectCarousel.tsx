@@ -54,8 +54,8 @@ export function ProjectCarousel() {
   }, [emblaApi, onSelect]);
 
   return (
-    <div className="relative group">
-      <div className="py-8">
+    <section className="relative group py-16 md:py-24 border-t border-slate-800 bg-slate-900/50">
+      <div className="mb-12">
         <h2 className="font-heading text-3xl font-bold text-slate-50 sm:text-4xl text-center">
           Featured Projects
         </h2>
@@ -158,6 +158,6 @@ export function ProjectCarousel() {
           />
         ))}
       </div>
-    </div>
+    </section>
   );
 }

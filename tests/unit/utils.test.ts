@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { cn, getBlogPostUrl } from "@/lib/utils";
 
 // Mock logger to avoid console output during tests

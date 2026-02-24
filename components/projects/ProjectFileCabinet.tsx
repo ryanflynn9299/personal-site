@@ -7,6 +7,7 @@ import Folder from "@/components/primitives/misc/Folder";
 import { projects } from "@/data/projects";
 import { ProjectModal } from "./ProjectModal";
 import { projects as projectColors } from "@/constants/theme";
+import { env } from "@/lib/env";
 
 // Project type based on the data structure
 interface Project {
@@ -172,9 +173,14 @@ export function ProjectFileCabinet() {
         </div>
 
         {/* File Cabinet Grid */}
-        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mx-auto flex max-w-[1056px] flex-wrap justify-center gap-8 md:gap-12">
           {Object.entries(CATEGORIES).map(([categoryName, category]) => {
             const categoryProjects = categorizedProjects[categoryName] || [];
+
+            // Hide empty folders unless we're in dev mode
+            if (categoryProjects.length === 0 && !env.devModeUI) {
+              return null;
+            }
 
             return (
               <ProjectFolder
@@ -287,7 +293,7 @@ function ProjectFolder({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className="flex flex-col items-center"
+      className="flex flex-col items-center flex-shrink-0 w-[calc(100%-2rem)] sm:w-[calc(50%-2rem)] md:w-[calc(33.333%-2.5rem)] max-w-[320px]"
     >
       <div className="mb-8 text-center">
         <h3 className="text-sm font-semibold text-slate-300">{categoryName}</h3>
@@ -296,7 +302,12 @@ function ProjectFolder({
         </p>
       </div>
       <div className="cursor-pointer">
-        <Folder color={color} size={1.2} items={paperItems} />
+        <Folder
+          color={color}
+          size={1.2}
+          items={paperItems}
+          ariaLabel={`${categoryName} folder, ${projects.length} project${projects.length !== 1 ? "s" : ""}`}
+        />
       </div>
     </motion.div>
   );
@@ -315,11 +326,21 @@ interface ProjectPaperProps {
 function ProjectPaper({ project, index, onClick }: ProjectPaperProps) {
   return (
     <div
+      role="button"
+      tabIndex={0}
+      aria-label={`${project.title} project`}
       onClick={(e) => {
         e.stopPropagation();
         onClick();
       }}
-      className="flex h-full w-full flex-col items-center justify-center gap-1 p-2 text-center transition-all hover:scale-105"
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          e.stopPropagation();
+          onClick();
+        }
+      }}
+      className="flex h-full w-full flex-col items-center justify-center gap-1 p-2 text-center transition-all hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:rounded"
     >
       {index === 0 && project.imageUrl && (
         <Image

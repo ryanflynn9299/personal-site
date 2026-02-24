@@ -8,7 +8,7 @@ import { env } from "@/lib/env";
 import type { Entity, SolarSystemViewProps } from "./types";
 import { buildEntities } from "./buildEntities";
 import { useComets } from "./useComets";
-import { getEntityPosition, getEntityClickPosition } from "./utils";
+import { getEntityPosition } from "./utils";
 import { Sun } from "./components/Sun";
 import { Entity as EntityComponent } from "./components/Entity";
 import { OrbitLine } from "./components/OrbitLine";

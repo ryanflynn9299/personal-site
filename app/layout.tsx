@@ -64,7 +64,7 @@ export default function RootLayout({
       lang="en"
       className={`${fontHeading.variable} ${fontSans.variable} ${fontInter.variable} ${fontMono.variable}`}
     >
-      <body className="text-slate-200 antialiased">
+      <body className="text-slate-200 antialiased" suppressHydrationWarning>
         <MatomoProvider />
         <ToastProvider>
           <div className="flex min-h-screen flex-col">

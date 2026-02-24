@@ -9,9 +9,6 @@ import type {
 import { env } from "@/lib/env";
 
 export function ViewDevControls() {
-  if (!env.devModeUI || env.isTest) {
-    return null;
-  }
   const [isExpanded, setIsExpanded] = useState(false);
   const {
     viewMode,
@@ -34,6 +31,10 @@ export function ViewDevControls() {
       new CustomEvent("viewDevControlsExpanded", { detail: { isExpanded } })
     );
   }, [isExpanded]);
+
+  if (!env.devModeUI || env.isTest) {
+    return null;
+  }
 
   const collapsedHeight = 60; // Approximate collapsed height
 

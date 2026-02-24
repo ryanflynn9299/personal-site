@@ -57,7 +57,7 @@ export default function VitaePage() {
             Work Experience
           </h2>
           <div className="mt-6 space-y-8">
-            {vitaeData.experience.map((job: any, index: number) => (
+            {vitaeData.experience.map((job: { role: string; period: string; company: string; description: string[] }, index: number) => (
               <div key={index}>
                 <div className="flex justify-between items-baseline">
                   <h3 className="text-lg font-semibold text-sky-300">
@@ -69,7 +69,7 @@ export default function VitaePage() {
                   {job.company}
                 </p>
                 <ul className="mt-4 space-y-2">
-                  {job.description.map((item: any, itemIndex: number) => {
+                  {job.description.map((item: string, itemIndex: number) => {
                     // Mix up the colors of the bullet points sufficiently
                     const colors =
                       colorPalette[
@@ -146,7 +146,7 @@ export default function VitaePage() {
                       and will render correctly without runtime errors.
                     */}
           <div className="mt-6 space-y-6">
-            {vitaeData.projects.map((project: any, index: number) => (
+            {vitaeData.projects.map((project: { name: string; link: string; description: string }, index: number) => (
               <div key={index}>
                 <h3 className="text-lg font-semibold text-sky-300 hover:underline">
                   <Link href={project.link}>{project.name}</Link>
@@ -164,7 +164,7 @@ export default function VitaePage() {
           </h2>
           {/* FIX 2 (cont.): The skills data is now a populated array of strings. */}
           <div className="mt-6 flex flex-wrap gap-2">
-            {vitaeData.skills.map((skill: any) => (
+            {vitaeData.skills.map((skill: string) => (
               <span
                 key={skill}
                 className="rounded-full bg-slate-700 px-3 py-1 text-sm font-medium text-sky-300"

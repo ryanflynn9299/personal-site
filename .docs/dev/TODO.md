@@ -16,37 +16,30 @@ _Start here - these are the most important items to tackle next_
 
 ### Next promotion
 
-- [ ] Script for .env sync
-- [ ] Add About page CTA(s)
-- [ ] Deep dive on Matomo
+- [x] Organize and slightly refine vitae details
+- [x] Script for .env sync
+- [x] Add About page CTA(s)
 - [x] Add a config for production quotes setup
 - [x] Formalize dev mode (with and without services)
-- [ ] Configure secrets for dev mode/local testing
-- [ ] Fix missing author from Directus call
-- [ ] Organize and slightly refine vitae details
-- [ ] connect counter to database
-- [ ] Add navigation between blog posts (prev/next)
+- [x] Fix missing author from Directus call
+- [x] Add navigation between blog posts (prev/next)
 - [x] Add loading states/screens for API calls
-- [ ] Update site metadata (title, description, favicon)
 - [x] Make client-primary
-- [ ] Flesh out project file cabinet idea
+- [x] Flesh out project file cabinet idea
 - [x] establish baseline code coverage
-- [ ] pre-commit check script (validate, test, compare coverage, build)
-- [ ] Improve pre-commit checks for PR (PR naming conventions, etc)
-- [ ] Reduce build time for PR pipeline
 - [x] Mandatory approvers to master/main
 - [x] global logging
 - [x] cloudflared
-- [ ] clean up dev tooling
-  - [ ] make component selection work
-  - [ ] clean up styling
-  - [ ] hide by default
-  - [ ] disable in config
-- [ ] Remove unused components
+- [x] clean up dev tooling
+  - [x] make component selection work
+  - [x] clean up styling
+  - [x] hide by default
+  - [x] disable in config
 
 ### Before Launch - After UI reviewers
 
 - [ ] Add professional headshot/profile images
+- [ ] Deep dive on Matomo
 - [x] images for about page
 - [ ] Ensure responsive design works on mobile devices
 - [ ] Figure out scalability for blog
@@ -57,8 +50,14 @@ _Start here - these are the most important items to tackle next_
 - [ ] Enable SEO for blogs in lib/seo.ts
 - [ ] Versioning system/methodology
 - [ ] Implement Terms and Privacy Policies wrt Matomo analytics
-- [ ] clean up eslint warnings
+- [x] clean up eslint warnings
 - [ ] add coverage check to main branch
+- [ ] Improve pre-commit checks for PR (PR naming conventions, etc)
+- [ ] pre-commit check script (validate, test, compare coverage, build)
+- [ ] Configure secrets for dev mode/local testing
+- [ ] Remove unused components
+- [ ] connect counter to database
+- [ ] Update site metadata (title, description, favicon)
 
 ### First promote after launch
 
@@ -68,6 +67,7 @@ _Start here - these are the most important items to tackle next_
 - [ ] Set up VSCode server and connect cursor for remote development pipeline
 - [ ] Set up remote teardown command
 - [ ] add slug hashing
+- [ ] Reduce build time for PR pipeline
 
 ### After Launch (Future)
 
