@@ -57,70 +57,81 @@ export default function VitaePage() {
             Work Experience
           </h2>
           <div className="mt-6 space-y-8">
-            {vitaeData.experience.map((job: { role: string; period: string; company: string; description: string[] }, index: number) => (
-              <div key={index}>
-                <div className="flex justify-between items-baseline">
-                  <h3 className="text-lg font-semibold text-sky-300">
-                    {job.role}
-                  </h3>
-                  <p className="text-sm text-slate-400">{job.period}</p>
-                </div>
-                <p className="text-md font-medium text-slate-200">
-                  {job.company}
-                </p>
-                <ul className="mt-4 space-y-2">
-                  {job.description.map((item: string, itemIndex: number) => {
-                    // Mix up the colors of the bullet points sufficiently
-                    const colors =
-                      colorPalette[
-                        (8 - index + itemIndex + 1) % colorPalette.length
-                      ];
-                    const isLastItem = itemIndex === job.description.length - 1;
+            {vitaeData.experience.map(
+              (
+                job: {
+                  role: string;
+                  period: string;
+                  company: string;
+                  description: string[];
+                },
+                index: number
+              ) => (
+                <div key={index}>
+                  <div className="flex justify-between items-baseline">
+                    <h3 className="text-lg font-semibold text-sky-300">
+                      {job.role}
+                    </h3>
+                    <p className="text-sm text-slate-400">{job.period}</p>
+                  </div>
+                  <p className="text-md font-medium text-slate-200">
+                    {job.company}
+                  </p>
+                  <ul className="mt-4 space-y-2">
+                    {job.description.map((item: string, itemIndex: number) => {
+                      // Mix up the colors of the bullet points sufficiently
+                      const colors =
+                        colorPalette[
+                          (8 - index + itemIndex + 1) % colorPalette.length
+                        ];
+                      const isLastItem =
+                        itemIndex === job.description.length - 1;
 
-                    return (
-                      <li
-                        key={itemIndex}
-                        className="relative flex gap-x-4 items-start"
-                      >
-                        {/* Vertical Line element. */}
-                        {/* It is only rendered if it's NOT the last item in the list. */}
-                        {!isLastItem && (
-                          <div className="absolute left-2 h-full top-4 bottom-0 w-px bg-slate-700" />
-                        )}
-
-                        {/* Dot: appears on top of the line due to DOM order. */}
-                        <div className="relative mt-2 flex h-4 w-4 flex-none items-center justify-center">
-                          <div
-                            className={`absolute h-full w-full rounded-full bg-slate-800 ring-1 ${colors.ring}`}
-                          />
-                          <div
-                            className={`relative h-1.5 w-1.5 rounded-full ${colors.bg}`}
-                          />
-                        </div>
-
-                        {/* Text Content: Add padding-bottom to ensure there's space for the line to draw into. */}
-                        <p
-                          className={`flex-auto text-slate-300 ${!isLastItem ? "pb-4" : ""}`}
+                      return (
+                        <li
+                          key={itemIndex}
+                          className="relative flex gap-x-4 items-start"
                         >
-                          {item}
-                        </p>
-                      </li>
-                    );
-                  })}
-                </ul>
-                {/** Fallback implementation: use > or // as simple text bullet points **/}
-                {/*<ul className="mt-2 space-y-1.5 text-slate-300">*/}
-                {/*    {job.description.map((item, itemIndex) => (*/}
-                {/*        <li key={itemIndex} className="flex gap-x-2">*/}
-                {/*            <span className="font-mono text-slate-500">{">"}</span>*/}
-                {/*            <span>{item}</span>*/}
-                {/*        </li>*/}
-                {/*    ))}*/}
-                {/*</ul>*/}
-                {/** Non-list implementation: **/}
-                {/*<p className="mt-2 text-slate-300">{job.description}</p>*/}
-              </div>
-            ))}
+                          {/* Vertical Line element. */}
+                          {/* It is only rendered if it's NOT the last item in the list. */}
+                          {!isLastItem && (
+                            <div className="absolute left-2 h-full top-4 bottom-0 w-px bg-slate-700" />
+                          )}
+
+                          {/* Dot: appears on top of the line due to DOM order. */}
+                          <div className="relative mt-2 flex h-4 w-4 flex-none items-center justify-center">
+                            <div
+                              className={`absolute h-full w-full rounded-full bg-slate-800 ring-1 ${colors.ring}`}
+                            />
+                            <div
+                              className={`relative h-1.5 w-1.5 rounded-full ${colors.bg}`}
+                            />
+                          </div>
+
+                          {/* Text Content: Add padding-bottom to ensure there's space for the line to draw into. */}
+                          <p
+                            className={`flex-auto text-slate-300 ${!isLastItem ? "pb-4" : ""}`}
+                          >
+                            {item}
+                          </p>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                  {/** Fallback implementation: use > or // as simple text bullet points **/}
+                  {/*<ul className="mt-2 space-y-1.5 text-slate-300">*/}
+                  {/*    {job.description.map((item, itemIndex) => (*/}
+                  {/*        <li key={itemIndex} className="flex gap-x-2">*/}
+                  {/*            <span className="font-mono text-slate-500">{">"}</span>*/}
+                  {/*            <span>{item}</span>*/}
+                  {/*        </li>*/}
+                  {/*    ))}*/}
+                  {/*</ul>*/}
+                  {/** Non-list implementation: **/}
+                  {/*<p className="mt-2 text-slate-300">{job.description}</p>*/}
+                </div>
+              )
+            )}
           </div>
         </section>
 
@@ -146,14 +157,19 @@ export default function VitaePage() {
                       and will render correctly without runtime errors.
                     */}
           <div className="mt-6 space-y-6">
-            {vitaeData.projects.map((project: { name: string; link: string; description: string }, index: number) => (
-              <div key={index}>
-                <h3 className="text-lg font-semibold text-sky-300 hover:underline">
-                  <Link href={project.link}>{project.name}</Link>
-                </h3>
-                <p className="mt-1 text-slate-300">{project.description}</p>
-              </div>
-            ))}
+            {vitaeData.projects.map(
+              (
+                project: { name: string; link: string; description: string },
+                index: number
+              ) => (
+                <div key={index}>
+                  <h3 className="text-lg font-semibold text-sky-300 hover:underline">
+                    <Link href={project.link}>{project.name}</Link>
+                  </h3>
+                  <p className="mt-1 text-slate-300">{project.description}</p>
+                </div>
+              )
+            )}
           </div>
         </section>
 

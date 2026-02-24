@@ -727,7 +727,9 @@ export async function getAdjacentPosts(
   const sortedPosts = [...posts].sort((a, b) => {
     const timeDiff =
       new Date(b.publish_date).getTime() - new Date(a.publish_date).getTime();
-    if (timeDiff !== 0) {return timeDiff;}
+    if (timeDiff !== 0) {
+      return timeDiff;
+    }
     return b.id.localeCompare(a.id);
   });
 

@@ -83,6 +83,6 @@ export const vitaeData = {
     "AWS",
     "REST APIs",
     "Pandas",
-    "Numpy"
+    "Numpy",
   ],
 };

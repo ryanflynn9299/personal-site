@@ -8,7 +8,9 @@ interface BlogPostNavigationProps {
 }
 
 export function BlogPostNavigation({ prev, next }: BlogPostNavigationProps) {
-  if (!prev && !next) {return null;}
+  if (!prev && !next) {
+    return null;
+  }
 
   return (
     <nav className="mt-16 flex flex-col justify-between gap-6 border-t border-slate-700 pt-8 sm:flex-row sm:items-center sm:gap-4 lg:mx-auto">

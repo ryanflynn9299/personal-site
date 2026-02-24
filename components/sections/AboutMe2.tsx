@@ -39,11 +39,11 @@ export function AboutMe2() {
             </h2>
             {/* TODO: revise this text */}
             <p className="mt-6 text-lg text-slate-300 leading-relaxed">
-              I&apos;m a software engineer who thrives on turning complex problems
-              into elegant, user-centric solutions. With a foundation in modern
-              web technologies and a deep appreciation for clean code, I focus
-              on building applications that are both powerful and delightful to
-              use.
+              I&apos;m a software engineer who thrives on turning complex
+              problems into elegant, user-centric solutions. With a foundation
+              in modern web technologies and a deep appreciation for clean code,
+              I focus on building applications that are both powerful and
+              delightful to use.
             </p>
             <p className="mt-4 text-lg text-slate-300 leading-relaxed">
               My goal is to not just write code, but to craft digital
