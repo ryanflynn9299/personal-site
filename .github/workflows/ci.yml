@@ -220,6 +220,8 @@ jobs:
         shardTotal: [4]
     env:
       NODE_ENV: "test"
+      PLAYWRIGHT_BROWSERS_PATH: 0
+      HOME: /root
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
