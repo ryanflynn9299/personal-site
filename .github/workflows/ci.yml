@@ -212,7 +212,7 @@ jobs:
     # Always run on protected branches (main/master), otherwise respect skip pattern
     if: needs.check-commit-message.outputs.skip-all != 'true' && (needs.check-commit-message.outputs.is-protected-branch == 'true' || needs.check-commit-message.outputs.skip-e2e != 'true')
     container:
-      image: mcr.microsoft.com/playwright:v1.48.0-jammy
+      image: mcr.microsoft.com/playwright:v1.57.0-jammy
     strategy:
       fail-fast: false
       matrix:
