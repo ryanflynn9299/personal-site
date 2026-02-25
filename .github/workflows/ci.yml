@@ -256,7 +256,7 @@ jobs:
         if: always()
         with:
           name: playwright-blob-${{ matrix.shardIndex }}
-          path: output/playwright-report/
+          path: blob-report/
           retention-days: 1
 
   build:
