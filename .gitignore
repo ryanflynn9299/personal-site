@@ -25,6 +25,7 @@
 /extensions
 /uploads
 /init-db/**
+stdout
 
 # misc
 .DS_Store
