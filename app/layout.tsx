@@ -5,10 +5,11 @@ import { Header } from "@/components/common/Header";
 import { Footer } from "@/components/common/Footer";
 import React from "react";
 import { ToastProvider } from "@/context/ToastContext";
-import { MatomoProvider } from "@/components/common/MatomoProvider";
+import { MatomoProvider } from "@/components/matomo/MatomoProvider";
 import { DevModeIndicator } from "@/components/common/DevModeIndicator";
 import { DevControls } from "@/components/common/DevControls";
 import { utils } from "@/constants/theme";
+import { runtime } from "@/lib/config";
 
 // Font configuration according to our design document
 const fontHeading = Montserrat({
@@ -36,7 +37,7 @@ const fontMono = JetBrains_Mono({
   variable: "--font-mono",
 });
 
-import { defaultMetadata } from "@/lib/seo";
+import { defaultMetadata } from "@/lib/site/seo";
 
 export const metadata: Metadata = {
   ...defaultMetadata,
@@ -63,16 +64,18 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${fontHeading.variable} ${fontSans.variable} ${fontInter.variable} ${fontMono.variable}`}
+      data-runtime-mode={runtime.mode}
+      data-test-mode={runtime.isTest ? "true" : "false"}
     >
       <body className="text-slate-200 antialiased" suppressHydrationWarning>
         <MatomoProvider />
         <ToastProvider>
           <div className="flex min-h-screen flex-col">
-            <DevModeIndicator />
+            {runtime.isDevelopment && <DevModeIndicator />}
             <Header />
             <main className="flex-grow">{children}</main>
             <Footer />
-            <DevControls />
+            {runtime.isDevelopment && <DevControls />}
           </div>
         </ToastProvider>
       </body>

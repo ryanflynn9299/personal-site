@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { QuotesPageClient } from "@/components/quotes/QuotesPageClient";
-import { generatePageMetadata } from "@/lib/seo";
+import { generatePageMetadata } from "@/lib/site/seo";
 
 export const metadata: Metadata = generatePageMetadata({
   title: "Quotes",

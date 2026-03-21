@@ -22,6 +22,12 @@ const nextConfig: NextConfig = {
   // Works with both Turbopack and webpack
   serverExternalPackages: ["thread-stream", "pino"],
 
+  // Explicitly set the project root for Turbopack to resolve multiple lockfiles warning
+  // In Next.js 16, this is a top-level property
+  turbopack: {
+    root: ".",
+  },
+
   images: {
     // 2. This is the corrected 'remotePatterns' syntax
     remotePatterns: [

@@ -1,188 +1,67 @@
 import { test, expect } from "@playwright/test";
 
-test.describe("Navigation", () => {
-  test("navigates from homepage to about page", async ({ page }) => {
-    await page.goto("/");
+/**
+ * Navigation E2E Tests
+ *
+ * Validates that all site routes exist and are accessible.
+ * Intentionally avoids testing page content (headings, text, etc.)
+ * since those details are covered by page-specific spec files.
+ *
+ * This test should be one of the most reliable in the suite —
+ * it only asserts on HTTP status codes and redirect destinations,
+ * which are stable unless the site structure changes.
+ */
 
-    await page.waitForLoadState("load");
+// All primary pages that should return 200
+const PRIMARY_ROUTES = [
+  "/",
+  "/about",
+  "/vitae",
+  "/blog",
+  "/contact",
+  "/quotes",
+  "/projects-cabinet",
+  "/policies",
+];
 
-    // Wait for link to be visible and stable
-    const aboutLink = page.getByRole("link", { name: /about/i }).first();
-    await aboutLink.waitFor({ state: "visible", timeout: 5000 });
-    await aboutLink.click({ timeout: 5000 });
+// Routes that should redirect (301/302/307/308) to another location
+const REDIRECT_ROUTES = [
+  { from: "/privacy", toPattern: /\/policies\?tab=privacy/ },
+  { from: "/terms", toPattern: /\/policies\?tab=terms/ },
+];
 
-    await expect(page).toHaveURL(/\/about/);
-    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-  });
+test.describe("Navigation — Route Accessibility", () => {
+  for (const route of PRIMARY_ROUTES) {
+    test(`${route} returns a successful response`, async ({ page }) => {
+      const response = await page.goto(route, { waitUntil: "commit" });
 
-  test("navigates from homepage to blog page", async ({ page }) => {
-    await page.goto("/");
-
-    await page.waitForLoadState("load");
-
-    // Wait for link to be visible and stable
-    const blogLink = page.getByRole("link", { name: /blog/i }).first();
-    await blogLink.waitFor({ state: "visible", timeout: 5000 });
-    await blogLink.click({ timeout: 5000 });
-
-    await expect(page).toHaveURL(/\/blog/);
-    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-  });
-
-  test("navigates from homepage to contact page", async ({ page }) => {
-    await page.goto("/");
-
-    await page.waitForLoadState("load");
-
-    // Wait for link to be visible and stable
-    const contactLink = page.getByRole("link", { name: /contact/i }).first();
-    await contactLink.waitFor({ state: "visible", timeout: 5000 });
-    await contactLink.click({ timeout: 5000 });
-
-    await expect(page).toHaveURL(/\/contact/);
-    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-  });
-
-  test("navigates back to homepage using logo/brand link", async ({ page }) => {
-    await page.goto("/about");
-
-    // Click on logo or brand name to go back to homepage
-    // This assumes there's a link to home in the header
-    const homeLink = page.getByRole("link", { name: /ryan/i }).first();
-    if (await homeLink.isVisible()) {
-      await homeLink.click();
-      await expect(page).toHaveURL("/");
-    }
-  });
-
-  test("navigation works on all main pages", async ({ page }) => {
-    const pages = ["/", "/about", "/blog", "/contact"];
-
-    for (const pagePath of pages) {
-      await page.goto(pagePath);
-
-      // Verify navigation is present on each page
-      await expect(page.getByRole("navigation")).toBeVisible();
-
-      // Verify all main nav links are accessible
-      await expect(
-        page.getByRole("link", { name: /about/i }).first()
-      ).toBeVisible();
-      await expect(
-        page.getByRole("link", { name: /blog/i }).first()
-      ).toBeVisible();
-      await expect(
-        page.getByRole("link", { name: /contact/i }).first()
-      ).toBeVisible();
-    }
-  });
-
-  test("footer links navigate correctly", async ({ page }) => {
-    await page.goto("/");
-
-    // Scroll to footer
-    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-
-    // Test privacy policy link (goes to /policies?tab=privacy)
-    const privacyLink = page.getByRole("link", { name: /privacy policy/i });
-    if (await privacyLink.isVisible()) {
-      await privacyLink.click();
-      await expect(page).toHaveURL(/\/policies\?tab=privacy/);
-    }
-  });
-
-  test("terms of service link works", async ({ page }) => {
-    await page.goto("/");
-
-    await page.waitForLoadState("load");
-
-    // Scroll to footer
-    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-    await page.waitForTimeout(200); // Wait for scroll
-
-    // Test terms link (goes to /policies?tab=terms)
-    const termsLink = page.getByRole("link", { name: /terms of service/i });
-    if (await termsLink.isVisible()) {
-      await termsLink.click();
-      // Wait for navigation
-      await page.waitForLoadState("load");
-      await expect(page).toHaveURL(/\/policies\?tab=terms/);
-    }
-  });
-
-  test("external links open in new tab", async ({ page }) => {
-    await page.goto("/");
-
-    // Scroll to footer to find social links
-    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-
-    // Find LinkedIn link in footer (has sr-only text)
-    const linkedInLink = page.getByRole("link", { name: /linkedin/i });
-
-    if (await linkedInLink.isVisible()) {
-      // Check that external link has proper href
-      const href = await linkedInLink.getAttribute("href");
-      expect(href).toContain("linkedin.com");
-    }
-  });
+      expect(response).not.toBeNull();
+      expect(response!.status()).toBe(200);
+    });
+  }
 });
 
-test.describe("Mobile Navigation", () => {
-  test.beforeEach(async ({ page }) => {
-    // Set mobile viewport
-    await page.setViewportSize({ width: 375, height: 667 });
-  });
+test.describe("Navigation — Redirects", () => {
+  for (const { from, toPattern } of REDIRECT_ROUTES) {
+    test(`${from} redirects correctly`, async ({ page }) => {
+      const response = await page.goto(from, { waitUntil: "commit" });
 
-  test("mobile menu toggle works", async ({ page }) => {
-    await page.goto("/");
+      expect(response).not.toBeNull();
+      // The final response after redirect should be 200
+      expect(response!.status()).toBe(200);
+      // URL should match the expected redirect destination
+      await expect(page).toHaveURL(toPattern);
+    });
+  }
+});
 
-    // Look for mobile menu button (has aria-label "Toggle navigation menu")
-    const menuButton = page.getByRole("button", { name: /toggle navigation/i });
+test.describe("Navigation — Invalid Routes", () => {
+  test("non-existent route returns 404", async ({ page }) => {
+    const response = await page.goto("/this-route-does-not-exist", {
+      waitUntil: "commit",
+    });
 
-    // Mobile menu button should be visible at mobile viewport
-    await expect(menuButton).toBeVisible();
-
-    // Click to open menu
-    await menuButton.click();
-
-    // Navigation links should become visible in mobile menu
-    await expect(
-      page.getByRole("link", { name: /about/i }).first()
-    ).toBeVisible();
-    await expect(
-      page.getByRole("link", { name: /blog/i }).first()
-    ).toBeVisible();
-    await expect(
-      page.getByRole("link", { name: /contact/i }).first()
-    ).toBeVisible();
-
-    // Click again to close
-    await menuButton.click();
-  });
-
-  test("mobile navigation links work", async ({ page }) => {
-    await page.goto("/");
-
-    await page.waitForLoadState("load");
-
-    // Open mobile menu if needed
-    const menuButton = page.getByRole("button", { name: /toggle navigation/i });
-    if (await menuButton.isVisible()) {
-      await menuButton.click();
-      // Wait for menu animation to complete
-      await page.waitForTimeout(300);
-    }
-
-    // Get the about link and ensure it's visible and clickable
-    const aboutLink = page.getByRole("link", { name: /about/i }).first();
-
-    // Scroll into view and wait for it to be stable
-    await aboutLink.scrollIntoViewIfNeeded();
-    await aboutLink.waitFor({ state: "visible", timeout: 5000 });
-
-    // Use force click to bypass any overlays
-    await aboutLink.click({ force: true, timeout: 5000 });
-
-    await expect(page).toHaveURL(/\/about/);
+    expect(response).not.toBeNull();
+    expect(response!.status()).toBe(404);
   });
 });

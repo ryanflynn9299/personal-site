@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { ContactPageClient } from "@/components/contact/ContactPageClient";
-import { isEmailServiceConfigured } from "@/lib/email-service";
-import { generatePageMetadata } from "@/lib/seo";
+import { isEmailServiceConfigured } from "@/lib/services/email-service";
+import { generatePageMetadata } from "@/lib/site/seo";
 
 export const metadata: Metadata = generatePageMetadata({
   title: "Contact",

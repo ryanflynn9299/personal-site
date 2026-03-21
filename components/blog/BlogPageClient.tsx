@@ -11,14 +11,22 @@ import { SearchButton } from "@/components/blog/SearchButton";
 import { FileText } from "lucide-react";
 import { Dialog } from "radix-ui";
 import { ServiceUnavailable } from "@/components/common/ServiceUnavailable";
-import { trackBlogSearch } from "@/components/common/Matomo";
+import { trackBlogSearch } from "@/components/matomo/Matomo";
 
 interface BlogPageClientProps {
   status: "success" | "error";
   posts: Post[];
+  currentPage: number;
+  totalPages: number;
+  limit: number;
 }
 
-export function BlogPageClient({ posts, status }: BlogPageClientProps) {
+export function BlogPageClient({
+  posts,
+  status,
+  currentPage,
+  totalPages,
+}: BlogPageClientProps) {
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [, startTransition] = useTransition();
@@ -95,10 +103,48 @@ export function BlogPageClient({ posts, status }: BlogPageClientProps) {
 
     // If successful and there are posts, render the grid
     return (
-      <div className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-        {posts.map((post) => (
-          <PostCard key={post.id} post={post} />
-        ))}
+      <div className="mt-12 flex flex-col gap-12">
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          {posts.map((post) => (
+            <PostCard key={post.id} post={post} />
+          ))}
+        </div>
+
+        {totalPages > 1 && (
+          <div className="flex items-center justify-center gap-4 pt-4 border-t border-slate-800/50">
+            {currentPage > 1 ? (
+              <Link
+                href={`/blog?page=${currentPage - 1}`}
+                className="rounded-md border border-slate-700 bg-slate-800 px-4 py-2 text-sm font-medium text-slate-200 hover:bg-slate-700 transition-colors"
+                aria-label="Previous Page"
+              >
+                Previous
+              </Link>
+            ) : (
+              <span className="rounded-md border border-slate-800 bg-slate-900 px-4 py-2 text-sm font-medium text-slate-600 opacity-50 cursor-not-allowed">
+                Previous
+              </span>
+            )}
+
+            <div className="text-sm font-medium text-slate-400">
+              Page {currentPage} of {totalPages}
+            </div>
+
+            {currentPage < totalPages ? (
+              <Link
+                href={`/blog?page=${currentPage + 1}`}
+                className="rounded-md border border-slate-700 bg-slate-800 px-4 py-2 text-sm font-medium text-slate-200 hover:bg-slate-700 transition-colors"
+                aria-label="Next Page"
+              >
+                Next
+              </Link>
+            ) : (
+              <span className="rounded-md border border-slate-800 bg-slate-900 px-4 py-2 text-sm font-medium text-slate-600 opacity-50 cursor-not-allowed">
+                Next
+              </span>
+            )}
+          </div>
+        )}
       </div>
     );
   };

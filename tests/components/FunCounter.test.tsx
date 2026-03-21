@@ -3,7 +3,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { FunCounter } from "@/components/contact/FunCounter";
 
-import { shouldShowDevIndicator } from "@/lib/features";
+import { shouldShowDevIndicator } from "@/lib/dev-tooling/features";
 
 // Mock framer-motion
 vi.mock("framer-motion", () => ({
@@ -26,7 +26,7 @@ vi.mock("@/app/actions/counter", () => ({
 }));
 
 // Mock feature flags
-vi.mock("@/lib/features", () => ({
+vi.mock("@/lib/dev-tooling/features", () => ({
   isFeatureEnabled: vi.fn(() => true),
   shouldShowDevIndicator: vi.fn(() => false),
 }));

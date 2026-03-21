@@ -1,7 +1,9 @@
 "use client";
 
-import { Code, AlertCircle } from "lucide-react";
-import { env, isDirectusEnabled } from "@/lib/env";
+import { useEffect, useState } from "react";
+import { Code, AlertCircle, Rocket } from "lucide-react";
+import Link from "next/link";
+import { runtime, isDirectusConfigured } from "@/lib/config";
 
 /**
  * Dev Mode Indicator Component
@@ -10,13 +12,16 @@ import { env, isDirectusEnabled } from "@/lib/env";
  * Only displays in development modes (live-dev or offline-dev).
  */
 export function DevModeIndicator() {
-  // Only show in development modes
-  if (!env.isDevelopment) {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
+  // Only show in development modes on the client
+  if (!mounted || !runtime.isDevelopment) {
     return null;
   }
 
-  const directusEnabled = isDirectusEnabled();
-  const modeLabel = env.isLiveDev ? "Live Dev" : "Offline Dev";
+  const directusEnabled = isDirectusConfigured();
+  const modeLabel = runtime.isLiveDev ? "Live Dev" : "Offline Dev";
   const serviceStatus = directusEnabled
     ? "Services connected"
     : "Services offline";
@@ -27,7 +32,7 @@ export function DevModeIndicator() {
       <div className="absolute inset-0 bg-slate-800 -z-10"></div>
       {/* Amber overlay to maintain original look */}
       <div className="absolute inset-0 bg-amber-500/5 -z-[5]"></div>
-      <div className="container mx-auto flex flex-col items-center justify-center gap-1 text-center sm:flex-row sm:gap-2 sm:text-sm relative">
+      <div className="container mx-auto flex flex-col items-center justify-center gap-1 text-center sm:flex-row sm:gap-4 sm:text-sm relative">
         <div className="flex items-center gap-2">
           <Code className="h-4 w-4 text-amber-400 flex-shrink-0" />
           <span className="font-bold text-amber-300">
@@ -35,9 +40,19 @@ export function DevModeIndicator() {
           </span>
         </div>
         <span className="hidden text-slate-400 sm:inline">•</span>
-        <span className="text-xs text-slate-400 sm:text-sm">
-          {serviceStatus}
-        </span>
+        <div className="flex items-center gap-4">
+          <span className="text-xs text-slate-400 sm:text-sm">
+            {serviceStatus}
+          </span>
+
+          <Link
+            href="/admin/dashboard"
+            className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 hover:bg-amber-500/20 transition-all text-amber-200 hover:text-amber-100 text-[10px] font-bold uppercase tracking-wider group"
+          >
+            <Rocket className="h-3 w-3 text-amber-400 group-hover:scale-110 transition-transform" />
+            Shuttle Control
+          </Link>
+        </div>
       </div>
     </div>
   );
@@ -51,9 +66,9 @@ export function DevModeIndicator() {
  * - Offline-dev: Informational (services intentionally disabled)
  */
 export function ServiceUnavailableWithDevMode() {
-  const isProduction = env.isProduction;
-  const isLiveDev = env.isLiveDev;
-  const isOfflineDev = env.isOfflineDev;
+  const isProduction = runtime.isProduction;
+  const isLiveDev = runtime.isLiveDev;
+  const isOfflineDev = runtime.isOfflineDev;
 
   // Production and live-dev: This is a real error
   if (isProduction || isLiveDev) {
@@ -74,7 +89,7 @@ export function ServiceUnavailableWithDevMode() {
             <li>
               Set{" "}
               <code className="bg-slate-700 px-1 rounded">
-                DIRECTUS_URL_SERVER_SIDE
+                DIRECTUS_INTERNAL_URL
               </code>{" "}
               in .env
             </li>
@@ -102,7 +117,9 @@ export function ServiceUnavailableWithDevMode() {
         </h3>
         <p className="mt-2 text-slate-400">
           Services are intentionally disabled in offline dev mode. Set{" "}
-          <code className="bg-slate-700 px-1 rounded">APP_MODE=live-dev</code>{" "}
+          <code className="bg-slate-700 px-1 rounded">
+            RUNTIME_MODE=live-dev
+          </code>{" "}
           to enable service connections.
         </p>
       </div>

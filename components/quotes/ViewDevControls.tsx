@@ -6,7 +6,7 @@ import type {
   NormalVariant,
   ConstellationVariant,
 } from "@/app/(portfolio)/quotes/config";
-import { env } from "@/lib/env";
+import { runtime } from "@/lib/config";
 
 export function ViewDevControls() {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -32,7 +32,7 @@ export function ViewDevControls() {
     );
   }, [isExpanded]);
 
-  if (!env.devModeUI || env.isTest) {
+  if (!runtime.previewFeatures || runtime.isTest) {
     return null;
   }
 

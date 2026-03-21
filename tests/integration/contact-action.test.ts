@@ -1,9 +1,9 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { submitContactForm } from "@/app/actions/contact";
-import * as emailService from "@/lib/email-service";
+import * as emailService from "@/lib/services/email-service";
 
 // Mock logger to avoid console output during tests
-vi.mock("@/lib/logger", () => {
+vi.mock("@/lib/dev-tooling/logger", () => {
   const mockLogger = {
     info: vi.fn(),
     warn: vi.fn(),
@@ -20,7 +20,7 @@ vi.mock("@/lib/logger", () => {
 });
 
 // Mock the email service module to avoid delays in tests
-vi.mock("@/lib/email-service", () => ({
+vi.mock("@/lib/services/email-service", () => ({
   isEmailServiceConfigured: vi.fn(),
   sendEmail: vi.fn().mockImplementation(async () => {
     // Return immediately without delay for tests
@@ -31,8 +31,62 @@ vi.mock("@/lib/email-service", () => ({
   }),
 }));
 
+// Mock the config module to allow it to be dynamic for tests
+vi.mock("@/lib/config", async () => {
+  const actual =
+    await vi.importActual<typeof import("@/lib/config")>("@/lib/config");
+  return {
+    ...actual,
+    config: {
+      ...actual.config,
+      get runtimeMode() {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        return (process.env.RUNTIME_MODE as any) || actual.config.runtimeMode;
+      },
+    },
+    runtime: {
+      get mode() {
+        return process.env.RUNTIME_MODE || "offline-dev";
+      },
+      get isProduction() {
+        return process.env.RUNTIME_MODE === "production";
+      },
+      get isDevelopment() {
+        return (
+          process.env.RUNTIME_MODE === "live-dev" ||
+          process.env.RUNTIME_MODE === "offline-dev"
+        );
+      },
+      get isLiveDev() {
+        return process.env.RUNTIME_MODE === "live-dev";
+      },
+      get isOfflineDev() {
+        return process.env.RUNTIME_MODE === "offline-dev";
+      },
+      get isTest() {
+        return process.env.RUNTIME_MODE === "test";
+      },
+      get connectToServices() {
+        return (
+          process.env.RUNTIME_MODE === "production" ||
+          process.env.RUNTIME_MODE === "live-dev"
+        );
+      },
+      get treatServiceErrorsAsReal() {
+        return (
+          process.env.RUNTIME_MODE === "production" ||
+          process.env.RUNTIME_MODE === "live-dev"
+        );
+      },
+      get previewFeatures() {
+        return process.env.ENABLE_PREVIEW_FEATURES === "true";
+      },
+    },
+  };
+});
+
 // Mock the delay function to ensure no delays in tests
-vi.mock("@/lib/delay", () => ({
+vi.mock("@/lib/dev-tooling/delay", () => ({
   delay: vi.fn().mockResolvedValue(undefined),
 }));
 
@@ -40,7 +94,7 @@ describe("submitContactForm", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     // Set test mode - services are disabled in test mode
-    vi.stubEnv("APP_MODE", "test");
+    vi.stubEnv("RUNTIME_MODE", "test");
     vi.stubEnv("NODE_ENV", "test");
   });
 
@@ -87,7 +141,7 @@ describe("submitContactForm", () => {
   });
 
   it("handles missing email service in offline-dev mode", async () => {
-    vi.stubEnv("APP_MODE", "offline-dev");
+    vi.stubEnv("RUNTIME_MODE", "offline-dev");
     vi.stubEnv("NODE_ENV", "development");
     vi.mocked(emailService.isEmailServiceConfigured).mockReturnValue(false);
 
@@ -100,11 +154,11 @@ describe("submitContactForm", () => {
 
     expect(result.success).toBe(true);
     expect(result.emailSent).toBe(false);
-    expect(result.message).toContain("offline dev mode");
+    expect(result.message).toContain("Development Mode: Submission received");
   });
 
   it("handles missing email service in production (returns error)", async () => {
-    vi.stubEnv("APP_MODE", "production");
+    vi.stubEnv("RUNTIME_MODE", "production");
     vi.stubEnv("NODE_ENV", "production");
     vi.mocked(emailService.isEmailServiceConfigured).mockReturnValue(false);
 
@@ -117,7 +171,7 @@ describe("submitContactForm", () => {
 
     // In production, missing service is a real error
     expect(result.success).toBe(false);
-    expect(result.error).toContain("Email service is not configured");
+    expect(result.error).toContain("Failed to process your message");
   });
 
   it("returns success when email service is configured", async () => {

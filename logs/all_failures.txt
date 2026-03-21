@@ -1,0 +1,631 @@
+
+Running 264 tests using 1 worker
+
+[1A[2K[1/264] [chromium] › tests/e2e/about.spec.ts:8:7 › About Page › loads main content and sections properly
+[1A[2K  1) [chromium] › tests/e2e/about.spec.ts:8:7 › About Page › loads main content and sections properly 
+
+    Error: locator.scrollIntoViewIfNeeded: Element is not attached to the DOM
+    Call log:
+    [2m  - attempting scroll into view action[22m
+    [2m    - waiting for element to be stable[22m
+
+
+      14 |     // The text sections use Framer Motion whileInView, so we scroll to ensure they render
+      15 |     const philHeading = page.getByRole("heading", { name: "My Philosophy" });
+    > 16 |     await philHeading.scrollIntoViewIfNeeded();
+         |                       ^
+      17 |     await expect(philHeading).toBeVisible();
+      18 |
+      19 |     // Check Project Work section
+        at /Users/ryanflynn/personal-site/personal-site/tests/e2e/about.spec.ts:16:23
+
+    Error Context: output/test-results/about-About-Page-loads-main-content-and-sections-properly-chromium/error-context.md
+
+
+[1A[2K[2/264] [chromium] › tests/e2e/about.spec.ts:25:7 › About Page › renders the Core Values Grid
+[1A[2K  2) [chromium] › tests/e2e/about.spec.ts:25:7 › About Page › renders the Core Values Grid ─────────
+
+    Error: locator.scrollIntoViewIfNeeded: Element is not attached to the DOM
+    Call log:
+    [2m  - attempting scroll into view action[22m
+    [2m    - waiting for element to be stable[22m
+
+
+      27 |       .locator("h3.font-heading:has-text('Craftsmanship')")
+      28 |       .first();
+    > 29 |     await firstValueHeading.scrollIntoViewIfNeeded();
+         |                             ^
+      30 |     await expect(firstValueHeading).toBeVisible();
+      31 |   });
+      32 |
+        at /Users/ryanflynn/personal-site/personal-site/tests/e2e/about.spec.ts:29:29
+
+    Error Context: output/test-results/about-About-Page-renders-the-Core-Values-Grid-chromium/error-context.md
+
+
+[1A[2K[3/264] [chromium] › tests/e2e/about.spec.ts:33:7 › About Page › renders the Call-to-Action section correctly
+[1A[2K  3) [chromium] › tests/e2e/about.spec.ts:33:7 › About Page › renders the Call-to-Action section correctly 
+
+    Error: locator.scrollIntoViewIfNeeded: Element is not attached to the DOM
+    Call log:
+    [2m  - attempting scroll into view action[22m
+    [2m    - waiting for element to be stable[22m
+
+
+      36 |       name: /Read Vitae|View My Vitae/i,
+      37 |     });
+    > 38 |     await vitaeCTA.scrollIntoViewIfNeeded();
+         |                    ^
+      39 |     await expect(vitaeCTA).toBeVisible();
+      40 |
+      41 |     // Contact Link
+        at /Users/ryanflynn/personal-site/personal-site/tests/e2e/about.spec.ts:38:20
+
+    Error Context: output/test-results/about-About-Page-renders-t-e4bc1-to-Action-section-correctly-chromium/error-context.md
+
+
+[1A[2K[4/264] [chromium] › tests/e2e/about.spec.ts:49:7 › About Page › CTA interactions navigate users successfully
+[1A[2K  4) [chromium] › tests/e2e/about.spec.ts:49:7 › About Page › CTA interactions navigate users successfully 
+
+    Error: locator.scrollIntoViewIfNeeded: Element is not attached to the DOM
+    Call log:
+    [2m  - attempting scroll into view action[22m
+    [2m    - waiting for element to be stable[22m
+
+
+      51 |       name: /Contact Me|Get in Touch/i,
+      52 |     });
+    > 53 |     await contactCTA.scrollIntoViewIfNeeded();
+         |                      ^
+      54 |     await contactCTA.click();
+      55 |     await expect(page).toHaveURL(/\/contact/);
+      56 |   });
+        at /Users/ryanflynn/personal-site/personal-site/tests/e2e/about.spec.ts:53:22
+
+    Error Context: output/test-results/about-About-Page-CTA-inter-f264d-navigate-users-successfully-chromium/error-context.md
+
+
+[1A[2K[5/264] [chromium] › tests/e2e/accessibility.spec.ts:7:9 › Accessibility › / has proper heading hierarchy
+[1A[2K[6/264] [chromium] › tests/e2e/accessibility.spec.ts:15:9 › Accessibility › / has accessible navigation
+[1A[2K[7/264] [chromium] › tests/e2e/accessibility.spec.ts:23:9 › Accessibility › / has proper link text
+[1A[2K[8/264] [chromium] › tests/e2e/accessibility.spec.ts:35:9 › Accessibility › / images have alt text
+[1A[2K[9/264] [chromium] › tests/e2e/accessibility.spec.ts:7:9 › Accessibility › /about has proper heading hierarchy
+[1A[2K[10/264] [chromium] › tests/e2e/accessibility.spec.ts:15:9 › Accessibility › /about has accessible navigation
+[1A[2K[11/264] [chromium] › tests/e2e/accessibility.spec.ts:23:9 › Accessibility › /about has proper link text
+[1A[2K[12/264] [chromium] › tests/e2e/accessibility.spec.ts:35:9 › Accessibility › /about images have alt text
+[1A[2K[13/264] [chromium] › tests/e2e/accessibility.spec.ts:7:9 › Accessibility › /blog has proper heading hierarchy
+[1A[2K[14/264] [chromium] › tests/e2e/accessibility.spec.ts:15:9 › Accessibility › /blog has accessible navigation
+[1A[2K[15/264] [chromium] › tests/e2e/accessibility.spec.ts:23:9 › Accessibility › /blog has proper link text
+[1A[2K[16/264] [chromium] › tests/e2e/accessibility.spec.ts:35:9 › Accessibility › /blog images have alt text
+[1A[2K[17/264] [chromium] › tests/e2e/accessibility.spec.ts:7:9 › Accessibility › /contact has proper heading hierarchy
+[1A[2K[18/264] [chromium] › tests/e2e/accessibility.spec.ts:15:9 › Accessibility › /contact has accessible navigation
+[1A[2K[19/264] [chromium] › tests/e2e/accessibility.spec.ts:23:9 › Accessibility › /contact has proper link text
+[1A[2K[20/264] [chromium] › tests/e2e/accessibility.spec.ts:35:9 › Accessibility › /contact images have alt text
+[1A[2K[21/264] [chromium] › tests/e2e/accessibility.spec.ts:53:7 › Accessibility › skip link exists for keyboard navigation
+[1A[2K[22/264] [chromium] › tests/e2e/accessibility.spec.ts:74:7 › Accessibility › forms have proper labels
+[1A[2K[23/264] [chromium] › tests/e2e/accessibility.spec.ts:109:7 › Accessibility › focus is visible on interactive elements
+[1A[2K[24/264] [chromium] › tests/e2e/accessibility.spec.ts:148:7 › Accessibility › color contrast is sufficient
+[1A[2K[25/264] [chromium] › tests/e2e/accessibility.spec.ts:164:7 › Keyboard Navigation › can navigate through page with keyboard
+[1A[2K[26/264] [chromium] › tests/e2e/accessibility.spec.ts:180:7 › Keyboard Navigation › can navigate backwards with Shift+Tab
+[1A[2K[27/264] [chromium] › tests/e2e/accessibility.spec.ts:196:7 › Keyboard Navigation › Enter key activates links
+[1A[2K[28/264] [chromium] › tests/e2e/accessibility.spec.ts:227:7 › Keyboard Navigation › Escape key closes modals/menus
+[1A[2K[29/264] [chromium] › tests/e2e/blog.spec.ts:8:7 › Blog Page › displays blog page with heading
+[1A[2K[30/264] [chromium] › tests/e2e/blog.spec.ts:14:7 › Blog Page › shows blog posts or empty state
+[1A[2K[31/264] [chromium] › tests/e2e/blog.spec.ts:34:7 › Blog Page › blog post cards are clickable
+[1A[2K[32/264] [chromium] › tests/e2e/blog.spec.ts:54:7 › Blog Page › displays search functionality if available
+[1A[2K[33/264] [chromium] › tests/e2e/blog.spec.ts:74:7 › Blog Post Page › displays 404 for non-existent post
+[1A[2K[34/264] [chromium] › tests/e2e/blog.spec.ts:84:7 › Blog Post Page › blog post page has correct structure
+[1A[2K[35/264] [chromium] › tests/e2e/blog.spec.ts:105:7 › Blog Post Page › blog post has back navigation
+[1A[2K[36/264] [chromium] › tests/e2e/blog.spec.ts:125:7 › Blog - Responsive › blog page works on mobile
+[1A[2K[37/264] [chromium] › tests/e2e/blog.spec.ts:133:7 › Blog - Responsive › blog page works on tablet
+[1A[2K[38/264] [chromium] › tests/e2e/contact.spec.ts:8:7 › Contact Page › displays contact page with form
+[1A[2K[39/264] [chromium] › tests/e2e/contact.spec.ts:25:7 › Contact Page › displays direct contact information
+[1A[2K[40/264] [chromium] › tests/e2e/contact.spec.ts:44:7 › Contact Page › shows validation for empty form submission
+[1A[2K[41/264] [chromium] › tests/e2e/contact.spec.ts:58:7 › Contact Page › shows validation for invalid email
+[1A[2K[42/264] [chromium] › tests/e2e/contact.spec.ts:75:7 › Contact Page › submits form with valid data
+[1A[2K  5) [chromium] › tests/e2e/contact.spec.ts:75:7 › Contact Page › submits form with valid data ─────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByText(/message sent|cannot be sent|thank you/i).first()
+    Expected: visible
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 10000ms[22m
+    [2m  - waiting for getByText(/message sent|cannot be sent|thank you/i).first()[22m
+
+
+      88 |     await expect(
+      89 |       page.getByText(/message sent|cannot be sent|thank you/i).first()
+    > 90 |     ).toBeVisible({ timeout: 10000 });
+         |       ^
+      91 |   });
+      92 |
+      93 |   test("shows loading state during submission", async ({ page }) => {
+        at /Users/ryanflynn/personal-site/personal-site/tests/e2e/contact.spec.ts:90:7
+
+    Error Context: output/test-results/contact-Contact-Page-submits-form-with-valid-data-chromium/error-context.md
+
+
+[1A[2K[43/264] [chromium] › tests/e2e/contact.spec.ts:93:7 › Contact Page › shows loading state during submission
+[1A[2K[44/264] [chromium] › tests/e2e/contact.spec.ts:117:7 › Contact Page › email link has correct mailto href
+[1A[2K[45/264] [chromium] › tests/e2e/contact.spec.ts:127:7 › Contact Page › LinkedIn link opens in new tab
+[1A[2K[46/264] [chromium] › tests/e2e/contact.spec.ts:147:7 › Contact Page - Mobile › form is usable on mobile
+[1A[2K[47/264] [chromium] › tests/e2e/error-pages.spec.ts:4:7 › Error Pages › displays 404 page for non-existent routes
+[1A[2K[48/264] [chromium] › tests/e2e/error-pages.spec.ts:13:7 › Error Pages › 404 page has navigation back to home
+[1A[2K[49/264] [chromium] › tests/e2e/error-pages.spec.ts:26:7 › Error Pages › 404 page maintains site styling
+[1A[2K[50/264] [chromium] › tests/e2e/error-pages.spec.ts:38:7 › Error Pages › deeply nested non-existent route shows 404
+[1A[2K[51/264] [chromium] › tests/e2e/error-pages.spec.ts:49:7 › Policy Pages › privacy policy page loads (redirects to /policies)
+[1A[2K[52/264] [chromium] › tests/e2e/error-pages.spec.ts:60:7 › Policy Pages › terms of service page loads (redirects to /policies)
+[1A[2K[53/264] [chromium] › tests/e2e/error-pages.spec.ts:71:7 › Policy Pages › policies page loads directly
+[1A[2K[54/264] [chromium] › tests/e2e/error-pages.spec.ts:80:7 › About Page › about page loads correctly
+[1A[2K[55/264] [chromium] › tests/e2e/error-pages.spec.ts:87:7 › About Page › about page has content
+[1A[2K[56/264] [chromium] › tests/e2e/error-pages.spec.ts:101:7 › Vitae/CV Page › vitae page loads if it exists
+[1A[2K[57/264] [chromium] › tests/e2e/homepage.spec.ts:8:7 › Homepage › loads and displays main content
+[1A[2K[58/264] [chromium] › tests/e2e/homepage.spec.ts:17:7 › Homepage › displays navigation header
+[1A[2K[59/264] [chromium] › tests/e2e/homepage.spec.ts:33:7 › Homepage › displays footer with links
+[1A[2K[60/264] [chromium] › tests/e2e/homepage.spec.ts:46:7 › Homepage › has responsive layout on mobile
+[1A[2K[61/264] [chromium] › tests/e2e/homepage.spec.ts:57:7 › Homepage › has responsive layout on tablet
+[1A[2K[62/264] [chromium] › tests/e2e/homepage.spec.ts:65:7 › Homepage › loads without console errors
+[1A[2K[63/264] [chromium] › tests/e2e/navigation.spec.ts:4:7 › Navigation › navigates from homepage to about page
+[1A[2K[64/264] [chromium] › tests/e2e/navigation.spec.ts:16:7 › Navigation › navigates from homepage to blog page
+[1A[2K[65/264] [chromium] › tests/e2e/navigation.spec.ts:28:7 › Navigation › navigates from homepage to contact page
+[1A[2K[66/264] [chromium] › tests/e2e/navigation.spec.ts:40:7 › Navigation › navigates back to homepage using logo/brand link
+[1A[2K[67/264] [chromium] › tests/e2e/navigation.spec.ts:52:7 › Navigation › navigation works on all main pages
+[1A[2K[68/264] [chromium] › tests/e2e/navigation.spec.ts:74:7 › Navigation › footer links navigate correctly
+[1A[2K[69/264] [chromium] › tests/e2e/navigation.spec.ts:89:7 › Navigation › terms of service link works
+[1A[2K[70/264] [chromium] › tests/e2e/navigation.spec.ts:108:7 › Navigation › external links open in new tab
+[1A[2K[71/264] [chromium] › tests/e2e/navigation.spec.ts:132:7 › Mobile Navigation › mobile menu toggle works
+[1A[2K[72/264] [chromium] › tests/e2e/navigation.spec.ts:157:7 › Mobile Navigation › mobile navigation links work
+[1A[2K[73/264] [chromium] › tests/e2e/policies.spec.ts:4:7 › Policies Page › direct routes trigger proper redirects
+[1A[2K[74/264] [chromium] › tests/e2e/policies.spec.ts:14:7 › Policies Page › loads policies page and defaults to active tab
+[1A[2K[75/264] [chromium] › tests/e2e/policies.spec.ts:33:7 › Policies Page › user can switch tabs successfully
+[1A[2K[76/264] [chromium] › tests/e2e/policies.spec.ts:61:7 › Policies Page › tab keyboard navigation operates correctly
+[1A[2K[77/264] [chromium] › tests/e2e/projects-cabinet.spec.ts:8:7 › Project File Cabinet Page › loads the main cabinet interface
+[1A[2K[78/264] [chromium] › tests/e2e/projects-cabinet.spec.ts:27:7 › Project File Cabinet Page › clicking a project paper opens the project modal
+[1A[2K  6) [chromium] › tests/e2e/projects-cabinet.spec.ts:27:7 › Project File Cabinet Page › clicking a project paper opens the project modal 
+
+    Error: locator.scrollIntoViewIfNeeded: Element is not attached to the DOM
+    Call log:
+    [2m  - attempting scroll into view action[22m
+    [2m    - waiting for element to be stable[22m
+    [2m    - element is not stable[22m
+    [2m  - retrying scroll into view action[22m
+    [2m    - waiting for element to be stable[22m
+
+
+      28 |     // First, click a folder to expose its papers properly
+      29 |     const firstFolder = page.locator("[aria-label*='folder']").first();
+    > 30 |     await firstFolder.scrollIntoViewIfNeeded();
+         |                       ^
+      31 |     await firstFolder.click({ force: true });
+      32 |
+      33 |     // Now find the papers
+        at /Users/ryanflynn/personal-site/personal-site/tests/e2e/projects-cabinet.spec.ts:30:23
+
+    Error Context: output/test-results/projects-cabinet-Project-F-75a15-per-opens-the-project-modal-chromium/error-context.md
+
+
+[1A[2K[79/264] [chromium] › tests/e2e/projects-cabinet.spec.ts:55:7 › Project File Cabinet Page › keyboard navigation allows interaction with project papers
+[1A[2K[80/264] [chromium] › tests/e2e/quotes.spec.ts:4:7 › Quotes Page Component › renders the Quotes structural shell correctly
+[1A[2K[81/264] [chromium] › tests/e2e/quotes.spec.ts:15:7 › Quotes Page Component › interacting with view toggles visually changes the context
+[1A[2K[82/264] [chromium] › tests/e2e/vitae.spec.ts:8:7 › Vitae/CV Page › displays vitae page with heading
+[1A[2K[83/264] [chromium] › tests/e2e/vitae.spec.ts:12:7 › Vitae/CV Page › displays professional experience section
+[1A[2K[84/264] [chromium] › tests/e2e/vitae.spec.ts:18:7 › Vitae/CV Page › displays projects section
+[1A[2K[85/264] [chromium] › tests/e2e/vitae.spec.ts:24:7 › Vitae/CV Page › displays skills section
+[1A[2K[86/264] [chromium] › tests/e2e/vitae.spec.ts:28:7 › Vitae/CV Page › has download/print option if available
+[1A[2K[87/264] [chromium] › tests/e2e/vitae.spec.ts:46:7 › Vitae/CV Page › has navigation back to main site
+[1A[2K[88/264] [chromium] › tests/e2e/vitae.spec.ts:53:7 › Vitae/CV Page › works on mobile viewport
+[1A[2K[89/264] [firefox] › tests/e2e/about.spec.ts:8:7 › About Page › loads main content and sections properly
+[1A[2K[90/264] [firefox] › tests/e2e/about.spec.ts:25:7 › About Page › renders the Core Values Grid
+[1A[2K  7) [firefox] › tests/e2e/about.spec.ts:25:7 › About Page › renders the Core Values Grid ──────────
+
+    Error: locator.scrollIntoViewIfNeeded: Element is not attached to the DOM
+    Call log:
+    [2m  - attempting scroll into view action[22m
+    [2m    - waiting for element to be stable[22m
+
+
+      27 |       .locator("h3.font-heading:has-text('Craftsmanship')")
+      28 |       .first();
+    > 29 |     await firstValueHeading.scrollIntoViewIfNeeded();
+         |                             ^
+      30 |     await expect(firstValueHeading).toBeVisible();
+      31 |   });
+      32 |
+        at /Users/ryanflynn/personal-site/personal-site/tests/e2e/about.spec.ts:29:29
+
+    Error Context: output/test-results/about-About-Page-renders-the-Core-Values-Grid-firefox/error-context.md
+
+
+[1A[2K[91/264] [firefox] › tests/e2e/about.spec.ts:33:7 › About Page › renders the Call-to-Action section correctly
+[1A[2K  8) [firefox] › tests/e2e/about.spec.ts:33:7 › About Page › renders the Call-to-Action section correctly 
+
+    Error: locator.scrollIntoViewIfNeeded: Element is not attached to the DOM
+    Call log:
+    [2m  - attempting scroll into view action[22m
+    [2m    - waiting for element to be stable[22m
+
+
+      36 |       name: /Read Vitae|View My Vitae/i,
+      37 |     });
+    > 38 |     await vitaeCTA.scrollIntoViewIfNeeded();
+         |                    ^
+      39 |     await expect(vitaeCTA).toBeVisible();
+      40 |
+      41 |     // Contact Link
+        at /Users/ryanflynn/personal-site/personal-site/tests/e2e/about.spec.ts:38:20
+
+    Error Context: output/test-results/about-About-Page-renders-t-e4bc1-to-Action-section-correctly-firefox/error-context.md
+
+
+[1A[2K[92/264] [firefox] › tests/e2e/about.spec.ts:49:7 › About Page › CTA interactions navigate users successfully
+[1A[2K  9) [firefox] › tests/e2e/about.spec.ts:49:7 › About Page › CTA interactions navigate users successfully 
+
+    Error: locator.scrollIntoViewIfNeeded: Element is not attached to the DOM
+    Call log:
+    [2m  - attempting scroll into view action[22m
+    [2m    - waiting for element to be stable[22m
+
+
+      51 |       name: /Contact Me|Get in Touch/i,
+      52 |     });
+    > 53 |     await contactCTA.scrollIntoViewIfNeeded();
+         |                      ^
+      54 |     await contactCTA.click();
+      55 |     await expect(page).toHaveURL(/\/contact/);
+      56 |   });
+        at /Users/ryanflynn/personal-site/personal-site/tests/e2e/about.spec.ts:53:22
+
+    Error Context: output/test-results/about-About-Page-CTA-inter-f264d-navigate-users-successfully-firefox/error-context.md
+
+
+[1A[2K[93/264] [firefox] › tests/e2e/accessibility.spec.ts:7:9 › Accessibility › / has proper heading hierarchy
+[1A[2K[94/264] [firefox] › tests/e2e/accessibility.spec.ts:15:9 › Accessibility › / has accessible navigation
+[1A[2K[95/264] [firefox] › tests/e2e/accessibility.spec.ts:23:9 › Accessibility › / has proper link text
+[1A[2K[96/264] [firefox] › tests/e2e/accessibility.spec.ts:35:9 › Accessibility › / images have alt text
+[1A[2K[97/264] [firefox] › tests/e2e/accessibility.spec.ts:7:9 › Accessibility › /about has proper heading hierarchy
+[1A[2K[98/264] [firefox] › tests/e2e/accessibility.spec.ts:15:9 › Accessibility › /about has accessible navigation
+[1A[2K[99/264] [firefox] › tests/e2e/accessibility.spec.ts:23:9 › Accessibility › /about has proper link text
+[1A[2K[100/264] [firefox] › tests/e2e/accessibility.spec.ts:35:9 › Accessibility › /about images have alt text
+[1A[2K[101/264] [firefox] › tests/e2e/accessibility.spec.ts:7:9 › Accessibility › /blog has proper heading hierarchy
+[1A[2K[102/264] [firefox] › tests/e2e/accessibility.spec.ts:15:9 › Accessibility › /blog has accessible navigation
+[1A[2K[103/264] [firefox] › tests/e2e/accessibility.spec.ts:23:9 › Accessibility › /blog has proper link text
+[1A[2K[104/264] [firefox] › tests/e2e/accessibility.spec.ts:35:9 › Accessibility › /blog images have alt text
+[1A[2K[105/264] [firefox] › tests/e2e/accessibility.spec.ts:7:9 › Accessibility › /contact has proper heading hierarchy
+[1A[2K[106/264] [firefox] › tests/e2e/accessibility.spec.ts:15:9 › Accessibility › /contact has accessible navigation
+[1A[2K[107/264] [firefox] › tests/e2e/accessibility.spec.ts:23:9 › Accessibility › /contact has proper link text
+[1A[2K[108/264] [firefox] › tests/e2e/accessibility.spec.ts:35:9 › Accessibility › /contact images have alt text
+[1A[2K[109/264] [firefox] › tests/e2e/accessibility.spec.ts:53:7 › Accessibility › skip link exists for keyboard navigation
+[1A[2K[110/264] [firefox] › tests/e2e/accessibility.spec.ts:74:7 › Accessibility › forms have proper labels
+[1A[2K[111/264] [firefox] › tests/e2e/accessibility.spec.ts:109:7 › Accessibility › focus is visible on interactive elements
+[1A[2K[112/264] [firefox] › tests/e2e/accessibility.spec.ts:148:7 › Accessibility › color contrast is sufficient
+[1A[2K[113/264] [firefox] › tests/e2e/accessibility.spec.ts:164:7 › Keyboard Navigation › can navigate through page with keyboard
+[1A[2K[114/264] [firefox] › tests/e2e/accessibility.spec.ts:180:7 › Keyboard Navigation › can navigate backwards with Shift+Tab
+[1A[2K[115/264] [firefox] › tests/e2e/accessibility.spec.ts:196:7 › Keyboard Navigation › Enter key activates links
+[1A[2K[116/264] [firefox] › tests/e2e/accessibility.spec.ts:227:7 › Keyboard Navigation › Escape key closes modals/menus
+[1A[2K[117/264] [firefox] › tests/e2e/blog.spec.ts:8:7 › Blog Page › displays blog page with heading
+[1A[2K[118/264] [firefox] › tests/e2e/blog.spec.ts:14:7 › Blog Page › shows blog posts or empty state
+[1A[2K[119/264] [firefox] › tests/e2e/blog.spec.ts:34:7 › Blog Page › blog post cards are clickable
+[1A[2K[120/264] [firefox] › tests/e2e/blog.spec.ts:54:7 › Blog Page › displays search functionality if available
+[1A[2K[121/264] [firefox] › tests/e2e/blog.spec.ts:74:7 › Blog Post Page › displays 404 for non-existent post
+[1A[2K[122/264] [firefox] › tests/e2e/blog.spec.ts:84:7 › Blog Post Page › blog post page has correct structure
+[1A[2K[123/264] [firefox] › tests/e2e/blog.spec.ts:105:7 › Blog Post Page › blog post has back navigation
+[1A[2K[124/264] [firefox] › tests/e2e/blog.spec.ts:125:7 › Blog - Responsive › blog page works on mobile
+[1A[2K[125/264] [firefox] › tests/e2e/blog.spec.ts:133:7 › Blog - Responsive › blog page works on tablet
+[1A[2K[126/264] [firefox] › tests/e2e/contact.spec.ts:8:7 › Contact Page › displays contact page with form
+[1A[2K[127/264] [firefox] › tests/e2e/contact.spec.ts:25:7 › Contact Page › displays direct contact information
+[1A[2K[128/264] [firefox] › tests/e2e/contact.spec.ts:44:7 › Contact Page › shows validation for empty form submission
+[1A[2K[129/264] [firefox] › tests/e2e/contact.spec.ts:58:7 › Contact Page › shows validation for invalid email
+[1A[2K[130/264] [firefox] › tests/e2e/contact.spec.ts:75:7 › Contact Page › submits form with valid data
+[1A[2K[131/264] [firefox] › tests/e2e/contact.spec.ts:93:7 › Contact Page › shows loading state during submission
+[1A[2K[132/264] [firefox] › tests/e2e/contact.spec.ts:117:7 › Contact Page › email link has correct mailto href
+[1A[2K[133/264] [firefox] › tests/e2e/contact.spec.ts:127:7 › Contact Page › LinkedIn link opens in new tab
+[1A[2K[134/264] [firefox] › tests/e2e/contact.spec.ts:147:7 › Contact Page - Mobile › form is usable on mobile
+[1A[2K[135/264] [firefox] › tests/e2e/error-pages.spec.ts:4:7 › Error Pages › displays 404 page for non-existent routes
+[1A[2K[136/264] [firefox] › tests/e2e/error-pages.spec.ts:13:7 › Error Pages › 404 page has navigation back to home
+[1A[2K[137/264] [firefox] › tests/e2e/error-pages.spec.ts:26:7 › Error Pages › 404 page maintains site styling
+[1A[2K[138/264] [firefox] › tests/e2e/error-pages.spec.ts:38:7 › Error Pages › deeply nested non-existent route shows 404
+[1A[2K[139/264] [firefox] › tests/e2e/error-pages.spec.ts:49:7 › Policy Pages › privacy policy page loads (redirects to /policies)
+[1A[2K[140/264] [firefox] › tests/e2e/error-pages.spec.ts:60:7 › Policy Pages › terms of service page loads (redirects to /policies)
+[1A[2K[141/264] [firefox] › tests/e2e/error-pages.spec.ts:71:7 › Policy Pages › policies page loads directly
+[1A[2K[142/264] [firefox] › tests/e2e/error-pages.spec.ts:80:7 › About Page › about page loads correctly
+[1A[2K[143/264] [firefox] › tests/e2e/error-pages.spec.ts:87:7 › About Page › about page has content
+[1A[2K[144/264] [firefox] › tests/e2e/error-pages.spec.ts:101:7 › Vitae/CV Page › vitae page loads if it exists
+[1A[2K[145/264] [firefox] › tests/e2e/homepage.spec.ts:8:7 › Homepage › loads and displays main content
+[1A[2K[146/264] [firefox] › tests/e2e/homepage.spec.ts:17:7 › Homepage › displays navigation header
+[1A[2K[147/264] [firefox] › tests/e2e/homepage.spec.ts:33:7 › Homepage › displays footer with links
+[1A[2K[148/264] [firefox] › tests/e2e/homepage.spec.ts:46:7 › Homepage › has responsive layout on mobile
+[1A[2K[149/264] [firefox] › tests/e2e/homepage.spec.ts:57:7 › Homepage › has responsive layout on tablet
+[1A[2K[150/264] [firefox] › tests/e2e/homepage.spec.ts:65:7 › Homepage › loads without console errors
+[1A[2K[151/264] [firefox] › tests/e2e/navigation.spec.ts:4:7 › Navigation › navigates from homepage to about page
+[1A[2K[152/264] [firefox] › tests/e2e/navigation.spec.ts:16:7 › Navigation › navigates from homepage to blog page
+[1A[2K[153/264] [firefox] › tests/e2e/navigation.spec.ts:28:7 › Navigation › navigates from homepage to contact page
+[1A[2K[154/264] [firefox] › tests/e2e/navigation.spec.ts:40:7 › Navigation › navigates back to homepage using logo/brand link
+[1A[2K[155/264] [firefox] › tests/e2e/navigation.spec.ts:52:7 › Navigation › navigation works on all main pages
+[1A[2K[156/264] [firefox] › tests/e2e/navigation.spec.ts:74:7 › Navigation › footer links navigate correctly
+[1A[2K[157/264] [firefox] › tests/e2e/navigation.spec.ts:89:7 › Navigation › terms of service link works
+[1A[2K[158/264] [firefox] › tests/e2e/navigation.spec.ts:108:7 › Navigation › external links open in new tab
+[1A[2K[159/264] [firefox] › tests/e2e/navigation.spec.ts:132:7 › Mobile Navigation › mobile menu toggle works
+[1A[2K[160/264] [firefox] › tests/e2e/navigation.spec.ts:157:7 › Mobile Navigation › mobile navigation links work
+[1A[2K[161/264] [firefox] › tests/e2e/policies.spec.ts:4:7 › Policies Page › direct routes trigger proper redirects
+[1A[2K[162/264] [firefox] › tests/e2e/policies.spec.ts:14:7 › Policies Page › loads policies page and defaults to active tab
+[1A[2K[163/264] [firefox] › tests/e2e/policies.spec.ts:33:7 › Policies Page › user can switch tabs successfully
+[1A[2K[164/264] [firefox] › tests/e2e/policies.spec.ts:61:7 › Policies Page › tab keyboard navigation operates correctly
+[1A[2K[165/264] [firefox] › tests/e2e/projects-cabinet.spec.ts:8:7 › Project File Cabinet Page › loads the main cabinet interface
+[1A[2K[166/264] [firefox] › tests/e2e/projects-cabinet.spec.ts:27:7 › Project File Cabinet Page › clicking a project paper opens the project modal
+[1A[2K  10) [firefox] › tests/e2e/projects-cabinet.spec.ts:27:7 › Project File Cabinet Page › clicking a project paper opens the project modal 
+
+    Error: locator.scrollIntoViewIfNeeded: Element is not attached to the DOM
+    Call log:
+    [2m  - attempting scroll into view action[22m
+    [2m    - waiting for element to be stable[22m
+
+
+      28 |     // First, click a folder to expose its papers properly
+      29 |     const firstFolder = page.locator("[aria-label*='folder']").first();
+    > 30 |     await firstFolder.scrollIntoViewIfNeeded();
+         |                       ^
+      31 |     await firstFolder.click({ force: true });
+      32 |
+      33 |     // Now find the papers
+        at /Users/ryanflynn/personal-site/personal-site/tests/e2e/projects-cabinet.spec.ts:30:23
+
+    Error Context: output/test-results/projects-cabinet-Project-F-75a15-per-opens-the-project-modal-firefox/error-context.md
+
+
+[1A[2K[167/264] [firefox] › tests/e2e/projects-cabinet.spec.ts:55:7 › Project File Cabinet Page › keyboard navigation allows interaction with project papers
+[1A[2K[168/264] [firefox] › tests/e2e/quotes.spec.ts:4:7 › Quotes Page Component › renders the Quotes structural shell correctly
+[1A[2K[169/264] [firefox] › tests/e2e/quotes.spec.ts:15:7 › Quotes Page Component › interacting with view toggles visually changes the context
+[1A[2K[170/264] [firefox] › tests/e2e/vitae.spec.ts:8:7 › Vitae/CV Page › displays vitae page with heading
+[1A[2K[171/264] [firefox] › tests/e2e/vitae.spec.ts:12:7 › Vitae/CV Page › displays professional experience section
+[1A[2K[172/264] [firefox] › tests/e2e/vitae.spec.ts:18:7 › Vitae/CV Page › displays projects section
+[1A[2K[173/264] [firefox] › tests/e2e/vitae.spec.ts:24:7 › Vitae/CV Page › displays skills section
+[1A[2K[174/264] [firefox] › tests/e2e/vitae.spec.ts:28:7 › Vitae/CV Page › has download/print option if available
+[1A[2K[175/264] [firefox] › tests/e2e/vitae.spec.ts:46:7 › Vitae/CV Page › has navigation back to main site
+[1A[2K[176/264] [firefox] › tests/e2e/vitae.spec.ts:53:7 › Vitae/CV Page › works on mobile viewport
+[1A[2K[177/264] [webkit] › tests/e2e/about.spec.ts:8:7 › About Page › loads main content and sections properly
+[1A[2K  11) [webkit] › tests/e2e/about.spec.ts:8:7 › About Page › loads main content and sections properly 
+
+    Error: locator.scrollIntoViewIfNeeded: Element is not attached to the DOM
+    Call log:
+    [2m  - attempting scroll into view action[22m
+    [2m    - waiting for element to be stable[22m
+
+
+      19 |     // Check Project Work section
+      20 |     const projHeading = page.getByRole("heading", { name: "Project Work" });
+    > 21 |     await projHeading.scrollIntoViewIfNeeded();
+         |                       ^
+      22 |     await expect(projHeading).toBeVisible();
+      23 |   });
+      24 |
+        at /Users/ryanflynn/personal-site/personal-site/tests/e2e/about.spec.ts:21:23
+
+    Error Context: output/test-results/about-About-Page-loads-main-content-and-sections-properly-webkit/error-context.md
+
+
+[1A[2K[178/264] [webkit] › tests/e2e/about.spec.ts:25:7 › About Page › renders the Core Values Grid
+[1A[2K[179/264] [webkit] › tests/e2e/about.spec.ts:33:7 › About Page › renders the Call-to-Action section correctly
+[1A[2K  12) [webkit] › tests/e2e/about.spec.ts:33:7 › About Page › renders the Call-to-Action section correctly 
+
+    Error: locator.scrollIntoViewIfNeeded: Element is not attached to the DOM
+    Call log:
+    [2m  - attempting scroll into view action[22m
+    [2m    - waiting for element to be stable[22m
+
+
+      43 |       name: /Contact Me|Get in Touch/i,
+      44 |     });
+    > 45 |     await contactCTA.scrollIntoViewIfNeeded();
+         |                      ^
+      46 |     await expect(contactCTA).toBeVisible();
+      47 |   });
+      48 |
+        at /Users/ryanflynn/personal-site/personal-site/tests/e2e/about.spec.ts:45:22
+
+    Error Context: output/test-results/about-About-Page-renders-t-e4bc1-to-Action-section-correctly-webkit/error-context.md
+
+
+[1A[2K[180/264] [webkit] › tests/e2e/about.spec.ts:49:7 › About Page › CTA interactions navigate users successfully
+[1A[2K[181/264] [webkit] › tests/e2e/accessibility.spec.ts:7:9 › Accessibility › / has proper heading hierarchy
+[1A[2K[182/264] [webkit] › tests/e2e/accessibility.spec.ts:15:9 › Accessibility › / has accessible navigation
+[1A[2K[183/264] [webkit] › tests/e2e/accessibility.spec.ts:23:9 › Accessibility › / has proper link text
+[1A[2K[184/264] [webkit] › tests/e2e/accessibility.spec.ts:35:9 › Accessibility › / images have alt text
+[1A[2K[185/264] [webkit] › tests/e2e/accessibility.spec.ts:7:9 › Accessibility › /about has proper heading hierarchy
+[1A[2K[186/264] [webkit] › tests/e2e/accessibility.spec.ts:15:9 › Accessibility › /about has accessible navigation
+[1A[2K[187/264] [webkit] › tests/e2e/accessibility.spec.ts:23:9 › Accessibility › /about has proper link text
+[1A[2K[188/264] [webkit] › tests/e2e/accessibility.spec.ts:35:9 › Accessibility › /about images have alt text
+[1A[2K[189/264] [webkit] › tests/e2e/accessibility.spec.ts:7:9 › Accessibility › /blog has proper heading hierarchy
+[1A[2K[190/264] [webkit] › tests/e2e/accessibility.spec.ts:15:9 › Accessibility › /blog has accessible navigation
+[1A[2K[191/264] [webkit] › tests/e2e/accessibility.spec.ts:23:9 › Accessibility › /blog has proper link text
+[1A[2K[192/264] [webkit] › tests/e2e/accessibility.spec.ts:35:9 › Accessibility › /blog images have alt text
+[1A[2K[193/264] [webkit] › tests/e2e/accessibility.spec.ts:7:9 › Accessibility › /contact has proper heading hierarchy
+[1A[2K[194/264] [webkit] › tests/e2e/accessibility.spec.ts:15:9 › Accessibility › /contact has accessible navigation
+[1A[2K[195/264] [webkit] › tests/e2e/accessibility.spec.ts:23:9 › Accessibility › /contact has proper link text
+[1A[2K[196/264] [webkit] › tests/e2e/accessibility.spec.ts:35:9 › Accessibility › /contact images have alt text
+[1A[2K[197/264] [webkit] › tests/e2e/accessibility.spec.ts:53:7 › Accessibility › skip link exists for keyboard navigation
+[1A[2K[198/264] [webkit] › tests/e2e/accessibility.spec.ts:74:7 › Accessibility › forms have proper labels
+[1A[2K[199/264] [webkit] › tests/e2e/accessibility.spec.ts:109:7 › Accessibility › focus is visible on interactive elements
+[1A[2K[200/264] [webkit] › tests/e2e/accessibility.spec.ts:148:7 › Accessibility › color contrast is sufficient
+[1A[2K[201/264] [webkit] › tests/e2e/accessibility.spec.ts:164:7 › Keyboard Navigation › can navigate through page with keyboard
+[1A[2K[202/264] [webkit] › tests/e2e/accessibility.spec.ts:180:7 › Keyboard Navigation › can navigate backwards with Shift+Tab
+[1A[2K[203/264] [webkit] › tests/e2e/accessibility.spec.ts:196:7 › Keyboard Navigation › Enter key activates links
+[1A[2K[204/264] [webkit] › tests/e2e/accessibility.spec.ts:227:7 › Keyboard Navigation › Escape key closes modals/menus
+[1A[2K[205/264] [webkit] › tests/e2e/blog.spec.ts:8:7 › Blog Page › displays blog page with heading
+[1A[2K[206/264] [webkit] › tests/e2e/blog.spec.ts:14:7 › Blog Page › shows blog posts or empty state
+[1A[2K[207/264] [webkit] › tests/e2e/blog.spec.ts:34:7 › Blog Page › blog post cards are clickable
+[1A[2K[208/264] [webkit] › tests/e2e/blog.spec.ts:54:7 › Blog Page › displays search functionality if available
+[1A[2K[209/264] [webkit] › tests/e2e/blog.spec.ts:74:7 › Blog Post Page › displays 404 for non-existent post
+[1A[2K[210/264] [webkit] › tests/e2e/blog.spec.ts:84:7 › Blog Post Page › blog post page has correct structure
+[1A[2K[211/264] [webkit] › tests/e2e/blog.spec.ts:105:7 › Blog Post Page › blog post has back navigation
+[1A[2K[212/264] [webkit] › tests/e2e/blog.spec.ts:125:7 › Blog - Responsive › blog page works on mobile
+[1A[2K[213/264] [webkit] › tests/e2e/blog.spec.ts:133:7 › Blog - Responsive › blog page works on tablet
+[1A[2K[214/264] [webkit] › tests/e2e/contact.spec.ts:8:7 › Contact Page › displays contact page with form
+[1A[2K[215/264] [webkit] › tests/e2e/contact.spec.ts:25:7 › Contact Page › displays direct contact information
+[1A[2K[216/264] [webkit] › tests/e2e/contact.spec.ts:44:7 › Contact Page › shows validation for empty form submission
+[1A[2K[217/264] [webkit] › tests/e2e/contact.spec.ts:58:7 › Contact Page › shows validation for invalid email
+[1A[2K[218/264] [webkit] › tests/e2e/contact.spec.ts:75:7 › Contact Page › submits form with valid data
+[1A[2K  13) [webkit] › tests/e2e/contact.spec.ts:75:7 › Contact Page › submits form with valid data ──────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByText(/message sent|cannot be sent|thank you/i).first()
+    Expected: visible
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 10000ms[22m
+    [2m  - waiting for getByText(/message sent|cannot be sent|thank you/i).first()[22m
+
+
+      88 |     await expect(
+      89 |       page.getByText(/message sent|cannot be sent|thank you/i).first()
+    > 90 |     ).toBeVisible({ timeout: 10000 });
+         |       ^
+      91 |   });
+      92 |
+      93 |   test("shows loading state during submission", async ({ page }) => {
+        at /Users/ryanflynn/personal-site/personal-site/tests/e2e/contact.spec.ts:90:7
+
+    Error Context: output/test-results/contact-Contact-Page-submits-form-with-valid-data-webkit/error-context.md
+
+
+[1A[2K[219/264] [webkit] › tests/e2e/contact.spec.ts:93:7 › Contact Page › shows loading state during submission
+[1A[2K[220/264] [webkit] › tests/e2e/contact.spec.ts:117:7 › Contact Page › email link has correct mailto href
+[1A[2K[221/264] [webkit] › tests/e2e/contact.spec.ts:127:7 › Contact Page › LinkedIn link opens in new tab
+[1A[2K[222/264] [webkit] › tests/e2e/contact.spec.ts:147:7 › Contact Page - Mobile › form is usable on mobile
+[1A[2K[223/264] [webkit] › tests/e2e/error-pages.spec.ts:4:7 › Error Pages › displays 404 page for non-existent routes
+[1A[2K[224/264] [webkit] › tests/e2e/error-pages.spec.ts:13:7 › Error Pages › 404 page has navigation back to home
+[1A[2K  14) [webkit] › tests/e2e/error-pages.spec.ts:13:7 › Error Pages › 404 page has navigation back to home 
+
+    Error: [2mexpect([22m[31mpage[39m[2m).[22mtoHaveURL[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Expected: [32m"http://localhost:3000/"[39m
+    Received: [31m"http://localhost:3000/[7mnon-existent-page[27m"[39m
+    Timeout:  5000ms
+
+    Call log:
+    [2m  - Expect "toHaveURL" with timeout 5000ms[22m
+    [2m    9 × unexpected value "http://localhost:3000/non-existent-page"[22m
+
+
+      21 |     await expect(homeLink).toBeVisible();
+      22 |     await homeLink.click();
+    > 23 |     await expect(page).toHaveURL("/");
+         |                        ^
+      24 |   });
+      25 |
+      26 |   test("404 page maintains site styling", async ({ page }) => {
+        at /Users/ryanflynn/personal-site/personal-site/tests/e2e/error-pages.spec.ts:23:24
+
+    Error Context: output/test-results/error-pages-Error-Pages-404-page-has-navigation-back-to-home-webkit/error-context.md
+
+
+[1A[2K[225/264] [webkit] › tests/e2e/error-pages.spec.ts:26:7 › Error Pages › 404 page maintains site styling
+[1A[2K[226/264] [webkit] › tests/e2e/error-pages.spec.ts:38:7 › Error Pages › deeply nested non-existent route shows 404
+[1A[2K[227/264] [webkit] › tests/e2e/error-pages.spec.ts:49:7 › Policy Pages › privacy policy page loads (redirects to /policies)
+[1A[2K[228/264] [webkit] › tests/e2e/error-pages.spec.ts:60:7 › Policy Pages › terms of service page loads (redirects to /policies)
+[1A[2K[229/264] [webkit] › tests/e2e/error-pages.spec.ts:71:7 › Policy Pages › policies page loads directly
+[1A[2K[230/264] [webkit] › tests/e2e/error-pages.spec.ts:80:7 › About Page › about page loads correctly
+[1A[2K[231/264] [webkit] › tests/e2e/error-pages.spec.ts:87:7 › About Page › about page has content
+[1A[2K[232/264] [webkit] › tests/e2e/error-pages.spec.ts:101:7 › Vitae/CV Page › vitae page loads if it exists
+[1A[2K[233/264] [webkit] › tests/e2e/homepage.spec.ts:8:7 › Homepage › loads and displays main content
+[1A[2K[234/264] [webkit] › tests/e2e/homepage.spec.ts:17:7 › Homepage › displays navigation header
+[1A[2K[235/264] [webkit] › tests/e2e/homepage.spec.ts:33:7 › Homepage › displays footer with links
+[1A[2K[236/264] [webkit] › tests/e2e/homepage.spec.ts:46:7 › Homepage › has responsive layout on mobile
+[1A[2K[237/264] [webkit] › tests/e2e/homepage.spec.ts:57:7 › Homepage › has responsive layout on tablet
+[1A[2K[238/264] [webkit] › tests/e2e/homepage.spec.ts:65:7 › Homepage › loads without console errors
+[1A[2K[239/264] [webkit] › tests/e2e/navigation.spec.ts:4:7 › Navigation › navigates from homepage to about page
+[1A[2K[240/264] [webkit] › tests/e2e/navigation.spec.ts:16:7 › Navigation › navigates from homepage to blog page
+[1A[2K[241/264] [webkit] › tests/e2e/navigation.spec.ts:28:7 › Navigation › navigates from homepage to contact page
+[1A[2K[242/264] [webkit] › tests/e2e/navigation.spec.ts:40:7 › Navigation › navigates back to homepage using logo/brand link
+[1A[2K  15) [webkit] › tests/e2e/navigation.spec.ts:40:7 › Navigation › navigates back to homepage using logo/brand link 
+
+    Error: [2mexpect([22m[31mpage[39m[2m).[22mtoHaveURL[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Expected: [32m"http://localhost:3000/"[39m
+    Received: [31m"http://localhost:3000/[7mabout[27m"[39m
+    Timeout:  5000ms
+
+    Call log:
+    [2m  - Expect "toHaveURL" with timeout 5000ms[22m
+    [2m    9 × unexpected value "http://localhost:3000/about"[22m
+
+
+      46 |     if (await homeLink.isVisible()) {
+      47 |       await homeLink.click();
+    > 48 |       await expect(page).toHaveURL("/");
+         |                          ^
+      49 |     }
+      50 |   });
+      51 |
+        at /Users/ryanflynn/personal-site/personal-site/tests/e2e/navigation.spec.ts:48:26
+
+    Error Context: output/test-results/navigation-Navigation-navi-fbee1-epage-using-logo-brand-link-webkit/error-context.md
+
+
+[1A[2K[243/264] [webkit] › tests/e2e/navigation.spec.ts:52:7 › Navigation › navigation works on all main pages
+[1A[2K[244/264] [webkit] › tests/e2e/navigation.spec.ts:74:7 › Navigation › footer links navigate correctly
+[1A[2K[245/264] [webkit] › tests/e2e/navigation.spec.ts:89:7 › Navigation › terms of service link works
+[1A[2K  16) [webkit] › tests/e2e/navigation.spec.ts:89:7 › Navigation › terms of service link works ──────
+
+    [31mTest timeout of 30000ms exceeded.[39m
+
+    Error: page.waitForURL: Test timeout of 30000ms exceeded.
+    =========================== logs ===========================
+    waiting for navigation until "load"
+    ============================================================
+
+      101 |       await termsLink.click();
+      102 |       // Wait for navigation
+    > 103 |       await page.waitForURL(/\/policies\?tab=terms/);
+          |                  ^
+      104 |       await expect(page).toHaveURL(/\/policies\?tab=terms/);
+      105 |     }
+      106 |   });
+        at /Users/ryanflynn/personal-site/personal-site/tests/e2e/navigation.spec.ts:103:18
+
+    Error Context: output/test-results/navigation-Navigation-terms-of-service-link-works-webkit/error-context.md
+
+
+[1A[2K[246/264] [webkit] › tests/e2e/navigation.spec.ts:108:7 › Navigation › external links open in new tab
+[1A[2K[247/264] [webkit] › tests/e2e/navigation.spec.ts:132:7 › Mobile Navigation › mobile menu toggle works
+[1A[2K[248/264] [webkit] › tests/e2e/navigation.spec.ts:157:7 › Mobile Navigation › mobile navigation links work
+[1A[2K[249/264] [webkit] › tests/e2e/policies.spec.ts:4:7 › Policies Page › direct routes trigger proper redirects
+[1A[2K[250/264] [webkit] › tests/e2e/policies.spec.ts:14:7 › Policies Page › loads policies page and defaults to active tab
+[1A[2K[251/264] [webkit] › tests/e2e/policies.spec.ts:33:7 › Policies Page › user can switch tabs successfully
+[1A[2K[252/264] [webkit] › tests/e2e/policies.spec.ts:61:7 › Policies Page › tab keyboard navigation operates correctly
+[1A[2K[253/264] [webkit] › tests/e2e/projects-cabinet.spec.ts:8:7 › Project File Cabinet Page › loads the main cabinet interface
+[1A[2K[254/264] [webkit] › tests/e2e/projects-cabinet.spec.ts:27:7 › Project File Cabinet Page › clicking a project paper opens the project modal
+[1A[2K[255/264] [webkit] › tests/e2e/projects-cabinet.spec.ts:55:7 › Project File Cabinet Page › keyboard navigation allows interaction with project papers
+[1A[2K[256/264] [webkit] › tests/e2e/quotes.spec.ts:4:7 › Quotes Page Component › renders the Quotes structural shell correctly
+[1A[2K[257/264] [webkit] › tests/e2e/quotes.spec.ts:15:7 › Quotes Page Component › interacting with view toggles visually changes the context
+[1A[2K[258/264] [webkit] › tests/e2e/vitae.spec.ts:8:7 › Vitae/CV Page › displays vitae page with heading
+[1A[2K[259/264] [webkit] › tests/e2e/vitae.spec.ts:12:7 › Vitae/CV Page › displays professional experience section
+[1A[2K[260/264] [webkit] › tests/e2e/vitae.spec.ts:18:7 › Vitae/CV Page › displays projects section
+[1A[2K[261/264] [webkit] › tests/e2e/vitae.spec.ts:24:7 › Vitae/CV Page › displays skills section
+[1A[2K[262/264] [webkit] › tests/e2e/vitae.spec.ts:28:7 › Vitae/CV Page › has download/print option if available
+[1A[2K[263/264] [webkit] › tests/e2e/vitae.spec.ts:46:7 › Vitae/CV Page › has navigation back to main site
+[1A[2K[264/264] [webkit] › tests/e2e/vitae.spec.ts:53:7 › Vitae/CV Page › works on mobile viewport
+[1A[2K  16 failed
+    [chromium] › tests/e2e/about.spec.ts:8:7 › About Page › loads main content and sections properly 
+    [chromium] › tests/e2e/about.spec.ts:25:7 › About Page › renders the Core Values Grid ──────────
+    [chromium] › tests/e2e/about.spec.ts:33:7 › About Page › renders the Call-to-Action section correctly 
+    [chromium] › tests/e2e/about.spec.ts:49:7 › About Page › CTA interactions navigate users successfully 
+    [chromium] › tests/e2e/contact.spec.ts:75:7 › Contact Page › submits form with valid data ──────
+    [chromium] › tests/e2e/projects-cabinet.spec.ts:27:7 › Project File Cabinet Page › clicking a project paper opens the project modal 
+    [firefox] › tests/e2e/about.spec.ts:25:7 › About Page › renders the Core Values Grid ───────────
+    [firefox] › tests/e2e/about.spec.ts:33:7 › About Page › renders the Call-to-Action section correctly 
+    [firefox] › tests/e2e/about.spec.ts:49:7 › About Page › CTA interactions navigate users successfully 
+    [firefox] › tests/e2e/projects-cabinet.spec.ts:27:7 › Project File Cabinet Page › clicking a project paper opens the project modal 
+    [webkit] › tests/e2e/about.spec.ts:8:7 › About Page › loads main content and sections properly ─
+    [webkit] › tests/e2e/about.spec.ts:33:7 › About Page › renders the Call-to-Action section correctly 
+    [webkit] › tests/e2e/contact.spec.ts:75:7 › Contact Page › submits form with valid data ────────
+    [webkit] › tests/e2e/error-pages.spec.ts:13:7 › Error Pages › 404 page has navigation back to home 
+    [webkit] › tests/e2e/navigation.spec.ts:40:7 › Navigation › navigates back to homepage using logo/brand link 
+    [webkit] › tests/e2e/navigation.spec.ts:89:7 › Navigation › terms of service link works ────────
+  248 passed (6.1m)

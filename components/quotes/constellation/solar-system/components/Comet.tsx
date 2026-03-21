@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import {
   RocketIcon,
   AsteroidIcon,
-} from "@/components/common/SpaceMarkdownIcons";
+} from "@/components/primitives/misc/SpaceMarkdownIcons";
 import type { Comet } from "../types";
 
 interface CometProps {

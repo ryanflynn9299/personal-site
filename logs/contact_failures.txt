@@ -1,0 +1,118 @@
+[2m[WebServer] [22m[33m[1m⚠[22m[39m turbopack.root should be absolute, using: /Users/ryanflynn/personal-site/personal-site
+[2m[WebServer] [22m[33m[1m⚠[22m[39m turbopack.root should be absolute, using: /Users/ryanflynn/personal-site/personal-site
+[2m[WebServer] [22m[33m[1m⚠[22m[39m "next start" does not work with "output: standalone" configuration. Use "node .next/standalone/server.js" instead.
+
+Running 27 tests using 8 workers
+
+  ✓   8 [chromium] › tests/e2e/contact.spec.ts:127:7 › Contact Page › LinkedIn link opens in new tab (804ms)
+  ✓   5 [chromium] › tests/e2e/contact.spec.ts:117:7 › Contact Page › email link has correct mailto href (853ms)
+  ✓   1 [chromium] › tests/e2e/contact.spec.ts:8:7 › Contact Page › displays contact page with form (1.1s)
+  ✓   3 [chromium] › tests/e2e/contact.spec.ts:25:7 › Contact Page › displays direct contact information (1.2s)
+  ✓   4 [chromium] › tests/e2e/contact.spec.ts:44:7 › Contact Page › shows validation for empty form submission (1.3s)
+  ✓   7 [chromium] › tests/e2e/contact.spec.ts:58:7 › Contact Page › shows validation for invalid email (1.5s)
+  ✓   9 [chromium] › tests/e2e/contact.spec.ts:147:7 › Contact Page - Mobile › form is usable on mobile (1.0s)
+  ✓   2 [chromium] › tests/e2e/contact.spec.ts:93:7 › Contact Page › shows loading state during submission (1.9s)
+  ✘   6 [chromium] › tests/e2e/contact.spec.ts:75:7 › Contact Page › submits form with valid data (1.7s)
+  ✓  12 [firefox] › tests/e2e/contact.spec.ts:44:7 › Contact Page › shows validation for empty form submission (3.1s)
+  ✓  10 [firefox] › tests/e2e/contact.spec.ts:8:7 › Contact Page › displays contact page with form (2.6s)
+  ✓  18 [firefox] › tests/e2e/contact.spec.ts:147:7 › Contact Page - Mobile › form is usable on mobile (1.4s)
+  ✓  15 [firefox] › tests/e2e/contact.spec.ts:127:7 › Contact Page › LinkedIn link opens in new tab (3.1s)
+  ✓  16 [firefox] › tests/e2e/contact.spec.ts:117:7 › Contact Page › email link has correct mailto href (3.2s)
+  ✓  17 [firefox] › tests/e2e/contact.spec.ts:93:7 › Contact Page › shows loading state during submission (4.2s)
+  ✓  14 [firefox] › tests/e2e/contact.spec.ts:25:7 › Contact Page › displays direct contact information (4.3s)
+  ✓  19 [webkit] › tests/e2e/contact.spec.ts:8:7 › Contact Page › displays contact page with form (2.9s)
+  ✓  20 [webkit] › tests/e2e/contact.spec.ts:25:7 › Contact Page › displays direct contact information (2.0s)
+  ✓  11 [firefox] › tests/e2e/contact.spec.ts:58:7 › Contact Page › shows validation for invalid email (5.2s)
+  ✓  22 [webkit] › tests/e2e/contact.spec.ts:117:7 › Contact Page › email link has correct mailto href (995ms)
+  ✓  21 [webkit] › tests/e2e/contact.spec.ts:44:7 › Contact Page › shows validation for empty form submission (2.3s)
+  ✓  24 [webkit] › tests/e2e/contact.spec.ts:127:7 › Contact Page › LinkedIn link opens in new tab (761ms)
+  ✘  13 [firefox] › tests/e2e/contact.spec.ts:75:7 › Contact Page › submits form with valid data (5.3s)
+  ✓  23 [webkit] › tests/e2e/contact.spec.ts:58:7 › Contact Page › shows validation for invalid email (2.3s)
+  ✘  25 [webkit] › tests/e2e/contact.spec.ts:75:7 › Contact Page › submits form with valid data (1.8s)
+  ✓  27 [webkit] › tests/e2e/contact.spec.ts:147:7 › Contact Page - Mobile › form is usable on mobile (1.2s)
+  ✓  26 [webkit] › tests/e2e/contact.spec.ts:93:7 › Contact Page › shows loading state during submission (2.2s)
+
+
+  1) [chromium] › tests/e2e/contact.spec.ts:75:7 › Contact Page › submits form with valid data ─────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByText(/message sent|cannot be sent|thank you/i)
+    Expected: visible
+    Error: strict mode violation: getByText(/message sent|cannot be sent|thank you/i) resolved to 2 elements:
+        1) <h3 class="mt-4 font-semibold text-slate-50">Message Cannot Be Sent</h3> aka getByRole('heading', { name: 'Message Cannot Be Sent' })
+        2) <p class="mt-2 max-w-md text-slate-400">Thank you for your message! I'll get back to you …</p> aka getByText('Thank you for your message! I')
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 10000ms[22m
+    [2m  - waiting for getByText(/message sent|cannot be sent|thank you/i)[22m
+
+
+      88 |     await expect(
+      89 |       page.getByText(/message sent|cannot be sent|thank you/i)
+    > 90 |     ).toBeVisible({ timeout: 10000 });
+         |       ^
+      91 |   });
+      92 |
+      93 |   test("shows loading state during submission", async ({ page }) => {
+        at /Users/ryanflynn/personal-site/personal-site/tests/e2e/contact.spec.ts:90:7
+
+    Error Context: output/test-results/contact-Contact-Page-submits-form-with-valid-data-chromium/error-context.md
+
+  2) [firefox] › tests/e2e/contact.spec.ts:75:7 › Contact Page › submits form with valid data ──────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByText(/message sent|cannot be sent|thank you/i)
+    Expected: visible
+    Error: strict mode violation: getByText(/message sent|cannot be sent|thank you/i) resolved to 2 elements:
+        1) <h3 class="mt-4 font-semibold text-slate-50">Message Cannot Be Sent</h3> aka getByRole('heading', { name: 'Message Cannot Be Sent' })
+        2) <p class="mt-2 max-w-md text-slate-400">Thank you for your message! I'll get back to you …</p> aka getByText('Thank you for your message! I')
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 10000ms[22m
+    [2m  - waiting for getByText(/message sent|cannot be sent|thank you/i)[22m
+
+
+      88 |     await expect(
+      89 |       page.getByText(/message sent|cannot be sent|thank you/i)
+    > 90 |     ).toBeVisible({ timeout: 10000 });
+         |       ^
+      91 |   });
+      92 |
+      93 |   test("shows loading state during submission", async ({ page }) => {
+        at /Users/ryanflynn/personal-site/personal-site/tests/e2e/contact.spec.ts:90:7
+
+    Error Context: output/test-results/contact-Contact-Page-submits-form-with-valid-data-firefox/error-context.md
+
+  3) [webkit] › tests/e2e/contact.spec.ts:75:7 › Contact Page › submits form with valid data ───────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByText(/message sent|cannot be sent|thank you/i)
+    Expected: visible
+    Error: strict mode violation: getByText(/message sent|cannot be sent|thank you/i) resolved to 2 elements:
+        1) <h3 class="mt-4 font-semibold text-slate-50">Message Cannot Be Sent</h3> aka getByRole('heading', { name: 'Message Cannot Be Sent' })
+        2) <p class="mt-2 max-w-md text-slate-400">Thank you for your message! I'll get back to you …</p> aka getByText('Thank you for your message! I')
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 10000ms[22m
+    [2m  - waiting for getByText(/message sent|cannot be sent|thank you/i)[22m
+
+
+      88 |     await expect(
+      89 |       page.getByText(/message sent|cannot be sent|thank you/i)
+    > 90 |     ).toBeVisible({ timeout: 10000 });
+         |       ^
+      91 |   });
+      92 |
+      93 |   test("shows loading state during submission", async ({ page }) => {
+        at /Users/ryanflynn/personal-site/personal-site/tests/e2e/contact.spec.ts:90:7
+
+    Error Context: output/test-results/contact-Contact-Page-submits-form-with-valid-data-webkit/error-context.md
+
+  3 failed
+    [chromium] › tests/e2e/contact.spec.ts:75:7 › Contact Page › submits form with valid data ──────
+    [firefox] › tests/e2e/contact.spec.ts:75:7 › Contact Page › submits form with valid data ───────
+    [webkit] › tests/e2e/contact.spec.ts:75:7 › Contact Page › submits form with valid data ────────
+  24 passed (54.0s)

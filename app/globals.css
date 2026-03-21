@@ -3,6 +3,10 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
   :root {
     --color-background: 239 68% 68%;
     --color-foreground: 222 47% 11%;
@@ -329,4 +333,17 @@
 
 .document-transition {
   will-change: opacity, transform;
+}
+
+/* ---------------------------------------------------------------------------
+ * E2E Stability Overrides
+ * Disables animations, transitions, and smooth scrolling in test mode
+ * to ensure deterministic results and prevent click interception.
+ * --------------------------------------------------------------------------- */
+[data-test-mode="true"],
+[data-test-mode="true"] * {
+  animation: none !important;
+  transition: none !important;
+  transition-duration: 0ms !important;
+  scroll-behavior: auto !important;
 }

@@ -2,15 +2,14 @@ import type { Metadata } from "next";
 import { HeroSection } from "@/components/sections/HeroSection";
 import { FinalCTA } from "@/components/sections/FinalCTA";
 import { ActiveHomeSections } from "@/components/sections/ActiveHomeSections";
-import { generatePageMetadata } from "@/lib/seo";
+import { generatePageMetadata } from "@/lib/site/seo";
 
 // Import all sections to pass them as Server Components
-import { AboutMe2 } from "@/components/sections/AboutMe2";
-import { ProjectCarousel2 } from "@/components/sections/ProjectCarousel2";
-import { TechStack2 } from "@/components/sections/TechStack2";
+import { AboutMe } from "@/components/sections/AboutMe";
+import { ProjectCarousel } from "@/components/sections/ProjectCarousel";
 import { TechStack3 } from "@/components/sections/TechStack3";
 import { TechStack4 } from "@/components/sections/TechStack4";
-import { BlogHighlight4 } from "@/components/sections/BlogHighlight4";
+import { BlogHighlight } from "@/components/sections/BlogHighlight";
 
 export const metadata: Metadata = generatePageMetadata({
   title: "Ryan Flynn | Software Engineer & Tech Enthusiast",
@@ -29,12 +28,11 @@ export default async function HomePage() {
 
       {/* Dev Controls orchestrator resolving selected component states */}
       <ActiveHomeSections
-        aboutMe2={<AboutMe2 />}
-        projectCarousel={<ProjectCarousel2 />}
-        techStack2={<TechStack2 />}
-        techStack3={<TechStack3 />}
-        techStack4={<TechStack4 />}
-        blogHighlight4={<BlogHighlight4 />}
+        aboutMe={<AboutMe />}
+        projectCarousel={<ProjectCarousel />}
+        standardTechStack={<TechStack3 />}
+        animatedTechStack={<TechStack4 />}
+        blogHighlight={<BlogHighlight />}
       />
 
       <FinalCTA />

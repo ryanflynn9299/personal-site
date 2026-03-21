@@ -1,6 +1,6 @@
 import { Post } from "@/types";
-import { SITE_URL, SITE_AUTHOR, ENABLE_BLOG_SEO } from "@/lib/seo";
-import { env } from "@/lib/env";
+import { SITE_URL, SITE_AUTHOR, ENABLE_BLOG_SEO } from "@/lib/site/seo";
+import { config } from "@/lib/config";
 
 interface JsonLdProps {
   post: Post;
@@ -31,8 +31,8 @@ export function JsonLd({ post }: JsonLdProps) {
 
   // Construct the featured image URL if available
   const imageUrl =
-    post.feature_image && env.directus.publicUrl
-      ? `${env.directus.publicUrl}/assets/${post.feature_image.id}`
+    post.feature_image && config.directus.publicUrl
+      ? `${config.directus.publicUrl}/assets/${post.feature_image.id}`
       : undefined;
 
   // Format dates to ISO 8601 format (required by Schema.org)

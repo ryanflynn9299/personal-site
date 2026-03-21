@@ -132,8 +132,8 @@ export default [
       "no-unused-vars": "off", // Use TypeScript version
       "prefer-const": "warn",
       "no-var": "error",
-      "eqeqeq": ["warn", "always", { null: "ignore" }],
-      "curly": ["warn", "all"],
+      eqeqeq: ["warn", "always", { null: "ignore" }],
+      curly: ["warn", "all"],
     },
   },
 ];

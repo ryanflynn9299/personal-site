@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { ProjectFileCabinet } from "@/components/projects/ProjectFileCabinet";
-import { generatePageMetadata } from "@/lib/seo";
+import { generatePageMetadata } from "@/lib/site/seo";
 
 export const metadata: Metadata = generatePageMetadata({
   title: "Project File Cabinet",

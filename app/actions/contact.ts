@@ -4,17 +4,23 @@ import {
   isEmailServiceConfigured,
   sendEmail,
   type EmailMessage,
-} from "@/lib/email-service";
-import { env } from "@/lib/env";
+} from "@/lib/services/email-service";
+import { runtime } from "@/lib/config";
+import { serverConfig } from "@/lib/config/server";
 import type { FormState } from "@/types/forms";
+
+import {
+  isDirectusConfigured,
+  createContactMessage,
+} from "@/lib/services/directus";
 
 export async function submitContactForm(
   formData: FormData
 ): Promise<FormState> {
   // Extract form data
-  const name = formData.get("name") as string;
-  const email = formData.get("email") as string;
-  const message = formData.get("message") as string;
+  const name = (formData.get("name") as string) || "";
+  const email = (formData.get("email") as string) || "";
+  const message = (formData.get("message") as string) || "";
 
   // Basic validation
   if (!name || !email || !message) {
@@ -33,69 +39,54 @@ export async function submitContactForm(
     };
   }
 
-  // Check if email service is configured
+  // Service availability and mode check
+  const directusAvailable = isDirectusConfigured();
   const emailServiceAvailable = isEmailServiceConfigured();
-  const isProduction = env.isProduction;
-  const isLiveDev = env.isLiveDev;
-  const isOfflineDev = env.isOfflineDev;
+  const { isProduction, mode } = runtime;
 
-  if (!emailServiceAvailable) {
-    // In production/live-dev: This is a real error
-    if (isProduction || isLiveDev) {
+  // 1. Store in Directus (if available)
+  let directusStored = false;
+  if (directusAvailable) {
+    directusStored = await createContactMessage({ name, email, message });
+  }
+
+  // 2. Send Email (if available)
+  let emailSent = false;
+  if (emailServiceAvailable) {
+    const emailMessage: EmailMessage = {
+      from: serverConfig.smtp.from || "noreply@example.com",
+      to: serverConfig.smtp.to || "contact@example.com",
+      subject: `Contact Form Submission from ${name}`,
+      text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
+      html: `<p><strong>Name:</strong> ${name}</p><p><strong>Email:</strong> ${email}</p><p><strong>Message:</strong></p><p>${message.replace(/\n/g, "<br>")}</p>`,
+    };
+
+    const emailResult = await sendEmail(emailMessage);
+    emailSent = emailResult.success;
+  }
+
+  // 3. Determine Response based on Mode and Outcome
+  if (mode === "offline-dev") {
+    return {
+      success: true,
+      emailSent: false,
+      message: "Development Mode: Submission received (no services called).",
+    };
+  }
+
+  if (!emailSent && !directusStored) {
+    // Both failed in non-offline mode
+    if (isProduction || mode === "live-dev") {
       return {
         success: false,
-        error:
-          "Email service is not configured. This is a configuration error. Please check your SMTP settings.",
+        error: "Failed to process your message. Please try again later.",
       };
     }
-
-    // In offline-dev: Informational message
-    if (isOfflineDev) {
-      return {
-        success: true,
-        emailSent: false,
-        message:
-          "Services are disabled in offline dev mode. Set APP_MODE=live-dev to enable email delivery.",
-      };
-    }
-
-    // Fallback (should not happen)
-    return {
-      success: true,
-      emailSent: false,
-      message: "Email service is currently unavailable.",
-    };
   }
-
-  // Email service is available - send the email
-  // The delay is now encapsulated in the sendEmail service
-  // In tests, the email service can be mocked to avoid delays
-  const emailMessage: EmailMessage = {
-    from: process.env.SMTP_FROM || "noreply@example.com",
-    to: process.env.SMTP_TO || "contact@example.com",
-    subject: `Contact Form Submission from ${name}`,
-    text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
-    html: `<p><strong>Name:</strong> ${name}</p><p><strong>Email:</strong> ${email}</p><p><strong>Message:</strong></p><p>${message.replace(/\n/g, "<br>")}</p>`,
-  };
-
-  const emailResult = await sendEmail(emailMessage);
-
-  if (!emailResult.success) {
-    return {
-      success: true,
-      emailSent: false,
-      message:
-        "There was an error sending your message. Please try again later or use the direct email link above.",
-    };
-  }
-
-  // Email sent successfully
-  // TODO: Store submission in database for record-keeping
-  // TODO: Implement rate limiting and spam protection
 
   return {
     success: true,
-    emailSent: true,
+    emailSent,
     message: "Thank you for your message! I'll get back to you soon.",
   };
 }

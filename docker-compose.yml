@@ -17,7 +17,7 @@
 #     - http://ps-matomo:8181 (Matomo)
 #   - Run: docker compose up -d
 # ==============================================================================
-version: '3.9'
+version: "3.9"
 
 services:
   # 1. Frontend Service (Next.js)
@@ -39,7 +39,7 @@ services:
     # This makes the config consistent with the other services.
     environment:
       - NEXT_PUBLIC_DIRECTUS_URL=${NEXT_PUBLIC_DIRECTUS_URL}
-      - DIRECTUS_URL_SERVER_SIDE=${DIRECTUS_URL_SERVER_SIDE}
+      - DIRECTUS_INTERNAL_URL=${DIRECTUS_INTERNAL_URL}
       # Add any other runtime-only variables for Next.js here
     networks:
       - backend-net
@@ -54,7 +54,13 @@ services:
     healthcheck:
       # Internal health check endpoint - only accessible from within container
       # Uses Node.js (available in image) instead of curl/wget for reliability
-      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/api/health', (r) => { process.exit(r.statusCode === 200 ? 0 : 1) }).on('error', () => process.exit(1))"]
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "require('http').get('http://localhost:3000/api/health', (r) => { process.exit(r.statusCode === 200 ? 0 : 1) }).on('error', () => process.exit(1))",
+        ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -80,10 +86,10 @@ services:
       - DB_DATABASE=${DB_NAME}
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
-      - ADMIN_EMAIL=${ADMIN_EMAIL}
-      - ADMIN_PASSWORD=${ADMIN_PW}
+      - ADMIN_EMAIL=${DIRECTUS_ADMIN_EMAIL}
+      - ADMIN_PASSWORD=${DIRECTUS_ADMIN_PASSWORD}
       - WEBSOCKETS_ENABLED=true
-      - PUBLIC_URL=${HTTP_DOMAIN_NAME}
+      - PUBLIC_URL=${DIRECTUS_PUBLIC_URL}
       # --- Added from old file for production ---
       - EXTENSIONS_PATH=/directus/extensions
       - CORS_ENABLED=true
@@ -96,11 +102,15 @@ services:
         condition: service_healthy # Wait for DB to be healthy
     logging: *default-logging # Reuse the logging config
     healthcheck:
-        test: ["CMD-SHELL", "node -e \"require('http').get('http://127.0.0.1:8055/server/info', res => { if (res.statusCode === 200) process.exit(0); else process.exit(1); }).on('error', () => process.exit(1));\""]
-        interval: 30s
-        timeout: 10s
-        retries: 5      # <-- INCREASED from 3
-        start_period: 30s # <-- INCREASED from 10s
+      test:
+        [
+          "CMD-SHELL",
+          'node -e "require(''http'').get(''http://127.0.0.1:8055/server/info'', res => { if (res.statusCode === 200) process.exit(0); else process.exit(1); }).on(''error'', () => process.exit(1));"',
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 5 # <-- INCREASED from 3
+      start_period: 30s # <-- INCREASED from 10s
 
   # 3. Database Service (PostgreSQL)
   ps-database:
@@ -217,7 +227,17 @@ services:
       - backend-net
     logging: *default-logging
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MATOMO_DB_ROOT_PASSWORD}"]
+      test:
+        [
+          "CMD",
+          "mysqladmin",
+          "ping",
+          "-h",
+          "localhost",
+          "-u",
+          "root",
+          "-p${MATOMO_DB_ROOT_PASSWORD}",
+        ]
       interval: 30s
       timeout: 10s
       retries: 5

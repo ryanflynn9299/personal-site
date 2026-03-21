@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { cn, getBlogPostUrl } from "@/lib/utils";
 
 // Mock logger to avoid console output during tests
-vi.mock("@/lib/logger", () => {
+vi.mock("@/lib/dev-tooling/logger", () => {
   const mockLogger = {
     info: vi.fn(),
     warn: vi.fn(),
@@ -93,7 +93,7 @@ describe("getBlogPostUrl", () => {
 
   it("logs error for invalid slug using logger", async () => {
     // Import the mocked logger module
-    const loggerModule = await import("@/lib/logger");
+    const loggerModule = await import("@/lib/dev-tooling/logger");
     const mockLog = vi.mocked(loggerModule.log);
 
     // Clear any previous calls

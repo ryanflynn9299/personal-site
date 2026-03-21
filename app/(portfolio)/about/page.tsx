@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { AboutPageClient } from "@/components/about/AboutPageClient";
-import { generatePageMetadata } from "@/lib/seo";
+import { generatePageMetadata } from "@/lib/site/seo";
 
 export const metadata: Metadata = generatePageMetadata({
   title: "About Me",

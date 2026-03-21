@@ -3,7 +3,7 @@ import {
   formatPlaintext,
   isLikelyMarkdown,
   isLikelyHTML,
-} from "@/lib/plaintext-formatter";
+} from "@/lib/policy-utils/plaintext-formatter";
 
 describe("formatPlaintext", () => {
   describe("basic formatting", () => {

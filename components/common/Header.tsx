@@ -81,6 +81,7 @@ export function Header() {
                 href="/"
                 className="flex items-center gap-2 flex-shrink-0 text-lg font-bold text-slate-50 font-heading sm:text-xl"
                 onClick={() => setMobileMenuOpen(false)}
+                data-testid="nav-logo"
               >
                 <HomeIcon />
                 <span>Ryan Flynn</span>
@@ -97,7 +98,8 @@ export function Header() {
                   <li key={item.href}>
                     <Link
                       href={item.href}
-                      className="text-sm font-medium text-slate-300 transition-colors hover:text-sky-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus:visible:ring-offset-2 focus-visible:ring-offset-slate-900 rounded-sm"
+                      className="inline-block px-3 py-2 text-sm font-medium text-slate-300 transition-colors hover:text-sky-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus:visible:ring-offset-2 focus-visible:ring-offset-slate-900 rounded-md"
+                      data-testid={`nav-link-${item.name.toLowerCase()}`}
                     >
                       {item.name}
                     </Link>
@@ -113,6 +115,7 @@ export function Header() {
               aria-label="Toggle navigation menu"
               aria-expanded={mobileMenuOpen}
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              data-testid="mobile-menu-toggle"
             >
               {mobileMenuOpen ? (
                 <X className="h-6 w-6" aria-hidden="true" />
@@ -149,6 +152,7 @@ export function Header() {
                     href={item.href}
                     className="block px-4 py-3 text-base font-medium text-slate-200 transition-colors hover:bg-slate-700 hover:text-sky-300 focus:outline-none focus:bg-slate-700 focus:text-sky-300 focus:ring-2 focus:ring-inset focus:ring-sky-400 first:rounded-lg"
                     onClick={() => setMobileMenuOpen(false)}
+                    data-testid={`mobile-nav-link-${item.name.toLowerCase()}`}
                   >
                     {item.name}
                   </Link>

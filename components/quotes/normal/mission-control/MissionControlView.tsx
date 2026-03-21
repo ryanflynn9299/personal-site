@@ -3,7 +3,7 @@
 import { useState, useCallback } from "react";
 import type { Quote } from "@/app/(portfolio)/quotes/config";
 import { Check, Copy } from "lucide-react";
-import { createLogger } from "@/lib/logger";
+import { createLogger } from "@/lib/dev-tooling/logger";
 
 const log = createLogger("ALL");
 

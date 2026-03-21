@@ -1,7 +1,10 @@
 import { MetadataRoute } from "next";
-import { SITE_URL, ENABLE_BLOG_SEO } from "@/lib/seo";
-import { getPublishedPosts, isDirectusConfigured } from "@/lib/directus";
-import { createLogger } from "@/lib/logger";
+import { SITE_URL, ENABLE_BLOG_SEO } from "@/lib/site/seo";
+import {
+  getPublishedPosts,
+  isDirectusConfigured,
+} from "@/lib/services/directus";
+import { createLogger } from "@/lib/dev-tooling/logger";
 
 const log = createLogger("ALL");
 

@@ -1,6 +1,6 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { createLogger } from "./logger";
+import { createLogger } from "./dev-tooling/logger";
 
 const log = createLogger("ALL");
 

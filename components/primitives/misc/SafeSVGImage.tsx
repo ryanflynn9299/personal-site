@@ -33,8 +33,8 @@ import {
   getSVGTrustLevel,
   SVGTrustLevel,
   type SVGTrustLevel as SVGTrustLevelType,
-} from "@/lib/svg-security";
-import { createLogger } from "@/lib/logger";
+} from "@/lib/site/svg-security";
+import { createLogger } from "@/lib/dev-tooling/logger";
 
 const log = createLogger("ALL");
 

@@ -2,18 +2,57 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { EmailStatusIndicatorWithStatus } from "@/components/contact/EmailStatusIndicator";
 
-// Mock the env module to ensure it reads from process.env at runtime
-vi.mock("@/lib/env", async () => {
-  const actual = await vi.importActual<typeof import("@/lib/env")>("@/lib/env");
-  // Create a Proxy that intercepts access to ensure env reads from process.env dynamically
+// Mock the config module to allow it to be dynamic for tests
+vi.mock("@/lib/config", async () => {
+  const actual =
+    await vi.importActual<typeof import("@/lib/config")>("@/lib/config");
   return {
     ...actual,
-    env: new Proxy(actual.env, {
-      get(target, prop) {
-        // For all properties (including getters), access normally
-        return Reflect.get(target, prop, target);
+    config: {
+      ...actual.config,
+      get runtimeMode() {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        return (process.env.RUNTIME_MODE as any) || actual.config.runtimeMode;
       },
-    }),
+    },
+    runtime: {
+      get mode() {
+        return process.env.RUNTIME_MODE || "offline-dev";
+      },
+      get isProduction() {
+        return process.env.RUNTIME_MODE === "production";
+      },
+      get isDevelopment() {
+        return (
+          process.env.RUNTIME_MODE === "live-dev" ||
+          process.env.RUNTIME_MODE === "offline-dev"
+        );
+      },
+      get isLiveDev() {
+        return process.env.RUNTIME_MODE === "live-dev";
+      },
+      get isOfflineDev() {
+        return process.env.RUNTIME_MODE === "offline-dev";
+      },
+      get isTest() {
+        return process.env.RUNTIME_MODE === "test";
+      },
+      get connectToServices() {
+        return (
+          process.env.RUNTIME_MODE === "production" ||
+          process.env.RUNTIME_MODE === "live-dev"
+        );
+      },
+      get treatServiceErrorsAsReal() {
+        return (
+          process.env.RUNTIME_MODE === "production" ||
+          process.env.RUNTIME_MODE === "live-dev"
+        );
+      },
+      get previewFeatures() {
+        return process.env.ENABLE_PREVIEW_FEATURES === "true";
+      },
+    },
   };
 });
 
@@ -71,7 +110,7 @@ describe("EmailStatusIndicatorWithStatus", () => {
   });
 
   it("shows offline-dev message in offline-dev mode", () => {
-    vi.stubEnv("APP_MODE", "offline-dev");
+    vi.stubEnv("RUNTIME_MODE", "offline-dev");
     vi.stubEnv("NODE_ENV", "development");
     vi.resetModules();
 
@@ -83,7 +122,7 @@ describe("EmailStatusIndicatorWithStatus", () => {
   });
 
   it("shows development message in live-dev mode", () => {
-    vi.stubEnv("APP_MODE", "live-dev");
+    vi.stubEnv("RUNTIME_MODE", "live-dev");
     vi.stubEnv("NODE_ENV", "development");
     vi.resetModules();
 
@@ -95,7 +134,7 @@ describe("EmailStatusIndicatorWithStatus", () => {
   });
 
   it("shows production message in production mode", () => {
-    vi.stubEnv("APP_MODE", "production");
+    vi.stubEnv("RUNTIME_MODE", "production");
     vi.stubEnv("NODE_ENV", "production");
     vi.resetModules();
 

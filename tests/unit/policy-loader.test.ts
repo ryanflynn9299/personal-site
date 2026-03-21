@@ -58,7 +58,9 @@ This is the content.`;
       );
 
       // Dynamic import to get fresh module with mocks
-      const { loadPolicyDocument } = await import("@/lib/policy-loader");
+      const { loadPolicyDocument } = await import(
+        "@/lib/policy-utils/policy-loader"
+      );
 
       const result = loadPolicyDocument("privacy-policy.md");
 
@@ -70,7 +72,9 @@ This is the content.`;
     it("throws error when file does not exist", async () => {
       (fs.existsSync as ReturnType<typeof vi.fn>).mockReturnValue(false);
 
-      const { loadPolicyDocument } = await import("@/lib/policy-loader");
+      const { loadPolicyDocument } = await import(
+        "@/lib/policy-utils/policy-loader"
+      );
 
       expect(() => loadPolicyDocument("nonexistent.md")).toThrow(
         "Policy document not found"
@@ -85,7 +89,9 @@ This is the content.`;
         mockContent
       );
 
-      const { loadPolicyDocument } = await import("@/lib/policy-loader");
+      const { loadPolicyDocument } = await import(
+        "@/lib/policy-utils/policy-loader"
+      );
 
       const result = loadPolicyDocument("simple.md");
 
@@ -105,7 +111,9 @@ Content here`;
         mockContent
       );
 
-      const { loadPolicyDocument } = await import("@/lib/policy-loader");
+      const { loadPolicyDocument } = await import(
+        "@/lib/policy-utils/policy-loader"
+      );
 
       const result = loadPolicyDocument("test.md");
 
@@ -122,7 +130,9 @@ Content here`;
         "README.md",
       ] as unknown as fs.Dirent[]);
 
-      const { getAvailablePolicies } = await import("@/lib/policy-loader");
+      const { getAvailablePolicies } = await import(
+        "@/lib/policy-utils/policy-loader"
+      );
 
       const result = getAvailablePolicies();
 
@@ -134,7 +144,9 @@ Content here`;
     it("returns empty array when policies directory does not exist", async () => {
       (fs.existsSync as ReturnType<typeof vi.fn>).mockReturnValue(false);
 
-      const { getAvailablePolicies } = await import("@/lib/policy-loader");
+      const { getAvailablePolicies } = await import(
+        "@/lib/policy-utils/policy-loader"
+      );
 
       const result = getAvailablePolicies();
 
@@ -149,7 +161,9 @@ Content here`;
         "data.json",
       ] as unknown as fs.Dirent[]);
 
-      const { getAvailablePolicies } = await import("@/lib/policy-loader");
+      const { getAvailablePolicies } = await import(
+        "@/lib/policy-utils/policy-loader"
+      );
 
       const result = getAvailablePolicies();
 
@@ -184,7 +198,9 @@ Terms content`;
         }
       );
 
-      const { loadAllPolicies } = await import("@/lib/policy-loader");
+      const { loadAllPolicies } = await import(
+        "@/lib/policy-utils/policy-loader"
+      );
 
       const result = loadAllPolicies();
 
@@ -210,7 +226,9 @@ title: Cookie Policy
 
 Content`);
 
-      const { loadAllPolicies } = await import("@/lib/policy-loader");
+      const { loadAllPolicies } = await import(
+        "@/lib/policy-utils/policy-loader"
+      );
 
       const result = loadAllPolicies();
 

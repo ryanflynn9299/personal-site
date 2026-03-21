@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, Sparkles } from "lucide-react";
+import { ChevronDown, Sparkles, Layers } from "lucide-react";
 import { useQuoteViewStore } from "@/components/quotes/store/useQuoteViewStore";
 import { useDevControlsStore } from "./store/useDevControlsStore";
-import { env } from "@/lib/env";
+import { runtime } from "@/lib/config";
 import type {
   NormalVariant,
   ConstellationVariant,
@@ -21,11 +21,22 @@ import type {
  */
 export function DevControls() {
   const pathname = usePathname();
+  const { showDevControls } = useDevControlsStore();
+  const [mounted, setMounted] = useState(false);
   // Default to true so it is hidden on load
   const [isCollapsed, setIsCollapsed] = useState(true);
 
-  // Only show if dev mode UI is enabled and not in test mode
-  if (!env.devModeUI || env.isTest) {
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Only show if dev mode UI is enabled, not in test mode, and showDevControls is true
+  if (
+    !mounted ||
+    !runtime.previewFeatures ||
+    runtime.isTest ||
+    !showDevControls
+  ) {
     return null;
   }
 
@@ -39,6 +50,9 @@ export function DevControls() {
   } else if (pathname === "/") {
     ControlsComponent = HomePageControls;
     title = "Home Controls";
+  } else if (pathname === "/about") {
+    ControlsComponent = AboutPageControls;
+    title = "About Page Controls";
   }
 
   // No controls for this route
@@ -371,11 +385,11 @@ function HomePageControls() {
   const {
     selectedAboutMe,
     selectedProjects,
-    selectedTechStack,
+    isTechStackPremium,
     selectedBlogHighlight,
     setSelectedAboutMe,
     setSelectedProjects,
-    setSelectedTechStack,
+    setTechStackPremium,
     setSelectedBlogHighlight,
   } = useDevControlsStore();
 
@@ -385,7 +399,7 @@ function HomePageControls() {
       <div>
         <SectionLabel>About Me Module</SectionLabel>
         <div className="flex flex-col gap-2">
-          {(["aboutMe2"] as const).map((variant) => (
+          {(["aboutMe"] as const).map((variant) => (
             <VariantButton
               key={variant}
               active={selectedAboutMe === variant}
@@ -415,19 +429,27 @@ function HomePageControls() {
 
       {/* Tech Stack Section */}
       <div>
-        <SectionLabel>Technology Grid</SectionLabel>
-        <div className="flex flex-col gap-2">
-          {(["techStack2", "techStack3", "techStack4"] as const).map(
-            (variant) => (
-              <VariantButton
-                key={variant}
-                active={selectedTechStack === variant}
-                onClick={() => setSelectedTechStack(variant)}
-              >
-                {formatVariantName(variant)}
-              </VariantButton>
-            )
-          )}
+        <div className="flex items-center justify-between gap-3 p-3 rounded-xl border border-white/10 bg-white/5">
+          <div className="flex items-center gap-2">
+            <Layers
+              className={`h-4 w-4 ${isTechStackPremium ? "text-sky-400" : "text-slate-500"}`}
+            />
+            <span className="text-xs font-medium text-slate-300">
+              Animated (v4)
+            </span>
+          </div>
+          <button
+            onClick={() => setTechStackPremium(!isTechStackPremium)}
+            className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors ${
+              isTechStackPremium ? "bg-sky-600" : "bg-slate-700"
+            }`}
+          >
+            <span
+              className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform ${
+                isTechStackPremium ? "translate-x-5" : "translate-x-0.5"
+              }`}
+            />
+          </button>
         </div>
       </div>
 
@@ -435,11 +457,59 @@ function HomePageControls() {
       <div>
         <SectionLabel>Blog Highlighting</SectionLabel>
         <div className="flex flex-col gap-2">
-          {(["blogHighlight4"] as const).map((variant) => (
+          {(["blogHighlight"] as const).map((variant) => (
             <VariantButton
               key={variant}
               active={selectedBlogHighlight === variant}
               onClick={() => setSelectedBlogHighlight(variant)}
+            >
+              {formatVariantName(variant)}
+            </VariantButton>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * About Page Controls
+ */
+function AboutPageControls() {
+  const {
+    selectedAboutValuesGrid,
+    setSelectedAboutValuesGrid,
+    selectedAboutCTA,
+    setSelectedAboutCTA,
+  } = useDevControlsStore();
+
+  return (
+    <div className="w-full max-h-[65vh] overflow-y-auto pr-1 space-y-6">
+      {/* Values Grid Section */}
+      <div>
+        <SectionLabel>Values Grid Styling</SectionLabel>
+        <div className="flex flex-col gap-2">
+          {(["valuesGridFlat", "valuesGridPremium"] as const).map((variant) => (
+            <VariantButton
+              key={variant}
+              active={selectedAboutValuesGrid === variant}
+              onClick={() => setSelectedAboutValuesGrid(variant)}
+            >
+              {formatVariantName(variant)}
+            </VariantButton>
+          ))}
+        </div>
+      </div>
+
+      {/* CTA Section */}
+      <div>
+        <SectionLabel>CTA Styling</SectionLabel>
+        <div className="flex flex-col gap-2">
+          {(["ctaPremium", "ctaFlat"] as const).map((variant) => (
+            <VariantButton
+              key={variant}
+              active={selectedAboutCTA === variant}
+              onClick={() => setSelectedAboutCTA(variant)}
             >
               {formatVariantName(variant)}
             </VariantButton>
