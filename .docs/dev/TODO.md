@@ -61,7 +61,7 @@ _Start here - these are the most important items to tackle next_
 
 ### Release blockers (security & ops)
 
-- [x] Wire admin middleware (`middleware.ts` → `lib/site/middleware.ts`)
+- [x] Wire admin middleware (`middleware.ts`)
 - [x] Contact form honeypot + rate limiting (see `.docs/dev/CONTACT_FORM_SECURITY.md`)
 - [x] Matomo client cleanup (`config.matomo.enabled`)
 - [x] Docker prod env wiring (SMTP, admin, Matomo build args)

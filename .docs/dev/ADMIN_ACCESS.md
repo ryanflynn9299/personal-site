@@ -4,7 +4,7 @@ The admin dashboard at `/admin/dashboard` is protected by middleware, passcode a
 
 ## Current Implementation (done)
 
-- [x] Root `middleware.ts` wired to `lib/site/middleware.ts`
+- [x] Root `middleware.ts` protects `/admin` routes
 - [x] Unauthenticated requests redirect to `/admin/dashboard/login`
 - [x] Passcode login sets `httpOnly` session cookie (`ADMIN_SESSION_SECRET`)
 - [x] Login brute-force delay (1s synthetic wait on failure)
