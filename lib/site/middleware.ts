@@ -1,55 +1,93 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { runtime } from "@/lib/config";
-import { serverConfig } from "@/lib/config/server";
 
 const SESSION_COOKIE_NAME = "admin_session";
 
+/** Preview-only routes — blocked in production unless ENABLE_PREVIEW_FEATURES=true */
+const PREVIEW_ONLY_ROUTES = ["/quotes", "/projects-cabinet"];
+
+function isProductionDeployment(): boolean {
+  const mode = process.env.RUNTIME_MODE;
+  if (mode === "production") {
+    return true;
+  }
+  if (mode === "live-dev" || mode === "offline-dev" || mode === "test") {
+    return false;
+  }
+  return process.env.NODE_ENV === "production";
+}
+
+function previewFeaturesEnabled(): boolean {
+  return process.env.ENABLE_PREVIEW_FEATURES === "true";
+}
+
+function getClientIp(request: NextRequest): string {
+  const forwarded = request.headers.get("x-forwarded-for");
+  if (forwarded) {
+    return forwarded.split(",")[0]?.trim() ?? "unknown";
+  }
+  return request.headers.get("x-real-ip") ?? "unknown";
+}
+
+function isTailscaleIp(ip: string): boolean {
+  const parts = ip.split(".").map(Number);
+  if (parts.length !== 4 || parts.some(Number.isNaN)) {
+    return false;
+  }
+  return parts[0] === 100 && parts[1] >= 64 && parts[1] <= 127;
+}
+
 /**
- * Middleware to protect admin routes
+ * Middleware: admin auth, optional Tailscale gate, preview-route blocking.
  */
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Only run middleware for admin routes
+  if (
+    isProductionDeployment() &&
+    !previewFeaturesEnabled() &&
+    PREVIEW_ONLY_ROUTES.some(
+      (route) => pathname === route || pathname.startsWith(`${route}/`)
+    )
+  ) {
+    return new NextResponse(null, { status: 404 });
+  }
+
   if (pathname.startsWith("/admin")) {
-    // Allow access to login page without a session
     if (pathname.includes("/login")) {
       return NextResponse.next();
     }
 
-    // Check for admin session cookie
     const session = request.cookies.get(SESSION_COOKIE_NAME);
-    const sessionSecret = serverConfig.admin.sessionSecret;
+    const sessionSecret = process.env.ADMIN_SESSION_SECRET;
 
-    // Verify session exists and matches our secret
     if (!session || !sessionSecret || session.value !== sessionSecret) {
-      // Redirect to login if no valid session found
       const url = request.nextUrl.clone();
       url.pathname = "/admin/dashboard/login";
       return NextResponse.redirect(url);
     }
 
-    // [Optional] Tailscale IP Check
-    const clientIP =
-      request.headers.get("x-forwarded-for") ||
-      request.headers.get("x-real-ip") ||
-      "127.0.0.1";
-    const isDevelopment = runtime.isDevelopment;
-    const isTailscale = clientIP?.startsWith("100.");
-
-    if (!isDevelopment && !isTailscale && serverConfig.admin.requireTailscale) {
-      return new NextResponse(
-        "Subspace Access Denied: Tailscale Connection Required",
-        { status: 403 }
-      );
+    const requireTailscale = process.env.ADMIN_REQUIRE_TAILSCALE === "true";
+    if (requireTailscale && isProductionDeployment()) {
+      const clientIP = getClientIp(request);
+      if (!isTailscaleIp(clientIP)) {
+        return new NextResponse(
+          "Subspace Access Denied: Tailscale Connection Required",
+          { status: 403 }
+        );
+      }
     }
   }
 
   return NextResponse.next();
 }
 
-// Matching Paths
 export const config = {
-  matcher: ["/admin/:path*"],
+  matcher: [
+    "/admin/:path*",
+    "/quotes/:path*",
+    "/quotes",
+    "/projects-cabinet/:path*",
+    "/projects-cabinet",
+  ],
 };

@@ -5,6 +5,8 @@ import {
   sendEmail,
   type EmailMessage,
 } from "@/lib/services/email-service";
+import { getContactClientIp } from "@/lib/services/contact-client-ip";
+import { validateContactSubmission } from "@/lib/services/contact-protection";
 import { runtime } from "@/lib/config";
 import { serverConfig } from "@/lib/config/server";
 import type { FormState } from "@/types/forms";
@@ -14,9 +16,37 @@ import {
   createContactMessage,
 } from "@/lib/services/directus";
 
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 export async function submitContactForm(
   formData: FormData
 ): Promise<FormState> {
+  const clientIp = await getContactClientIp();
+  const protection = validateContactSubmission(formData, clientIp);
+
+  if (!protection.allowed) {
+    if (protection.reason === "honeypot") {
+      // Silent success — do not signal to bots that the honeypot was detected
+      return {
+        success: true,
+        emailSent: false,
+        message: "Thank you for your message! I'll get back to you soon.",
+      };
+    }
+
+    return {
+      success: false,
+      error: "Too many messages sent recently. Please try again later.",
+    };
+  }
+
   // Extract form data
   const name = (formData.get("name") as string) || "";
   const email = (formData.get("email") as string) || "";
@@ -58,7 +88,7 @@ export async function submitContactForm(
       to: serverConfig.smtp.to || "contact@example.com",
       subject: `Contact Form Submission from ${name}`,
       text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
-      html: `<p><strong>Name:</strong> ${name}</p><p><strong>Email:</strong> ${email}</p><p><strong>Message:</strong></p><p>${message.replace(/\n/g, "<br>")}</p>`,
+      html: `<p><strong>Name:</strong> ${escapeHtml(name)}</p><p><strong>Email:</strong> ${escapeHtml(email)}</p><p><strong>Message:</strong></p><p>${escapeHtml(message).replace(/\n/g, "<br>")}</p>`,
     };
 
     const emailResult = await sendEmail(emailMessage);

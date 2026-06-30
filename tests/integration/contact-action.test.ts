@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { submitContactForm } from "@/app/actions/contact";
 import * as emailService from "@/lib/services/email-service";
+import { resetContactRateLimitForTests } from "@/lib/services/contact-protection";
 
 // Mock logger to avoid console output during tests
 vi.mock("@/lib/dev-tooling/logger", () => {
@@ -90,9 +91,19 @@ vi.mock("@/lib/dev-tooling/delay", () => ({
   delay: vi.fn().mockResolvedValue(undefined),
 }));
 
+vi.mock("@/lib/services/contact-client-ip", () => ({
+  getContactClientIp: vi.fn().mockResolvedValue("127.0.0.1"),
+}));
+
+vi.mock("@/lib/services/directus", () => ({
+  isDirectusConfigured: vi.fn().mockReturnValue(false),
+  createContactMessage: vi.fn().mockResolvedValue(false),
+}));
+
 describe("submitContactForm", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    resetContactRateLimitForTests();
     // Set test mode - services are disabled in test mode
     vi.stubEnv("RUNTIME_MODE", "test");
     vi.stubEnv("NODE_ENV", "test");
@@ -208,5 +219,41 @@ describe("submitContactForm", () => {
       const result = await submitContactForm(formData);
       expect(result.success).toBe(true);
     }
+  });
+
+  it("silently accepts honeypot submissions", async () => {
+    const formData = new FormData();
+    formData.set("name", "Bot");
+    formData.set("email", "bot@example.com");
+    formData.set("message", "spam");
+    formData.set("website", "https://spam.example.com");
+
+    const result = await submitContactForm(formData);
+
+    expect(result.success).toBe(true);
+    expect(result.message).toContain("Thank you");
+    expect(emailService.sendEmail).not.toHaveBeenCalled();
+  });
+
+  it("rejects submissions when rate limit exceeded", async () => {
+    vi.mocked(emailService.isEmailServiceConfigured).mockReturnValue(true);
+
+    for (let i = 0; i < 5; i++) {
+      const formData = new FormData();
+      formData.set("name", "User");
+      formData.set("email", "test@example.com");
+      formData.set("message", `Message ${i}`);
+      await submitContactForm(formData);
+    }
+
+    const formData = new FormData();
+    formData.set("name", "User");
+    formData.set("email", "test@example.com");
+    formData.set("message", "One too many");
+
+    const result = await submitContactForm(formData);
+
+    expect(result.success).toBe(false);
+    expect(result.error).toContain("Too many messages");
   });
 });

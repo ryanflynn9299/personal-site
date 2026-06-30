@@ -39,7 +39,7 @@ _Start here - these are the most important items to tackle next_
 ### Before Launch - After UI reviewers
 
 - [ ] Add professional headshot/profile images
-- [ ] Deep dive on Matomo
+- [ ] Deep dive on Matomo (see `.docs/dev/MATOMO_LAUNCH_CHECKLIST.md`)
 - [ ] Update site metadata (title, description, favicon)
 - [ ] Versioning system/methodology
 - [x] Implement Terms and Privacy Policies wrt Matomo analytics
@@ -51,13 +51,23 @@ _Start here - these are the most important items to tackle next_
 - [ ] Ensure responsive design works on mobile devices
 - [x] Figure out scalability for blog
 - [x] Add pagination for blog listing page
-- [ ] Finish quotes page and make final selection
+- [x] Quotes page — dev-only at launch (middleware + sitemap + robots)
 - [ ] See my latest LinkedIn posts??
 - [x] clean up eslint warnings
 - [ ] connect counter to database
 - [x] Add complete suite of e2e tests and improve unit test coverage
 - [x] Stabilize e2e tests
-- [ ] Clean up documentation
+- [x] Clean up documentation (see `.docs/dev/RELEASE_READINESS.md`)
+
+### Release blockers (security & ops)
+
+- [x] Wire admin middleware (`middleware.ts` → `lib/site/middleware.ts`)
+- [x] Contact form honeypot + rate limiting (see `.docs/dev/CONTACT_FORM_SECURITY.md`)
+- [x] Matomo client cleanup (`config.matomo.enabled`)
+- [x] Docker prod env wiring (SMTP, admin, Matomo build args)
+- [ ] **Configure Tailscale for admin access** (see `.docs/dev/ADMIN_ACCESS.md`)
+- [ ] **Implement real SMTP email delivery** (see `.docs/dev/SMTP_LAUNCH_CHECKLIST.md`)
+- [ ] Complete Matomo launch operator tasks (see `.docs/dev/MATOMO_LAUNCH_CHECKLIST.md`)
 
 ### First promote after launch
 

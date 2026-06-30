@@ -96,7 +96,9 @@ export function parsePublicConfig(): PublicConfig {
       siteId: process.env.NEXT_PUBLIC_MATOMO_SITE_ID || undefined,
       enabled:
         !!process.env.NEXT_PUBLIC_MATOMO_URL &&
-        process.env.NEXT_PUBLIC_MATOMO_URL !== "DISABLED",
+        process.env.NEXT_PUBLIC_MATOMO_URL !== "DISABLED" &&
+        !!process.env.NEXT_PUBLIC_MATOMO_SITE_ID &&
+        process.env.NEXT_PUBLIC_MATOMO_SITE_ID !== "DISABLED",
     },
   };
 

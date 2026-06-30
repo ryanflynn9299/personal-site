@@ -27,9 +27,10 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        # This passes the public URL to the 'docker build' command.
-        # Docker Compose gets the value from the root .env file.
         - NEXT_PUBLIC_DIRECTUS_URL=${NEXT_PUBLIC_DIRECTUS_URL}
+        - NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL}
+        - NEXT_PUBLIC_MATOMO_URL=${NEXT_PUBLIC_MATOMO_URL}
+        - NEXT_PUBLIC_MATOMO_SITE_ID=${NEXT_PUBLIC_MATOMO_SITE_ID}
     restart: unless-stopped
     expose:
       # Expose port 3000 internally to the backend-net network
@@ -38,9 +39,21 @@ services:
     # We now pass variables directly from the root .env file
     # This makes the config consistent with the other services.
     environment:
+      - RUNTIME_MODE=production
       - NEXT_PUBLIC_DIRECTUS_URL=${NEXT_PUBLIC_DIRECTUS_URL}
+      - NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL}
+      - NEXT_PUBLIC_MATOMO_URL=${NEXT_PUBLIC_MATOMO_URL}
+      - NEXT_PUBLIC_MATOMO_SITE_ID=${NEXT_PUBLIC_MATOMO_SITE_ID}
       - DIRECTUS_INTERNAL_URL=${DIRECTUS_INTERNAL_URL}
-      # Add any other runtime-only variables for Next.js here
+      - SMTP_HOST=${SMTP_HOST}
+      - SMTP_PORT=${SMTP_PORT}
+      - SMTP_FROM=${SMTP_FROM}
+      - SMTP_TO=${SMTP_TO}
+      - SMTP_USER=${SMTP_USER}
+      - SMTP_PASS=${SMTP_PASS}
+      - ADMIN_PASSCODE=${ADMIN_PASSCODE}
+      - ADMIN_SESSION_SECRET=${ADMIN_SESSION_SECRET}
+      - ADMIN_REQUIRE_TAILSCALE=${ADMIN_REQUIRE_TAILSCALE}
     networks:
       - backend-net
     depends_on:

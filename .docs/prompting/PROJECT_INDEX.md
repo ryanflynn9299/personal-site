@@ -50,19 +50,26 @@ This document serves as the definitive map for identifying the core configuratio
 
 ## 4. Services & Integrations
 
-| System            | Source of Truth                                                                                                      | Description                                                  |
-| :---------------- | :------------------------------------------------------------------------------------------------------------------- | :----------------------------------------------------------- |
-| **Directus CMS**  | [lib/services/directus/index.ts](file:///Users/ryanflynn/personal-site/personal-site/lib/services/directus/index.ts) | Entry point for all CMS data fetching and transforms.        |
-| **Email Service** | [lib/services/email-service.ts](file:///Users/ryanflynn/personal-site/personal-site/lib/services/email-service.ts)   | Logic for transactional emails and contact form submissions. |
+| System               | Source of Truth                                                                                                                                                                           | Description                                                  |
+| :------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :----------------------------------------------------------- |
+| **Directus CMS**     | [lib/services/directus/index.ts](file:///Users/ryanflynn/personal-site/personal-site/lib/services/directus/index.ts)                                                                      | Entry point for all CMS data fetching and transforms.        |
+| **Email Service**    | [lib/services/email-service.ts](file:///Users/ryanflynn/personal-site/personal-site/lib/services/email-service.ts)                                                                        | Logic for transactional emails and contact form submissions. |
+| **Contact Security** | [lib/services/contact-protection.ts](file:///Users/ryanflynn/personal-site/personal-site/lib/services/contact-protection.ts)                                                              | Honeypot and rate limiting for contact form.                 |
+| **Admin Middleware** | [middleware.ts](file:///Users/ryanflynn/personal-site/personal-site/middleware.ts) → [lib/site/middleware.ts](file:///Users/ryanflynn/personal-site/personal-site/lib/site/middleware.ts) | Route protection for `/admin` and preview routes.            |
 
 ## 5. Core Documentation (Strategy)
 
-| Topic                | Source of Truth                                                                                                                            |
-| :------------------- | :----------------------------------------------------------------------------------------------------------------------------------------- |
-| **Architecture**     | [.docs/ARCHITECTURE.md](file:///Users/ryanflynn/personal-site/personal-site/.docs/ARCHITECTURE.md)                                         |
-| **Testing Strategy** | [.docs/TESTING_STRATEGY.md](file:///Users/ryanflynn/personal-site/personal-site/.docs/TESTING_STRATEGY.md)                                 |
-| **Dev Guidelines**   | [.docs/prompting/DEVELOPMENT_GUIDELINES.md](file:///Users/ryanflynn/personal-site/personal-site/.docs/prompting/DEVELOPMENT_GUIDELINES.md) |
-| **Security**         | [.docs/SECURITY_HEALTH_CHECK.md](file:///Users/ryanflynn/personal-site/personal-site/.docs/SECURITY_HEALTH_CHECK.md)                       |
+| Topic                 | Source of Truth                                                                                                                            |
+| :-------------------- | :----------------------------------------------------------------------------------------------------------------------------------------- |
+| **Release Readiness** | [.docs/dev/RELEASE_READINESS.md](file:///Users/ryanflynn/personal-site/personal-site/.docs/dev/RELEASE_READINESS.md)                       |
+| **Architecture**      | [.docs/ARCHITECTURE.md](file:///Users/ryanflynn/personal-site/personal-site/.docs/ARCHITECTURE.md)                                         |
+| **Testing Strategy**  | [.docs/TESTING_STRATEGY.md](file:///Users/ryanflynn/personal-site/personal-site/.docs/TESTING_STRATEGY.md)                                 |
+| **Dev Guidelines**    | [.docs/prompting/DEVELOPMENT_GUIDELINES.md](file:///Users/ryanflynn/personal-site/personal-site/.docs/prompting/DEVELOPMENT_GUIDELINES.md) |
+| **Admin Access**      | [.docs/dev/ADMIN_ACCESS.md](file:///Users/ryanflynn/personal-site/personal-site/.docs/dev/ADMIN_ACCESS.md)                                 |
+| **Contact Security**  | [.docs/dev/CONTACT_FORM_SECURITY.md](file:///Users/ryanflynn/personal-site/personal-site/.docs/dev/CONTACT_FORM_SECURITY.md)               |
+| **Matomo Launch**     | [.docs/dev/MATOMO_LAUNCH_CHECKLIST.md](file:///Users/ryanflynn/personal-site/personal-site/.docs/dev/MATOMO_LAUNCH_CHECKLIST.md)           |
+| **SMTP Launch**       | [.docs/dev/SMTP_LAUNCH_CHECKLIST.md](file:///Users/ryanflynn/personal-site/personal-site/.docs/dev/SMTP_LAUNCH_CHECKLIST.md)               |
+| **Security**          | [.docs/SECURITY_HEALTH_CHECK.md](file:///Users/ryanflynn/personal-site/personal-site/.docs/SECURITY_HEALTH_CHECK.md)                       |
 
 ## 6. Testing Infrastructure
 

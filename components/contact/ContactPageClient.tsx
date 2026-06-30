@@ -15,6 +15,7 @@ import { Button } from "@/components/primitives/Button";
 import { submitContactForm } from "@/app/actions/contact";
 import { EmailStatusIndicatorWithStatus } from "@/components/contact/EmailStatusIndicator";
 import { FunCounter } from "@/components/contact/FunCounter";
+import { CONTACT_HONEYPOT_FIELD } from "@/lib/services/contact-protection";
 import type { FormState, SavedFormData, ContactPageClientProps } from "@/types";
 
 const initialState: FormState = { success: false };
@@ -253,6 +254,20 @@ export function ContactPageClient({
                   rows={5}
                   placeholder="Your Message"
                   className="w-full rounded-md border-slate-600 bg-slate-700 px-4 py-2 text-slate-200 ring-offset-slate-900 transition-colors focus:border-sky-300 focus:ring-2 focus:ring-sky-300"
+                />
+              </div>
+              {/* Honeypot — hidden from users, filled by bots */}
+              <div
+                className="absolute left-[-9999px] h-0 w-0 overflow-hidden"
+                aria-hidden="true"
+              >
+                <label htmlFor={CONTACT_HONEYPOT_FIELD}>Website</label>
+                <input
+                  type="text"
+                  name={CONTACT_HONEYPOT_FIELD}
+                  id={CONTACT_HONEYPOT_FIELD}
+                  tabIndex={-1}
+                  autoComplete="off"
                 />
               </div>
               <div className="flex items-center justify-between">

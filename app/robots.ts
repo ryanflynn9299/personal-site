@@ -7,12 +7,24 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/admin/", "/dashboard/", "/api/"],
+        disallow: [
+          "/admin/",
+          "/dashboard/",
+          "/api/",
+          "/quotes/",
+          "/projects-cabinet/",
+        ],
       },
       {
         userAgent: "Googlebot",
         allow: "/",
-        disallow: ["/admin/", "/dashboard/", "/api/"],
+        disallow: [
+          "/admin/",
+          "/dashboard/",
+          "/api/",
+          "/quotes/",
+          "/projects-cabinet/",
+        ],
       },
     ],
     sitemap: `${SITE_URL}/sitemap.xml`,
