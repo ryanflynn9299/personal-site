@@ -61,6 +61,8 @@ export default defineConfig({
     stdout: "ignore", // Suppress stdout to reduce noise
     stderr: "pipe", // Keep stderr for actual errors
     env: {
+      // Production-like runtime for middleware and route blocking tests
+      RUNTIME_MODE: "production",
       // Set test mode - services will be disabled automatically
       APP_MODE: "test",
       // Suppress noisy warnings during E2E tests

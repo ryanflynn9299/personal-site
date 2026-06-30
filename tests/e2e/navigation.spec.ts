@@ -12,17 +12,18 @@ import { test, expect } from "@playwright/test";
  * which are stable unless the site structure changes.
  */
 
-// All primary pages that should return 200
-const PRIMARY_ROUTES = [
+// Public pages that should return 200 in production
+const PUBLIC_ROUTES = [
   "/",
   "/about",
   "/vitae",
   "/blog",
   "/contact",
-  "/quotes",
-  "/projects-cabinet",
   "/policies",
 ];
+
+// Preview-only pages blocked in production (see middleware.ts)
+const PREVIEW_ONLY_ROUTES = ["/quotes", "/projects-cabinet"];
 
 // Routes that should redirect (301/302/307/308) to another location
 const REDIRECT_ROUTES = [
@@ -31,12 +32,21 @@ const REDIRECT_ROUTES = [
 ];
 
 test.describe("Navigation — Route Accessibility", () => {
-  for (const route of PRIMARY_ROUTES) {
+  for (const route of PUBLIC_ROUTES) {
     test(`${route} returns a successful response`, async ({ page }) => {
       const response = await page.goto(route, { waitUntil: "commit" });
 
       expect(response).not.toBeNull();
       expect(response!.status()).toBe(200);
+    });
+  }
+
+  for (const route of PREVIEW_ONLY_ROUTES) {
+    test(`${route} is blocked in production (404)`, async ({ page }) => {
+      const response = await page.goto(route, { waitUntil: "commit" });
+
+      expect(response).not.toBeNull();
+      expect(response!.status()).toBe(404);
     });
   }
 });

@@ -50,12 +50,12 @@ This document serves as the definitive map for identifying the core configuratio
 
 ## 4. Services & Integrations
 
-| System               | Source of Truth                                                                                                                                                                           | Description                                                  |
-| :------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :----------------------------------------------------------- |
-| **Directus CMS**     | [lib/services/directus/index.ts](file:///Users/ryanflynn/personal-site/personal-site/lib/services/directus/index.ts)                                                                      | Entry point for all CMS data fetching and transforms.        |
-| **Email Service**    | [lib/services/email-service.ts](file:///Users/ryanflynn/personal-site/personal-site/lib/services/email-service.ts)                                                                        | Logic for transactional emails and contact form submissions. |
-| **Contact Security** | [lib/services/contact-protection.ts](file:///Users/ryanflynn/personal-site/personal-site/lib/services/contact-protection.ts)                                                              | Honeypot and rate limiting for contact form.                 |
-| **Admin Middleware** | [middleware.ts](file:///Users/ryanflynn/personal-site/personal-site/middleware.ts) | Route protection for `/admin` and preview routes.            |
+| System               | Source of Truth                                                                                                              | Description                                                  |
+| :------------------- | :--------------------------------------------------------------------------------------------------------------------------- | :----------------------------------------------------------- |
+| **Directus CMS**     | [lib/services/directus/index.ts](file:///Users/ryanflynn/personal-site/personal-site/lib/services/directus/index.ts)         | Entry point for all CMS data fetching and transforms.        |
+| **Email Service**    | [lib/services/email-service.ts](file:///Users/ryanflynn/personal-site/personal-site/lib/services/email-service.ts)           | Logic for transactional emails and contact form submissions. |
+| **Contact Security** | [lib/services/contact-protection.ts](file:///Users/ryanflynn/personal-site/personal-site/lib/services/contact-protection.ts) | Honeypot and rate limiting for contact form.                 |
+| **Admin Middleware** | [middleware.ts](file:///Users/ryanflynn/personal-site/personal-site/middleware.ts)                                           | Route protection for `/admin` and preview routes.            |
 
 ## 5. Core Documentation (Strategy)
 

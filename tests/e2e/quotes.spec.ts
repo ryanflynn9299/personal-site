@@ -1,6 +1,13 @@
 import { test, expect } from "@playwright/test";
 
+const previewFeaturesEnabled = process.env.ENABLE_PREVIEW_FEATURES === "true";
+
 test.describe("Quotes Page Component", () => {
+  test.skip(
+    !previewFeaturesEnabled,
+    "Quotes are dev-only in production; set ENABLE_PREVIEW_FEATURES=true to run these tests"
+  );
+
   test("renders the Quotes structural shell correctly", async ({ page }) => {
     await page.goto("/quotes");
 

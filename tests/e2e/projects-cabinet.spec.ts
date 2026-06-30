@@ -1,6 +1,13 @@
 import { test, expect } from "@playwright/test";
 
+const previewFeaturesEnabled = process.env.ENABLE_PREVIEW_FEATURES === "true";
+
 test.describe("Project File Cabinet Page", () => {
+  test.skip(
+    !previewFeaturesEnabled,
+    "Projects cabinet is dev-only in production; set ENABLE_PREVIEW_FEATURES=true to run these tests"
+  );
+
   test.beforeEach(async ({ page }) => {
     await page.goto("/projects-cabinet");
   });
