@@ -58,7 +58,6 @@ The Next.js dashboard is separate from:
 
 | File                           | Purpose                                   |
 | ------------------------------ | ----------------------------------------- |
-| `middleware.ts`                | Next.js entry                             |
-| `lib/site/middleware.ts`       | Auth + Tailscale + preview route blocking |
+| `middleware.ts`                | Auth + Tailscale + preview route blocking |
 | `app/actions/auth.ts`          | Login/logout server actions               |
 | `app/(admin)/admin/dashboard/` | Dashboard UI                              |
