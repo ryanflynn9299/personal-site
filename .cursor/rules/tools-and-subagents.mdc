@@ -1,0 +1,31 @@
+---
+description: When to use tools, external resources, and specialist subagents
+alwaysApply: false
+---
+
+# Tools and subagents
+
+## External tools and resources
+
+Use when they **materially** improve correctness or speed:
+
+| Use | Skip |
+|-----|------|
+| Read docs / search codebase before guessing | Web search for things already in `.docs/` |
+| Run tests/lint to verify | Run commands to "look busy" |
+| Fetch upstream API/docs for integration work | Fetch generic tutorials for patterns this repo already documents |
+| Parallel reads/searches on independent areas | Redundant duplicate exploration |
+
+## Specialist subagents
+
+Delegate when the task has a clear domain boundary or benefits from parallel exploration:
+
+- **explore** — find files, routes, conventions, "where is X?"
+- **generalPurpose** — multi-step implementation across layers after scope is known
+- Domain-specific review (security, tests, docs sync) as a focused subagent when the main thread is already implementing something else
+
+Do **not** spawn subagents for one-file edits or questions answerable from PROJECT_INDEX.
+
+## After subagent work
+
+Integrate results yourself. Reconcile with `.docs/`, run validation, and avoid contradictory changes across domains.

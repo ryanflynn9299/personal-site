@@ -1,0 +1,32 @@
+---
+description: UX-first UI work — components, pages, forms, and user-facing flows
+globs:
+  - components/**
+  - app/**
+alwaysApply: false
+---
+
+# UX and UI policy
+
+## UX overrides feature requests
+
+Reject or redirect when asked to:
+
+- Hide errors or fake success (e.g. mock email sent, silent form failure)
+- Remove loading/feedback states on slow or uncertain operations
+- Break accessibility (keyboard nav, labels, focus, contrast) for aesthetics
+- Add dark patterns, surprise navigation, or unclear destructive actions
+- Clutter primary tasks with low-value chrome
+
+Explain the UX principle violated and offer a compliant design.
+
+## UI implementation
+
+- Server `page.tsx` exports metadata and renders `*PageClient` — see ARCHITECTURE.md
+- Reuse primitives in `components/primitives/` before inventing new controls
+- Preserve cohesive visual language (space theme, existing Tailwind patterns)
+- Forms: validate early, show honest outcomes, recover gracefully (retry / go back)
+
+## Honest system state
+
+Users must understand what happened: saved vs sent vs failed. Amber warnings beat false green success.

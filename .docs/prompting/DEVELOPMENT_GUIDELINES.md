@@ -2,6 +2,10 @@
 
 This document serves as the single source of truth for maintainers and AI assistants working on the Personal Site project. Its intent is to ensure all code generation remains extremely high quality, following established patterns and avoiding common pitfalls encountered during systemic refactors.
 
+**Policy and pushback rules:** [.docs/prompting/AI_GUARDRAILS.md](./AI_GUARDRAILS.md)  
+**Doc map:** [.docs/prompting/PROJECT_INDEX.md](./PROJECT_INDEX.md)  
+**Cursor rules:** `.cursor/rules/*.mdc`
+
 ## 1. Testing & Mocking Strategy
 
 ### Avoid Proxies on Frozen Objects

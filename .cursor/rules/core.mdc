@@ -1,0 +1,31 @@
+---
+alwaysApply: true
+---
+
+# Core agent policy
+
+## Documentation is the default authority
+
+Before product, architecture, design, or style decisions:
+
+1. Read `.docs/prompting/PROJECT_INDEX.md` and the topic doc it points to.
+2. Follow documented patterns unless you can **prove** a better approach.
+
+**Override policy (docs too restrictive):** implement the better path, explain why in the PR/summary, and **update the relevant `.docs/` file in the same change**. Do not silently diverge.
+
+**Contradiction policy (operator request vs docs):** push back. State which doc conflicts and why. Proceed only after explicit permission to override — then update documentation as part of the work.
+
+## Code quality (required)
+
+- Structure: `.docs/ARCHITECTURE.md`, `.docs/prompting/DEVELOPMENT_GUIDELINES.md`
+- Match naming, imports, and abstractions in files you touch; minimal diff
+- Never import `@/lib/services/*` from `"use client"` components
+- Before done: `pnpm run validate` and `pnpm run test` (plus E2E when touching routes/flows)
+
+## UX is paramount
+
+If a request conflicts with established UX principles (clarity, feedback, accessibility, honest system state, predictable navigation, error recovery), **reject it** and propose a UX-aligned alternative. Do not ship deceptive success states or hidden failure modes.
+
+## Completion bar
+
+A task is not done when code compiles. It is done when behavior matches docs/intent, quality gates pass, and docs are updated if behavior or policy changed.

@@ -1,0 +1,41 @@
+---
+description: Testing philosophy and scope — when to add, skip, or deepen tests
+globs:
+  - tests/**
+  - "**/*.test.ts"
+  - "**/*.test.tsx"
+  - "**/*.spec.ts"
+alwaysApply: false
+---
+
+# Testing policy
+
+Full strategy: `.docs/TESTING_STRATEGY.md`. Repo pitfalls: `.docs/prompting/DEVELOPMENT_GUIDELINES.md` §1.
+
+## Default: requirements, happy path
+
+Tests should codify **what the system must do**, not how it is implemented today.
+
+- Prefer one clear happy-path test per behavior over many brittle assertions
+- Test user-visible outcomes and public contracts (actions, API shapes, UI states)
+- Do **not** add tests whose only purpose is coverage padding or line-count
+
+## When to add depth
+
+Add edge cases, failure modes, security tests, or regression tests **only when**:
+
+- A bug escaped once (regression test with a one-line comment referencing the failure)
+- Security or abuse is in scope (auth, input validation, rate limits, honeypots)
+- The happy path hides a risky branch (e.g. stored-without-email vs total failure)
+- CI would otherwise give no useful signal on regressions
+
+Skip depth when the case is impossible, trivially typed away, or third-party library behavior.
+
+## Maintenance cost
+
+If a feature change forces widespread test rewrites, tests were probably too specific. Refactor toward behavior-level assertions.
+
+## Mocks
+
+- Mock external services (Directus, SMTP), not your own pure utilities
+- Never use Proxies on frozen `lib/config` objects — use getters (see DEVELOPMENT_GUIDELINES)

@@ -1,0 +1,12 @@
+# Deprecated — use AGENTS.md and .cursor/rules/*.mdc instead.
+#
+# This file remains for tools that only read .cursorrules at the repo root.
+# Canonical instructions: AGENTS.md → .docs/prompting/AI_GUARDRAILS.md
+
+Read AGENTS.md before making changes.
+
+- Documentation in `.docs/` is authoritative. Push back on requests that contradict it, or get explicit permission and update docs.
+- Code must be readable, cohesive, and validated (`pnpm run validate`, `pnpm run test`).
+- Happy-path tests by default; no test theater.
+- UX wins over convenience. Reject anti-UX requests with a better alternative.
+- Use tools and subagents when they clearly help, not reflexively.

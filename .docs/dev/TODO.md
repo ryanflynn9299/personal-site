@@ -35,6 +35,7 @@ _Start here — see also [RELEASE_READINESS.md](./RELEASE_READINESS.md) for the 
 - [x] Clean up documentation (see [RELEASE_READINESS.md](./RELEASE_READINESS.md))
 - [x] CI: no auto checks on `dev`; full CI on `main`; manual dispatch
 - [x] Branch sync: `dev` staging, `main` production
+- [x] AI guardrails (`AGENTS.md`, `.cursor/rules/`, `AI_GUARDRAILS.md`)
 
 ### First promote after launch
 
