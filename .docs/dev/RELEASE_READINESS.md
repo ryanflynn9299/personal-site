@@ -2,16 +2,16 @@
 
 Central index for shipping the personal site. Updated March 2026.
 
-## Release Branch Strategy
+## Branch Strategy
 
-| Branch          | Role                                                 |
-| --------------- | ---------------------------------------------------- |
-| **`main`**      | Production — merge release PRs here                  |
-| **`dev`**       | Integration — feature work lands here first          |
-| **`dev-main`**  | **Stale** — delete after merge (superseded by `dev`) |
-| **`dev-ci-cd`** | **Stale** — delete after merge                       |
+| Branch     | Role                                                                           |
+| ---------- | ------------------------------------------------------------------------------ |
+| **`main`** | Production — release PRs merge here                                            |
+| **`dev`**  | Staging — feature branches merge here first; synced with `main` after releases |
 
-**Current release path:** `cursor/polish-dev-release-d174` → PR → `main`
+**Workflow:** `feature/*` → PR to **`dev`** → PR to **`main`** when ready to release.
+
+CI on **`dev`**: lint, tests, and build always run; E2E is opt-in (`[run e2e]` in commit/PR message).
 
 ## Pre-Release Checklist
 
