@@ -5,6 +5,7 @@ import tseslint from "typescript-eslint";
 import react from "eslint-plugin-react";
 import reactHooks from "eslint-plugin-react-hooks";
 import nextPlugin from "@next/eslint-plugin-next";
+import jsxA11y from "eslint-plugin-jsx-a11y";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -27,6 +28,7 @@ export default [
       "public/**",
       "scripts/**",
       "infrastructure/sync-service/**",
+      "components/archived/**",
       ".turbo/**",
       "playwright/.cache/**",
     ],
@@ -74,6 +76,7 @@ export default [
     plugins: {
       react: react,
       "react-hooks": reactHooks,
+      "jsx-a11y": jsxA11y,
     },
     languageOptions: {
       parserOptions: {
@@ -100,6 +103,8 @@ export default [
       // React Hooks rules
       "react-hooks/rules-of-hooks": "error",
       "react-hooks/exhaustive-deps": "warn",
+      // Accessibility (jsx-a11y recommended)
+      ...jsxA11y.configs.recommended.rules,
     },
   },
 

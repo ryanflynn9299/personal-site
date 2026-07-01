@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 import { Github, Linkedin, Twitter } from "lucide-react";
 import { runtime } from "@/lib/config";

@@ -127,7 +127,7 @@ export function PoliciesPage({ policies, initialTab }: PoliciesPageProps) {
               <h2 className="font-heading text-xl font-bold text-slate-50 mb-4">
                 Policies
               </h2>
-              <nav
+              <div
                 className="flex flex-row lg:flex-col gap-2 overflow-x-auto lg:overflow-visible pb-2 lg:pb-0"
                 role="tablist"
                 aria-label="Policy documents"
@@ -168,7 +168,7 @@ export function PoliciesPage({ policies, initialTab }: PoliciesPageProps) {
                     </button>
                   );
                 })}
-              </nav>
+              </div>
             </div>
           </aside>
 

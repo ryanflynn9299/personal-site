@@ -63,7 +63,7 @@ export function ViewDevControls() {
 
           {/* Mode Toggle */}
           <div className="mb-4">
-            <label className="mb-1 block text-xs text-slate-400">Mode</label>
+            <span className="mb-1 block text-xs text-slate-400">Mode</span>
             <div className="flex gap-2">
               <button
                 onClick={() => setViewMode("normal")}
@@ -91,9 +91,9 @@ export function ViewDevControls() {
           {/* Normal Variants */}
           {viewMode === "normal" && (
             <div className="mb-4">
-              <label className="mb-1 block text-xs text-slate-400">
+              <span className="mb-1 block text-xs text-slate-400">
                 Normal Variant
-              </label>
+              </span>
               <div className="flex flex-col gap-1">
                 {(["mission_control", "tesseract"] as NormalVariant[]).map(
                   (variant) => (
@@ -117,9 +117,9 @@ export function ViewDevControls() {
           {/* Constellation Variants */}
           {viewMode === "constellation" && (
             <div className="mb-4">
-              <label className="mb-1 block text-xs text-slate-400">
+              <span className="mb-1 block text-xs text-slate-400">
                 Constellation Variant
-              </label>
+              </span>
               <div className="flex flex-col gap-1">
                 {(
                   [

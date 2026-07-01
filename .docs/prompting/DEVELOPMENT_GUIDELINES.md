@@ -88,6 +88,16 @@ Always run the full validation suite locally before considering a task complete:
 
 ## 6. E2E Testing & Project Hygiene
 
+### Archived components (`components/archived/`)
+
+**Do not touch** during routine development or AI-assisted refactors.
+
+- **No imports** into active `app/` or `components/` code
+- **No edits** (lint fixes, refactors, dependency upgrades) unless the task explicitly targets archived reference code
+- **No deletion** without operator approval
+
+See `components/archived/README.md` for the inventory and replacement mapping.
+
 ### Lightweight Navigation Testing
 
 To ensure the site is "up and reachable" without the flakiness of DOM-heavy assertions:

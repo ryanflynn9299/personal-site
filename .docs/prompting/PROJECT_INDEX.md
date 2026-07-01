@@ -10,6 +10,7 @@ This document serves as the definitive map for identifying the core configuratio
 
 - `app/`: Next.js App Router (pages, layouts, and API routes).
 - `components/`: Reusable UI components.
+- `components/archived/`: **Frozen** superseded UI — do not import, edit, or delete without operator approval (see `components/archived/README.md`).
 - `lib/`: Business logic, services, and system configuration.
 - `tests/`: E2E (Playwright) and Unit (Vitest) test suites.
 - `.docs/`: High-level strategy, architecture, and development guidelines.
