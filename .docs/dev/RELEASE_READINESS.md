@@ -4,9 +4,9 @@ Central index for shipping the personal site. Updated March 2026.
 
 ## Branch Strategy
 
-| Branch     | Role                                                                 |
-| ---------- | -------------------------------------------------------------------- |
-| **`main`** | Production — release PRs merge here                                  |
+| Branch     | Role                                                                           |
+| ---------- | ------------------------------------------------------------------------------ |
+| **`main`** | Production — release PRs merge here                                            |
 | **`dev`**  | Staging — feature branches merge here first; synced with `main` after releases |
 
 **Workflow:** `feature/*` → PR to **`dev`** → PR to **`main`** when ready to release.
