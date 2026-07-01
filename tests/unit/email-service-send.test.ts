@@ -69,7 +69,7 @@ describe("Email Service - sendEmail", () => {
     expect(result.error).toMatch(/not configured/);
   });
 
-  it("should successfully log and 'send' email if correctly configured", async () => {
+  it("refuses mock send when SMTP is configured in live-dev/production", async () => {
     const { sendEmail } = await import("@/lib/services/email-service");
 
     const result = await sendEmail({
@@ -79,8 +79,8 @@ describe("Email Service - sendEmail", () => {
       text: "Test",
     });
 
-    expect(result.success).toBe(true);
-    expect(result.messageId).toBeDefined();
-    expect(result.error).toBeUndefined();
+    expect(result.success).toBe(false);
+    expect(result.error).toMatch(/not yet implemented/);
+    expect(result.messageId).toBeUndefined();
   });
 });

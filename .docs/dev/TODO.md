@@ -2,93 +2,60 @@
 
 ## 🎯 Next Actions (Priority Order)
 
-_Start here - these are the most important items to tackle next_
+_Start here — see also [RELEASE_READINESS.md](./RELEASE_READINESS.md) for the full launch gate._
 
-### Before Next promotion
+### Before Launch — code (merge to `dev`, then `main` for release)
 
-- [x] Fix slug in metadata
-- [x] Design and implement quotes page
-- [x] Fix planet featured view
-- [x] Consider removing `dangerouslyAllowsSVGs` from next.config.ts
-- [x] Finish sitemap and robots.ts
-- [x] Consolidate colors
-- [x] clean up command output directories (check build out too)
+- [x] **Contact form: warn when SMTP unavailable** — never report mock success in production; show honest warning UI if email cannot be sent (see [SMTP_LAUNCH_CHECKLIST.md](./SMTP_LAUNCH_CHECKLIST.md))
+- [ ] Ensure responsive design works on mobile devices (manual sign-off)
+- [ ] Remove unused components and rename, archive out of use
 
-### Next promotion
+### Before Launch — operator (home server / deploy day)
 
-- [x] Organize and slightly refine vitae details
-- [x] Script for .env sync
-- [x] Add About page CTA(s)
-- [x] Add a config for production quotes setup
-- [x] Formalize dev mode (with and without services)
-- [x] Fix missing author from Directus call
-- [x] Add navigation between blog posts (prev/next)
-- [x] Add loading states/screens for API calls
-- [x] Make client-primary
-- [x] Flesh out project file cabinet idea
-- [x] establish baseline code coverage
-- [x] Mandatory approvers to master/main
-- [x] global logging
-- [x] cloudflared
-- [x] clean up dev tooling
-  - [x] make component selection work
-  - [x] clean up styling
-  - [x] hide by default
-  - [x] disable in config
+- [ ] **Configure Tailscale for admin access** (see [ADMIN_ACCESS.md](./ADMIN_ACCESS.md))
+- [ ] **Lock down Directus + Matomo admin** at reverse proxy (not public internet)
+- [ ] **Complete Matomo launch tasks** (see [MATOMO_LAUNCH_CHECKLIST.md](./MATOMO_LAUNCH_CHECKLIST.md))
+- [ ] **Production `.env` + Docker rebuild + smoke test** (see [RELEASE_READINESS.md](./RELEASE_READINESS.md))
 
-### Before Launch - After UI reviewers
+### Before Launch — polish (optional, won't block ship)
 
 - [ ] Add professional headshot/profile images
-- [ ] Deep dive on Matomo (see `.docs/dev/MATOMO_LAUNCH_CHECKLIST.md`)
-- [ ] Update site metadata (title, description, favicon)
+- [ ] Deep dive on Matomo (analytics tuning beyond install checklist)
 - [ ] Versioning system/methodology
-- [x] Implement Terms and Privacy Policies wrt Matomo analytics
-- [ ] Enable SEO for blogs in lib/seo.ts
-- [ ] Remove unused components and rename, archive out of use
-- [x] images for about page
-- [ ] add coverage check to main branch
-- [x] make about page UX optimized
-- [ ] Ensure responsive design works on mobile devices
-- [x] Figure out scalability for blog
-- [x] Add pagination for blog listing page
-- [x] Quotes page — dev-only at launch (middleware + sitemap + robots)
 - [ ] See my latest LinkedIn posts??
-- [x] clean up eslint warnings
-- [ ] connect counter to database
-- [x] Add complete suite of e2e tests and improve unit test coverage
-- [x] Stabilize e2e tests
-- [x] Clean up documentation (see `.docs/dev/RELEASE_READINESS.md`)
 
-### Release blockers (security & ops)
+### Release blockers — done
 
 - [x] Wire admin middleware (`middleware.ts`)
-- [x] Contact form honeypot + rate limiting (see `.docs/dev/CONTACT_FORM_SECURITY.md`)
+- [x] Contact form honeypot + rate limiting (see [CONTACT_FORM_SECURITY.md](./CONTACT_FORM_SECURITY.md))
 - [x] Matomo client cleanup (`config.matomo.enabled`)
 - [x] Docker prod env wiring (SMTP, admin, Matomo build args)
-- [ ] **Configure Tailscale for admin access** (see `.docs/dev/ADMIN_ACCESS.md`)
-- [ ] **Implement real SMTP email delivery** (see `.docs/dev/SMTP_LAUNCH_CHECKLIST.md`)
-- [ ] Complete Matomo launch operator tasks (see `.docs/dev/MATOMO_LAUNCH_CHECKLIST.md`)
+- [x] Implement Terms and Privacy Policies wrt Matomo analytics
+- [x] Quotes page — dev-only at launch (middleware + sitemap + robots)
+- [x] Clean up documentation (see [RELEASE_READINESS.md](./RELEASE_READINESS.md))
+- [x] CI: no auto checks on `dev`; full CI on `main`; manual dispatch
+- [x] Branch sync: `dev` staging, `main` production
 
 ### First promote after launch
 
+- [ ] **Implement real SMTP email delivery** (see [SMTP_LAUNCH_CHECKLIST.md](./SMTP_LAUNCH_CHECKLIST.md))
+- [ ] Enable SEO for blogs in `lib/site/seo.ts` (`ENABLE_BLOG_SEO`) when content is ready
+- [ ] add coverage check to main branch
+- [ ] pre-commit check script (validate, test, compare coverage, build)
+- [ ] Improve pre-commit checks for PR (PR naming conventions, etc.)
+- [ ] Matomo analytics page on dashboard
 - [ ] Add author bio section for posts (with popup card)
 - [ ] Add "Back to top" button for long pages
-- [ ] Matomo analytics page on dashboard
+- [ ] add slug hashing
+- [ ] Clean up env variables and secrets (including dev and local)
+- [ ] Add blog post categories/tags system
 - [ ] Set up VSCode server and connect cursor for remote development pipeline
 - [ ] Set up remote teardown command
-- [ ] add slug hashing
-- [x] Reduce build time for PR pipeline
-- [ ] Apply pagination/scalability changes from documentation
-- [ ] Clean up directus.ts
-- [ ] Clean up env variables and secrets (including dev and local)
-- [ ] Improve pre-commit checks for PR (PR naming conventions, etc.)
-- [ ] pre-commit check script (validate, test, compare coverage, build)
-- [ ] Add blog post categories/tags system
 
 ### After Launch (Future)
 
 - [ ] add christmas mode
-- [ ] Establish CD pipelinec
+- [ ] Establish CD pipeline
 - [ ] Add twilio for build notis
 - [ ] Create backup strategy for content
 - [ ] Review and optimize bundle size
@@ -104,7 +71,7 @@ _Start here - these are the most important items to tackle next_
 - [ ] Create post series/collections
 - [ ] Add blog post excerpt/summary display
 - [ ] Add reading time estimates for blog posts
-- [ ] Add proper meta tags for social sharing
+- [ ] connect counter to database
 
 ## Post-launch admin-oriented tasks
 
@@ -122,6 +89,12 @@ _Start here - these are the most important items to tackle next_
 
 ## 📋 Backlog by Category
 
+### Performance & SEO (not required for launch)
+
+- [ ] Add proper meta tags for social sharing
+- [ ] Create `og-default.png` and wire Open Graph image
+- [ ] Update social profile URLs in `lib/site/seo.ts`
+
 ### User Experience
 
 - [x] Implement smooth scrolling navigation
@@ -133,10 +106,11 @@ _Start here - these are the most important items to tackle next_
 
 - [x] Create deployment pipeline (CI/CD)
 - [x] Complete successful CI run
+- [x] Reduce build time for PR pipeline
 - [ ] Set up error monitoring (Sentry)
 - [ ] Audit accessibility compliance
 - [ ] Refactor repetitive code patterns
-- [x] Set up automated testing (Jest/Cypress)
+- [x] Set up automated testing (Vitest + Playwright)
 
 ### Interactive Elements & UI Components
 
@@ -187,11 +161,41 @@ _Start here - these are the most important items to tackle next_
 
 ## ✅ Completed Tasks
 
+### Core release infrastructure
+
+- [x] Fix slug in metadata
+- [x] Design and implement quotes page
+- [x] Finish sitemap and robots.ts
+- [x] Consolidate colors
+- [x] Organize and slightly refine vitae details
+- [x] Script for .env sync
+- [x] Add About page CTA(s)
+- [x] Formalize dev mode (with and without services)
+- [x] Fix missing author from Directus call
+- [x] Add navigation between blog posts (prev/next)
+- [x] Add loading states/screens for API calls
+- [x] Make client-primary
+- [x] Flesh out project file cabinet idea
+- [x] establish baseline code coverage
+- [x] Mandatory approvers to master/main
+- [x] global logging
+- [x] cloudflared
+- [x] clean up dev tooling
+- [x] images for about page
+- [x] make about page UX optimized
+- [x] Figure out scalability for blog
+- [x] Add pagination for blog listing page
+- [x] clean up eslint warnings
+- [x] Add complete suite of e2e tests and improve unit test coverage
+- [x] Stabilize e2e tests
+- [x] Consider removing `dangerouslyAllowsSVGs` from next.config.ts
+- [x] Fix planet featured view
+- [x] clean up command output directories
+
 ---
 
 ## 📝 Notes
 
-- Last organized: 2026-03-XX
-- Focus on Next Actions section for immediate work
-- Move items to Completed section when done
-- Archive old completed items periodically
+- Last organized: 2026-07-01
+- Launch gate: [RELEASE_READINESS.md](./RELEASE_READINESS.md)
+- Feature workflow: `cursor/*` → `dev` (no CI) → `main` (full CI)

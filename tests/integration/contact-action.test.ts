@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { submitContactForm } from "@/app/actions/contact";
 import * as emailService from "@/lib/services/email-service";
+import * as directusService from "@/lib/services/directus";
 import { resetContactRateLimitForTests } from "@/lib/services/contact-protection";
 
 // Mock logger to avoid console output during tests
@@ -104,6 +105,12 @@ describe("submitContactForm", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     resetContactRateLimitForTests();
+    vi.mocked(emailService.sendEmail).mockResolvedValue({
+      success: true,
+      messageId: `test-message-${Date.now()}`,
+    });
+    vi.mocked(directusService.isDirectusConfigured).mockReturnValue(false);
+    vi.mocked(directusService.createContactMessage).mockResolvedValue(false);
     // Set test mode - services are disabled in test mode
     vi.stubEnv("RUNTIME_MODE", "test");
     vi.stubEnv("NODE_ENV", "test");
@@ -183,6 +190,30 @@ describe("submitContactForm", () => {
     // In production, missing service is a real error
     expect(result.success).toBe(false);
     expect(result.error).toContain("Failed to process your message");
+  });
+
+  it("returns stored-only success when Directus saves but email fails in production", async () => {
+    vi.stubEnv("RUNTIME_MODE", "production");
+    vi.stubEnv("NODE_ENV", "production");
+    vi.mocked(emailService.isEmailServiceConfigured).mockReturnValue(true);
+    vi.mocked(emailService.sendEmail).mockResolvedValue({
+      success: false,
+      error: "SMTP delivery is not yet implemented",
+    });
+    vi.mocked(directusService.isDirectusConfigured).mockReturnValue(true);
+    vi.mocked(directusService.createContactMessage).mockResolvedValue(true);
+
+    const formData = new FormData();
+    formData.set("name", "John Doe");
+    formData.set("email", "test@example.com");
+    formData.set("message", "Hello world");
+
+    const result = await submitContactForm(formData);
+
+    expect(result.success).toBe(true);
+    expect(result.emailSent).toBe(false);
+    expect(result.messageStored).toBe(true);
+    expect(result.message).toMatch(/received and saved/i);
   });
 
   it("returns success when email service is configured", async () => {

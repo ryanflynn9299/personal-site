@@ -100,12 +100,12 @@ export async function submitContactForm(
     return {
       success: true,
       emailSent: false,
+      messageStored: false,
       message: "Development Mode: Submission received (no services called).",
     };
   }
 
   if (!emailSent && !directusStored) {
-    // Both failed in non-offline mode
     if (isProduction || mode === "live-dev") {
       return {
         success: false,
@@ -114,9 +114,20 @@ export async function submitContactForm(
     }
   }
 
+  if (directusStored && !emailSent) {
+    return {
+      success: true,
+      emailSent: false,
+      messageStored: true,
+      message:
+        "Your message was received and saved. Email notification could not be sent at this time — I'll still see your message.",
+    };
+  }
+
   return {
     success: true,
     emailSent,
+    messageStored: directusStored,
     message: "Thank you for your message! I'll get back to you soon.",
   };
 }

@@ -231,6 +231,41 @@ describe("ContactPageClient", () => {
     );
   });
 
+  it("displays stored-only warning when message saved but email failed", async () => {
+    const user = userEvent.setup({ delay: null });
+    const mockSubmit = vi.mocked(contactAction.submitContactForm);
+    mockSubmit.mockResolvedValue({
+      success: true,
+      emailSent: false,
+      messageStored: true,
+      message:
+        "Your message was received and saved. Email notification could not be sent at this time.",
+    });
+
+    render(<ContactPageClient emailServiceAvailable={true} />);
+
+    const nameInput = screen.getByPlaceholderText("Your Name");
+    const emailInput = screen.getByPlaceholderText("Your Email");
+    const messageInput = screen.getByPlaceholderText("Your Message");
+
+    await user.type(nameInput, "John Doe");
+    await user.type(emailInput, "john@example.com");
+    await user.type(messageInput, "Test message");
+
+    const submitButton = screen.getByRole("button", { name: /send message/i });
+    await user.click(submitButton);
+
+    await waitFor(
+      () => {
+        expect(screen.getByText("Message Received")).toBeInTheDocument();
+        expect(
+          screen.getByText(/received and saved/i)
+        ).toBeInTheDocument();
+      },
+      { timeout: 100 }
+    );
+  });
+
   it("displays warning when email service is unavailable", async () => {
     const user = userEvent.setup({ delay: null });
     const mockSubmit = vi.mocked(contactAction.submitContactForm);

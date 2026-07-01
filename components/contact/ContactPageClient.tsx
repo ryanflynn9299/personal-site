@@ -189,8 +189,20 @@ export function ContactPageClient({
                     "Thank you for reaching out. I'll get back to you shortly."}
                 </p>
               </div>
+            ) : state.messageStored ? (
+              // Stored in Directus but email could not be sent
+              <div className="mt-4 flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-amber-500 bg-slate-800 p-12 text-center">
+                <AlertTriangle className="h-12 w-12 text-amber-500" />
+                <h3 className="mt-4 font-semibold text-slate-50">
+                  Message Received
+                </h3>
+                <p className="mt-2 max-w-md text-slate-400">
+                  {state.message ||
+                    "Your message was saved, but email notification could not be sent. I'll still see your message."}
+                </p>
+              </div>
             ) : (
-              // Email service unavailable - amber warning UI
+              // Email service unavailable and message not stored
               <div className="mt-4 flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-amber-500 bg-slate-800 p-12 text-center">
                 <AlertTriangle className="h-12 w-12 text-amber-500" />
                 <h3 className="mt-4 font-semibold text-slate-50">
@@ -198,7 +210,7 @@ export function ContactPageClient({
                 </h3>
                 <p className="mt-2 max-w-md text-slate-400">
                   {state.message ||
-                    "Email service is currently unavailable. Your message cannot and will not be sent. No message has been saved or stored. Please use the direct email link above or try again later."}
+                    "Email service is currently unavailable. Your message was not saved. Please use the direct email link above or try again later."}
                 </p>
                 <Button
                   onClick={handleGoBack}

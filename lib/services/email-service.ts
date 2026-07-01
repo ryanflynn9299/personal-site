@@ -154,18 +154,27 @@ export async function sendEmail(
     "Initiating email service call: sendEmail"
   );
 
+  // Real SMTP transport is post-launch — never report mock success in production/live-dev
+  if (runtime.treatServiceErrorsAsReal) {
+    log.warn(
+      {
+        mode: runtime.mode,
+        messageTo: _message.to,
+        messageSubject: _message.subject,
+      },
+      "SMTP is configured but delivery is not implemented — refusing mock send"
+    );
+    return {
+      success: false,
+      error: "SMTP delivery is not yet implemented",
+    };
+  }
+
   try {
-    // Simulate network/processing delay (500ms)
-    // In production, this represents actual SMTP communication time
-    // In tests, this service should be mocked to return immediately
+    // Simulate network/processing delay (500ms) for non-production modes only
     await delay(500);
 
     // TODO: Integrate SMTP provider (e.g. Nodemailer or Resend)
-    // - Configure transporter with auth from env vars
-    // - Handle connection timeouts and retries
-
-    // For now, simulate successful email sending
-    // In the future, this will actually send the email
     const result = {
       success: true,
       messageId: `mock-${Date.now()}`,
