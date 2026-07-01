@@ -9,9 +9,15 @@ Central index for shipping the personal site. Updated March 2026.
 | **`main`** | Production — release PRs merge here                                            |
 | **`dev`**  | Staging — feature branches merge here first; synced with `main` after releases |
 
-**Workflow:** `feature/*` → PR to **`dev`** → PR to **`main`** when ready to release.
+**Workflow:** `feature/*` → PR to **`dev`** (no CI) → PR to **`main`** when ready to release (full CI required).
 
-CI on **`dev`**: lint, tests, and build always run; E2E is opt-in (`[run e2e]` in commit/PR message).
+**CI policy:**
+
+| Target         | Auto CI | When                                                    |
+| -------------- | ------- | ------------------------------------------------------- |
+| **`dev`**      | No      | Merge freely; run checks locally if you want            |
+| **`main`**     | Yes     | Every push and every PR (required for release)          |
+| **Any branch** | Manual  | Actions → CI → Run workflow (pick branch; E2E optional) |
 
 ## Pre-Release Checklist
 

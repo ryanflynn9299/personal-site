@@ -2,11 +2,16 @@ name: CI
 
 on:
   push:
-    # main/master: full CI on every push
-    # dev: staging branch — E2E opt-in on push (see check-commit-message job)
-    branches: [main, master, dev]
+    branches: [main, master]
   pull_request:
-    branches: [main, master, dev]
+    branches: [main, master]
+  workflow_dispatch:
+    inputs:
+      run_e2e:
+        description: Run E2E tests
+        required: false
+        default: true
+        type: boolean
 
 env:
   # Site URL - Required for Next.js build and SEO
@@ -29,7 +34,6 @@ jobs:
       skip-e2e: ${{ steps.check.outputs.skip-e2e }}
       skip-build: ${{ steps.check.outputs.skip-build }}
       is-protected-branch: ${{ steps.check.outputs.is-protected-branch }}
-      is-staging: ${{ steps.check.outputs.is-staging }}
       run-e2e: ${{ steps.check.outputs.run-e2e }}
     steps:
       - name: Checkout code
@@ -48,6 +52,9 @@ jobs:
             BRANCH="${{ github.base_ref }}"
             # Use env vars so PR markdown (parentheses, quotes, etc.) cannot break bash
             COMMIT_MSG="${PR_TITLE} ${PR_BODY}"
+          elif [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            BRANCH="${{ github.ref_name }}"
+            COMMIT_MSG=$(git log -1 --pretty=%B)
           else
             BRANCH="${{ github.ref_name }}"
             COMMIT_MSG=$(git log -1 --pretty=%B)
@@ -56,16 +63,10 @@ jobs:
           # Check if this is a protected branch (main or master)
           if [ "$BRANCH" == "main" ] || [ "$BRANCH" == "master" ]; then
             echo "is-protected-branch=true" >> $GITHUB_OUTPUT
-            echo "is-staging=false" >> $GITHUB_OUTPUT
             echo "✅ Protected branch detected: $BRANCH - E2E tests will always run"
-          elif [ "$BRANCH" == "dev" ]; then
-            echo "is-protected-branch=false" >> $GITHUB_OUTPUT
-            echo "is-staging=true" >> $GITHUB_OUTPUT
-            echo "ℹ️ dev staging branch detected - E2E tests are opt-in (use [run e2e] to enable)"
           else
             echo "is-protected-branch=false" >> $GITHUB_OUTPUT
-            echo "is-staging=false" >> $GITHUB_OUTPUT
-            echo "ℹ️ Non-protected branch: $BRANCH - E2E tests run by default"
+            echo "ℹ️ Branch: $BRANCH"
           fi
 
           # Convert to uppercase for case-insensitive matching
@@ -101,29 +102,25 @@ jobs:
             echo "run-e2e=false" >> $GITHUB_OUTPUT
           fi
 
-          # For E2E: Logic depends on branch type
-          # Protected branches (main/master): Always run E2E (ignore all patterns)
-          # dev (staging): Only run if opt-in pattern [run e2e] is present
-          # Other branches: Run by default, but can be skipped with [skip e2e]
-          if [ "$BRANCH" == "main" ] || [ "$BRANCH" == "master" ]; then
-            # Protected branch: Always run E2E (ignore all patterns)
-            echo "skip-e2e=false" >> $GITHUB_OUTPUT
-            echo "✅ Protected branch: E2E tests will run regardless of patterns"
-          elif [ "$BRANCH" == "dev" ]; then
-            # dev staging: Opt-in only (check for [run e2e] pattern)
-            if echo "$COMMIT_MSG_UPPER" | grep -qE '\[RUN E2E\]|\[E2E\]'; then
+          # For E2E: Logic depends on branch type and trigger
+          # main/master (push or PR): Always run E2E
+          # workflow_dispatch: Controlled by run_e2e input (default: true)
+          # Other branches (manual only): Respect skip patterns
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            if [ "${{ github.event.inputs.run_e2e }}" == "true" ]; then
               echo "skip-e2e=false" >> $GITHUB_OUTPUT
-              echo "✅ dev: E2E tests will run (opt-in pattern detected)"
+              echo "✅ Manual run: E2E tests enabled"
             else
               echo "skip-e2e=true" >> $GITHUB_OUTPUT
-              echo "ℹ️ dev: E2E tests skipped by default (use [run e2e] to enable)"
+              echo "ℹ️ Manual run: E2E tests disabled via input"
             fi
+          elif [ "$BRANCH" == "main" ] || [ "$BRANCH" == "master" ]; then
+            echo "skip-e2e=false" >> $GITHUB_OUTPUT
+            echo "✅ Protected branch: E2E tests will run regardless of patterns"
           elif echo "$COMMIT_MSG_UPPER" | grep -qE '\[SKIP E2E\]|\[SKIP E2E-TESTS\]'; then
-            # Other branches: Can be skipped with [skip e2e]
             echo "skip-e2e=true" >> $GITHUB_OUTPUT
             echo "⚠️ Skipping E2E tests job due to [skip e2e] in commit message"
           else
-            # Other branches: Run by default
             echo "skip-e2e=false" >> $GITHUB_OUTPUT
           fi
 
