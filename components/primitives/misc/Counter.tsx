@@ -1,4 +1,11 @@
-import { MotionValue, motion, useSpring, useTransform } from "motion/react";
+"use client";
+
+import {
+  motion,
+  useSpring,
+  useTransform,
+  type MotionValue,
+} from "framer-motion";
 import { useEffect } from "react";
 
 interface NumberProps {

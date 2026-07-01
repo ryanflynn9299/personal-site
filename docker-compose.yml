@@ -158,7 +158,7 @@ services:
   # ps-sync:
   #   container_name: ps-sync
   #   build:
-  #     context: ./sync-service
+  #     context: ./infrastructure/sync-service
   #     dockerfile: Dockerfile
   #   restart: unless-stopped
   #   # NO depends_on - this service runs independently
@@ -204,7 +204,7 @@ services:
     volumes:
       - matomo-app-data:/var/www/html
       # Mount custom Apache ports config to change Listen from 80 to 8181
-      - ./matomo-config/apache-port-8181.conf:/etc/apache2/ports.conf:ro
+      - ./infrastructure/matomo-config/apache-port-8181.conf:/etc/apache2/ports.conf:ro
     environment:
       - MATOMO_DATABASE_ADAPTER=mysql
       - MATOMO_DATABASE_HOST=ps-matomo-db

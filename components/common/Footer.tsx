@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-// import { usePathname } from "next/navigation";
 import { Github, Linkedin, Twitter } from "lucide-react";
 import { runtime } from "@/lib/config";
 import { SITE_VERSION } from "@/lib/site/seo";
@@ -53,9 +52,6 @@ export interface SocialLink {
 }
 
 export function Footer() {
-  // const pathname = usePathname();
-  // const isProjectsCabinetPage = pathname === "/projects-cabinet";
-
   return (
     <footer className="border-t border-slate-700 bg-slate-800 relative z-10">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">

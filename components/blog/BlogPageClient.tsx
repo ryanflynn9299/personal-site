@@ -167,16 +167,6 @@ export function BlogPageClient({
             </p>
           </div>
 
-          {/* {posts && posts.length > 0 ? (
-                        <div className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-                            {posts.map((post) => (
-                                <PostCard key={post.id} post={post}/>
-                            ))}
-                        </div>
-                    ) : (
-                        <p className="mt-12 text-center text-slate-400">No posts found. Check back soon!</p>
-                    )} */}
-          {/* Render the content based on our new logic */}
           {renderContent()}
         </div>
       </div>

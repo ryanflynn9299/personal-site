@@ -31,19 +31,19 @@ This directory contains configuration files for the Cloudflare Tunnel service.
 1. Copy the example config files:
 
    ```bash
-   cp cloudflare/config.yml.example cloudflare/config.yml
-   cp cloudflare/credentials.json.example cloudflare/credentials.json
+   cp infrastructure/cloudflare/config.yml.example infrastructure/cloudflare/config.yml
+   cp infrastructure/cloudflare/credentials.json.example infrastructure/cloudflare/credentials.json
    ```
 
 2. Authenticate with Cloudflare (this will populate credentials.json):
 
    ```bash
-   docker run --rm -v $(pwd)/cloudflare:/etc/cloudflared cloudflare/cloudflared:latest tunnel login
+   docker run --rm -v $(pwd)/infrastructure/cloudflare:/etc/cloudflared cloudflare/cloudflared:latest tunnel login
    ```
 
    This will open a browser to authenticate and automatically update `credentials.json`.
 
-3. Edit `cloudflare/config.yml`:
+3. Edit `infrastructure/cloudflare/config.yml`:
    - Replace `YOUR_TUNNEL_ID` with your actual tunnel ID (from credentials.json or Cloudflare dashboard)
    - Configure ingress rules for your services
    - Customize hostnames and service URLs

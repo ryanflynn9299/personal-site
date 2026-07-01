@@ -52,7 +52,7 @@ SYNC_ADMIN_TOKEN=your-admin-token  # For pause/resume API
 
 ```bash
 # Generate both secrets
-./sync-service/generate-secrets.sh
+./infrastructure/sync-service/generate-secrets.sh
 
 # Or manually:
 openssl rand -hex 32  # For WEBHOOK_SECRET

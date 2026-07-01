@@ -44,10 +44,10 @@ yarn-error.log*
 !.env.example
 
 # cloudflare tunnel config (contains sensitive credentials)
-cloudflare/config.yml
-cloudflare/credentials.json
+infrastructure/cloudflare/config.yml
+infrastructure/cloudflare/credentials.json
 # Allow example files to be committed
-!cloudflare/*.example
+!infrastructure/cloudflare/*.example
 
 # vercel
 .vercel

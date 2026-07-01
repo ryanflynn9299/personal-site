@@ -26,7 +26,7 @@ export default [
       "*.config.{js,mjs,ts}",
       "public/**",
       "scripts/**",
-      "sync-service/**",
+      "infrastructure/sync-service/**",
       ".turbo/**",
       "playwright/.cache/**",
     ],

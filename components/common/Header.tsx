@@ -114,6 +114,7 @@ export function Header() {
               className="flex items-center justify-center rounded-md p-2 text-slate-300 transition-colors hover:bg-slate-700 hover:text-sky-300 focus:outline-none focus:ring-2 focus:ring-sky-400 focus:ring-offset-2 focus:ring-offset-slate-900 sm:hidden"
               aria-label="Toggle navigation menu"
               aria-expanded={mobileMenuOpen}
+              aria-controls="mobile-navigation-menu"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               data-testid="mobile-menu-toggle"
             >
@@ -139,6 +140,7 @@ export function Header() {
 
           {/* Mobile Menu Bubble - Fixed size, deploys from bottom edge of menu button */}
           <nav
+            id="mobile-navigation-menu"
             className="fixed top-24 right-0 z-50 w-64 rounded-tl-lg rounded-bl-lg rounded-br-lg bg-slate-800 shadow-2xl sm:hidden menu-bubble-animation"
             aria-label="Mobile navigation"
             role="dialog"

@@ -15,7 +15,7 @@ import { Button } from "@/components/primitives/Button";
 import { submitContactForm } from "@/app/actions/contact";
 import { EmailStatusIndicatorWithStatus } from "@/components/contact/EmailStatusIndicator";
 import { FunCounter } from "@/components/contact/FunCounter";
-import { CONTACT_HONEYPOT_FIELD } from "@/lib/services/contact-protection";
+import { CONTACT_HONEYPOT_FIELD } from "@/lib/constants/contact";
 import type { FormState, SavedFormData, ContactPageClientProps } from "@/types";
 
 const initialState: FormState = { success: false };
@@ -285,7 +285,10 @@ export function ContactPageClient({
               <div className="flex items-center justify-between">
                 <div className="text-sm">
                   {state.error && (
-                    <p className="flex items-center gap-2 text-red-400">
+                    <p
+                      role="alert"
+                      className="flex items-center gap-2 text-red-400"
+                    >
                       <AlertTriangle className="h-4 w-4" />
                       {state.error}
                     </p>

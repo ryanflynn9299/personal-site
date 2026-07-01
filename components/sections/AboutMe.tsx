@@ -5,9 +5,6 @@ import { Button } from "@/components/primitives/Button";
 import Link from "next/link";
 import Image from "next/image";
 
-{
-  /* About Me Snippet - Option 2: Split-Layout with Image */
-}
 export function AboutMe() {
   return (
     <section className="py-16 md:py-24 border-t border-slate-800">
@@ -24,7 +21,7 @@ export function AboutMe() {
               <Image
                 // Replace with a professional-looking photo of yourself
                 src="/images/6858504.png"
-                alt="Placeholder: A professional headshot"
+                alt="Ryan Flynn, software engineer"
                 width={500}
                 height={500}
                 className="rounded-lg object-cover shadow-2xl shadow-slate-950/50"

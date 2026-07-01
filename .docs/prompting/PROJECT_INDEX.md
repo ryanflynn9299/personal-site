@@ -30,63 +30,63 @@ This document serves as the definitive map for identifying the core configuratio
 
 ## 1. Configuration & Environment
 
-| System              | Source of Truth              | Description                                                     |
-| :------------------ | :--------------------------- | :-------------------------------------------------------------- |
-| **Runtime Config**  | `lib/config/index.ts`        | Centralized, frozen configuration object used across the app.   |
-| **Env Schemas**     | `lib/config/schemas.ts`      | Zod schemas and validation logic for all environment variables. |
-| **Deployment Info** | `package.json`               | Node.js metadata, dependencies, and build scripts.              |
+| System              | Source of Truth         | Description                                                     |
+| :------------------ | :---------------------- | :-------------------------------------------------------------- |
+| **Runtime Config**  | `lib/config/index.ts`   | Centralized, frozen configuration object used across the app.   |
+| **Env Schemas**     | `lib/config/schemas.ts` | Zod schemas and validation logic for all environment variables. |
+| **Deployment Info** | `package.json`          | Node.js metadata, dependencies, and build scripts.              |
 
 ## 2. Site Metadata & Brand
 
-| System             | Source of Truth     | Description                                                 |
-| :----------------- | :------------------ | :---------------------------------------------------------- |
-| **Site Constants** | `lib/site/seo.ts`   | Site name, version, SEO defaults, and primary social links. |
-| **Version Number** | `lib/site/seo.ts`   | The `SITE_VERSION` constant (synced with `package.json`).   |
-| **Navigation Map** | `app/sitemap.ts`    | Logical map of all searchable/public routes.                |
+| System             | Source of Truth   | Description                                                 |
+| :----------------- | :---------------- | :---------------------------------------------------------- |
+| **Site Constants** | `lib/site/seo.ts` | Site name, version, SEO defaults, and primary social links. |
+| **Version Number** | `lib/site/seo.ts` | The `SITE_VERSION` constant (synced with `package.json`).   |
+| **Navigation Map** | `app/sitemap.ts`  | Logical map of all searchable/public routes.                |
 
 ## 3. Feature Management & Tooling
 
-| System            | Source of Truth                 | Description                                                         |
-| :---------------- | :------------------------------ | :------------------------------------------------------------------ |
-| **Feature Flags** | `lib/dev-tooling/features.ts`   | Flags for enabling/hiding experimental or dev-only features.        |
-| **Logging**       | `lib/dev-tooling/logger.ts`     | Primary, centralized PINO logger configuration and utility helpers. |
+| System            | Source of Truth               | Description                                                         |
+| :---------------- | :---------------------------- | :------------------------------------------------------------------ |
+| **Feature Flags** | `lib/dev-tooling/features.ts` | Flags for enabling/hiding experimental or dev-only features.        |
+| **Logging**       | `lib/dev-tooling/logger.ts`   | Primary, centralized PINO logger configuration and utility helpers. |
 
 ## 4. Services & Integrations
 
-| System               | Source of Truth                        | Description                                                  |
-| :------------------- | :------------------------------------- | :----------------------------------------------------------- |
-| **Directus CMS**     | `lib/services/directus/index.ts`       | Entry point for all CMS data fetching and transforms.        |
+| System               | Source of Truth                      | Description                                                  |
+| :------------------- | :----------------------------------- | :----------------------------------------------------------- |
+| **Directus CMS**     | `lib/services/directus/index.ts`     | Entry point for all CMS data fetching and transforms.        |
 | **Email Service**    | `lib/services/email-service.ts`      | Logic for transactional emails and contact form submissions. |
 | **Contact Security** | `lib/services/contact-protection.ts` | Honeypot and rate limiting for contact form.                 |
-| **Admin Middleware** | `middleware.ts`                        | Route protection for `/admin` and preview routes.            |
+| **Admin Middleware** | `middleware.ts`                      | Route protection for `/admin` and preview routes.            |
 
 ## 5. Core Documentation (Strategy)
 
-| Topic                 | Source of Truth                              |
-| :-------------------- | :------------------------------------------- |
-| **AI policy**         | `.docs/prompting/AI_GUARDRAILS.md`           |
-| **Release Readiness** | `.docs/dev/RELEASE_READINESS.md`             |
-| **Architecture**      | `.docs/ARCHITECTURE.md`                      |
-| **Testing Strategy**  | `.docs/TESTING_STRATEGY.md`                  |
-| **Dev Guidelines**    | `.docs/prompting/DEVELOPMENT_GUIDELINES.md`  |
-| **Admin Access**      | `.docs/dev/ADMIN_ACCESS.md`                  |
-| **Contact Security**  | `.docs/dev/CONTACT_FORM_SECURITY.md`         |
-| **Matomo Launch**     | `.docs/dev/MATOMO_LAUNCH_CHECKLIST.md`       |
-| **SMTP Launch**       | `.docs/dev/SMTP_LAUNCH_CHECKLIST.md`         |
-| **Security**          | `.docs/SECURITY_HEALTH_CHECK.md`             |
+| Topic                 | Source of Truth                             |
+| :-------------------- | :------------------------------------------ |
+| **AI policy**         | `.docs/prompting/AI_GUARDRAILS.md`          |
+| **Release Readiness** | `.docs/dev/RELEASE_READINESS.md`            |
+| **Architecture**      | `.docs/ARCHITECTURE.md`                     |
+| **Testing Strategy**  | `.docs/TESTING_STRATEGY.md`                 |
+| **Dev Guidelines**    | `.docs/prompting/DEVELOPMENT_GUIDELINES.md` |
+| **Admin Access**      | `.docs/dev/ADMIN_ACCESS.md`                 |
+| **Contact Security**  | `.docs/dev/CONTACT_FORM_SECURITY.md`        |
+| **Matomo Launch**     | `.docs/dev/MATOMO_LAUNCH_CHECKLIST.md`      |
+| **SMTP Launch**       | `.docs/dev/SMTP_LAUNCH_CHECKLIST.md`        |
+| **Security**          | `.docs/SECURITY_HEALTH_CHECK.md`            |
 
 ## 6. AI Infrastructure
 
-| Artifact            | Path                         | Purpose                                      |
-| :------------------ | :--------------------------- | :------------------------------------------- |
-| **Agent entry**     | `AGENTS.md`                  | First read for any AI assistant              |
-| **Legacy pointer**  | `.cursorrules`               | Redirects to modern rules                    |
-| **Cursor rules**    | `.cursor/rules/*.mdc`        | Scoped guardrails (core, testing, UX, tools) |
-| **Full AI policy**  | `.docs/prompting/AI_GUARDRAILS.md` | Docs authority, pushback, UX, testing   |
+| Artifact           | Path                               | Purpose                                      |
+| :----------------- | :--------------------------------- | :------------------------------------------- |
+| **Agent entry**    | `AGENTS.md`                        | First read for any AI assistant              |
+| **Legacy pointer** | `.cursorrules`                     | Redirects to modern rules                    |
+| **Cursor rules**   | `.cursor/rules/*.mdc`              | Scoped guardrails (core, testing, UX, tools) |
+| **Full AI policy** | `.docs/prompting/AI_GUARDRAILS.md` | Docs authority, pushback, UX, testing        |
 
 ## 7. Testing Infrastructure
 
-| Type                 | Directory / Config                    |
-| :------------------- | :------------------------------------ |
-| **E2E (Playwright)** | `tests/e2e/` + `playwright.config.ts` |
+| Type                 | Directory / Config                            |
+| :------------------- | :-------------------------------------------- |
+| **E2E (Playwright)** | `tests/e2e/` + `playwright.config.ts`         |
 | **Unit (Vitest)**    | `tests/` (excluding e2e) + `vitest.config.ts` |
