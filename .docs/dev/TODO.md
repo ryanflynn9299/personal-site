@@ -8,7 +8,7 @@ _Start here — see also [RELEASE_READINESS.md](./RELEASE_READINESS.md) for the 
 
 - [x] **Contact form: warn when SMTP unavailable** — never report mock success in production; show honest warning UI if email cannot be sent (see [SMTP_LAUNCH_CHECKLIST.md](./SMTP_LAUNCH_CHECKLIST.md))
 - [ ] Ensure responsive design works on mobile devices (manual sign-off)
-- [ ] Remove unused components and rename, archive out of use
+- [x] Remove unused components and rename, archive out of use
 
 ### Before Launch — operator (home server / deploy day)
 
@@ -46,7 +46,7 @@ _Start here — see also [RELEASE_READINESS.md](./RELEASE_READINESS.md) for the 
 - [ ] Improve pre-commit checks for PR (PR naming conventions, etc.)
 - [ ] Matomo analytics page on dashboard
 - [ ] Add author bio section for posts (with popup card)
-- [ ] Add "Back to top" button for long pages
+- [x] Add "Back to top" button for long pages
 - [ ] add slug hashing
 - [ ] Clean up env variables and secrets (including dev and local)
 - [ ] Add blog post categories/tags system
@@ -71,7 +71,7 @@ _Start here — see also [RELEASE_READINESS.md](./RELEASE_READINESS.md) for the 
 - [ ] Add related posts suggestions
 - [ ] Create post series/collections
 - [ ] Add blog post excerpt/summary display
-- [ ] Add reading time estimates for blog posts
+- [x] Add reading time estimates for blog posts
 - [ ] connect counter to database
 
 ## Post-launch admin-oriented tasks

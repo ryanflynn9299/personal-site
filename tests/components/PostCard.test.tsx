@@ -84,13 +84,15 @@ describe("PostCard", () => {
 
   it("displays calendar icon with date", () => {
     render(<PostCard post={mockPost} />);
-    // Calendar icon should be present (lucide-react Calendar component)
-    // The date should be in a time element with the correct datetime attribute
     const timeElement = screen.getByRole("time");
     expect(timeElement.tagName).toBe("TIME");
     expect(timeElement).toHaveAttribute("datetime", "2024-01-15T00:00:00Z");
-    // The formatted date should contain "2024" and "January" (exact day may vary by timezone)
     expect(timeElement).toHaveTextContent(/January/);
     expect(timeElement).toHaveTextContent(/2024/);
+  });
+
+  it("displays reading time estimate", () => {
+    render(<PostCard post={mockPost} />);
+    expect(screen.getByText(/min read/)).toBeInTheDocument();
   });
 });

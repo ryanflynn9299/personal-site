@@ -16,6 +16,7 @@ import { SITE_URL, ENABLE_BLOG_SEO } from "@/lib/site/seo";
 import { config, runtime } from "@/lib/config";
 import { isFeatureEnabled } from "@/lib/dev-tooling/features";
 import { BlogPostNavigation } from "@/components/blog/BlogPostNavigation";
+import { estimateReadingTimeMinutes, formatReadingTime } from "@/lib/utils";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -135,6 +136,9 @@ export default async function BlogPostPage({ params }: Props) {
       day: "numeric",
     }
   );
+  const readingTime = formatReadingTime(
+    estimateReadingTimeMinutes(post.content)
+  );
 
   const imageUrl =
     post.feature_image && config.directus.publicUrl
@@ -152,12 +156,14 @@ export default async function BlogPostPage({ params }: Props) {
           <h1 className="font-heading text-4xl font-bold text-slate-50 md:text-5xl">
             {post.title}
           </h1>
-          <div className="mt-4 text-slate-400">
+          <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-slate-400">
             <span>
               By {post.author.first_name} {post.author.last_name}
             </span>
-            <span className="mx-2">&bull;</span>
+            <span aria-hidden="true">&bull;</span>
             <time dateTime={post.publish_date}>{formattedDate}</time>
+            <span aria-hidden="true">&bull;</span>
+            <span>{readingTime}</span>
           </div>
         </header>
 

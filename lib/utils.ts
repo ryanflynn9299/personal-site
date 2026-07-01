@@ -57,3 +57,39 @@ export function getBlogPostUrl(slug: string | null | undefined): string {
   // The route group (portfolio) is not part of the URL path
   return `/blog/${trimmedSlug}`;
 }
+
+const WORDS_PER_MINUTE = 200;
+
+/**
+ * Strips HTML tags and normalizes whitespace for word counting.
+ */
+function stripContentForWordCount(content: string): string {
+  return content
+    .replace(/<[^>]*>/g, " ")
+    .replace(/&nbsp;/gi, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+/**
+ * Estimates reading time for blog content.
+ *
+ * @param content - Raw post content (markdown, HTML, or plaintext)
+ * @returns Reading time in whole minutes (minimum 1)
+ */
+export function estimateReadingTimeMinutes(content: string): number {
+  const normalized = stripContentForWordCount(content);
+  if (!normalized) {
+    return 1;
+  }
+
+  const wordCount = normalized.split(" ").filter(Boolean).length;
+  return Math.max(1, Math.ceil(wordCount / WORDS_PER_MINUTE));
+}
+
+/**
+ * Formats reading time for display in the UI.
+ */
+export function formatReadingTime(minutes: number): string {
+  return `${minutes} min read`;
+}

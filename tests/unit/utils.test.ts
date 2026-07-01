@@ -1,5 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { cn, getBlogPostUrl } from "@/lib/utils";
+import {
+  cn,
+  estimateReadingTimeMinutes,
+  formatReadingTime,
+  getBlogPostUrl,
+} from "@/lib/utils";
 
 // Mock logger to avoid console output during tests
 vi.mock("@/lib/dev-tooling/logger", () => {
@@ -58,6 +63,29 @@ describe("cn", () => {
     expect(cn()).toBe("");
     expect(cn("")).toBe("");
     expect(cn("", undefined, null)).toBe("");
+  });
+});
+
+describe("estimateReadingTimeMinutes", () => {
+  it("returns 1 minute for empty content", () => {
+    expect(estimateReadingTimeMinutes("")).toBe(1);
+    expect(estimateReadingTimeMinutes("   ")).toBe(1);
+  });
+
+  it("estimates reading time from plaintext", () => {
+    const content = Array.from({ length: 400 }, () => "word").join(" ");
+    expect(estimateReadingTimeMinutes(content)).toBe(2);
+  });
+
+  it("strips HTML tags before counting words", () => {
+    const content = `<p>${Array.from({ length: 200 }, () => "word").join(" ")}</p>`;
+    expect(estimateReadingTimeMinutes(content)).toBe(1);
+  });
+});
+
+describe("formatReadingTime", () => {
+  it("formats minutes for display", () => {
+    expect(formatReadingTime(3)).toBe("3 min read");
   });
 });
 

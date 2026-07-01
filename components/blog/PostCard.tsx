@@ -1,8 +1,12 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Calendar } from "lucide-react";
+import { Calendar, Clock } from "lucide-react";
 import { Post } from "@/types";
-import { getBlogPostUrl } from "@/lib/utils";
+import {
+  estimateReadingTimeMinutes,
+  formatReadingTime,
+  getBlogPostUrl,
+} from "@/lib/utils";
 
 interface PostCardProps {
   post: Post;
@@ -16,6 +20,9 @@ export function PostCard({ post }: PostCardProps) {
       month: "long",
       day: "numeric",
     }
+  );
+  const readingTime = formatReadingTime(
+    estimateReadingTimeMinutes(post.content)
   );
 
   // const imageUrl = post.feature_image
@@ -43,9 +50,15 @@ export function PostCard({ post }: PostCardProps) {
           {post.title}
         </h2>
         <p className="mt-3 flex-grow text-slate-300">{post.summary}</p>
-        <div className="mt-4 flex items-center text-sm text-slate-400">
-          <Calendar className="mr-2 h-4 w-4" />
-          <time dateTime={post.publish_date}>{formattedDate}</time>
+        <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-slate-400">
+          <span className="inline-flex items-center">
+            <Calendar className="mr-2 h-4 w-4" />
+            <time dateTime={post.publish_date}>{formattedDate}</time>
+          </span>
+          <span className="inline-flex items-center">
+            <Clock className="mr-2 h-4 w-4" />
+            <span>{readingTime}</span>
+          </span>
         </div>
       </div>
     </Link>

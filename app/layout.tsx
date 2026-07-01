@@ -8,6 +8,7 @@ import { ToastProvider } from "@/context/ToastContext";
 import { MatomoProvider } from "@/components/matomo/MatomoProvider";
 import { DevModeIndicator } from "@/components/common/DevModeIndicator";
 import { DevControls } from "@/components/common/DevControls";
+import { BackToTop } from "@/components/common/BackToTop";
 import { utils } from "@/constants/theme";
 import { runtime } from "@/lib/config";
 
@@ -76,6 +77,7 @@ export default function RootLayout({
             <main className="flex-grow">{children}</main>
             <Footer />
             {runtime.isDevelopment && <DevControls />}
+            <BackToTop />
           </div>
         </ToastProvider>
       </body>
