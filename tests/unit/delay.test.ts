@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { delay } from "@/lib/delay";
+import { delay } from "@/lib/dev-tooling/delay";
 
 describe("delay", () => {
   it("resolves immediately in test environment", async () => {

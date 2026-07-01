@@ -19,6 +19,16 @@ COPY package.json pnpm-lock.yaml ./
 # re-run if the manifest or lockfile changes.
 RUN pnpm install --frozen-lockfile
 
+# Build-time public env vars (baked into client bundle)
+ARG NEXT_PUBLIC_DIRECTUS_URL
+ARG NEXT_PUBLIC_SITE_URL
+ARG NEXT_PUBLIC_MATOMO_URL
+ARG NEXT_PUBLIC_MATOMO_SITE_ID
+ENV NEXT_PUBLIC_DIRECTUS_URL=$NEXT_PUBLIC_DIRECTUS_URL
+ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL
+ENV NEXT_PUBLIC_MATOMO_URL=$NEXT_PUBLIC_MATOMO_URL
+ENV NEXT_PUBLIC_MATOMO_SITE_ID=$NEXT_PUBLIC_MATOMO_SITE_ID
+
 # 2. Build the Application
 # Copy the rest of your application's source code
 COPY . .

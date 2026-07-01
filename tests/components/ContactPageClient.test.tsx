@@ -6,7 +6,7 @@ import { ContactPageClient } from "@/components/contact/ContactPageClient";
 import * as contactAction from "@/app/actions/contact";
 
 // Mock logger to avoid console output during tests
-vi.mock("@/lib/logger", () => {
+vi.mock("@/lib/dev-tooling/logger", () => {
   const mockLogger = {
     info: vi.fn(),
     warn: vi.fn(),
@@ -24,7 +24,7 @@ vi.mock("@/lib/logger", () => {
 
 // Mock the email service to avoid delays in tests
 // This ensures sendEmail returns immediately without any delay
-vi.mock("@/lib/email-service", () => ({
+vi.mock("@/lib/services/email-service", () => ({
   isEmailServiceConfigured: vi.fn(() => true),
   sendEmail: vi.fn().mockResolvedValue({
     success: true,
@@ -33,7 +33,7 @@ vi.mock("@/lib/email-service", () => ({
 }));
 
 // Also mock the delay function to ensure no delays in tests
-vi.mock("@/lib/delay", () => ({
+vi.mock("@/lib/dev-tooling/delay", () => ({
   delay: vi.fn().mockResolvedValue(undefined),
 }));
 

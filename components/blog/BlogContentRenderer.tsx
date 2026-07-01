@@ -9,7 +9,7 @@ import {
   formatPlaintext,
   isLikelyMarkdown,
   isLikelyHTML,
-} from "@/lib/plaintext-formatter";
+} from "@/lib/policy-utils/plaintext-formatter";
 
 export type ContentFormat = "markdown" | "html" | "plaintext" | "auto";
 

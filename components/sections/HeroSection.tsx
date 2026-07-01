@@ -1,6 +1,6 @@
 import { Button } from "@/components/primitives/Button";
 import Link from "next/link";
-import { AnimatedText } from "@/components/common/AnimatedText";
+import { AnimatedText } from "@/components/primitives/misc/AnimatedText";
 
 export function HeroSection() {
   return (

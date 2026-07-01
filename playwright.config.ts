@@ -21,7 +21,10 @@ export default defineConfig({
   workers: process.env.CI ? 2 : undefined,
   reporter: process.env.CI
     ? [["blob"], ["github"]]
-    : [["html", { outputFolder: "output/playwright-report" }], ["list"]],
+    : [
+        ["html", { outputFolder: "output/playwright-report", open: "never" }],
+        ["list"],
+      ],
   outputDir: "output/test-results",
   use: {
     baseURL: "http://localhost:3000",
@@ -33,14 +36,19 @@ export default defineConfig({
       name: "chromium",
       use: { ...devices["Desktop Chrome"] },
     },
-    {
-      name: "firefox",
-      use: { ...devices["Desktop Firefox"] },
-    },
-    {
-      name: "webkit",
-      use: { ...devices["Desktop Safari"] },
-    },
+    // Only run other browsers locally to save CI resources
+    ...(!process.env.CI
+      ? [
+          {
+            name: "firefox",
+            use: { ...devices["Desktop Firefox"] },
+          },
+          {
+            name: "webkit",
+            use: { ...devices["Desktop Safari"] },
+          },
+        ]
+      : []),
   ],
 
   webServer: {
@@ -53,6 +61,8 @@ export default defineConfig({
     stdout: "ignore", // Suppress stdout to reduce noise
     stderr: "pipe", // Keep stderr for actual errors
     env: {
+      // Production-like runtime for middleware and route blocking tests
+      RUNTIME_MODE: "production",
       // Set test mode - services will be disabled automatically
       APP_MODE: "test",
       // Suppress noisy warnings during E2E tests
@@ -61,6 +71,8 @@ export default defineConfig({
       PLAYWRIGHT_TEST: "true",
       // Hide DevControls in e2e tests (client-side - NEXT_PUBLIC_ prefix required)
       NEXT_PUBLIC_PLAYWRIGHT_TEST: "true",
+      // Ensure we are in a non-interactive CI-like state for tests
+      NODE_ENV: "production",
     },
   },
 });

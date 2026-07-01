@@ -2,7 +2,7 @@
 
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
-import { env } from "@/lib/env";
+import { runtime } from "@/lib/config";
 import type {
   ViewMode,
   NormalVariant,
@@ -55,7 +55,7 @@ const getStorage = () => {
     return noOpStorage;
   }
   // Only persist in development modes with dev UI enabled
-  return env.devModeUI ? localStorage : noOpStorage;
+  return runtime.previewFeatures ? localStorage : noOpStorage;
 };
 
 export const useQuoteViewStore = create<QuoteViewState>()(

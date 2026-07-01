@@ -167,7 +167,7 @@ types/
 ├── index.ts                 # Re-exports all types for convenience
 ├── [domain].ts              # Domain-specific types
 │   ├── components.ts        # Component prop types
-│   ├── data.ts             # Data structure types
+│   ├── formatting.ts             # Data structure types
 │   ├── forms.ts            # Form-related types
 │   ├── animations.ts       # Animation types
 │   └── policies.ts         # Policy-related types

@@ -10,8 +10,8 @@ Matomo is integrated into the Next.js application via client-side JavaScript tra
 
 ### Active Components
 
-- **`MatomoProvider`** (`components/MatomoProvider.tsx`) - Client wrapper that reads environment variables and conditionally renders the Matomo component
-- **`Matomo`** (`components/Matomo.tsx`) - Main tracking component that initializes Matomo, tracks page views, and provides utility functions for custom events
+- **`MatomoProvider`** (`components/matomo/MatomoProvider.tsx`) - Client wrapper; renders when `config.matomo.enabled`
+- **`Matomo`** (`components/matomo/Matomo.tsx`) - Main tracking component
 - **`BlogPostTracker`** (`components/BlogPostTracker.tsx`) - Tracks individual blog post views with slug and title
 - **`DownloadButton`** (`components/DownloadButton.tsx`) - Tracks file download events (e.g., resume downloads)
 
@@ -61,12 +61,14 @@ Additional custom events are tracked via code:
 
 ### Environment Variables
 
-Add these to your `.env` file:
+Add these to your `.env` file (both required for tracking):
 
 ```bash
 NEXT_PUBLIC_MATOMO_URL=https://your-matomo-domain.com
 NEXT_PUBLIC_MATOMO_SITE_ID=1
 ```
+
+Set both to `DISABLED` only for local offline development. **Production launch requires real values** — see [MATOMO_LAUNCH_CHECKLIST.md](dev/MATOMO_LAUNCH_CHECKLIST.md).
 
 **Important**: The `NEXT_PUBLIC_MATOMO_URL` must be accessible from the browser (client-side). Use your public domain or Tailscale URL, not the Docker internal network name (`ps-matomo:80`).
 

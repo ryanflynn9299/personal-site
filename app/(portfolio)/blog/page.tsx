@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
-import { getPublishedPosts, isDirectusConfigured } from "@/lib/directus";
-import { isFeatureEnabled } from "@/lib/features";
+import {
+  getPublishedPosts,
+  isDirectusConfigured,
+} from "@/lib/services/directus";
+import { isFeatureEnabled } from "@/lib/dev-tooling/features";
 import { BlogPageClient } from "@/components/blog/BlogPageClient";
-import { generatePageMetadata, ENABLE_BLOG_SEO } from "@/lib/seo";
+import { generatePageMetadata, ENABLE_BLOG_SEO } from "@/lib/site/seo";
 
 // Use minimal metadata if blog SEO is disabled
 export const metadata: Metadata = ENABLE_BLOG_SEO
@@ -24,15 +27,42 @@ export const metadata: Metadata = ENABLE_BLOG_SEO
 // Revalidate the page every hour to fetch new posts
 export const revalidate = 3600;
 
-export default async function BlogIndexPage() {
+export default async function BlogIndexPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
   // Check if Directus is configured or dummy data is forcefully enabled
   if (!isDirectusConfigured() && !isFeatureEnabled("offlineDummyBlogs")) {
-    return <BlogPageClient posts={[]} status="error" />;
+    return (
+      <BlogPageClient
+        posts={[]}
+        status="error"
+        currentPage={1}
+        totalPages={0}
+        limit={50}
+      />
+    );
   }
 
-  const postsResponse = await getPublishedPosts();
+  const params = await searchParams;
+  const limit = 50;
+  const page = params?.page ? parseInt(params.page as string) : 1;
+
+  const { status, posts, total } = await getPublishedPosts({
+    limit,
+    page,
+  });
+
+  const totalPages = Math.ceil((total || 0) / limit);
 
   return (
-    <BlogPageClient posts={postsResponse.posts} status={postsResponse.status} />
+    <BlogPageClient
+      posts={posts}
+      status={status}
+      currentPage={page}
+      totalPages={totalPages}
+      limit={limit}
+    />
   );
 }

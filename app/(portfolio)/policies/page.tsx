@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { PoliciesPage } from "@/components/policies/PoliciesPage";
-import { loadAllPolicies } from "@/lib/policy-loader";
-import { mapTabToPolicyId } from "@/lib/policy-colors";
-import { generatePageMetadata } from "@/lib/seo";
+import { loadAllPolicies } from "@/lib/policy-utils/policy-loader";
+import { mapTabToPolicyId } from "@/lib/policy-utils/policy-colors";
+import { generatePageMetadata } from "@/lib/site/seo";
 
 export const metadata: Metadata = generatePageMetadata({
   title: "Policies",

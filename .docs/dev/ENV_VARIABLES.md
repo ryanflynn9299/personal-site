@@ -1,257 +1,101 @@
-# Environment Variables Documentation
+# Environment Variables Reference
 
-This document describes the environment variable system for the personal-site project.
+> **Source of truth** for the personal-site environment variable system.
 
-## Overview
+## Architecture
 
-The application uses a centralized environment variable system (`lib/env.ts`) that separates:
+The config system lives in `lib/config/` with three modules:
 
-- **Service connectivity** (whether to connect to services like Directus, SMTP)
-- **Dev mode UI** (whether to show unreleased features)
-- **Test mode** (whether we're in tests)
+| Module       | Import                | Purpose                                                     |
+| ------------ | --------------------- | ----------------------------------------------------------- |
+| `schemas.ts` | — (internal)          | Zod validation schemas; the ONLY file reading `process.env` |
+| `index.ts`   | `@/lib/config`        | Public `config` + derived `runtime` policies                |
+| `server.ts`  | `@/lib/config/server` | Server-only secrets (guarded by `server-only` package)      |
 
-## Application Modes
+```typescript
+// Client or Server Component
+import { config, runtime } from "@/lib/config";
 
-The application supports four modes controlled by `APP_MODE`:
-
-### 1. Production (`APP_MODE=production`)
-
-- **Services MUST be configured** - connection errors are treated as genuine errors
-- Service errors are logged as CRITICAL and shown in UI
-- Production behavior
-- Dev mode UI disabled
-- Used for live production deployment
-
-### 2. Live Dev (`APP_MODE=live-dev`)
-
-- **Services MUST be configured** - behaves like production
-- Service errors are treated as genuine errors (logged and shown in UI)
-- Development environment/configuration
-- Dev mode UI enabled by default (can be disabled with `DEV_MODE_UI=false`)
-- Used when developing with services connected (e.g., frontend on different computer than server)
-
-### 3. Offline Dev (`APP_MODE=offline-dev`)
-
-- **Services are IGNORED** - no service calls made regardless of .env values
-- Service environment variables are completely ignored
-- Development behavior
-- Dev mode UI enabled by default (can be disabled with `DEV_MODE_UI=false`)
-- Used for pure frontend development without service dependencies
-- **This is the default mode** when `APP_MODE` is not set and `NODE_ENV !== "production"`
-
-### 4. Test (`APP_MODE=test`)
-
-- **Services are disabled** - no service calls made
-- Test behavior
-- Dev mode UI disabled
-- Automatically set in test environments (vitest, playwright)
-
-## Mode Detection Priority
-
-1. Explicit `APP_MODE` env var (highest priority)
-2. `NODE_ENV=test` → test mode
-3. `NODE_ENV=production` → production mode
-4. Default → offline-dev mode
-
-## Dev Mode UI Toggle
-
-`DEV_MODE_UI` controls whether unreleased UI features are visible:
-
-- `true`: Show dev-only features (dev controls, unreleased pages, etc.)
-- `false`: Hide dev-only features (production-like view)
-
-**Policy:**
-
-- Production: Always `false` (cannot be overridden)
-- Live-dev: Defaults to `true`, can be set to `false` to see production view
-- Offline-dev: Defaults to `true`, can be set to `false` to see production view
-- Test: Always `false` (cannot be overridden)
-
-This is **separate** from service connectivity. You can have:
-
-- Services connected + dev UI disabled (see production view with live data)
-- Services disabled + dev UI enabled (see dev features without services)
-
-## Environment Variables
-
-### Application Mode
-
-```bash
-# Application mode (optional - auto-detected if not set)
-APP_MODE=offline-dev  # Options: production, live-dev, offline-dev, test
-
-# Dev mode UI toggle (optional - defaults based on mode)
-DEV_MODE_UI=true  # Options: true, false
+// Server Component, Action, or Middleware ONLY
+import { serverConfig } from "@/lib/config/server";
 ```
 
-### Site Configuration
+## Runtime Modes
 
-```bash
-# Base URL for the site (used for SEO, sitemap, etc.)
-NEXT_PUBLIC_SITE_URL=https://www.ryanflynn.org
-```
+Set via `RUNTIME_MODE` (auto-detected if unset):
+
+| Mode          | Services | Preview Features | Use Case                    |
+| ------------- | -------- | ---------------- | --------------------------- |
+| `production`  | Required | Off              | Live deployment             |
+| `live-dev`    | Required | On (default)     | Dev with services connected |
+| `offline-dev` | Disabled | On (default)     | Frontend-only development   |
+| `test`        | Disabled | Off              | Automated tests             |
+
+## Variable Reference
+
+### Application Runtime
+
+| Variable                  | Scope  | Default                 | Description                   |
+| ------------------------- | ------ | ----------------------- | ----------------------------- |
+| `RUNTIME_MODE`            | Server | `offline-dev`           | Application runtime mode      |
+| `ENABLE_PREVIEW_FEATURES` | Server | Mode-dependent          | Show unreleased UI features   |
+| `NEXT_PUBLIC_SITE_URL`    | Public | `http://localhost:3000` | Canonical site URL            |
+| `LOG_PRETTY_PRINT`        | Server | `false`                 | Enable pino-pretty log output |
 
 ### Directus CMS
 
-```bash
-# Internal URL for server-side requests (Docker service name or localhost)
-DIRECTUS_URL_SERVER_SIDE=http://ps-directus:8055
+| Variable                   | Scope  | Description                               |
+| -------------------------- | ------ | ----------------------------------------- |
+| `NEXT_PUBLIC_DIRECTUS_URL` | Public | Browser-accessible CMS URL                |
+| `DIRECTUS_INTERNAL_URL`    | Server | Server-side CMS URL (Docker service name) |
+| `DIRECTUS_KEY`             | Docker | Directus application key                  |
+| `DIRECTUS_SECRET`          | Docker | Directus application secret               |
+| `DIRECTUS_ADMIN_EMAIL`     | Docker | Initial admin email                       |
+| `DIRECTUS_ADMIN_PASSWORD`  | Docker | Initial admin password                    |
+| `DIRECTUS_PUBLIC_URL`      | Docker | Public URL for CORS/assets                |
 
-# Public URL for client-side requests (must be accessible from browser)
-NEXT_PUBLIC_DIRECTUS_URL=http://localhost:8055
+### Admin Dashboard
 
-# Cloudflare Access (for dev tunnel, only in live-dev mode)
-USE_CLOUDFLARE_TUNNEL=false
-CF_ACCESS_CLIENT_ID=your-client-id
-CF_ACCESS_CLIENT_SECRET=your-client-secret
-```
+| Variable                  | Scope  | Description                            |
+| ------------------------- | ------ | -------------------------------------- |
+| `ADMIN_PASSCODE`          | Server | Dashboard login passcode               |
+| `ADMIN_SESSION_SECRET`    | Server | Session cookie signing secret          |
+| `ADMIN_REQUIRE_TAILSCALE` | Server | Require Tailscale VPN for admin routes |
 
 ### SMTP Email
 
-```bash
-# SMTP server configuration
-SMTP_HOST=smtp.example.com
-SMTP_PORT=587
-SMTP_FROM=contact@example.com
-SMTP_TO=your-email@example.com
-
-# Optional authentication
-SMTP_USER=your-username
-SMTP_PASS=your-password
-```
+| Variable    | Scope  | Description                   |
+| ----------- | ------ | ----------------------------- |
+| `SMTP_HOST` | Server | SMTP server hostname          |
+| `SMTP_PORT` | Server | SMTP server port              |
+| `SMTP_FROM` | Server | Sender email address          |
+| `SMTP_TO`   | Server | Recipient email address       |
+| `SMTP_USER` | Server | SMTP auth username (optional) |
+| `SMTP_PASS` | Server | SMTP auth password (optional) |
 
 ### Matomo Analytics
 
-```bash
-# Matomo analytics configuration
-NEXT_PUBLIC_MATOMO_URL=https://your-matomo-domain.com
-NEXT_PUBLIC_MATOMO_SITE_ID=1
+| Variable                     | Scope  | Description                   |
+| ---------------------------- | ------ | ----------------------------- |
+| `NEXT_PUBLIC_MATOMO_URL`     | Public | Matomo instance URL           |
+| `NEXT_PUBLIC_MATOMO_SITE_ID` | Public | Matomo site ID                |
+| `MATOMO_DB_PASSWORD`         | Docker | Matomo database password      |
+| `MATOMO_DB_ROOT_PASSWORD`    | Docker | Matomo database root password |
 
-# Set to "DISABLED" to explicitly disable
-NEXT_PUBLIC_MATOMO_URL=DISABLED
-NEXT_PUBLIC_MATOMO_SITE_ID=DISABLED
-```
+### Cloudflare
 
-### Development Tools
+| Variable                  | Scope  | Description                         |
+| ------------------------- | ------ | ----------------------------------- |
+| `CF_TUNNEL_ENABLED`       | Server | Enable Cloudflare tunnel (live-dev) |
+| `CF_ACCESS_CLIENT_ID`     | Server | Cloudflare Access client ID         |
+| `CF_ACCESS_CLIENT_SECRET` | Server | Cloudflare Access client secret     |
+| `CF_TUNNEL_TOKEN`         | Docker | Cloudflare tunnel token             |
 
-```bash
-# Enable pretty-printed logs in development
-ENABLE_PINO_PRETTY=false
-```
+### Database
 
-## Syncing Environment Variables
-
-When a new environment variable is added to the project, it will appear in `.env.example`. A script is provided to safely synchronize your local `.env` file with the templates in `.env.example`, generating stubs or copying values natively regardless of your operating system.
-
-```bash
-# Preview what is missing and ask for confirmation to append it
-./scripts/sync-env.sh
-
-# Automatically append missing variables, generating stubs for empty values
-./scripts/sync-env.sh --fix
-
-# View verbose breakdown of exactly what values will be stubbed or copied
-./scripts/sync-env.sh -v
-```
-
-**Key Behaviors:**
-
-- Preserves existing formatting and custom comments in your `.env`.
-- Missing variables are exclusively appended to the bottom section.
-- Automatically hyphenates variable names into stubs when the template is empty (e.g. `MY_VAR=` becomes `MY_VAR=my-var`).
-
-## Usage Examples
-
-### Production Deployment
-
-```bash
-APP_MODE=production
-DEV_MODE_UI=false  # Automatically false in production
-DIRECTUS_URL_SERVER_SIDE=http://ps-directus:8055
-NEXT_PUBLIC_DIRECTUS_URL=https://api.ryanflynn.org
-SMTP_HOST=smtp.example.com
-# ... other production config
-```
-
-### Live Dev (Frontend on Different Computer)
-
-```bash
-APP_MODE=live-dev
-DEV_MODE_UI=true  # Default, can set to false to see production view
-DIRECTUS_URL_SERVER_SIDE=http://your-server-ip:8055  # Or Tailscale URL
-NEXT_PUBLIC_DIRECTUS_URL=https://api.ryanflynn.org  # Public URL
-# ... other service configs
-```
-
-### Offline Dev (Pure Frontend Development)
-
-```bash
-APP_MODE=offline-dev  # Or omit (this is the default)
-DEV_MODE_UI=true  # Default
-# Services will be disabled regardless of .env values
-# No need to configure services
-```
-
-### Testing
-
-```bash
-# Automatically set in test environments
-APP_MODE=test  # Set automatically by test setup
-# Services are disabled automatically
-# Dev mode UI is disabled automatically
-```
-
-## Service Connectivity Rules
-
-**Strict Policy:**
-
-1. **Production/Live-dev modes:**
-   - Services MUST be configured properly
-   - Service connection errors are treated as **genuine errors**
-   - Errors are logged as CRITICAL and shown in UI
-   - Services are expected to be available and working
-
-2. **Offline-dev mode:**
-   - Services are **completely ignored**
-   - No service calls are made regardless of .env values
-   - Service environment variables are not checked
-   - Used for pure frontend development
-
-3. **Test mode:**
-   - Services are disabled
-   - No service calls are made
-   - Test mocks are used instead
-
-## Migration from Old System
-
-The old system used `NODE_ENV` checks throughout the codebase. The new system:
-
-- Still respects `NODE_ENV` for Next.js built-in behavior
-- Adds `APP_MODE` for explicit control
-- Adds `DEV_MODE_UI` for UI feature toggling
-- Centralizes all environment logic in `lib/env.ts`
-
-To migrate:
-
-1. Replace `process.env.NODE_ENV === "development"` with `env.isDevelopment` or `env.devModeUI`
-2. Replace `process.env.NODE_ENV === "production"` with `env.isProduction`
-3. Use `env.connectToServices` to check if services should be connected
-4. Use `env.devModeUI` to check if dev UI features should be shown
-
-## Debugging
-
-Use the `getEnvSummary()` function to see current environment configuration:
-
-```typescript
-import { getEnvSummary } from "@/lib/env";
-
-console.log(getEnvSummary());
-// {
-//   mode: "offline-dev",
-//   devModeUI: true,
-//   connectToServices: false,
-//   directusEnabled: false,
-//   emailEnabled: false,
-//   ...
-// }
-```
+| Variable      | Scope  | Description       |
+| ------------- | ------ | ----------------- |
+| `DB_PORT`     | Docker | PostgreSQL port   |
+| `DB_NAME`     | Docker | Database name     |
+| `DB_USER`     | Docker | Database user     |
+| `DB_PASSWORD` | Docker | Database password |

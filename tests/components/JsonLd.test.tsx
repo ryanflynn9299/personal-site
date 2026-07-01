@@ -4,34 +4,64 @@ import { JsonLd } from "@/components/common/JsonLd";
 import type { Post } from "@/types";
 
 // Mock the seo module to enable blog SEO for tests
-vi.mock("@/lib/seo", () => ({
+vi.mock("@/lib/site/seo", () => ({
   SITE_URL: "https://www.ryanflynn.org",
   SITE_AUTHOR: "Ryan Flynn",
   ENABLE_BLOG_SEO: true, // Enable for tests
 }));
 
-// Mock the env module to ensure it reads from process.env at runtime
-// The env.directus.publicUrl property is set at module load time, so we need to
-// intercept access to make it read from process.env dynamically
-vi.mock("@/lib/env", async () => {
-  const actual = await vi.importActual<typeof import("@/lib/env")>("@/lib/env");
-  // Create a Proxy that intercepts access to the directus property
-  // to read from process.env at runtime instead of module load time
+// Mock the config module to ensure it reads from process.env at runtime
+vi.mock("@/lib/config", async () => {
+  const actual =
+    await vi.importActual<typeof import("@/lib/config")>("@/lib/config");
   return {
     ...actual,
-    env: new Proxy(actual.env, {
-      get(target, prop) {
-        // Intercept directus property to read from process.env dynamically
-        if (prop === "directus") {
-          return {
-            serverUrl: process.env.DIRECTUS_URL_SERVER_SIDE,
-            publicUrl: process.env.NEXT_PUBLIC_DIRECTUS_URL,
-          };
-        }
-        // For all other properties (including getters), access normally
-        return Reflect.get(target, prop, target);
+    config: {
+      ...actual.config,
+      get directus() {
+        return {
+          publicUrl: process.env.NEXT_PUBLIC_DIRECTUS_URL,
+        };
       },
-    }),
+    },
+    runtime: {
+      get mode() {
+        return process.env.RUNTIME_MODE || "offline-dev";
+      },
+      get isProduction() {
+        return process.env.RUNTIME_MODE === "production";
+      },
+      get isDevelopment() {
+        return (
+          process.env.RUNTIME_MODE === "live-dev" ||
+          process.env.RUNTIME_MODE === "offline-dev"
+        );
+      },
+      get isLiveDev() {
+        return process.env.RUNTIME_MODE === "live-dev";
+      },
+      get isOfflineDev() {
+        return process.env.RUNTIME_MODE === "offline-dev";
+      },
+      get isTest() {
+        return process.env.RUNTIME_MODE === "test";
+      },
+      get connectToServices() {
+        return (
+          process.env.RUNTIME_MODE === "production" ||
+          process.env.RUNTIME_MODE === "live-dev"
+        );
+      },
+      get treatServiceErrorsAsReal() {
+        return (
+          process.env.RUNTIME_MODE === "production" ||
+          process.env.RUNTIME_MODE === "live-dev"
+        );
+      },
+      get previewFeatures() {
+        return process.env.ENABLE_PREVIEW_FEATURES === "true";
+      },
+    },
   };
 });
 

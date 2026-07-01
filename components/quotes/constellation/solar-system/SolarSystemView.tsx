@@ -4,7 +4,7 @@ import { useMemo, useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { QuoteModalTitle } from "@/components/quotes/QuoteModalTitle";
 import { useQuoteViewStore } from "@/components/quotes/store/useQuoteViewStore";
-import { env } from "@/lib/env";
+import { runtime } from "@/lib/config";
 import type { Entity, SolarSystemViewProps } from "./types";
 import { buildEntities } from "./buildEntities";
 import { useComets } from "./useComets";
@@ -363,7 +363,7 @@ export function SolarSystemView({ quotes }: SolarSystemViewProps) {
             // Don't show tooltip if no quote (production) or show "No quotes available" in dev
             if (!comet.quote) {
               // In dev mode UI, show "No quotes available", in prod show nothing
-              if (!env.devModeUI) {
+              if (!runtime.previewFeatures) {
                 return null;
               }
 

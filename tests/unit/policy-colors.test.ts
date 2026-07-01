@@ -1,5 +1,8 @@
 import { describe, it, expect } from "vitest";
-import { getPolicyColorTheme, mapTabToPolicyId } from "@/lib/policy-colors";
+import {
+  getPolicyColorTheme,
+  mapTabToPolicyId,
+} from "@/lib/policy-utils/policy-colors";
 
 describe("getPolicyColorTheme", () => {
   it("returns privacy-policy theme for privacy-policy id", () => {

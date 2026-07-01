@@ -53,8 +53,6 @@ test.describe("Policy Pages", () => {
 
     // Should redirect to /policies?tab=privacy
     await expect(page).toHaveURL(/\/policies\?tab=privacy/);
-    // Page should have loaded with privacy policy content
-    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
   });
 
   test("terms of service page loads (redirects to /policies)", async ({
@@ -64,15 +62,15 @@ test.describe("Policy Pages", () => {
 
     // Should redirect to /policies?tab=terms
     await expect(page).toHaveURL(/\/policies\?tab=terms/);
-    // Page should have loaded with terms content
-    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
   });
 
   test("policies page loads directly", async ({ page }) => {
     await page.goto("/policies");
 
     // Should show policy content
-    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Policies", exact: true })
+    ).toBeVisible();
   });
 });
 

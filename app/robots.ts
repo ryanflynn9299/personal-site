@@ -1,5 +1,5 @@
 import { MetadataRoute } from "next";
-import { SITE_URL } from "@/lib/seo";
+import { SITE_URL } from "@/lib/site/seo";
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -7,12 +7,24 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/admin/", "/dashboard/", "/api/"],
+        disallow: [
+          "/admin/",
+          "/dashboard/",
+          "/api/",
+          "/quotes/",
+          "/projects-cabinet/",
+        ],
       },
       {
         userAgent: "Googlebot",
         allow: "/",
-        disallow: ["/admin/", "/dashboard/", "/api/"],
+        disallow: [
+          "/admin/",
+          "/dashboard/",
+          "/api/",
+          "/quotes/",
+          "/projects-cabinet/",
+        ],
       },
     ],
     sitemap: `${SITE_URL}/sitemap.xml`,

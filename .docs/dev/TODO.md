@@ -39,25 +39,35 @@ _Start here - these are the most important items to tackle next_
 ### Before Launch - After UI reviewers
 
 - [ ] Add professional headshot/profile images
-- [ ] Deep dive on Matomo
-- [x] images for about page
-- [ ] Ensure responsive design works on mobile devices
-- [ ] Figure out scalability for blog
-- [ ] Add pagination for blog listing page
-- [ ] make about page UX optimized
-- [ ] Finish quotes page and make final selection
-- [ ] See my latest LinkedIn posts??
-- [ ] Enable SEO for blogs in lib/seo.ts
-- [ ] Versioning system/methodology
-- [ ] Implement Terms and Privacy Policies wrt Matomo analytics
-- [x] clean up eslint warnings
-- [ ] add coverage check to main branch
-- [ ] Improve pre-commit checks for PR (PR naming conventions, etc)
-- [ ] pre-commit check script (validate, test, compare coverage, build)
-- [ ] Configure secrets for dev mode/local testing
-- [ ] Remove unused components
-- [ ] connect counter to database
+- [ ] Deep dive on Matomo (see `.docs/dev/MATOMO_LAUNCH_CHECKLIST.md`)
 - [ ] Update site metadata (title, description, favicon)
+- [ ] Versioning system/methodology
+- [x] Implement Terms and Privacy Policies wrt Matomo analytics
+- [ ] Enable SEO for blogs in lib/seo.ts
+- [ ] Remove unused components and rename, archive out of use
+- [x] images for about page
+- [ ] add coverage check to main branch
+- [x] make about page UX optimized
+- [ ] Ensure responsive design works on mobile devices
+- [x] Figure out scalability for blog
+- [x] Add pagination for blog listing page
+- [x] Quotes page — dev-only at launch (middleware + sitemap + robots)
+- [ ] See my latest LinkedIn posts??
+- [x] clean up eslint warnings
+- [ ] connect counter to database
+- [x] Add complete suite of e2e tests and improve unit test coverage
+- [x] Stabilize e2e tests
+- [x] Clean up documentation (see `.docs/dev/RELEASE_READINESS.md`)
+
+### Release blockers (security & ops)
+
+- [x] Wire admin middleware (`middleware.ts`)
+- [x] Contact form honeypot + rate limiting (see `.docs/dev/CONTACT_FORM_SECURITY.md`)
+- [x] Matomo client cleanup (`config.matomo.enabled`)
+- [x] Docker prod env wiring (SMTP, admin, Matomo build args)
+- [ ] **Configure Tailscale for admin access** (see `.docs/dev/ADMIN_ACCESS.md`)
+- [ ] **Implement real SMTP email delivery** (see `.docs/dev/SMTP_LAUNCH_CHECKLIST.md`)
+- [ ] Complete Matomo launch operator tasks (see `.docs/dev/MATOMO_LAUNCH_CHECKLIST.md`)
 
 ### First promote after launch
 
@@ -67,7 +77,13 @@ _Start here - these are the most important items to tackle next_
 - [ ] Set up VSCode server and connect cursor for remote development pipeline
 - [ ] Set up remote teardown command
 - [ ] add slug hashing
-- [ ] Reduce build time for PR pipeline
+- [x] Reduce build time for PR pipeline
+- [ ] Apply pagination/scalability changes from documentation
+- [ ] Clean up directus.ts
+- [ ] Clean up env variables and secrets (including dev and local)
+- [ ] Improve pre-commit checks for PR (PR naming conventions, etc.)
+- [ ] pre-commit check script (validate, test, compare coverage, build)
+- [ ] Add blog post categories/tags system
 
 ### After Launch (Future)
 
@@ -78,9 +94,23 @@ _Start here - these are the most important items to tackle next_
 - [ ] Review and optimize bundle size
 - [ ] Add photos gallery to About Page
 - [ ] Add some kind of books commentary page or component
+- [ ] Add duck animation easter eggs
 - [ ] Add spotify integration
 - [ ] Add socials links to About page
 - [ ] Add more projects to vitae page
+- [ ] Add code syntax highlighting for technical posts (terminal theme)
+- [ ] Implement table of contents for long posts
+- [ ] Add related posts suggestions
+- [ ] Create post series/collections
+- [ ] Add blog post excerpt/summary display
+- [ ] Add reading time estimates for blog posts
+- [ ] Add proper meta tags for social sharing
+
+## Post-launch admin-oriented tasks
+
+- [ ] Add admin dashboard for quick edits
+- [ ] Add content scheduling functionality
+- [ ] Create draft preview functionality
 
 ---
 
@@ -92,30 +122,12 @@ _Start here - these are the most important items to tackle next_
 
 ## 📋 Backlog by Category
 
-### Content & Features
-
-- [ ] Add blog post categories/tags system
-- [ ] Create draft preview functionality
-- [ ] Add blog post excerpt/summary display
-- [ ] Add code syntax highlighting for technical posts (terminal theme)
-- [ ] Implement table of contents for long posts
-- [ ] Add related posts suggestions
-- [ ] Create post series/collections
-
 ### User Experience
 
-- [ ] Implement smooth scrolling navigation
-- [ ] Add reading time estimates for blog posts
-- [ ] Create breadcrumb navigation
+- [x] Implement smooth scrolling navigation
+- [x] Create breadcrumb navigation
 - [x] Improve toasts styling and limit
 - [x] Stylize toasts to space theme
-
-### Performance & SEO
-
-- [x] Optimize images with Next.js Image component
-- [ ] Add proper meta tags for social sharing
-- [x] Implement structured data for blog posts
-- [x] Set up Google Analytics or similar
 
 ### Development & Infrastructure
 
@@ -124,7 +136,7 @@ _Start here - these are the most important items to tackle next_
 - [ ] Set up error monitoring (Sentry)
 - [ ] Audit accessibility compliance
 - [ ] Refactor repetitive code patterns
-- [ ] Set up automated testing (Jest/Cypress)
+- [x] Set up automated testing (Jest/Cypress)
 
 ### Interactive Elements & UI Components
 
@@ -154,21 +166,11 @@ _Start here - these are the most important items to tackle next_
 - [ ] Add social media integration
 - [ ] Implement full-text search across all content
 - [ ] Add RSS feed generation
-- [ ] Create admin dashboard for quick edits
-- [ ] Add content scheduling functionality
-- [ ] Implement A/B testing for different layouts
 
 ### Documentation
 
 - [ ] Create UI style guide for consistent design
-- [ ] Consolidate and refine documentation
 - [ ] Write deployment instructions
-- [ ] Document Directus schema and relationships
-- [ ] Create troubleshooting guide
-- [ ] Add to README:
-  - Toasts and error handling
-  - Animations
-  - Download resume
 
 ### Content Ideas
 
@@ -177,70 +179,19 @@ _Start here - these are the most important items to tackle next_
 - [ ] Document lessons learned from projects
 - [ ] Share productivity tips and tools
 - [ ] Write about career journey and experiences
+- [ ] Salsa and Pretzels
 
 ### Miscellaneous Ideas
-
-- [ ] Implement hidden sections revealed by URL manipulation or sessions for gemini links and other organizational nonsense
 
 ---
 
 ## ✅ Completed Tasks
 
-_Recently completed items (for reference)_
-
-### Core Functionality
-
-- [x] Make featured projects a carousel
-- [x] Support skills tags on projects in vitae
-- [x] Add a blog post
-- [x] Placeholder images
-- [x] Update about page with more content
-- [x] Update vitae information
-- [x] Attach real resume
-- [x] Implement blog post detail pages
-- [x] Add search for blogs
-- [x] Create proper 404 page for missing blog posts
-- [x] Implement proper error boundaries
-
-### Bug Fixes
-
-- [x] Fix TypeScript error in `readItems` call for posts collection
-- [x] Verify all Directus API calls handle errors properly
-- [x] Test blog post rendering with actual content
-- [x] Fix any console errors in development
-
-### Content & Setup
-
-- [x] Add actual blog posts to Directus CMS
-- [x] Write and publish first blog post
-- [x] Set up production environment variables
-- [x] Add 3 blog posts to home screen
-- [x] Support markdown blogs
-
-### Development & Maintenance
-
-- [x] Make sure no ENV variables are hardcoded in the codebase
-- [x] Add code formatting with Prettier
-- [x] Clean up code and comments
-- [x] Clean up files and directories
-- [x] Add tests
-- [x] Clean up unused dependencies
-- [x] Update to latest framework versions
-
-### Portfolio Features
-
-- [x] Add resume/CV download functionality
-- [x] Implement contact form
-
-### Future Items (Completed)
-
-- [x] Implement blog post search functionality
-
 ---
 
 ## 📝 Notes
 
-- Last organized: 2026-01-XX
+- Last organized: 2026-03-XX
 - Focus on Next Actions section for immediate work
 - Move items to Completed section when done
 - Archive old completed items periodically

@@ -10,7 +10,7 @@ import {
   PlanetIcon,
   StarIcon,
   RocketIcon,
-} from "@/components/common/SpaceMarkdownIcons";
+} from "@/components/primitives/misc/SpaceMarkdownIcons";
 import { usePulseScheduler } from "./usePulseScheduler";
 import { HexPulse } from "./HexPulse";
 import type { DataSurge, HexTile } from "./types";

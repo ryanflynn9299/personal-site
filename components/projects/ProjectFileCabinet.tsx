@@ -7,7 +7,7 @@ import Folder from "@/components/primitives/misc/Folder";
 import { projects } from "@/data/projects";
 import { ProjectModal } from "./ProjectModal";
 import { projects as projectColors } from "@/constants/theme";
-import { env } from "@/lib/env";
+import { runtime } from "@/lib/config";
 
 // Project type based on the data structure
 interface Project {
@@ -178,7 +178,7 @@ export function ProjectFileCabinet() {
             const categoryProjects = categorizedProjects[categoryName] || [];
 
             // Hide empty folders unless we're in dev mode
-            if (categoryProjects.length === 0 && !env.devModeUI) {
+            if (categoryProjects.length === 0 && !runtime.previewFeatures) {
               return null;
             }
 

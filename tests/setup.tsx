@@ -5,11 +5,14 @@ import { afterEach, beforeAll, afterAll, vi } from "vitest";
 import React from "react";
 import { server } from "./mocks/server";
 
+// Mock `server-only` — it throws unconditionally outside Next.js,
+// but our tests need to import modules that transitively import it.
+vi.mock("server-only", () => ({}));
+
 // Set test mode for environment configuration
 // This ensures services are disabled and test context is established
-// Note: NODE_ENV is read-only, but APP_MODE can be set
 if (typeof process !== "undefined") {
-  process.env.APP_MODE = "test";
+  process.env.RUNTIME_MODE = "test";
   // NODE_ENV is automatically set to "test" by vitest
 }
 

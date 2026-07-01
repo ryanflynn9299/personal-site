@@ -4,12 +4,11 @@ import { useDevControlsStore } from "@/components/common/store/useDevControlsSto
 import type { ReactNode } from "react";
 
 interface ActiveHomeSectionsProps {
-  aboutMe2: ReactNode;
+  aboutMe: ReactNode;
   projectCarousel: ReactNode;
-  techStack2: ReactNode;
-  techStack3: ReactNode;
-  techStack4: ReactNode;
-  blogHighlight4: ReactNode;
+  standardTechStack: ReactNode;
+  animatedTechStack: ReactNode;
+  blogHighlight: ReactNode;
 }
 
 /**
@@ -22,25 +21,23 @@ export function ActiveHomeSections(props: ActiveHomeSectionsProps) {
   const {
     selectedAboutMe,
     selectedProjects,
-    selectedTechStack,
+    isTechStackPremium,
     selectedBlogHighlight,
   } = useDevControlsStore();
 
   return (
     <>
       {/* About Me */}
-      {selectedAboutMe === "aboutMe2" && props.aboutMe2}
+      {selectedAboutMe === "aboutMe" && props.aboutMe}
 
       {/* Projects */}
       {selectedProjects === "projectCarousel" && props.projectCarousel}
 
       {/* Tech Stack */}
-      {selectedTechStack === "techStack2" && props.techStack2}
-      {selectedTechStack === "techStack3" && props.techStack3}
-      {selectedTechStack === "techStack4" && props.techStack4}
+      {isTechStackPremium ? props.animatedTechStack : props.standardTechStack}
 
       {/* Blog Highlight */}
-      {selectedBlogHighlight === "blogHighlight4" && props.blogHighlight4}
+      {selectedBlogHighlight === "blogHighlight" && props.blogHighlight}
     </>
   );
 }

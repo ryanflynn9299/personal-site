@@ -6,8 +6,11 @@ import { Sparkles } from "lucide-react";
 import Counter from "@/components/primitives/misc/Counter";
 import { incrementCounter } from "@/app/actions/counter";
 import { core } from "@/constants/theme";
-import { createLogger } from "@/lib/logger";
-import { isFeatureEnabled, shouldShowDevIndicator } from "@/lib/features";
+import { createLogger } from "@/lib/dev-tooling/logger";
+import {
+  isFeatureEnabled,
+  shouldShowDevIndicator,
+} from "@/lib/dev-tooling/features";
 
 const log = createLogger("ALL");
 

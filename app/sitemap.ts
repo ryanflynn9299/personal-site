@@ -1,7 +1,10 @@
 import { MetadataRoute } from "next";
-import { SITE_URL, ENABLE_BLOG_SEO } from "@/lib/seo";
-import { getPublishedPosts, isDirectusConfigured } from "@/lib/directus";
-import { createLogger } from "@/lib/logger";
+import { SITE_URL, ENABLE_BLOG_SEO } from "@/lib/site/seo";
+import {
+  getPublishedPosts,
+  isDirectusConfigured,
+} from "@/lib/services/directus";
+import { createLogger } from "@/lib/dev-tooling/logger";
 
 const log = createLogger("ALL");
 
@@ -41,18 +44,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: `${SITE_URL}/contact`,
       lastModified: new Date(),
       changeFrequency: "yearly",
-      priority: 0.7,
-    },
-    {
-      url: `${SITE_URL}/quotes`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.6,
-    },
-    {
-      url: `${SITE_URL}/projects-cabinet`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
       priority: 0.7,
     },
     {

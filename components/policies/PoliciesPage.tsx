@@ -3,8 +3,8 @@
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
-import { PseudoMarkdownRenderer } from "@/components/common/PseudoMarkdownRenderer";
-import { getPolicyColorTheme } from "@/lib/policy-colors";
+import { PseudoMarkdownRenderer } from "@/components/policies/PseudoMarkdownRenderer";
+import { getPolicyColorTheme } from "@/lib/policy-utils/policy-colors";
 import type { PolicyMetadata } from "@/types/policies";
 
 // Ensure Tailwind generates these classes: text-purple-400 text-sky-400 bg-purple-600/20 bg-sky-600/20 border-purple-500/50 border-sky-500/50

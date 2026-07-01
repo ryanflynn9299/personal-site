@@ -3,7 +3,7 @@ import {
   getPublishedPosts,
   getAdjacentPosts,
   isDirectusConfigured,
-} from "@/lib/directus";
+} from "@/lib/services/directus";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Image from "next/image";
@@ -12,9 +12,9 @@ import { BlogPostTracker } from "@/components/blog/BlogPostTracker";
 import { ServiceUnavailableWithDevMode } from "@/components/common/DevModeIndicator";
 import { BlogContentRenderer } from "@/components/blog/BlogContentRenderer";
 import { Post } from "@/types";
-import { SITE_URL, ENABLE_BLOG_SEO } from "@/lib/seo";
-import { env } from "@/lib/env";
-import { isFeatureEnabled } from "@/lib/features";
+import { SITE_URL, ENABLE_BLOG_SEO } from "@/lib/site/seo";
+import { config, runtime } from "@/lib/config";
+import { isFeatureEnabled } from "@/lib/dev-tooling/features";
 import { BlogPostNavigation } from "@/components/blog/BlogPostNavigation";
 
 type Props = {
@@ -54,8 +54,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const postUrl = `${SITE_URL}/blog/${post.slug}`;
   const authorName = `${post.author.first_name} ${post.author.last_name}`;
   const imageUrl =
-    post.feature_image && env.directus.publicUrl
-      ? `${env.directus.publicUrl}/assets/${post.feature_image.id}`
+    post.feature_image && config.directus.publicUrl
+      ? `${config.directus.publicUrl}/assets/${post.feature_image.id}`
       : undefined;
 
   return {
@@ -112,7 +112,7 @@ export default async function BlogPostPage({ params }: Props) {
   if (
     !isDirectusConfigured() &&
     !isFeatureEnabled("offlineDummyBlogs") &&
-    env.treatServiceErrorsAsReal
+    runtime.treatServiceErrorsAsReal
   ) {
     return (
       <div className="container mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
@@ -137,8 +137,8 @@ export default async function BlogPostPage({ params }: Props) {
   );
 
   const imageUrl =
-    post.feature_image && env.directus.publicUrl
-      ? `${env.directus.publicUrl}/assets/${post.feature_image.id}`
+    post.feature_image && config.directus.publicUrl
+      ? `${config.directus.publicUrl}/assets/${post.feature_image.id}`
       : null;
 
   const { prev, next } = await getAdjacentPosts(post.publish_date, post.id);

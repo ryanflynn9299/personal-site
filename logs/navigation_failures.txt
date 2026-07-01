@@ -1,0 +1,115 @@
+[2m[WebServer] [22m[33m[1m⚠[22m[39m turbopack.root should be absolute, using: /Users/ryanflynn/personal-site/personal-site
+[2m[WebServer] [22m[33m[1m⚠[22m[39m turbopack.root should be absolute, using: /Users/ryanflynn/personal-site/personal-site
+[2m[WebServer] [22m[33m[1m⚠[22m[39m "next start" does not work with "output: standalone" configuration. Use "node .next/standalone/server.js" instead.
+
+Running 30 tests using 8 workers
+
+  ✓   5 [chromium] › tests/e2e/navigation.spec.ts:113:7 › Navigation › external links open in new tab (1.9s)
+  ✓   2 [chromium] › tests/e2e/navigation.spec.ts:46:7 › Navigation › navigates back to homepage using logo/brand link (2.0s)
+  ✓   6 [chromium] › tests/e2e/navigation.spec.ts:32:7 › Navigation › navigates from homepage to contact page (3.0s)
+  ✓   1 [chromium] › tests/e2e/navigation.spec.ts:18:7 › Navigation › navigates from homepage to blog page (3.1s)
+  ✓   3 [chromium] › tests/e2e/navigation.spec.ts:4:7 › Navigation › navigates from homepage to about page (3.1s)
+  ✓   8 [chromium] › tests/e2e/navigation.spec.ts:94:7 › Navigation › terms of service link works (3.4s)
+  ✓   4 [chromium] › tests/e2e/navigation.spec.ts:58:7 › Navigation › navigation works on all main pages (3.4s)
+  ✓   9 [chromium] › tests/e2e/navigation.spec.ts:136:7 › Mobile Navigation › mobile menu toggle works (1.9s)
+  ✓   7 [chromium] › tests/e2e/navigation.spec.ts:80:7 › Navigation › footer links navigate correctly (4.0s)
+  ✓  10 [chromium] › tests/e2e/navigation.spec.ts:163:7 › Mobile Navigation › mobile navigation links work (2.5s)
+  ✓  15 [firefox] › tests/e2e/navigation.spec.ts:58:7 › Navigation › navigation works on all main pages (3.6s)
+  ✓  18 [firefox] › tests/e2e/navigation.spec.ts:113:7 › Navigation › external links open in new tab (3.9s)
+  ✓  19 [firefox] › tests/e2e/navigation.spec.ts:136:7 › Mobile Navigation › mobile menu toggle works (2.6s)
+  ✓  13 [firefox] › tests/e2e/navigation.spec.ts:46:7 › Navigation › navigates back to homepage using logo/brand link (5.3s)
+  ✓  20 [firefox] › tests/e2e/navigation.spec.ts:163:7 › Mobile Navigation › mobile navigation links work (3.4s)
+  ✓  12 [firefox] › tests/e2e/navigation.spec.ts:4:7 › Navigation › navigates from homepage to about page (5.2s)
+  ✓  11 [firefox] › tests/e2e/navigation.spec.ts:18:7 › Navigation › navigates from homepage to blog page (5.4s)
+  ✓  14 [firefox] › tests/e2e/navigation.spec.ts:32:7 › Navigation › navigates from homepage to contact page (5.4s)
+  ✓  17 [firefox] › tests/e2e/navigation.spec.ts:94:7 › Navigation › terms of service link works (5.3s)
+  ✘  16 [firefox] › tests/e2e/navigation.spec.ts:80:7 › Navigation › footer links navigate correctly (8.5s)
+  ✓  22 [webkit] › tests/e2e/navigation.spec.ts:18:7 › Navigation › navigates from homepage to blog page (2.2s)
+  ✓  25 [webkit] › tests/e2e/navigation.spec.ts:113:7 › Navigation › external links open in new tab (2.0s)
+  ✓  24 [webkit] › tests/e2e/navigation.spec.ts:46:7 › Navigation › navigates back to homepage using logo/brand link (2.5s)
+  ✓  29 [webkit] › tests/e2e/navigation.spec.ts:136:7 › Mobile Navigation › mobile menu toggle works (2.0s)
+  ✓  26 [webkit] › tests/e2e/navigation.spec.ts:58:7 › Navigation › navigation works on all main pages (2.9s)
+  ✓  30 [webkit] › tests/e2e/navigation.spec.ts:163:7 › Mobile Navigation › mobile navigation links work (2.0s)
+  ✓  28 [webkit] › tests/e2e/navigation.spec.ts:94:7 › Navigation › terms of service link works (3.2s)
+  ✓  27 [webkit] › tests/e2e/navigation.spec.ts:80:7 › Navigation › footer links navigate correctly (3.5s)
+  ✘  21 [webkit] › tests/e2e/navigation.spec.ts:4:7 › Navigation › navigates from homepage to about page (7.4s)
+  ✘  23 [webkit] › tests/e2e/navigation.spec.ts:32:7 › Navigation › navigates from homepage to contact page (7.1s)
+
+
+  1) [firefox] › tests/e2e/navigation.spec.ts:80:7 › Navigation › footer links navigate correctly ──
+
+    Error: [2mexpect([22m[31mpage[39m[2m).[22mtoHaveURL[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Expected pattern: [32m/\/policies\?tab=privacy/[39m
+    Received string:  [31m"http://localhost:3000/"[39m
+    Timeout: 5000ms
+
+    Call log:
+    [2m  - Expect "toHaveURL" with timeout 5000ms[22m
+    [2m    9 × unexpected value "http://localhost:3000/"[22m
+
+
+      88 |     if (await privacyLink.isVisible()) {
+      89 |       await privacyLink.click();
+    > 90 |       await expect(page).toHaveURL(/\/policies\?tab=privacy/);
+         |                          ^
+      91 |     }
+      92 |   });
+      93 |
+        at /Users/ryanflynn/personal-site/personal-site/tests/e2e/navigation.spec.ts:90:26
+
+    Error Context: output/test-results/navigation-Navigation-footer-links-navigate-correctly-firefox/error-context.md
+
+  2) [webkit] › tests/e2e/navigation.spec.ts:4:7 › Navigation › navigates from homepage to about page 
+
+    Error: [2mexpect([22m[31mpage[39m[2m).[22mtoHaveURL[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Expected pattern: [32m/\/about/[39m
+    Received string:  [31m"http://localhost:3000/"[39m
+    Timeout: 5000ms
+
+    Call log:
+    [2m  - Expect "toHaveURL" with timeout 5000ms[22m
+    [2m    9 × unexpected value "http://localhost:3000/"[22m
+
+
+      12 |     await aboutLink.click({ timeout: 5000 });
+      13 |
+    > 14 |     await expect(page).toHaveURL(/\/about/);
+         |                        ^
+      15 |     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+      16 |   });
+      17 |
+        at /Users/ryanflynn/personal-site/personal-site/tests/e2e/navigation.spec.ts:14:24
+
+    Error Context: output/test-results/navigation-Navigation-navigates-from-homepage-to-about-page-webkit/error-context.md
+
+  3) [webkit] › tests/e2e/navigation.spec.ts:32:7 › Navigation › navigates from homepage to contact page 
+
+    Error: [2mexpect([22m[31mpage[39m[2m).[22mtoHaveURL[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Expected pattern: [32m/\/contact/[39m
+    Received string:  [31m"http://localhost:3000/"[39m
+    Timeout: 5000ms
+
+    Call log:
+    [2m  - Expect "toHaveURL" with timeout 5000ms[22m
+    [2m    9 × unexpected value "http://localhost:3000/"[22m
+
+
+      40 |     await contactLink.click({ timeout: 5000 });
+      41 |
+    > 42 |     await expect(page).toHaveURL(/\/contact/);
+         |                        ^
+      43 |     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+      44 |   });
+      45 |
+        at /Users/ryanflynn/personal-site/personal-site/tests/e2e/navigation.spec.ts:42:24
+
+    Error Context: output/test-results/navigation-Navigation-navi-98643-om-homepage-to-contact-page-webkit/error-context.md
+
+  3 failed
+    [firefox] › tests/e2e/navigation.spec.ts:80:7 › Navigation › footer links navigate correctly ───
+    [webkit] › tests/e2e/navigation.spec.ts:4:7 › Navigation › navigates from homepage to about page 
+    [webkit] › tests/e2e/navigation.spec.ts:32:7 › Navigation › navigates from homepage to contact page 
+  27 passed (1.0m)

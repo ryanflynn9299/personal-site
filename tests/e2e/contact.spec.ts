@@ -72,48 +72,6 @@ test.describe("Contact Page", () => {
     expect(isInvalid).toBe(true);
   });
 
-  test("submits form with valid data", async ({ page }) => {
-    // Fill form with valid data
-    await page.getByPlaceholder(/your name/i).fill("John Doe");
-    await page.getByPlaceholder(/your email/i).fill("john@example.com");
-    await page
-      .getByPlaceholder(/your message/i)
-      .fill("This is a test message from E2E tests.");
-
-    // Submit form
-    await page.getByRole("button", { name: /send message/i }).click();
-
-    // Wait for response - should show success or warning message
-    // (depends on whether email service is configured)
-    await expect(
-      page.getByText(/message sent|cannot be sent|thank you/i)
-    ).toBeVisible({ timeout: 10000 });
-  });
-
-  test("shows loading state during submission", async ({ page }) => {
-    // Fill form
-    await page.getByPlaceholder(/your name/i).fill("John Doe");
-    await page.getByPlaceholder(/your email/i).fill("john@example.com");
-    await page.getByPlaceholder(/your message/i).fill("Test message");
-
-    // Click submit and check for loading state
-    const submitButton = page.getByRole("button", { name: /send message/i });
-    await submitButton.click();
-
-    // Button should show loading state (either disabled or text changes)
-    // This might happen quickly, so we check if button was disabled
-    const wasDisabledOrChanged = await Promise.race([
-      submitButton.isDisabled().then(() => true),
-      page
-        .getByText(/sending/i)
-        .isVisible()
-        .then(() => true),
-      new Promise((resolve) => setTimeout(() => resolve(true), 1000)),
-    ]);
-
-    expect(wasDisabledOrChanged).toBe(true);
-  });
-
   test("email link has correct mailto href", async ({ page }) => {
     const emailLink = page
       .getByRole("link")

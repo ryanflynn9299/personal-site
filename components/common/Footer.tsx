@@ -3,7 +3,8 @@
 import Link from "next/link";
 // import { usePathname } from "next/navigation";
 import { Github, Linkedin, Twitter } from "lucide-react";
-import { env } from "@/lib/env";
+import { runtime } from "@/lib/config";
+import { SITE_VERSION } from "@/lib/site/seo";
 
 const socialLinks = [
   {
@@ -81,7 +82,7 @@ export function Footer() {
                       return false;
                     }
                     // Filter by dev-only status (use dev mode UI toggle)
-                    if (item.devOnly && !env.devModeUI) {
+                    if (item.devOnly && !runtime.previewFeatures) {
                       return false;
                     }
                     return true;
@@ -90,7 +91,8 @@ export function Footer() {
                     <li key={item.href}>
                       <Link
                         href={item.href}
-                        className="flex items-center gap-2 text-base text-slate-300 hover:text-sky-300"
+                        className="flex items-center gap-2 px-2 py-1 -ml-2 text-base text-slate-300 hover:text-sky-300 rounded-md"
+                        data-testid={`footer-nav-link-${item.name.toLowerCase()}`}
                       >
                         <span>{item.name}</span>
                         {item.devOnly && (
@@ -102,7 +104,7 @@ export function Footer() {
                     </li>
                   ))}
                 {/* Dev-only link */}
-                {env.devModeUI && (
+                {runtime.previewFeatures && (
                   <li>
                     <Link
                       href="/projects-cabinet"
@@ -125,7 +127,8 @@ export function Footer() {
                 <li>
                   <Link
                     href="/policies?tab=privacy"
-                    className="text-base text-slate-300 hover:text-sky-300"
+                    className="inline-block px-2 py-1 -ml-2 text-base text-slate-300 hover:text-sky-300 rounded-md"
+                    data-testid="footer-privacy-link"
                   >
                     Privacy Policy
                   </Link>
@@ -133,7 +136,8 @@ export function Footer() {
                 <li>
                   <Link
                     href="/policies?tab=terms"
-                    className="text-base text-slate-300 hover:text-sky-300"
+                    className="inline-block px-2 py-1 -ml-2 text-base text-slate-300 hover:text-sky-300 rounded-md"
+                    data-testid="footer-terms-link"
                   >
                     Terms of Service
                   </Link>
@@ -160,10 +164,23 @@ export function Footer() {
             </div>
           </div>
         </div>
-        <div className="mt-8 border-t border-slate-700 pt-8 text-center text-sm text-slate-500">
-          <p>
+        <div className="mt-8 border-t border-slate-700 pt-8 grid grid-cols-1 items-center gap-4 sm:grid-cols-3">
+          <div className="hidden sm:block" />
+          <p className="text-sm text-slate-500 text-center">
             &copy; {new Date().getFullYear()} Ryan Flynn. All rights reserved.
           </p>
+          <div className="flex justify-center sm:justify-end">
+            <Link
+              href="#"
+              className="group flex items-center gap-1.5 rounded-full border border-slate-700/50 bg-slate-800/50 px-3 py-1 text-xs font-medium text-slate-400 transition-all hover:border-sky-500/30 hover:bg-slate-700/50 hover:text-sky-400"
+            >
+              <span className="relative flex h-1.5 w-1.5">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-sky-400 opacity-20"></span>
+                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-sky-500/50"></span>
+              </span>
+              v{SITE_VERSION}
+            </Link>
+          </div>
         </div>
       </div>
     </footer>
