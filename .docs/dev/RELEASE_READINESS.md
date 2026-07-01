@@ -13,11 +13,11 @@ Central index for shipping the personal site. Updated March 2026.
 
 **CI policy:**
 
-| Target | Auto CI | When |
-| ------ | ------- | ---- |
-| **`dev`** | No | Merge freely; run checks locally if you want |
-| **`main`** | Yes | Every push and every PR (required for release) |
-| **Any branch** | Manual | Actions → CI → Run workflow (pick branch; E2E optional) |
+| Target         | Auto CI | When                                                    |
+| -------------- | ------- | ------------------------------------------------------- |
+| **`dev`**      | No      | Merge freely; run checks locally if you want            |
+| **`main`**     | Yes     | Every push and every PR (required for release)          |
+| **Any branch** | Manual  | Actions → CI → Run workflow (pick branch; E2E optional) |
 
 ## Pre-Release Checklist
 
