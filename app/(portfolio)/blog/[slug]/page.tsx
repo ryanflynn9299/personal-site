@@ -6,17 +6,16 @@ import {
 } from "@/lib/services/directus";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import Image from "next/image";
 import { JsonLd } from "@/components/common/JsonLd";
 import { BlogPostTracker } from "@/components/blog/BlogPostTracker";
 import { ServiceUnavailableWithDevMode } from "@/components/common/DevModeIndicator";
-import { BlogContentRenderer } from "@/components/blog/BlogContentRenderer";
 import { Post } from "@/types";
 import { SITE_URL, ENABLE_BLOG_SEO } from "@/lib/site/seo";
 import { config, runtime } from "@/lib/config";
 import { isFeatureEnabled } from "@/lib/dev-tooling/features";
-import { BlogPostNavigation } from "@/components/blog/BlogPostNavigation";
+import { BlogPostArticle } from "@/components/blog/BlogPostArticle";
 import { estimateReadingTimeMinutes, formatReadingTime } from "@/lib/utils";
+import { resolveAuthor, buildAuthorContext } from "@/lib/site/authors";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -146,47 +145,27 @@ export default async function BlogPostPage({ params }: Props) {
       : null;
 
   const { prev, next } = await getAdjacentPosts(post.publish_date, post.id);
+  const { posts: allPosts } = await getPublishedPosts();
+  const resolvedAuthor = resolveAuthor(post.author);
+  const authorContext = buildAuthorContext(allPosts, resolvedAuthor, {
+    currentPostId: post.id,
+    recentLimit: 3,
+  });
 
   return (
     <>
       <JsonLd post={post} />
       <BlogPostTracker slug={post.slug} title={post.title} />
-      <article className="container mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
-        <header className="text-left">
-          <h1 className="font-heading text-4xl font-bold text-slate-50 md:text-5xl">
-            {post.title}
-          </h1>
-          <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-slate-400">
-            <span>
-              By {post.author.first_name} {post.author.last_name}
-            </span>
-            <span aria-hidden="true">&bull;</span>
-            <time dateTime={post.publish_date}>{formattedDate}</time>
-            <span aria-hidden="true">&bull;</span>
-            <span>{readingTime}</span>
-          </div>
-        </header>
-
-        {imageUrl && (
-          <div className="relative my-8 h-64 w-full overflow-hidden rounded-lg md:h-96">
-            <Image
-              src={imageUrl}
-              alt={post.title}
-              fill
-              className="object-cover"
-              priority
-            />
-          </div>
-        )}
-
-        {/* Note: A sticky TOC component would be added here, likely wrapping the main content */}
-        <BlogContentRenderer
-          content={post.content}
-          format={post.content_format || "auto"}
-        />
-
-        <BlogPostNavigation prev={prev} next={next} />
-      </article>
+      <BlogPostArticle
+        post={post}
+        author={resolvedAuthor}
+        authorContext={authorContext}
+        prev={prev}
+        next={next}
+        imageUrl={imageUrl}
+        formattedDate={formattedDate}
+        readingTime={readingTime}
+      />
     </>
   );
 }

@@ -115,7 +115,44 @@ export const accents = {
   blue: "#3b82f6", // blue-500
   violet: "#8b5cf6", // violet-500 (same as purple-500)
   yellow: "#fbbf24", // amber-400 / yellow
+  ruby: "#f43f5e", // rose-500
 } as const;
+
+/**
+ * Author profile accent palette — keys stored on author records.
+ * Operator may override; otherwise assigned deterministically from slug.
+ */
+export const authorAccents = {
+  sky: accents.primary,
+  emerald: accents.emerald,
+  gold: accents.amber,
+  ruby: accents.ruby,
+  violet: accents.violet,
+  cyan: accents.cyan,
+  fuchsia: accents.fuchsia,
+  indigo: accents.indigo,
+  teal: accents.teal,
+  orange: accents.orange,
+} as const;
+
+export type AuthorAccentKey = keyof typeof authorAccents;
+
+export const authorAccentKeys = Object.keys(authorAccents) as AuthorAccentKey[];
+
+/**
+ * Stable accent assignment from a slug when no override is set.
+ */
+export function getAuthorAccentFromSlug(slug: string): AuthorAccentKey {
+  let hash = 0;
+  for (let i = 0; i < slug.length; i++) {
+    hash = (hash * 31 + slug.charCodeAt(i)) >>> 0;
+  }
+  return authorAccentKeys[hash % authorAccentKeys.length];
+}
+
+export function getAuthorAccentHex(key: AuthorAccentKey): string {
+  return authorAccents[key];
+}
 
 // ============================================================================
 // COMPONENT-SPECIFIC COLORS

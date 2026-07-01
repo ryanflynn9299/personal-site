@@ -1,6 +1,6 @@
 # Author Profiles: Design & Data Spec
 
-**Status:** Draft for operator approval  
+**Status:** Approved — v1 implemented  
 **Last updated:** 2026-07-01
 
 Single source of truth for the blog author popup and post-footer card. This feature adds lightweight author context on blog posts — **not** a dedicated author page, **not** a quotes/legal/404-style experience.
@@ -339,16 +339,16 @@ Unknown authors: name + auto accent + `✍️` emoji; omit bio and recent posts 
 
 ---
 
-## 8. Operator decisions (pending approval)
+## 8. Operator decisions
 
-| #   | Question           | Recommendation                                   |
-| --- | ------------------ | ------------------------------------------------ |
-| 1   | Your emoji         | Pick one (e.g. `✨`, `🪐`, `🚀`)                 |
-| 2   | Your accent        | Pick from `authorAccents` table (e.g. `emerald`) |
-| 3   | `bio_short` copy   | 1–2 sentences for popup + footer                 |
-| 4   | Footer CTA label   | "About the author" (default)                     |
-| 5   | Popup deep link    | `/about` only (no author page)                   |
-| 6   | Recent posts count | 3 in popup                                       |
+| #   | Question           | Decision                         |
+| --- | ------------------ | -------------------------------- |
+| 1   | Your emoji         | `🪐`                             |
+| 2   | Your accent        | `violet`                         |
+| 3   | `bio_short` copy   | Hero section copy from home page |
+| 4   | Footer CTA label   | "About the author"               |
+| 5   | Popup deep link    | `/about` (no author page)        |
+| 6   | Recent posts count | 3                                |
 
 ---
 
@@ -366,6 +366,6 @@ Unknown authors: name + auto accent + `✍️` emoji; omit bio and recent posts 
 
 ## 10. Revision history
 
-| Date       | Change                                                                                               |
-| ---------- | ---------------------------------------------------------------------------------------------------- |
-| 2026-07-01 | Initial SSOT — popup + footer card, emoji v1, accents from theme, no author page, minimal CMS fields |
+| Date       | Change                                                                        |
+| ---------- | ----------------------------------------------------------------------------- |
+| 2026-07-01 | v1 implemented — popup, footer card, emoji, theme accents, edge-case handling |
