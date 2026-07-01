@@ -116,3 +116,19 @@ A cluttered project root slows down developer onboarding and AI context processi
   - Move non-standard or provider-specific configs (e.g., Cloudflare-specific docker files) to `infrastructure/`.
   - Content docs belong in `.docs/`.
   - Ensure build artifacts like `*.tsbuildinfo` are explicitly gitignored.
+
+## 7. Periodic code health review
+
+Day-to-day work uses **§5 Verification Workflow** (`pnpm run validate`, `pnpm run test`). That is sufficient for individual PRs and feature work.
+
+**Separately**, run a broader hygiene review on a schedule — quarterly, or before promoting `dev` → `main` for a significant release. This is **not** required for every new feature.
+
+1. Run the automated audit:
+   ```bash
+   pnpm run health:audit        # standard
+   pnpm run health:audit:full   # includes E2E + build (pre-release)
+   ```
+2. Complete the manual scorecard in [.docs/dev/CODE_HEALTH_SCORECARD.md](../dev/CODE_HEALTH_SCORECARD.md) (8 dimensions, 0–3 each).
+3. Save the review log to `logs/code-health-YYYY-MM-DD.md` and pick up to three actions for the next quarter (or add them to [TODO.md](../dev/TODO.md)).
+
+The audit script reports objective signals (boundary violations, test pass rate, lint suppressions, etc.). The scorecard adds human judgment on test efficacy, UX, and change safety — things automation cannot score fairly on every PR.

@@ -32,6 +32,10 @@ stdout
 *.pem
 /.idea/
 
+# local audit and failure artifacts (see .docs/dev/CODE_HEALTH_SCORECARD.md)
+/logs/*.md
+/logs/*.txt
+
 # debug
 npm-debug.log*
 yarn-debug.log*

@@ -75,6 +75,7 @@ This document serves as the definitive map for identifying the core configuratio
 | **Matomo Launch**     | `.docs/dev/MATOMO_LAUNCH_CHECKLIST.md`      |
 | **SMTP Launch**       | `.docs/dev/SMTP_LAUNCH_CHECKLIST.md`        |
 | **Security**          | `.docs/SECURITY_HEALTH_CHECK.md`            |
+| **Code Health**       | `.docs/dev/CODE_HEALTH_SCORECARD.md`        |
 
 ## 6. AI Infrastructure
 
