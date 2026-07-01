@@ -11,7 +11,7 @@
 #   1. Set up a Cloudflare Tunnel:
 #      - Go to Cloudflare Zero Trust dashboard
 #      - Create a tunnel and get the tunnel token
-#      - Or create a config file at ./cloudflare/config.yml
+#      - Or create a config file at ./infrastructure/cloudflare/config.yml
 #
 #   2. Set environment variables in .env:
 #      - CF_TUNNEL_TOKEN (for token-based auth)
@@ -25,7 +25,7 @@
 #
 # Configuration Options:
 #   - Token-based: Set CF_TUNNEL_TOKEN in .env
-#   - Config-based: Create ./cloudflare/config.yml with tunnel config
+#   - Config-based: Create ./infrastructure/cloudflare/config.yml with tunnel config
 #   - Both: Token takes precedence if both are set
 # ==============================================================================
 version: "3.9"
@@ -38,7 +38,7 @@ services:
     restart: unless-stopped
     # cloudflared will use TUNNEL_TOKEN if set, otherwise use config.yml
     # Token-based auth: Set CF_TUNNEL_TOKEN in .env
-    # Config-based auth: Create ./cloudflare/config.yml
+    # Config-based auth: Create ./infrastructure/cloudflare/config.yml
     command: tunnel run
     environment:
       # Token-based authentication (recommended)
@@ -47,9 +47,9 @@ services:
       - TUNNEL_TOKEN=${CF_TUNNEL_TOKEN:-}
     volumes:
       # Config file-based authentication (alternative to token)
-      # Create ./cloudflare/config.yml with your tunnel configuration
+      # Create ./infrastructure/cloudflare/config.yml with your tunnel configuration
       # Only used if TUNNEL_TOKEN is not set
-      - ./cloudflare/config.yml:/etc/cloudflared/config.yml:ro
+      - ./infrastructure/cloudflare/config.yml:/etc/cloudflared/config.yml:ro
       # Persistent tunnel credentials (created automatically)
       - cloudflared-data:/etc/cloudflared
     networks:

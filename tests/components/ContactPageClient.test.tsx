@@ -258,9 +258,7 @@ describe("ContactPageClient", () => {
     await waitFor(
       () => {
         expect(screen.getByText("Message Received")).toBeInTheDocument();
-        expect(
-          screen.getByText(/received and saved/i)
-        ).toBeInTheDocument();
+        expect(screen.getByText(/received and saved/i)).toBeInTheDocument();
       },
       { timeout: 100 }
     );

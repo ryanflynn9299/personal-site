@@ -353,13 +353,33 @@ export function ConstellationView({ quotes }: ConstellationViewProps) {
     setSelectedStarId(null);
   }, []);
 
+  const handleContainerClick = useCallback(
+    (event: React.MouseEvent<HTMLDivElement>) => {
+      if (event.target === event.currentTarget) {
+        handleBackgroundClick();
+      }
+    },
+    [handleBackgroundClick]
+  );
+
+  const handleBackgroundKeyDown = useCallback(
+    (event: React.KeyboardEvent<HTMLDivElement>) => {
+      if (event.key === "Escape") {
+        setSelectedStarId(null);
+      }
+    },
+    []
+  );
+
   return (
     <div
       ref={containerRef}
       className={`relative h-screen w-full bg-slate-900 ${
         isMobile ? "overflow-y-auto overflow-x-hidden" : "overflow-hidden"
       }`}
-      onClick={handleBackgroundClick}
+      onClick={handleContainerClick}
+      onKeyDown={handleBackgroundKeyDown}
+      role="presentation"
     >
       {/* Modal Title */}
       <QuoteModalTitle
@@ -623,7 +643,8 @@ export function ConstellationView({ quotes }: ConstellationViewProps) {
       {selectedQuote && (
         <div
           className="pointer-events-auto absolute left-1/2 top-1/2 z-50 min-w-[300px] max-w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-lg border border-slate-700 bg-slate-900 p-6 shadow-2xl"
-          onClick={(e) => e.stopPropagation()}
+          role="group"
+          aria-label="Quote details"
         >
           {/* Quote content */}
           <blockquote className="font-inter text-xl font-semibold leading-relaxed text-slate-50">

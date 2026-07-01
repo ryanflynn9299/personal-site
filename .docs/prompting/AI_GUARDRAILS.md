@@ -10,14 +10,14 @@ Canonical policy for human maintainers and AI assistants. Cursor rules in `.curs
 
 ### Authority
 
-| Layer | Location | Role |
-|-------|----------|------|
-| Index | `.docs/prompting/PROJECT_INDEX.md` | Where to find single sources of truth |
-| Policy | This file | How AI should decide and push back |
-| Architecture | `.docs/ARCHITECTURE.md` | Directory layout, naming, server/client split |
-| Product / launch | `.docs/dev/TODO.md`, `RELEASE_READINESS.md` | What ships when |
-| Domain | `.docs/dev/*.md`, `.docs/*.md` | Security, SMTP, Matomo, testing, etc. |
-| Pitfalls | `.docs/prompting/DEVELOPMENT_GUIDELINES.md` | Repo-specific mistakes to avoid |
+| Layer            | Location                                    | Role                                          |
+| ---------------- | ------------------------------------------- | --------------------------------------------- |
+| Index            | `.docs/prompting/PROJECT_INDEX.md`          | Where to find single sources of truth         |
+| Policy           | This file                                   | How AI should decide and push back            |
+| Architecture     | `.docs/ARCHITECTURE.md`                     | Directory layout, naming, server/client split |
+| Product / launch | `.docs/dev/TODO.md`, `RELEASE_READINESS.md` | What ships when                               |
+| Domain           | `.docs/dev/*.md`, `.docs/*.md`              | Security, SMTP, Matomo, testing, etc.         |
+| Pitfalls         | `.docs/prompting/DEVELOPMENT_GUIDELINES.md` | Repo-specific mistakes to avoid               |
 
 Consult docs **before** inventing patterns. The codebase is the second source of truth — read surrounding files and match them.
 
@@ -66,12 +66,12 @@ Goal: tests that **catch real regressions** without becoming a second codebase t
 
 ### Add nuance only when valuable
 
-| Add | Examples |
-|-----|----------|
-| Edge cases | Empty input, malformed input, boundary values |
+| Add           | Examples                                                  |
+| ------------- | --------------------------------------------------------- |
+| Edge cases    | Empty input, malformed input, boundary values             |
 | Failure modes | Service down, partial success (Directus ok, email failed) |
-| Security | Honeypot, rate limit, auth middleware |
-| Regression | Bug that shipped once; comment why the test exists |
+| Security      | Honeypot, rate limit, auth middleware                     |
+| Regression    | Bug that shipped once; comment why the test exists        |
 
 ### Avoid
 
@@ -128,23 +128,23 @@ The primary agent **owns integration**: reconcile subagent output with docs, run
 
 ## 7. Infrastructure map
 
-| Artifact | Purpose |
-|----------|---------|
-| `AGENTS.md` | Root entry for all AI tools |
-| `.cursorrules` | Legacy pointer to modern rules |
-| `.cursor/rules/*.mdc` | Cursor project rules (scoped + always-on) |
-| `.docs/prompting/AI_GUARDRAILS.md` | This file — full policy |
-| `.docs/prompting/PROJECT_INDEX.md` | Doc and code map |
-| `.docs/prompting/DEVELOPMENT_GUIDELINES.md` | Implementation pitfalls |
+| Artifact                                    | Purpose                                   |
+| ------------------------------------------- | ----------------------------------------- |
+| `AGENTS.md`                                 | Root entry for all AI tools               |
+| `.cursorrules`                              | Legacy pointer to modern rules            |
+| `.cursor/rules/*.mdc`                       | Cursor project rules (scoped + always-on) |
+| `.docs/prompting/AI_GUARDRAILS.md`          | This file — full policy                   |
+| `.docs/prompting/PROJECT_INDEX.md`          | Doc and code map                          |
+| `.docs/prompting/DEVELOPMENT_GUIDELINES.md` | Implementation pitfalls                   |
 
 ### Cursor rules index
 
-| Rule file | Activation |
-|-----------|------------|
-| `core.mdc` | Always — docs, quality, UX veto, completion |
-| `testing.mdc` | `tests/**`, `*.test.*`, `*.spec.*` |
-| `ux-and-ui.mdc` | `components/**`, `app/**` |
-| `tools-and-subagents.mdc` | Agent-requested when delegation matters |
+| Rule file                 | Activation                                  |
+| ------------------------- | ------------------------------------------- |
+| `core.mdc`                | Always — docs, quality, UX veto, completion |
+| `testing.mdc`             | `tests/**`, `*.test.*`, `*.spec.*`          |
+| `ux-and-ui.mdc`           | `components/**`, `app/**`                   |
+| `tools-and-subagents.mdc` | Agent-requested when delegation matters     |
 
 ---
 

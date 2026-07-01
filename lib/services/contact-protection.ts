@@ -4,7 +4,9 @@
  * @see .docs/dev/CONTACT_FORM_SECURITY.md
  */
 
-const HONEYPOT_FIELD = "website";
+import { CONTACT_HONEYPOT_FIELD } from "@/lib/constants/contact";
+
+const HONEYPOT_FIELD = CONTACT_HONEYPOT_FIELD;
 
 const requestCounts = new Map<string, { count: number; resetAt: number }>();
 
@@ -81,9 +83,6 @@ export function validateContactSubmission(
 
   return { allowed: true };
 }
-
-/** Honeypot field name for the contact form markup */
-export const CONTACT_HONEYPOT_FIELD = HONEYPOT_FIELD;
 
 /** Reset rate-limit state (tests only) */
 export function resetContactRateLimitForTests(): void {

@@ -9,7 +9,9 @@ interface SearchButtonProps {
 export function SearchButton({ onClick }: SearchButtonProps) {
   return (
     <button
+      type="button"
       onClick={onClick}
+      aria-label="Search blog posts"
       className="group flex items-center gap-2 rounded-full border border-slate-600 bg-slate-800 py-2 pl-3 pr-2
                  text-slate-300 transition-colors hover:border-sky-300/50 hover:bg-slate-700"
     >

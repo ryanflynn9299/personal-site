@@ -12,11 +12,13 @@ interface SunProps {
 
 export function Sun({ sunEntity, onClick, onHover, onHoverEnd }: SunProps) {
   return (
-    <div
-      className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 cursor-pointer z-20"
+    <button
+      type="button"
+      className="absolute left-1/2 top-1/2 z-20 -translate-x-1/2 -translate-y-1/2 cursor-pointer border-0 bg-transparent p-0"
       onClick={() => onClick(sunEntity)}
       onMouseEnter={onHover}
       onMouseLeave={onHoverEnd}
+      aria-label="View sun quote"
     >
       {/* Sun visual - z-10 ensures it's above background */}
       <motion.div
@@ -30,6 +32,6 @@ export function Sun({ sunEntity, onClick, onHover, onHoverEnd }: SunProps) {
         <div className="h-full w-full rounded-full border-2 border-yellow-400 bg-yellow-300" />
         <div className="absolute inset-0 animate-pulse rounded-full border-2 border-yellow-500/50" />
       </motion.div>
-    </div>
+    </button>
   );
 }

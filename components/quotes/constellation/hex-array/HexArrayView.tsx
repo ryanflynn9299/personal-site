@@ -743,6 +743,12 @@ export function HexArrayView({ quotes }: HexArrayViewProps) {
       ref={containerRef}
       className="relative h-screen w-full overflow-hidden bg-slate-950"
       onClick={handleClose}
+      onKeyDown={(event) => {
+        if (event.key === "Escape") {
+          handleClose();
+        }
+      }}
+      role="presentation"
     >
       {/* Floating Instructions Modal */}
       <div

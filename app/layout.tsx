@@ -69,12 +69,20 @@ export default function RootLayout({
       data-test-mode={runtime.isTest ? "true" : "false"}
     >
       <body className="text-slate-200 antialiased" suppressHydrationWarning>
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-sky-500 focus:px-4 focus:py-2 focus:text-white focus:outline-none focus:ring-2 focus:ring-sky-300"
+        >
+          Skip to main content
+        </a>
         <MatomoProvider />
         <ToastProvider>
           <div className="flex min-h-screen flex-col">
             {runtime.isDevelopment && <DevModeIndicator />}
             <Header />
-            <main className="flex-grow">{children}</main>
+            <main id="main-content" className="flex-grow">
+              {children}
+            </main>
             <Footer />
             {runtime.isDevelopment && <DevControls />}
             <BackToTop />

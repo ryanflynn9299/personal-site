@@ -1,19 +1,10 @@
-"use client";
-
-import { motion } from "framer-motion";
 import Link from "next/link";
 import { Button } from "@/components/primitives/Button";
 
 export function FinalCTA() {
   return (
-    <motion.section
-      className="py-16 md:py-24 border-t border-slate-800"
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      viewport={{ once: true, amount: 0.5 }}
-      transition={{ duration: 0.7 }}
-    >
-      <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
+    <section className="border-t border-slate-800 py-16 motion-safe:animate-fade-in md:py-24">
+      <div className="container mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
         <h2 className="font-heading text-3xl font-bold tracking-tight text-slate-50 sm:text-4xl">
           Let&apos;s Build Something Together
         </h2>
@@ -27,6 +18,6 @@ export function FinalCTA() {
           </Button>
         </div>
       </div>
-    </motion.section>
+    </section>
   );
 }
