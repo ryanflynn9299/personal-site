@@ -45,7 +45,7 @@ _Start here — see also [RELEASE_READINESS.md](./RELEASE_READINESS.md) for the 
 - [ ] pre-commit check script (validate, test, compare coverage, build)
 - [ ] Improve pre-commit checks for PR (PR naming conventions, etc.)
 - [ ] Matomo analytics page on dashboard
-- [ ] Add author bio section for posts (with popup card)
+- [ ] Add author bio section for posts (with popup card) — see [AUTHOR_PROFILES.md](./AUTHOR_PROFILES.md)
 - [x] Add "Back to top" button for long pages
 - [ ] add slug hashing
 - [ ] Clean up env variables and secrets (including dev and local)
