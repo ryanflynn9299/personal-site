@@ -9,7 +9,7 @@ Versioning policy: [.docs/dev/VERSIONING.md](.docs/dev/VERSIONING.md).
 
 ### Added
 
-- Blog table of contents — top placement, shows when more than two h2–h4 headings ([BLOG_TABLE_OF_CONTENTS.md](.docs/dev/BLOG_TABLE_OF_CONTENTS.md))
+- Blog table of contents — top placement, shows when more than two h2–h4 headings ([BLOG.md](.docs/dev/BLOG.md))
 
 ### Changed
 

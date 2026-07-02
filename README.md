@@ -3,8 +3,8 @@
 ![CI Status](https://github.com/ryanflynn9299/personal-site/workflows/CI/badge.svg)
 ![Node.js Version](https://img.shields.io/badge/node-%3E%3D20.0.0-brightgreen)
 ![pnpm Version](https://img.shields.io/badge/pnpm-10.0.0-orange)
-![Next.js Version](https://img.shields.io/badge/Next.js-16.0.7-black)
-![TypeScript Version](https://img.shields.io/badge/TypeScript-5.5.4-blue)
+![Next.js Version](https://img.shields.io/badge/Next.js-16-black)
+![TypeScript Version](https://img.shields.io/badge/TypeScript-5-blue)
 ![License](https://img.shields.io/badge/license-All%20Rights%20Reserved-red)
 ![Test Coverage](https://img.shields.io/badge/coverage-60%25+-green)
 
@@ -57,10 +57,11 @@ components/                   # React components
 └── [feature]/               # Feature-specific components
 
 lib/                         # Utilities and services
-├── env.ts                   # Environment configuration & validation
-├── directus.ts              # CMS client integration
-├── email-service.ts         # Email service abstraction
-├── seo.ts                   # SEO metadata management
+├── auth/                    # Session tokens and admin auth helpers
+├── blog/                    # Blog content helpers
+├── config/                  # Environment configuration & validation (client/server)
+├── services/                # Directus service layer, email, rate limiting
+├── site/                    # SEO metadata, authors, SVG security, version
 └── utils.ts                 # General utilities
 
 tests/                       # Test suite
@@ -75,9 +76,9 @@ tests/                       # Test suite
 
 **Core Framework:**
 
-- Next.js 16.1.1 (App Router, Turbopack)
-- React 19.2.1
-- TypeScript 5.5.4
+- Next.js 16 (App Router, Turbopack)
+- React 19
+- TypeScript 5
 
 **Styling & UI:**
 
@@ -88,7 +89,7 @@ tests/                       # Test suite
 
 **Content Management:**
 
-- Directus 16.1.0 (headless CMS for blog content)
+- Directus (headless CMS for blog content, via `@directus/sdk` 16)
 - React Markdown with rehype/remark plugins for content rendering
 
 **State Management:**
@@ -111,7 +112,7 @@ tests/                       # Test suite
 
 **Development Tools:**
 
-- ESLint 9.39.2 (code quality)
+- ESLint 9 (code quality)
 - Prettier (code formatting)
 - TypeScript (type checking)
 - pnpm 10.0.0 (package management)
@@ -264,7 +265,7 @@ Comprehensive TypeScript usage throughout:
 
 ### Configuration Management
 
-- **Centralized Environment Handling**: All environment variables are accessed through a typed interface (`lib/env.ts`) which validates configuration at runtime.
+- **Centralized Environment Handling**: All environment variables are accessed through a typed interface (`lib/config/`) which validates configuration at runtime.
 - **Mode-Based Logic**: Explicit handling for different application states (Production, Live-Dev, Offline-Dev, Test) to ensure safety across environments.
 
 ### Component Architecture

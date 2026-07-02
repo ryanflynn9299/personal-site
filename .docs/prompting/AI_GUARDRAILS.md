@@ -94,7 +94,7 @@ UX is **paramount**. If instructions conflict with solid UX:
 
 Examples aligned with this project:
 
-- Contact form must not claim email sent when it was not (`SMTP_LAUNCH_CHECKLIST.md`).
+- Contact form must not claim email sent when it was not (`.docs/dev/EMAIL.md`).
 - Destructive actions need confirmation; long operations need loading state.
 - Errors should be actionable, not generic blame on the user.
 

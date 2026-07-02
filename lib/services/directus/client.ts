@@ -8,7 +8,7 @@
  * This is the ONLY module that interacts with the Directus SDK's `createDirectus`.
  * All other modules access Directus through the client exported here.
  *
- * @see .docs/dev/DIRECTUS_SERVICE_LAYER.md for architecture overview
+ * @see .docs/DIRECTUS.md for architecture overview
  */
 
 import { createDirectus, rest, type RestClient } from "@directus/sdk";

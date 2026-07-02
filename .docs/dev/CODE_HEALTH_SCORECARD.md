@@ -72,7 +72,7 @@ Record results in the [Review log template](#review-log-template) at the bottom 
 
 ### Manual checklist
 
-- [ ] Contact form never fakes email success when SMTP is unavailable ([SMTP_LAUNCH_CHECKLIST.md](./SMTP_LAUNCH_CHECKLIST.md))
+- [ ] Contact form never fakes email success when SMTP is unavailable ([EMAIL.md](./EMAIL.md))
 - [ ] Error and loading states are visible on slow or uncertain operations
 - [ ] No silent failures in server actions or service integrations
 - [ ] `.docs/` still describes actual behavior for areas touched since last review

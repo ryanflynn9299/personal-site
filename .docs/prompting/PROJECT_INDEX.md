@@ -65,23 +65,42 @@ This document serves as the definitive map for identifying the core configuratio
 
 ## 5. Core Documentation (Strategy)
 
-| Topic                 | Source of Truth                             |
-| :-------------------- | :------------------------------------------ |
-| **AI policy**         | `.docs/prompting/AI_GUARDRAILS.md`          |
-| **Release Readiness** | `.docs/dev/RELEASE_READINESS.md`            |
-| **Versioning**        | `.docs/dev/VERSIONING.md`                   |
-| **Blog ToC**          | `.docs/dev/BLOG_TABLE_OF_CONTENTS.md`       |
-| **Architecture**      | `.docs/ARCHITECTURE.md`                     |
-| **Testing Strategy**  | `.docs/TESTING_STRATEGY.md`                 |
-| **Dev Guidelines**    | `.docs/prompting/DEVELOPMENT_GUIDELINES.md` |
-| **Admin Access**      | `.docs/dev/ADMIN_ACCESS.md`                 |
-| **Contact Security**  | `.docs/dev/CONTACT_FORM_SECURITY.md`        |
-| **Author profiles**   | `.docs/dev/AUTHOR_PROFILES.md`              |
-| **Matomo Launch**     | `.docs/dev/MATOMO_LAUNCH_CHECKLIST.md`      |
-| **SMTP Launch**       | `.docs/dev/SMTP_LAUNCH_CHECKLIST.md`        |
-| **Security**          | `.docs/SECURITY.md`                         |
-| **Health Endpoint**   | `.docs/SECURITY_HEALTH_CHECK.md`            |
-| **Code Health**       | `.docs/dev/CODE_HEALTH_SCORECARD.md`        |
+One doc per topic. If information seems missing, check the topic doc before creating a new file.
+
+| Topic                                    | Source of Truth                             |
+| :--------------------------------------- | :------------------------------------------ |
+| **AI policy**                            | `.docs/prompting/AI_GUARDRAILS.md`          |
+| **Dev pitfalls / prompting**             | `.docs/prompting/DEVELOPMENT_GUIDELINES.md` |
+| **Architecture & file layout**           | `.docs/ARCHITECTURE.md`                     |
+| **Developer onboarding + commands**      | `.docs/dev/DEVELOPMENT.md`                  |
+| **Environment variables (+ migration)**  | `.docs/dev/ENV_VARIABLES.md`                |
+| **Testing (unit + E2E)**                 | `.docs/TESTING_STRATEGY.md`                 |
+| **CI pipeline**                          | `.docs/dev/CI_PIPELINE.md`                  |
+| **Release readiness + branches**         | `.docs/dev/RELEASE_READINESS.md`            |
+| **Versioning**                           | `.docs/dev/VERSIONING.md`                   |
+| **Active TODOs**                         | `.docs/dev/TODO.md`                         |
+| **Security posture & standards**         | `.docs/SECURITY.md`                         |
+| **Health endpoint security**             | `.docs/SECURITY_HEALTH_CHECK.md`            |
+| **SVG security**                         | `.docs/dev/SECURITY_SVG.md`                 |
+| **Admin access (Tailscale-only)**        | `.docs/dev/ADMIN_ACCESS.md`                 |
+| **Directus CMS + service layer**         | `.docs/DIRECTUS.md`                         |
+| **Blog (pagination, search, ToC)**       | `.docs/dev/BLOG.md`                         |
+| **Author profiles**                      | `.docs/dev/AUTHOR_PROFILES.md`              |
+| **Contact form security**                | `.docs/dev/CONTACT_FORM_SECURITY.md`        |
+| **Email delivery (current + SMTP plan)** | `.docs/dev/EMAIL.md`                        |
+| **Self-hosted email setup**              | `.docs/dev/SELF_HOSTED_EMAIL_SETUP.md`      |
+| **Analytics (Matomo, incl. launch)**     | `.docs/ANALYTICS.md`                        |
+| **SEO & metadata**                       | `.docs/dev/SEO.md`                          |
+| **Code health reviews**                  | `.docs/dev/CODE_HEALTH_SCORECARD.md`        |
+
+### Future features & decision records (`.docs/features/`)
+
+Design docs and option analyses for features not yet implemented. Not authoritative for current behavior.
+
+| Topic                                     | Doc                                          |
+| :---------------------------------------- | :------------------------------------------- |
+| **SMS notifications (Twilio)**            | `.docs/features/TWILIO_SMS_NOTIFICATIONS.md` |
+| **Contact form delivery option analysis** | `.docs/features/CONTACT_FORM_OPTIONS.md`     |
 
 ## 6. AI Infrastructure
 

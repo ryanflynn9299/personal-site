@@ -68,9 +68,9 @@ NEXT_PUBLIC_MATOMO_URL=https://your-matomo-domain.com
 NEXT_PUBLIC_MATOMO_SITE_ID=1
 ```
 
-Set both to `DISABLED` only for local offline development. **Production launch requires real values** — see [MATOMO_LAUNCH_CHECKLIST.md](dev/MATOMO_LAUNCH_CHECKLIST.md).
+Set both to `DISABLED` only for local offline development. **Production launch requires real values** — see the [Launch checklist](#launch-checklist) below.
 
-**Important**: The `NEXT_PUBLIC_MATOMO_URL` must be accessible from the browser (client-side). Use your public domain or Tailscale URL, not the Docker internal network name (`ps-matomo:80`).
+**Important**: The `NEXT_PUBLIC_MATOMO_URL` must be accessible from the browser (client-side). Use your public domain or Tailscale URL, not the Docker internal network name (`ps-matomo:8181`). These `NEXT_PUBLIC_*` values are baked at **build** time — rebuild the frontend image after changing them.
 
 ### Getting Your Site ID
 
@@ -133,6 +133,61 @@ Matomo runs as part of the Docker Compose stack:
 Both services are on the `backend-net` network and start automatically with `docker compose up -d`.
 
 **Note**: Matomo is configured to run on port 8181 instead of 80 to avoid port conflicts (ports 80 and 8080 are typically in use). When configuring Nginx Proxy Manager, route traffic to `http://ps-matomo:8181`.
+
+## Launch Checklist
+
+Matomo ships **live at launch**. The client integration is done; these operator steps complete production readiness. (This section absorbed the former `dev/MATOMO_LAUNCH_CHECKLIST.md`.)
+
+### Code status (done)
+
+- [x] `MatomoProvider` loads tracking when `config.matomo.enabled` is true
+- [x] Both `NEXT_PUBLIC_MATOMO_URL` and `NEXT_PUBLIC_MATOMO_SITE_ID` must be set and not `DISABLED`
+- [x] Privacy policy documents self-hosted Matomo (`data/policies/privacy-policy.md`)
+- [x] Docker stack includes `ps-matomo` + `ps-matomo-db`
+- [x] Build args wired in `Dockerfile` and `docker-compose.yml`
+
+### Before launch (operator tasks)
+
+**Infrastructure:**
+
+- [ ] Configure NPM/reverse proxy so Matomo is reachable at a browser-facing URL (e.g. `https://analytics.ryanflynn.org`) — **not** the internal Docker hostname
+- [ ] Set production `.env`:
+  ```bash
+  NEXT_PUBLIC_MATOMO_URL=https://analytics.yourdomain.com
+  NEXT_PUBLIC_MATOMO_SITE_ID=1
+  ```
+- [ ] Rebuild the frontend after setting Matomo vars (baked at build time)
+
+**Matomo setup (first run):**
+
+- [ ] Complete the Matomo web installer at the public URL
+- [ ] Create the site entry; note the **Site ID** (usually `1`)
+- [ ] Enable **Do Not Track** respect (Matomo → Privacy settings)
+- [ ] Configure **IP anonymization** (last octet)
+- [ ] Set data retention (recommend 180 days or per your policy)
+- [ ] Enable MFA on the Matomo admin account
+- [ ] Restrict Matomo admin to VPN/Tailscale or internal network only (see [ADMIN_ACCESS.md](dev/ADMIN_ACCESS.md))
+
+**Verification:**
+
+- [ ] Visit the production site; confirm `_paq` requests in the browser Network tab
+- [ ] Matomo dashboard shows a real-time visit within 60 seconds
+- [ ] Blog post views and download events appear when exercised
+- [ ] Cookie/consent behavior matches privacy policy claims
+
+**Post-launch (tracked in [TODO.md](dev/TODO.md)):**
+
+- [ ] Matomo analytics summary page on the admin dashboard
+- [ ] Deep dive: goals, custom dimensions, email reports
+
+### Launch troubleshooting
+
+| Symptom               | Likely cause                                             |
+| --------------------- | -------------------------------------------------------- |
+| No tracking requests  | `NEXT_PUBLIC_MATOMO_*` not set at **build** time         |
+| CORS / blocked script | Matomo URL not publicly reachable or wrong domain        |
+| Site ID mismatch      | `NEXT_PUBLIC_MATOMO_SITE_ID` does not match Matomo admin |
+| Tracking in dev only  | `DISABLED` still set in production `.env`                |
 
 ## Troubleshooting
 

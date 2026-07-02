@@ -11,7 +11,7 @@
  *   contact.ts     → Contact message write operations
  *   transforms.ts  → Raw Directus → frontend type transformers (internal)
  *
- * @see .docs/dev/DIRECTUS_SERVICE_LAYER.md for full architecture docs
+ * @see .docs/DIRECTUS.md for full architecture docs
  */
 
 // Client & Configuration

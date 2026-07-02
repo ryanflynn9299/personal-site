@@ -1,8 +1,10 @@
 # Twilio SMS Notifications for CI/CD
 
+> **Status: future feature — not implemented.** Design doc for SMS notifications on contact-form submissions / CI failures. Nothing in this document is wired up in the repo today; the `notify-sms` job and Twilio secrets described below are proposed additions. For the current contact-form email pipeline, see [../dev/EMAIL.md](../dev/EMAIL.md).
+
 **Last Updated:** 2025  
 **Purpose:** Configure Twilio to send SMS notifications when CI workflows fail  
-**Location:** `.github/workflows/ci.yml`
+**Location:** `.github/workflows/ci.yml` (existing workflow; the notification job below is a proposed addition)
 
 ---
 

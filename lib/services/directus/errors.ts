@@ -4,7 +4,7 @@
  * Pure utility module for classifying errors from the Directus SDK into
  * actionable types. No dependencies on the Directus client or other service modules.
  *
- * @see .docs/dev/DIRECTUS_SERVICE_LAYER.md for error handling patterns
+ * @see .docs/DIRECTUS.md for error handling patterns
  */
 
 /** Discriminated error types for structured error handling */

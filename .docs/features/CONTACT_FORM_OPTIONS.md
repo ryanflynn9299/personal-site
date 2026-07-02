@@ -1,5 +1,9 @@
 # Contact Form Submission Options
 
+> **Status: decision record + option analysis.** Decision made: self-hosted SMTP relay (see [../dev/EMAIL.md](../dev/EMAIL.md) for the current plan). Kept for the full option analysis if the decision is revisited. Related docs: [../dev/CONTACT_FORM_SECURITY.md](../dev/CONTACT_FORM_SECURITY.md) (implemented protections) and [../dev/SELF_HOSTED_EMAIL_SETUP.md](../dev/SELF_HOSTED_EMAIL_SETUP.md) (server setup).
+>
+> Where this analysis proposed files, the shipped implementation lives at `app/actions/contact.ts` (Server Action), `lib/services/email-service.ts` (SMTP/email), and `lib/services/contact-protection.ts` (rate limiting/spam protection). Proposed paths that were never created are annotated inline below.
+
 ## Requirements
 
 - ✅ Secure submission of visitor information
@@ -38,10 +42,10 @@ Matomo Analytics
 
 **Files to Create:**
 
-- `app/actions/contact.ts` - Server Action
-- `lib/smtp.ts` - SMTP client wrapper
-- `lib/rate-limit.ts` - Rate limiting utility
-- `docker-compose.yml` - Add SMTP service (if using Docker)
+- `app/actions/contact.ts` - Server Action (exists in repo)
+- `lib/smtp.ts` - SMTP client wrapper (proposed; implemented as `lib/services/email-service.ts`)
+- `lib/rate-limit.ts` - Rate limiting utility (proposed; implemented as `lib/services/contact-protection.ts`)
+- `docker-compose.yml` - Add SMTP service (if using Docker; file exists in repo)
 
 ### Self-Hosted SMTP Options
 
@@ -332,10 +336,10 @@ Matomo Analytics
 
 **Files to Create:**
 
-- `app/actions/contact.ts` - Server Action
-- `lib/email.ts` - Email service wrapper
-- `lib/rate-limit.ts` - Rate limiting utility
-- `lib/contact-storage.ts` - Database storage (optional)
+- `app/actions/contact.ts` - Server Action (exists in repo)
+- `lib/email.ts` - Email service wrapper (proposed; implemented as `lib/services/email-service.ts`)
+- `lib/rate-limit.ts` - Rate limiting utility (proposed; implemented as `lib/services/contact-protection.ts`)
+- `lib/contact-storage.ts` - Database storage (optional; proposed, not created)
 
 ### Security Features
 
@@ -451,8 +455,8 @@ Matomo Analytics
 
 **Files to Create:**
 
-- Update `ContactPageClient.tsx` to submit to service
-- `app/api/webhooks/formspree/route.ts` (optional, for webhooks)
+- Update `components/contact/ContactPageClient.tsx` to submit to service
+- `app/api/webhooks/formspree/route.ts` (optional, for webhooks; proposed, not created)
 
 ### Service Options
 
@@ -614,8 +618,8 @@ Matomo Analytics
 
 **Files to Create:**
 
-- `app/api/contact/route.ts` - API endpoint
-- `lib/rate-limit.ts` - Rate limiting
+- `app/api/contact/route.ts` - API endpoint (proposed, not created; the shipped implementation uses a Server Action at `app/actions/contact.ts` instead)
+- `lib/rate-limit.ts` - Rate limiting (proposed; implemented as `lib/services/contact-protection.ts`)
 - Directus collection schema (via admin UI)
 - Directus Flow configuration
 
@@ -770,9 +774,9 @@ Matomo Analytics
 ### Phase 2: Server Action Implementation
 
 1. Create Server Action (`app/actions/contact.ts`)
-2. Create SMTP client wrapper (`lib/smtp.ts`)
+2. Create SMTP client wrapper (`lib/smtp.ts` — implemented as `lib/services/email-service.ts`)
 3. Create email template
-4. Update `ContactPageClient.tsx` to use Server Action
+4. Update `components/contact/ContactPageClient.tsx` to use Server Action
 5. Add basic validation
 
 ### Phase 3: Security & Rate Limiting
@@ -813,7 +817,7 @@ Matomo Analytics
 1. Create Server Action (`app/actions/contact.ts`)
 2. Set up Resend account and API key
 3. Create email template
-4. Update `ContactPageClient.tsx` to use Server Action
+4. Update `components/contact/ContactPageClient.tsx` to use Server Action
 5. Add basic validation
 
 ### Phase 2: Security & Rate Limiting

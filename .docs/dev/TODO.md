@@ -6,7 +6,7 @@ _Start here — see also [RELEASE_READINESS.md](./RELEASE_READINESS.md) for the 
 
 ### Before Launch — code (merge to `dev`, then `main` for release)
 
-- [x] **Contact form: warn when SMTP unavailable** — never report mock success in production; show honest warning UI if email cannot be sent (see [SMTP_LAUNCH_CHECKLIST.md](./SMTP_LAUNCH_CHECKLIST.md))
+- [x] **Contact form: warn when SMTP unavailable** — never report mock success in production; show honest warning UI if email cannot be sent (see [EMAIL.md](./EMAIL.md))
 - [ ] Ensure responsive design works on mobile devices (manual sign-off)
 - [x] Remove unused components and rename, archive out of use
 
@@ -18,7 +18,7 @@ _Start here — see also [RELEASE_READINESS.md](./RELEASE_READINESS.md) for the 
       verify from an off-tailnet network that the public URL dead-ends at
       the proxy. Full checklist: [ADMIN_ACCESS.md](./ADMIN_ACCESS.md)
 - [ ] **Lock down Directus + Matomo admin** at reverse proxy (not public internet)
-- [ ] **Complete Matomo launch tasks** (see [MATOMO_LAUNCH_CHECKLIST.md](./MATOMO_LAUNCH_CHECKLIST.md))
+- [ ] **Complete Matomo launch tasks** (see [ANALYTICS.md](../ANALYTICS.md#launch-checklist))
 - [ ] **Production `.env` + Docker rebuild + smoke test** (see [RELEASE_READINESS.md](./RELEASE_READINESS.md))
 
 ### Before Launch — polish (optional, won't block ship)
@@ -45,7 +45,7 @@ _Start here — see also [RELEASE_READINESS.md](./RELEASE_READINESS.md) for the 
 
 - [x] **Consolidate `BlogHighlight` inline `PostCard`** — unified on `components/blog/PostCard.tsx` with `instance` API for future layouts
 - [ ] **Matomo typed `window._paq` globals** — replace `(window as any)._paq` in `components/matomo/Matomo.tsx` with a `types/matomo.d.ts` ambient declaration. See PR notes for tradeoffs before implementing.
-- [ ] **Implement real SMTP email delivery** (see [SMTP_LAUNCH_CHECKLIST.md](./SMTP_LAUNCH_CHECKLIST.md))
+- [ ] **Implement real SMTP email delivery** (see [EMAIL.md](./EMAIL.md))
 - [ ] Enable SEO for blogs in `lib/site/seo.ts` (`ENABLE_BLOG_SEO`) when content is ready
 - [ ] add coverage check to main branch
 - [ ] pre-commit check script (validate, test, compare coverage, build)
@@ -73,7 +73,7 @@ _Start here — see also [RELEASE_READINESS.md](./RELEASE_READINESS.md) for the 
 - [ ] Add socials links to About page
 - [ ] Add more projects to vitae page
 - [ ] Add code syntax highlighting for technical posts (terminal theme)
-- [x] Implement table of contents for long posts — see [BLOG_TABLE_OF_CONTENTS.md](./BLOG_TABLE_OF_CONTENTS.md)
+- [x] Implement table of contents for long posts — see [BLOG.md](./BLOG.md)
 - [ ] Add related posts suggestions
 - [ ] Create post series/collections
 - [ ] Add blog post excerpt/summary display
