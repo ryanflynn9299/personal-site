@@ -1,0 +1,24 @@
+# Automated dependency updates — see .docs/SECURITY.md (dependency policy).
+# PRs target `dev` per the branch workflow (feature -> dev -> main).
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    target-branch: "dev"
+    open-pull-requests-limit: 5
+    groups:
+      # Batch routine minor/patch bumps into one PR to reduce noise;
+      # security updates always get their own PRs.
+      minor-and-patch:
+        applies-to: version-updates
+        update-types:
+          - "minor"
+          - "patch"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    target-branch: "dev"
