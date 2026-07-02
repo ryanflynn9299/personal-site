@@ -8,66 +8,56 @@ import { createLogger } from "@/lib/dev-tooling/logger";
 
 const log = createLogger("ALL");
 
+/** Stable build-time date for static routes (avoids churning `new Date()` every build). */
+const STATIC_LAST_MODIFIED = new Date(
+  process.env.BUILD_DATE ?? "2026-07-01T00:00:00.000Z"
+);
+
 /**
  * Generates the sitemap.xml file for the website.
  * This function is called at build time by Next.js.
  * @returns {Promise<MetadataRoute.Sitemap>} A promise that resolves to an array of sitemap entries.
  */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  // 1. Generate routes for static pages
   const staticRoutes: MetadataRoute.Sitemap = [
     {
       url: `${SITE_URL}`,
-      lastModified: new Date(),
+      lastModified: STATIC_LAST_MODIFIED,
       changeFrequency: "weekly",
       priority: 1.0,
     },
     {
       url: `${SITE_URL}/about`,
-      lastModified: new Date(),
+      lastModified: STATIC_LAST_MODIFIED,
       changeFrequency: "monthly",
       priority: 0.8,
     },
     {
       url: `${SITE_URL}/vitae`,
-      lastModified: new Date(),
+      lastModified: STATIC_LAST_MODIFIED,
       changeFrequency: "monthly",
       priority: 0.8,
     },
     {
       url: `${SITE_URL}/blog`,
-      lastModified: new Date(),
+      lastModified: STATIC_LAST_MODIFIED,
       changeFrequency: "weekly",
       priority: 0.9,
     },
     {
       url: `${SITE_URL}/contact`,
-      lastModified: new Date(),
+      lastModified: STATIC_LAST_MODIFIED,
       changeFrequency: "yearly",
       priority: 0.7,
     },
     {
       url: `${SITE_URL}/policies`,
-      lastModified: new Date(),
-      changeFrequency: "yearly",
-      priority: 0.5,
-    },
-    {
-      url: `${SITE_URL}/privacy`,
-      lastModified: new Date(),
-      changeFrequency: "yearly",
-      priority: 0.5,
-    },
-    {
-      url: `${SITE_URL}/terms`,
-      lastModified: new Date(),
+      lastModified: STATIC_LAST_MODIFIED,
       changeFrequency: "yearly",
       priority: 0.5,
     },
   ];
 
-  // 2. Generate routes for dynamic blog posts
-  // Fetch published posts from CMS if configured and blog SEO is enabled
   let postRoutes: MetadataRoute.Sitemap = [];
 
   if (ENABLE_BLOG_SEO && isDirectusConfigured()) {

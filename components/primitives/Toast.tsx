@@ -47,6 +47,7 @@ export function Toast({
         <button
           onClick={() => onDismiss(id)}
           className="flex-shrink-0 text-slate-400 hover:text-white"
+          aria-label="Dismiss notification"
         >
           <X className="h-5 w-5" />
         </button>

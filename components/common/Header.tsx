@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { Menu, X, Atom } from "lucide-react";
 
 const navItems = [
@@ -36,6 +37,17 @@ const HomeIcon = () => {
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const pathname = usePathname();
+
+  const isActive = (href: string) => {
+    if (href === "/") {
+      return pathname === "/";
+    }
+    return pathname === href || pathname.startsWith(`${href}/`);
+  };
+
+  const navLinkClass =
+    "inline-block px-3 py-2 text-sm font-medium transition-colors rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900";
 
   // Close mobile menu when route changes
   useEffect(() => {
@@ -98,7 +110,12 @@ export function Header() {
                   <li key={item.href}>
                     <Link
                       href={item.href}
-                      className="inline-block px-3 py-2 text-sm font-medium text-slate-300 transition-colors hover:text-sky-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus:visible:ring-offset-2 focus-visible:ring-offset-slate-900 rounded-md"
+                      className={`${navLinkClass} ${
+                        isActive(item.href)
+                          ? "text-sky-300"
+                          : "text-slate-300 hover:text-sky-300"
+                      }`}
+                      aria-current={isActive(item.href) ? "page" : undefined}
                       data-testid={`nav-link-${item.name.toLowerCase()}`}
                     >
                       {item.name}
@@ -143,16 +160,18 @@ export function Header() {
             id="mobile-navigation-menu"
             className="fixed top-24 right-0 z-50 w-64 rounded-tl-lg rounded-bl-lg rounded-br-lg bg-slate-800 shadow-2xl sm:hidden menu-bubble-animation"
             aria-label="Mobile navigation"
-            role="dialog"
-            aria-modal="true"
           >
-            {/* Navigation Links */}
             <ul className="flex flex-col py-2">
               {navItems.map((item) => (
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className="block px-4 py-3 text-base font-medium text-slate-200 transition-colors hover:bg-slate-700 hover:text-sky-300 focus:outline-none focus:bg-slate-700 focus:text-sky-300 focus:ring-2 focus:ring-inset focus:ring-sky-400 first:rounded-lg"
+                    className={`block px-4 py-3 text-base font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-inset focus:ring-sky-400 first:rounded-lg ${
+                      isActive(item.href)
+                        ? "bg-slate-700/80 text-sky-300"
+                        : "text-slate-200 hover:bg-slate-700 hover:text-sky-300 focus:bg-slate-700 focus:text-sky-300"
+                    }`}
+                    aria-current={isActive(item.href) ? "page" : undefined}
                     onClick={() => setMobileMenuOpen(false)}
                     data-testid={`mobile-nav-link-${item.name.toLowerCase()}`}
                   >

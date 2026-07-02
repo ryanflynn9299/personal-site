@@ -48,7 +48,7 @@ export function JsonLd({ post }: JsonLdProps) {
   const publisherType = "Person";
   const publisherName = SITE_AUTHOR;
   const publisherUrl = baseUrl;
-  const publisherLogo = `${baseUrl}/images/og-default.png`; // Update this path if you have a logo
+  const publisherLogo = `${baseUrl}/apple-touch-icon.svg`;
 
   // Extract a plain text description from content (first 200 chars)
   // This is a fallback if summary is not descriptive enough

@@ -22,6 +22,7 @@ export {
   getPublishedPosts,
   getPostBySlug,
   getAdjacentPosts,
+  resolveAdjacentPosts,
   type GetPostsOptions,
 } from "./blogs";
 

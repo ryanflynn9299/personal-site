@@ -99,7 +99,7 @@ _Start here — see also [RELEASE_READINESS.md](./RELEASE_READINESS.md) for the 
 ### Performance & SEO (not required for launch)
 
 - [ ] Add proper meta tags for social sharing
-- [ ] Create `og-default.png` and wire Open Graph image
+- [x] Remove default OG image references — social images only when page supplies one (see [SEO.md](./SEO.md))
 - [ ] Update social profile URLs in `lib/site/seo.ts`
 
 ### User Experience

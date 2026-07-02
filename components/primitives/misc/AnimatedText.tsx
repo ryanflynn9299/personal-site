@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, Variants } from "framer-motion";
+import { motion, Variants, MotionConfig } from "framer-motion";
 import type { AnimatedTextProps } from "@/types/components";
 
 export function AnimatedText({
@@ -8,7 +8,22 @@ export function AnimatedText({
   animationType = "stagger-words",
   className,
 }: AnimatedTextProps) {
-  // --- Animation Variation 1: Staggered Fade-In by Words ---
+  return (
+    <MotionConfig reducedMotion="user">
+      <AnimatedTextInner
+        text={text}
+        animationType={animationType}
+        className={className}
+      />
+    </MotionConfig>
+  );
+}
+
+function AnimatedTextInner({
+  text,
+  animationType = "stagger-words",
+  className,
+}: AnimatedTextProps) {
   if (animationType === "stagger-words") {
     const words = text.split(" ");
     const container = {
@@ -36,9 +51,15 @@ export function AnimatedText({
         initial="hidden"
         animate="visible"
         className={className}
+        aria-label={text}
       >
         {words.map((word, index) => (
-          <motion.span variants={child} key={index} className="mr-[0.25em]">
+          <motion.span
+            variants={child}
+            key={`${word}-${index}`}
+            className="mr-[0.25em]"
+            aria-hidden="true"
+          >
             {word}
           </motion.span>
         ))}
@@ -46,7 +67,6 @@ export function AnimatedText({
     );
   }
 
-  // --- Animation Variation 2: Cascade In by Letters ---
   if (animationType === "cascade-letters") {
     const letters = Array.from(text);
     const container = {
@@ -66,9 +86,14 @@ export function AnimatedText({
         initial="hidden"
         animate="visible"
         className={className}
+        aria-label={text}
       >
         {letters.map((letter, index) => (
-          <motion.span variants={child} key={index}>
+          <motion.span
+            variants={child}
+            key={`${index}-${letter}`}
+            aria-hidden="true"
+          >
             {letter === " " ? "\u00A0" : letter}
           </motion.span>
         ))}
@@ -76,11 +101,7 @@ export function AnimatedText({
     );
   }
 
-  // --- Animation Variation 3: Decode/Shuffle Effect ---
-  // This is a more conceptual implementation. A production version might use a more robust hook.
   if (animationType === "decode") {
-    // This is a simplified version. For a true character-by-character decode,
-    // a more complex state management hook would be needed. This provides the feel.
     const container = {
       hidden: { opacity: 0 },
       visible: { opacity: 1, transition: { duration: 1.5 } },
@@ -92,7 +113,6 @@ export function AnimatedText({
         variants={container}
         className={className}
       >
-        {/* The effect is implied by a slower fade-in, as if text is resolving */}
         {text}
       </motion.h1>
     );

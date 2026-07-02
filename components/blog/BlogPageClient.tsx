@@ -8,7 +8,7 @@ import { Command } from "cmdk";
 import { Post } from "@/types";
 import { PostCard } from "@/components/blog/PostCard";
 import { SearchButton } from "@/components/blog/SearchButton";
-import { FileText } from "lucide-react";
+import { FileText, Inbox } from "lucide-react";
 import { Dialog } from "radix-ui";
 import { ServiceUnavailable } from "@/components/common/ServiceUnavailable";
 import { trackBlogSearch } from "@/components/matomo/Matomo";
@@ -95,9 +95,16 @@ export function BlogPageClient({
     // If successful but no posts, show the "no posts" message
     if (posts.length === 0) {
       return (
-        <p className="mt-12 text-center text-slate-400">
-          No posts found. Check back soon!
-        </p>
+        <div className="mt-12 rounded-lg border border-dashed border-slate-700 bg-slate-800/30 px-6 py-12 text-center">
+          <Inbox
+            className="mx-auto h-10 w-10 text-slate-600"
+            aria-hidden="true"
+          />
+          <p className="mt-4 text-slate-300">No posts found yet.</p>
+          <p className="mt-2 text-sm text-slate-500">
+            Check back soon — new articles will appear here when published.
+          </p>
+        </div>
       );
     }
 
@@ -184,8 +191,7 @@ export function BlogPageClient({
         }}
         label="Search Blog Posts"
       >
-        <Dialog.Title className="DialogTitle" />{" "}
-        {/* Necessary to prevent react error */}
+        <Dialog.Title className="sr-only">Search Blog Posts</Dialog.Title>
         <Command.Input
           placeholder="Type to search articles..."
           value={searchQuery}

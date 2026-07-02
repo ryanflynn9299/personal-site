@@ -45,7 +45,6 @@ Central index for shipping the personal site. Updated July 2026.
 
 ### Not required for launch
 
-- Open Graph image (`og-default.png`)
 - Social profile URLs in `lib/site/seo.ts`
 - Blog SEO (`ENABLE_BLOG_SEO` — keep `false` until post-launch)
 - Real SMTP delivery (post-launch; use Directus storage + honest warning until then)

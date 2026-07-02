@@ -78,7 +78,7 @@ describe("ContactPageClient", () => {
       name: /ryan\.flynn001@gmail\.com/i,
     });
     expect(emailLink).toBeInTheDocument();
-    expect(emailLink).toHaveAttribute("href", "mailto:ryan.flyn001@gmail.com");
+    expect(emailLink).toHaveAttribute("href", "mailto:ryan.flynn001@gmail.com");
 
     // Check for the LinkedIn contact card by looking for the link
     const linkedInLink = screen.getByRole("link", {
