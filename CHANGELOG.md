@@ -7,13 +7,13 @@ Versioning policy: [.docs/dev/VERSIONING.md](.docs/dev/VERSIONING.md).
 
 ## [Unreleased]
 
+### Added
+
+- Blog table of contents — top placement, shows when more than two h2–h4 headings ([BLOG_TABLE_OF_CONTENTS.md](.docs/dev/BLOG_TABLE_OF_CONTENTS.md))
+
 ### Changed
 
 - Home "Recent Writings" uses shared `PostCard` (same look as blog index; HUD-style duplicate removed)
-
-### Added
-
-- (nothing yet)
 
 ## [0.2.0] - 2026-07-01
 

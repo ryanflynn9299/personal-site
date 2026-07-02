@@ -70,6 +70,7 @@ This document serves as the definitive map for identifying the core configuratio
 | **AI policy**         | `.docs/prompting/AI_GUARDRAILS.md`          |
 | **Release Readiness** | `.docs/dev/RELEASE_READINESS.md`            |
 | **Versioning**        | `.docs/dev/VERSIONING.md`                   |
+| **Blog ToC**          | `.docs/dev/BLOG_TABLE_OF_CONTENTS.md`       |
 | **Architecture**      | `.docs/ARCHITECTURE.md`                     |
 | **Testing Strategy**  | `.docs/TESTING_STRATEGY.md`                 |
 | **Dev Guidelines**    | `.docs/prompting/DEVELOPMENT_GUIDELINES.md` |

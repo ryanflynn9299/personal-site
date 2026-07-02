@@ -73,7 +73,7 @@ _Start here — see also [RELEASE_READINESS.md](./RELEASE_READINESS.md) for the 
 - [ ] Add socials links to About page
 - [ ] Add more projects to vitae page
 - [ ] Add code syntax highlighting for technical posts (terminal theme)
-- [ ] Implement table of contents for long posts
+- [x] Implement table of contents for long posts — see [BLOG_TABLE_OF_CONTENTS.md](./BLOG_TABLE_OF_CONTENTS.md)
 - [ ] Add related posts suggestions
 - [ ] Create post series/collections
 - [ ] Add blog post excerpt/summary display

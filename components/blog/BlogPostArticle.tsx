@@ -1,9 +1,12 @@
 "use client";
 
+import { useMemo } from "react";
 import Image from "next/image";
 import type { AuthorContext, Post, ResolvedAuthorProfile } from "@/types";
 import { BlogContentRenderer } from "@/components/blog/BlogContentRenderer";
+import { BlogTableOfContents } from "@/components/blog/BlogTableOfContents";
 import { BlogPostNavigation } from "@/components/blog/BlogPostNavigation";
+import { evaluateToc } from "@/lib/blog/toc";
 import { AuthorDialogProvider } from "@/components/author/AuthorDialogContext";
 import { AuthorByline } from "@/components/author/AuthorByline";
 import { AuthorPostFooter } from "@/components/author/AuthorPostFooter";
@@ -29,6 +32,11 @@ export function BlogPostArticle({
   formattedDate,
   readingTime,
 }: BlogPostArticleProps) {
+  const toc = useMemo(
+    () => evaluateToc(post.content, post.content_format || "auto"),
+    [post.content, post.content_format]
+  );
+
   return (
     <AuthorDialogProvider author={author} context={authorContext}>
       <article className="container mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
@@ -53,6 +61,14 @@ export function BlogPostArticle({
               priority
             />
           </div>
+        )}
+
+        {toc.show && (
+          <BlogTableOfContents
+            tree={toc.tree}
+            collapseH3ByDefault={toc.collapseH3ByDefault}
+            hiddenH3Count={toc.hiddenH3Count}
+          />
         )}
 
         <BlogContentRenderer
