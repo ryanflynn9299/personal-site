@@ -43,7 +43,7 @@ _Start here — see also [RELEASE_READINESS.md](./RELEASE_READINESS.md) for the 
 
 ### First promote after launch
 
-- [ ] **Consolidate `BlogHighlight` inline `PostCard`** — `components/sections/BlogHighlight.tsx` defines a private `PostCard` that duplicates `components/blog/PostCard.tsx` (different markup, no reading time, untested). Review whether to reuse the shared component with a `variant="compact"` prop or extract a shared base. _Added during code health pass — awaiting operator review._
+- [x] **Consolidate `BlogHighlight` inline `PostCard`** — unified on `components/blog/PostCard.tsx` with `instance` API for future layouts
 - [ ] **Matomo typed `window._paq` globals** — replace `(window as any)._paq` in `components/matomo/Matomo.tsx` with a `types/matomo.d.ts` ambient declaration. See PR notes for tradeoffs before implementing.
 - [ ] **Implement real SMTP email delivery** (see [SMTP_LAUNCH_CHECKLIST.md](./SMTP_LAUNCH_CHECKLIST.md))
 - [ ] Enable SEO for blogs in `lib/site/seo.ts` (`ENABLE_BLOG_SEO`) when content is ready

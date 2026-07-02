@@ -61,7 +61,7 @@ describe("PostCard", () => {
 
   it("renders feature image when available", () => {
     render(<PostCard post={mockPost} />);
-    const image = screen.getByAltText("Alt text");
+    const image = screen.getByAltText("Test Blog Post");
     expect(image).toBeInTheDocument();
     expect(image).toHaveAttribute(
       "src",
@@ -71,7 +71,7 @@ describe("PostCard", () => {
 
   it("does not render image when feature_image is null", () => {
     render(<PostCard post={mockPostWithoutImage} />);
-    const image = screen.queryByAltText("Alt text");
+    const image = screen.queryByAltText("Test Blog Post");
     expect(image).not.toBeInTheDocument();
   });
 
@@ -94,5 +94,16 @@ describe("PostCard", () => {
   it("displays reading time estimate", () => {
     render(<PostCard post={mockPost} />);
     expect(screen.getByText(/min read/)).toBeInTheDocument();
+  });
+
+  it("renders title as h3 when titleAs is h3", () => {
+    render(<PostCard post={mockPost} titleAs="h3" />);
+    const heading = screen.getByRole("heading", { level: 3 });
+    expect(heading).toHaveTextContent("Test Blog Post");
+  });
+
+  it("merges custom className onto the card link", () => {
+    render(<PostCard post={mockPost} className="custom-card-class" />);
+    expect(screen.getByRole("link")).toHaveClass("custom-card-class");
   });
 });

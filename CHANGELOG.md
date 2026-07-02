@@ -7,6 +7,10 @@ Versioning policy: [.docs/dev/VERSIONING.md](.docs/dev/VERSIONING.md).
 
 ## [Unreleased]
 
+### Changed
+
+- Home "Recent Writings" uses shared `PostCard` (same look as blog index; HUD-style duplicate removed)
+
 ### Added
 
 - (nothing yet)
