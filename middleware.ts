@@ -1,7 +1,12 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-const SESSION_COOKIE_NAME = "admin_session";
+import {
+  SESSION_COOKIE_NAME,
+  verifySessionToken,
+} from "@/lib/auth/session-token";
+
+const ADMIN_LOGIN_PATH = "/admin/dashboard/login";
 
 /** Preview-only routes — blocked in production unless ENABLE_PREVIEW_FEATURES=true */
 const PREVIEW_ONLY_ROUTES = ["/quotes", "/projects-cabinet"];
@@ -39,9 +44,13 @@ function isTailscaleIp(ip: string): boolean {
 
 /**
  * Middleware: admin auth, optional Tailscale gate, preview-route blocking.
+ *
+ * Runs in the Edge runtime, so it reads `process.env` directly instead of
+ * importing the Node-only server config (documented exception).
+ *
  * @see .docs/dev/ADMIN_ACCESS.md
  */
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (
@@ -55,16 +64,20 @@ export function middleware(request: NextRequest) {
   }
 
   if (pathname.startsWith("/admin")) {
-    if (pathname.includes("/login")) {
+    if (pathname === ADMIN_LOGIN_PATH) {
       return NextResponse.next();
     }
 
     const session = request.cookies.get(SESSION_COOKIE_NAME);
     const sessionSecret = process.env.ADMIN_SESSION_SECRET;
 
-    if (!session || !sessionSecret || session.value !== sessionSecret) {
+    const sessionValid = await verifySessionToken(
+      sessionSecret,
+      session?.value
+    );
+    if (!sessionValid) {
       const url = request.nextUrl.clone();
-      url.pathname = "/admin/dashboard/login";
+      url.pathname = ADMIN_LOGIN_PATH;
       return NextResponse.redirect(url);
     }
 

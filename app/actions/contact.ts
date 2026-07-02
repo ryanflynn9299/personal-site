@@ -5,7 +5,7 @@ import {
   sendEmail,
   type EmailMessage,
 } from "@/lib/services/email-service";
-import { getContactClientIp } from "@/lib/services/contact-client-ip";
+import { getClientIp } from "@/lib/services/client-ip";
 import { validateContactSubmission } from "@/lib/services/contact-protection";
 import { runtime } from "@/lib/config";
 import { serverConfig } from "@/lib/config/server";
@@ -28,7 +28,7 @@ function escapeHtml(value: string): string {
 export async function submitContactForm(
   formData: FormData
 ): Promise<FormState> {
-  const clientIp = await getContactClientIp();
+  const clientIp = await getClientIp();
   const protection = validateContactSubmission(formData, clientIp);
 
   if (!protection.allowed) {

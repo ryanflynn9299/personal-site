@@ -32,8 +32,8 @@ vi.mock("@/lib/dev-tooling/delay", () => ({
   delay: vi.fn().mockResolvedValue(undefined),
 }));
 
-vi.mock("@/lib/services/contact-client-ip", () => ({
-  getContactClientIp: vi.fn().mockResolvedValue("127.0.0.1"),
+vi.mock("@/lib/services/client-ip", () => ({
+  getClientIp: vi.fn().mockResolvedValue("127.0.0.1"),
 }));
 
 vi.mock("@/lib/services/directus", () => ({

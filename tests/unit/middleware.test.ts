@@ -1,5 +1,8 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { NextRequest } from "next/server";
+import { createSessionToken } from "@/lib/auth/session-token";
+
+const TEST_SECRET = "test-secret-0123456789abcdef0123456789abcdef";
 
 describe("middleware", () => {
   beforeEach(() => {
@@ -41,7 +44,7 @@ describe("middleware", () => {
     vi.stubEnv("ENABLE_PREVIEW_FEATURES", "false");
 
     const middleware = await loadMiddleware();
-    const response = middleware(createRequest("/quotes"));
+    const response = await middleware(createRequest("/quotes"));
 
     expect(response.status).toBe(404);
   });
@@ -51,16 +54,16 @@ describe("middleware", () => {
     vi.stubEnv("ENABLE_PREVIEW_FEATURES", "true");
 
     const middleware = await loadMiddleware();
-    const response = middleware(createRequest("/quotes"));
+    const response = await middleware(createRequest("/quotes"));
 
     expect(response.status).toBe(200);
   });
 
   it("redirects unauthenticated admin requests to login", async () => {
-    vi.stubEnv("ADMIN_SESSION_SECRET", "test-secret");
+    vi.stubEnv("ADMIN_SESSION_SECRET", TEST_SECRET);
 
     const middleware = await loadMiddleware();
-    const response = middleware(createRequest("/admin/dashboard"));
+    const response = await middleware(createRequest("/admin/dashboard"));
 
     expect(response.status).toBe(307);
     expect(response.headers.get("location")).toContain(
@@ -68,22 +71,55 @@ describe("middleware", () => {
     );
   });
 
-  it("allows authenticated admin requests with a valid session cookie", async () => {
-    vi.stubEnv("ADMIN_SESSION_SECRET", "test-secret");
+  it("allows authenticated admin requests with a valid signed session token", async () => {
+    vi.stubEnv("ADMIN_SESSION_SECRET", TEST_SECRET);
 
     const middleware = await loadMiddleware();
-    const response = middleware(
+    const token = await createSessionToken(TEST_SECRET);
+    const response = await middleware(
       createRequest("/admin/dashboard", {
-        cookies: { admin_session: "test-secret" },
+        cookies: { admin_session: token },
       })
     );
 
     expect(response.status).toBe(200);
   });
 
+  // Regression: the cookie used to store the raw ADMIN_SESSION_SECRET.
+  // Presenting the secret itself must no longer grant a session.
+  it("rejects the raw session secret as a cookie value", async () => {
+    vi.stubEnv("ADMIN_SESSION_SECRET", TEST_SECRET);
+
+    const middleware = await loadMiddleware();
+    const response = await middleware(
+      createRequest("/admin/dashboard", {
+        cookies: { admin_session: TEST_SECRET },
+      })
+    );
+
+    expect(response.status).toBe(307);
+    expect(response.headers.get("location")).toContain(
+      "/admin/dashboard/login"
+    );
+  });
+
+  it("rejects a token signed with a different secret", async () => {
+    vi.stubEnv("ADMIN_SESSION_SECRET", TEST_SECRET);
+
+    const middleware = await loadMiddleware();
+    const forged = await createSessionToken("wrong-secret-abcdef0123456789abcdef012345");
+    const response = await middleware(
+      createRequest("/admin/dashboard", {
+        cookies: { admin_session: forged },
+      })
+    );
+
+    expect(response.status).toBe(307);
+  });
+
   it("allows admin login route without authentication", async () => {
     const middleware = await loadMiddleware();
-    const response = middleware(createRequest("/admin/dashboard/login"));
+    const response = await middleware(createRequest("/admin/dashboard/login"));
 
     expect(response.status).toBe(200);
   });
