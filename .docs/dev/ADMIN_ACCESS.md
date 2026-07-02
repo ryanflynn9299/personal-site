@@ -2,6 +2,13 @@
 
 The admin dashboard at `/admin/dashboard` is protected by middleware, passcode auth, and optional Tailscale enforcement.
 
+> **DECIDED (2026-07-02): Admin is Tailscale-only.** `/admin` is **not**
+> published on the public domain — no reverse-proxy (NPM) route may forward
+> it. Access is exclusively via the server's Tailscale IP / MagicDNS, with
+> `ADMIN_REQUIRE_TAILSCALE=true` as an application-level backstop against
+> proxy misconfiguration. Publishing `/admin` publicly requires revisiting
+> this decision and updating `.docs/SECURITY.md` §9.
+
 ## Current Implementation (done)
 
 - [x] Root `middleware.ts` protects `/admin` routes
@@ -36,14 +43,21 @@ Generate secrets:
 openssl rand -hex 32   # ADMIN_SESSION_SECRET
 ```
 
-## TODO: Configure Tailscale for Admin (before/at launch)
+## TODO: Make admin Tailscale-only (launch blocker — operator)
+
+Tracked prominently in [TODO.md](./TODO.md). Steps:
 
 - [ ] Install Tailscale on the home server hosting the Docker stack
 - [ ] Join the server to your tailnet
+- [ ] Configure NPM so `/admin` is **not** routed on the public domain
+      (no forwarding rule; public requests must dead-end at the proxy)
 - [ ] Access admin via Tailscale IP or MagicDNS (e.g. `https://server-name/admin/dashboard`)
-- [ ] Set `ADMIN_REQUIRE_TAILSCALE=true` in production `.env`
+- [ ] Set `ADMIN_REQUIRE_TAILSCALE=true` in production `.env` (backstop if
+      the proxy is ever misconfigured)
+- [ ] Verify from an off-tailnet network: `https://<public-domain>/admin/dashboard`
+      returns the proxy's 404/error page, **not** the login screen
+- [ ] Verify from the tailnet: login works and middleware allows the session
 - [ ] Verify middleware returns 403 from non-Tailscale IPs (100.64.0.0/10 range)
-- [ ] Configure NPM so `/admin` is **not** exposed on the public internet, OR rely on Tailscale gate
 - [ ] Document your tailnet device list and who has access
 
 ### Tailscale IP check behavior
@@ -54,11 +68,15 @@ When `ADMIN_REQUIRE_TAILSCALE=true` and `RUNTIME_MODE=production`:
 - All other IPs receive `403 Subspace Access Denied: Tailscale Connection Required`
 - Disabled in dev modes for local testing
 
-### Recommended production posture
+### Production posture (decided)
 
-**Option A (strict):** Admin only via Tailscale URL; do not publish `/admin` on public domain.
+**Option A (strict) is the committed posture:** admin only via Tailscale URL;
+`/admin` is not published on the public domain. The middleware Tailscale gate
+and passcode/session auth remain active as defense-in-depth behind the
+network boundary.
 
-**Option B (layered):** Public domain + passcode + `ADMIN_REQUIRE_TAILSCALE=true` so only tailnet clients can authenticate.
+_Option B (public domain + passcode + Tailscale gate) was considered and
+rejected — it leaves the login surface reachable by the public internet._
 
 ## Directus & Matomo Admin
 

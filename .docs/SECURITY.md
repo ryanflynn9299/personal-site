@@ -36,7 +36,10 @@ Nation-state attackers and physical access are explicitly out of scope.
 
 1. Public pages and assets (Next.js, port 3000 behind reverse proxy)
 2. Contact form server action
-3. Admin login server action + `/admin` middleware
+3. Admin login server action + `/admin` middleware — **Tailscale-only by
+   decision**: not published on the public domain (see
+   [ADMIN_ACCESS.md](./dev/ADMIN_ACCESS.md)); middleware auth remains as
+   defense-in-depth behind the network boundary
 4. `/api/health` (internal-only by design)
 5. Directus (`:8055`) and Matomo (`:8181`) — must never be publicly exposed
 6. CI pipeline and dependency graph
@@ -189,10 +192,10 @@ origin that works and record why in the PR description.
 
 ## 9. Accepted risks (deliberate, reviewed)
 
-| Risk                                          | Rationale                                                                   |
-| --------------------------------------------- | --------------------------------------------------------------------------- |
-| CSP allows `unsafe-inline` scripts            | Next.js App Router inline bootstrapping; nonce pipeline is post-launch work |
-| In-memory rate limiting (resets on restart)   | Single-instance deployment; Redis unjustified at this scale                 |
-| Single shared admin passcode (no users/MFA)   | Single operator; Tailscale gate + signed sessions layer on top              |
-| `directus/directus:latest` not yet pinned     | Operator must pick the running version — see deploy action items            |
-| Health endpoint trusts proxy-stripped headers | Reverse proxy must strip/overwrite `X-Forwarded-For` (deploy checklist)     |
+| Risk                                          | Rationale                                                                                                       |
+| --------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| CSP allows `unsafe-inline` scripts            | Next.js App Router inline bootstrapping; nonce pipeline is post-launch work                                     |
+| In-memory rate limiting (resets on restart)   | Single-instance deployment; Redis unjustified at this scale                                                     |
+| Single shared admin passcode (no users/MFA)   | Single operator; admin is Tailscale-only (not publicly routed) with signed sessions behind the network boundary |
+| `directus/directus:latest` not yet pinned     | Operator must pick the running version — see deploy action items                                                |
+| Health endpoint trusts proxy-stripped headers | Reverse proxy must strip/overwrite `X-Forwarded-For` (deploy checklist)                                         |
