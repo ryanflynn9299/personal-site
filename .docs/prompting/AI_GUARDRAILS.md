@@ -139,12 +139,13 @@ The primary agent **owns integration**: reconcile subagent output with docs, run
 
 ### Cursor rules index
 
-| Rule file                 | Activation                                  |
-| ------------------------- | ------------------------------------------- |
-| `core.mdc`                | Always — docs, quality, UX veto, completion |
-| `testing.mdc`             | `tests/**`, `*.test.*`, `*.spec.*`          |
-| `ux-and-ui.mdc`           | `components/**`, `app/**`                   |
-| `tools-and-subagents.mdc` | Agent-requested when delegation matters     |
+| Rule file                 | Activation                                          |
+| ------------------------- | --------------------------------------------------- |
+| `core.mdc`                | Always — docs, quality, UX veto, completion         |
+| `testing.mdc`             | `tests/**`, `*.test.*`, `*.spec.*`                  |
+| `ux-and-ui.mdc`           | `components/**`, `app/**`                           |
+| `security.mdc`            | Auth, actions, config, middleware, CI, Docker paths |
+| `tools-and-subagents.mdc` | Agent-requested when delegation matters             |
 
 ---
 

@@ -6,14 +6,27 @@ The admin dashboard at `/admin/dashboard` is protected by middleware, passcode a
 
 - [x] Root `middleware.ts` protects `/admin` routes
 - [x] Unauthenticated requests redirect to `/admin/dashboard/login`
-- [x] Passcode login sets `httpOnly` session cookie (`ADMIN_SESSION_SECRET`)
-- [x] Login brute-force delay (1s synthetic wait on failure)
+- [x] Passcode login sets an `httpOnly` cookie containing a **signed,
+      expiring session token** (HMAC-SHA256 over the expiry, keyed by
+      `ADMIN_SESSION_SECRET`) — the raw secret never leaves the server
+- [x] Constant-time passcode comparison (`secretsEqual`)
+- [x] Login rate limiting: 5 failed attempts per IP per 15 minutes
+      (`lib/services/login-protection.ts`), plus 1s synthetic delay on failure
+- [x] Middleware verifies token signature and expiry (`lib/auth/session-token.ts`)
+
+### Session token design
+
+- Cookie: `admin_session` = `<expiresAtMs>.<hmacSha256Hex(secret, expiresAtMs)>`
+- Lifetime: 24 hours (`SESSION_MAX_AGE_SECONDS`)
+- Verification is edge-safe (Web Crypto) so middleware and server actions
+  share one implementation
+- Rotating `ADMIN_SESSION_SECRET` instantly invalidates all sessions
 
 ## Environment Variables
 
 ```bash
-ADMIN_PASSCODE=your-strong-passcode
-ADMIN_SESSION_SECRET=your-64-char-hex-secret   # openssl rand -hex 32
+ADMIN_PASSCODE=your-strong-passcode             # min 8 chars (enforced at startup)
+ADMIN_SESSION_SECRET=your-64-char-hex-secret    # min 32 chars; openssl rand -hex 32
 ADMIN_REQUIRE_TAILSCALE=false                   # set true for production hardening
 ```
 
@@ -56,8 +69,10 @@ The Next.js dashboard is separate from:
 
 ## Related Files
 
-| File                           | Purpose                                   |
-| ------------------------------ | ----------------------------------------- |
-| `middleware.ts`                | Auth + Tailscale + preview route blocking |
-| `app/actions/auth.ts`          | Login/logout server actions               |
-| `app/(admin)/admin/dashboard/` | Dashboard UI                              |
+| File                               | Purpose                                   |
+| ---------------------------------- | ----------------------------------------- |
+| `middleware.ts`                    | Auth + Tailscale + preview route blocking |
+| `app/actions/auth.ts`              | Login/logout server actions               |
+| `lib/auth/session-token.ts`        | Signed session token create/verify        |
+| `lib/services/login-protection.ts` | Failed-attempt rate limiting              |
+| `app/(admin)/admin/dashboard/`     | Dashboard UI                              |
