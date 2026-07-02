@@ -143,7 +143,10 @@ export const serverConfigSchema = z.object({
       .optional(),
     sessionSecret: z
       .string()
-      .min(32, "ADMIN_SESSION_SECRET must be at least 32 characters (openssl rand -hex 32)")
+      .min(
+        32,
+        "ADMIN_SESSION_SECRET must be at least 32 characters (openssl rand -hex 32)"
+      )
       .optional(),
     requireTailscale: z.boolean(),
   }),

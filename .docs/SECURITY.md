@@ -13,14 +13,14 @@ infrastructure. The vulnerability disclosure policy lives in the root
 
 ### What we protect
 
-| Asset                          | Impact if compromised                              |
-| ------------------------------ | -------------------------------------------------- |
-| Admin dashboard (`/admin`)     | Content tampering, pivot to Directus data          |
-| Directus CMS + Postgres        | Blog/content integrity, contact message PII        |
-| Contact form pipeline          | Spam relay, PII leakage, resource exhaustion       |
-| Secrets (`.env`)               | Full stack compromise (admin, DB, SMTP, CF tunnel) |
-| CI/CD + `main` branch          | Supply-chain code execution on the home server     |
-| Visitor trust (public pages)   | XSS, defacement, SEO poisoning                     |
+| Asset                        | Impact if compromised                              |
+| ---------------------------- | -------------------------------------------------- |
+| Admin dashboard (`/admin`)   | Content tampering, pivot to Directus data          |
+| Directus CMS + Postgres      | Blog/content integrity, contact message PII        |
+| Contact form pipeline        | Spam relay, PII leakage, resource exhaustion       |
+| Secrets (`.env`)             | Full stack compromise (admin, DB, SMTP, CF tunnel) |
+| CI/CD + `main` branch        | Supply-chain code execution on the home server     |
+| Visitor trust (public pages) | XSS, defacement, SEO poisoning                     |
 
 ### Who we defend against
 
@@ -45,21 +45,21 @@ Nation-state attackers and physical access are explicitly out of scope.
 
 ## 2. Security controls inventory
 
-| Control                        | Implementation                                        | Documentation                          |
-| ------------------------------ | ----------------------------------------------------- | -------------------------------------- |
-| Admin session tokens           | `lib/auth/session-token.ts` (HMAC-SHA256, 24h expiry) | [ADMIN_ACCESS.md](./dev/ADMIN_ACCESS.md) |
-| Admin route gating             | `middleware.ts` (token verify + optional Tailscale)   | [ADMIN_ACCESS.md](./dev/ADMIN_ACCESS.md) |
-| Login brute-force protection   | `lib/services/login-protection.ts` (5 fails / 15 min) | This file                              |
-| Timing-safe secret comparison  | `secretsEqual` in `lib/auth/session-token.ts`         | This file                              |
-| Contact form abuse protection  | `lib/services/contact-protection.ts` (honeypot + rate limit) | [CONTACT_FORM_SECURITY.md](./dev/CONTACT_FORM_SECURITY.md) |
-| Contact input limits           | `lib/constants/contact.ts` + `app/actions/contact.ts` | [CONTACT_FORM_SECURITY.md](./dev/CONTACT_FORM_SECURITY.md) |
-| Security headers + CSP         | `next.config.ts` (`headers()`)                        | §5 below                               |
-| CMS content sanitization       | `rehype-sanitize` in `BlogContentRenderer`, escaped plaintext, JSON-LD `<` escaping | This file |
-| Env validation + secret policy | `lib/config/schemas.ts` (Zod, min secret lengths)     | §6 below                               |
-| Server/client secret boundary  | `lib/config/server.ts` (`server-only`)                | [DEVELOPMENT_GUIDELINES.md](./prompting/DEVELOPMENT_GUIDELINES.md) §4 |
-| Health endpoint isolation      | `app/api/health/route.ts` + `lib/dev-tooling/ip-validation.ts` | [SECURITY_HEALTH_CHECK.md](./SECURITY_HEALTH_CHECK.md) |
-| Dependency audit gate          | CI `dependency-audit` job + Dependabot + CodeQL       | §7 below                               |
-| Container hardening            | Non-root frontend, `no-new-privileges`, internal-only ports | `Dockerfile`, `docker-compose.yml` |
+| Control                        | Implementation                                                                      | Documentation                                                         |
+| ------------------------------ | ----------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| Admin session tokens           | `lib/auth/session-token.ts` (HMAC-SHA256, 24h expiry)                               | [ADMIN_ACCESS.md](./dev/ADMIN_ACCESS.md)                              |
+| Admin route gating             | `middleware.ts` (token verify + optional Tailscale)                                 | [ADMIN_ACCESS.md](./dev/ADMIN_ACCESS.md)                              |
+| Login brute-force protection   | `lib/services/login-protection.ts` (5 fails / 15 min)                               | This file                                                             |
+| Timing-safe secret comparison  | `secretsEqual` in `lib/auth/session-token.ts`                                       | This file                                                             |
+| Contact form abuse protection  | `lib/services/contact-protection.ts` (honeypot + rate limit)                        | [CONTACT_FORM_SECURITY.md](./dev/CONTACT_FORM_SECURITY.md)            |
+| Contact input limits           | `lib/constants/contact.ts` + `app/actions/contact.ts`                               | [CONTACT_FORM_SECURITY.md](./dev/CONTACT_FORM_SECURITY.md)            |
+| Security headers + CSP         | `next.config.ts` (`headers()`)                                                      | §5 below                                                              |
+| CMS content sanitization       | `rehype-sanitize` in `BlogContentRenderer`, escaped plaintext, JSON-LD `<` escaping | This file                                                             |
+| Env validation + secret policy | `lib/config/schemas.ts` (Zod, min secret lengths)                                   | §6 below                                                              |
+| Server/client secret boundary  | `lib/config/server.ts` (`server-only`)                                              | [DEVELOPMENT_GUIDELINES.md](./prompting/DEVELOPMENT_GUIDELINES.md) §4 |
+| Health endpoint isolation      | `app/api/health/route.ts` + `lib/dev-tooling/ip-validation.ts`                      | [SECURITY_HEALTH_CHECK.md](./SECURITY_HEALTH_CHECK.md)                |
+| Dependency audit gate          | CI `dependency-audit` job + Dependabot + CodeQL                                     | §7 below                                                              |
+| Container hardening            | Non-root frontend, `no-new-privileges`, internal-only ports                         | `Dockerfile`, `docker-compose.yml`                                    |
 
 ---
 
@@ -189,10 +189,10 @@ origin that works and record why in the PR description.
 
 ## 9. Accepted risks (deliberate, reviewed)
 
-| Risk                                            | Rationale                                                        |
-| ----------------------------------------------- | ---------------------------------------------------------------- |
-| CSP allows `unsafe-inline` scripts              | Next.js App Router inline bootstrapping; nonce pipeline is post-launch work |
-| In-memory rate limiting (resets on restart)     | Single-instance deployment; Redis unjustified at this scale      |
-| Single shared admin passcode (no users/MFA)     | Single operator; Tailscale gate + signed sessions layer on top   |
-| `directus/directus:latest` not yet pinned       | Operator must pick the running version — see deploy action items |
-| Health endpoint trusts proxy-stripped headers   | Reverse proxy must strip/overwrite `X-Forwarded-For` (deploy checklist) |
+| Risk                                          | Rationale                                                                   |
+| --------------------------------------------- | --------------------------------------------------------------------------- |
+| CSP allows `unsafe-inline` scripts            | Next.js App Router inline bootstrapping; nonce pipeline is post-launch work |
+| In-memory rate limiting (resets on restart)   | Single-instance deployment; Redis unjustified at this scale                 |
+| Single shared admin passcode (no users/MFA)   | Single operator; Tailscale gate + signed sessions layer on top              |
+| `directus/directus:latest` not yet pinned     | Operator must pick the running version — see deploy action items            |
+| Health endpoint trusts proxy-stripped headers | Reverse proxy must strip/overwrite `X-Forwarded-For` (deploy checklist)     |

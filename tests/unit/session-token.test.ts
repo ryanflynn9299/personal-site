@@ -15,13 +15,14 @@ describe("session-token", () => {
   });
 
   it("rejects a token signed with a different secret", async () => {
-    const token = await createSessionToken("another-secret-abcdef0123456789abcdef");
+    const token = await createSessionToken(
+      "another-secret-abcdef0123456789abcdef"
+    );
     expect(await verifySessionToken(SECRET, token)).toBe(false);
   });
 
   it("rejects an expired token", async () => {
-    const issuedInThePast =
-      Date.now() - (SESSION_MAX_AGE_SECONDS + 60) * 1000;
+    const issuedInThePast = Date.now() - (SESSION_MAX_AGE_SECONDS + 60) * 1000;
     const token = await createSessionToken(SECRET, issuedInThePast);
     expect(await verifySessionToken(SECRET, token)).toBe(false);
   });

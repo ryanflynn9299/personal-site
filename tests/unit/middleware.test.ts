@@ -107,7 +107,9 @@ describe("middleware", () => {
     vi.stubEnv("ADMIN_SESSION_SECRET", TEST_SECRET);
 
     const middleware = await loadMiddleware();
-    const forged = await createSessionToken("wrong-secret-abcdef0123456789abcdef012345");
+    const forged = await createSessionToken(
+      "wrong-secret-abcdef0123456789abcdef012345"
+    );
     const response = await middleware(
       createRequest("/admin/dashboard", {
         cookies: { admin_session: forged },
