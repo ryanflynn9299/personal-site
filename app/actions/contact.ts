@@ -9,6 +9,11 @@ import { getClientIp } from "@/lib/services/client-ip";
 import { validateContactSubmission } from "@/lib/services/contact-protection";
 import { runtime } from "@/lib/config";
 import { serverConfig } from "@/lib/config/server";
+import {
+  CONTACT_MAX_NAME_LENGTH,
+  CONTACT_MAX_EMAIL_LENGTH,
+  CONTACT_MAX_MESSAGE_LENGTH,
+} from "@/lib/constants/contact";
 import type { FormState } from "@/types/forms";
 
 import {
@@ -48,15 +53,27 @@ export async function submitContactForm(
   }
 
   // Extract form data
-  const name = (formData.get("name") as string) || "";
-  const email = (formData.get("email") as string) || "";
-  const message = (formData.get("message") as string) || "";
+  const name = ((formData.get("name") as string) || "").trim();
+  const email = ((formData.get("email") as string) || "").trim();
+  const message = ((formData.get("message") as string) || "").trim();
 
   // Basic validation
   if (!name || !email || !message) {
     return {
       success: false,
       error: "All fields are required",
+    };
+  }
+
+  // Length limits (server-side; the UI mirrors these via maxLength)
+  if (
+    name.length > CONTACT_MAX_NAME_LENGTH ||
+    email.length > CONTACT_MAX_EMAIL_LENGTH ||
+    message.length > CONTACT_MAX_MESSAGE_LENGTH
+  ) {
+    return {
+      success: false,
+      error: "Your message is too long. Please shorten it and try again.",
     };
   }
 

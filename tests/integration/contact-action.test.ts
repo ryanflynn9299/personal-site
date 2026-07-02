@@ -73,6 +73,18 @@ describe("submitContactForm", () => {
     expect(result.error).toBe("All fields are required");
   });
 
+  it("rejects oversized input", async () => {
+    const formData = new FormData();
+    formData.set("name", "John Doe");
+    formData.set("email", "test@example.com");
+    formData.set("message", "a".repeat(5001));
+
+    const result = await submitContactForm(formData);
+
+    expect(result.success).toBe(false);
+    expect(result.error).toContain("too long");
+  });
+
   it("validates email format", async () => {
     const formData = new FormData();
     formData.set("name", "John Doe");

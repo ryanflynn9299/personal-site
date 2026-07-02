@@ -206,4 +206,25 @@ describe("JsonLd", () => {
 
     expect(() => JSON.parse(script?.innerHTML || "")).not.toThrow();
   });
+
+  // Security: CMS-controlled strings must not break out of the script tag
+  it("escapes </script> sequences in post content", () => {
+    const maliciousPost: Post = {
+      ...mockPost,
+      title: 'Bad title</script><script>alert("xss")</script>',
+    };
+
+    const { container } = render(<JsonLd post={maliciousPost} />);
+    const script = container.querySelector(
+      'script[type="application/ld+json"]'
+    );
+    const raw = script?.innerHTML || "";
+
+    expect(raw).not.toContain("</script>");
+    // Escaped form must round-trip back to the original string
+    const jsonLd = JSON.parse(raw);
+    expect(jsonLd.headline).toBe(
+      'Bad title</script><script>alert("xss")</script>'
+    );
+  });
 });
