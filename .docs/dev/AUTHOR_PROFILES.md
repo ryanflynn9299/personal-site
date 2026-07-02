@@ -359,7 +359,7 @@ Unknown authors: name + auto accent + `✍️` emoji; omit bio and recent posts 
 | Theme accents         | `constants/theme.ts`                   |
 | Blog post page        | `app/(portfolio)/blog/[slug]/page.tsx` |
 | Directus collections  | `.docs/DIRECTUS.md`                    |
-| Service layer pattern | `.docs/dev/DIRECTUS_SERVICE_LAYER.md`  |
+| Service layer pattern | `.docs/DIRECTUS.md`                    |
 | TODO tracking         | `.docs/dev/TODO.md`                    |
 
 ---

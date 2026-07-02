@@ -83,7 +83,7 @@ rejected — it leaves the login surface reachable by the public internet._
 The Next.js dashboard is separate from:
 
 - **Directus admin** (`:8055`) — CMS; lock behind VPN/proxy
-- **Matomo admin** — analytics; lock behind VPN/proxy (see [MATOMO_LAUNCH_CHECKLIST.md](./MATOMO_LAUNCH_CHECKLIST.md))
+- **Matomo admin** — analytics; lock behind VPN/proxy (see [ANALYTICS.md](../ANALYTICS.md#launch-checklist))
 
 ## Related Files
 

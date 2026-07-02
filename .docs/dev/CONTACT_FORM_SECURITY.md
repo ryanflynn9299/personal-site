@@ -48,7 +48,7 @@ Without these headers, rate limiting falls back to `"unknown"` and rejects submi
 
 - [ ] Redis-backed rate limiting for multi-instance deployments
 - [ ] reCAPTCHA v3 if honeypot + rate limit prove insufficient
-- [ ] Real SMTP delivery (see `.docs/dev/SMTP_LAUNCH_CHECKLIST.md`)
+- [ ] Real SMTP delivery (see [EMAIL.md](./EMAIL.md))
 
 ## Testing
 
