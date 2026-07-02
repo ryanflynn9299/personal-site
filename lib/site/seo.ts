@@ -13,7 +13,7 @@ export const ENABLE_BLOG_SEO = false; // Set to true when blog has meaningful co
 
 // Site metadata
 export const SITE_NAME = "Ryan Flynn";
-export const SITE_VERSION = "1.1.0";
+export { SITE_VERSION } from "./version";
 export const SITE_DESCRIPTION =
   "The personal portfolio and blog of Ryan Flynn, a passionate software engineer and tech enthusiast.";
 export const SITE_AUTHOR = "Ryan Flynn";

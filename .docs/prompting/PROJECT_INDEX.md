@@ -38,11 +38,11 @@ This document serves as the definitive map for identifying the core configuratio
 
 ## 2. Site Metadata & Brand
 
-| System             | Source of Truth   | Description                                                 |
-| :----------------- | :---------------- | :---------------------------------------------------------- |
-| **Site Constants** | `lib/site/seo.ts` | Site name, version, SEO defaults, and primary social links. |
-| **Version Number** | `lib/site/seo.ts` | The `SITE_VERSION` constant (synced with `package.json`).   |
-| **Navigation Map** | `app/sitemap.ts`  | Logical map of all searchable/public routes.                |
+| System             | Source of Truth                        | Description                                        |
+| :----------------- | :------------------------------------- | :------------------------------------------------- |
+| **Site Constants** | `lib/site/seo.ts`                      | Site name, SEO defaults, and primary social links. |
+| **Version Number** | `package.json` → `lib/site/version.ts` | Canonical semver; see `.docs/dev/VERSIONING.md`.   |
+| **Navigation Map** | `app/sitemap.ts`                       | Logical map of all searchable/public routes.       |
 
 ## 3. Feature Management & Tooling
 
@@ -66,6 +66,7 @@ This document serves as the definitive map for identifying the core configuratio
 | :-------------------- | :------------------------------------------ |
 | **AI policy**         | `.docs/prompting/AI_GUARDRAILS.md`          |
 | **Release Readiness** | `.docs/dev/RELEASE_READINESS.md`            |
+| **Versioning**        | `.docs/dev/VERSIONING.md`                   |
 | **Architecture**      | `.docs/ARCHITECTURE.md`                     |
 | **Testing Strategy**  | `.docs/TESTING_STRATEGY.md`                 |
 | **Dev Guidelines**    | `.docs/prompting/DEVELOPMENT_GUIDELINES.md` |

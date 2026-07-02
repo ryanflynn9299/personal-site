@@ -21,7 +21,7 @@ _Start here — see also [RELEASE_READINESS.md](./RELEASE_READINESS.md) for the 
 
 - [ ] Add professional headshot/profile images
 - [ ] Deep dive on Matomo (analytics tuning beyond install checklist)
-- [ ] Versioning system/methodology
+- [x] Versioning system/methodology — see [VERSIONING.md](./VERSIONING.md)
 - [ ] See my latest LinkedIn posts??
 
 ### Release blockers — done
