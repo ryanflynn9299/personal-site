@@ -16,7 +16,7 @@ Single source of truth for SEO/metadata state and remaining work. (This doc abso
 - **Sitemap** — `app/sitemap.ts`: static routes always; blog posts only when `ENABLE_BLOG_SEO` is true.
 - **Robots** — `app/robots.ts`: disallows `/admin/`, `/api/`, and preview routes (`/quotes/`, `/projects-cabinet/`); references the sitemap.
 - **Canonical URLs** on all pages; `lang="en"` on `<html>`; `app/favicon.ico` + `public/apple-touch-icon.svg` wired through `defaultMetadata.icons`.
-- **Open Graph + Twitter Card** structures complete (`summary_large_image`).
+- **Open Graph + Twitter Card** — metadata includes images only when a page supplies an explicit image (post feature image or `generatePageMetadata({ image })`). No site-wide default OG image; pages without an image use Twitter `summary` (no broken image URLs).
 - **JSON-LD** — `components/common/JsonLd.tsx` renders `BlogPosting` structured data on blog posts, gated by `ENABLE_BLOG_SEO`; `<` escaped as `\u003c` per [SECURITY.md](../SECURITY.md) §3.
 
 ### Blog SEO flag
@@ -29,7 +29,6 @@ Single source of truth for SEO/metadata state and remaining work. (This doc abso
 
 ### Critical (before SEO matters in production)
 
-- [ ] **Create `public/images/og-default.png`** (1200×630) — the path is already configured as `DEFAULT_OG_IMAGE` but **the file does not exist**, so social shares currently have a broken image
 - [ ] **Replace placeholder social profiles** in `lib/site/seo.ts` → `SOCIAL_PROFILES` (currently bare `https://twitter.com`, `https://github.com`, `https://linkedin.com`) — also fixes the Twitter `creator` field
 - [ ] **Set `NEXT_PUBLIC_SITE_URL`** in the production `.env` (falls back to the default otherwise)
 

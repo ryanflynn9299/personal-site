@@ -1,9 +1,4 @@
-import {
-  generatePageMetadata,
-  SITE_NAME,
-  DEFAULT_OG_IMAGE,
-  SITE_URL,
-} from "../../lib/site/seo";
+import { generatePageMetadata, SITE_NAME, SITE_URL } from "../../lib/site/seo";
 import { describe, it, expect } from "vitest";
 
 describe("SEO Utilities", () => {
@@ -25,12 +20,12 @@ describe("SEO Utilities", () => {
       expect(result.openGraph.description).toBe("Test Description");
       expect(result.openGraph.url).toBe(SITE_URL + "/test-path");
       expect(result.openGraph.siteName).toBe(SITE_NAME);
-      expect(result.openGraph.images[0].url).toBe(
+      expect(result.openGraph.images?.[0].url).toBe(
         "https://example.com/image.jpg"
       );
-      expect(result.openGraph.images[0].width).toBe(1200);
-      expect(result.openGraph.images[0].height).toBe(630);
-      expect(result.openGraph.images[0].alt).toBe("Test Page");
+      expect(result.openGraph.images?.[0].width).toBe(1200);
+      expect(result.openGraph.images?.[0].height).toBe(630);
+      expect(result.openGraph.images?.[0].alt).toBe("Test Page");
       expect(result.openGraph.type).toBe("article");
       expect(result.openGraph.publishedTime).toBe("2024-01-01T00:00:00Z");
       expect(result.openGraph.modifiedTime).toBe("2024-01-02T00:00:00Z");
@@ -38,12 +33,12 @@ describe("SEO Utilities", () => {
       expect(result.twitter.card).toBe("summary_large_image");
       expect(result.twitter.title).toBe("Test Page");
       expect(result.twitter.description).toBe("Test Description");
-      expect(result.twitter.images[0]).toBe("https://example.com/image.jpg");
+      expect(result.twitter.images?.[0]).toBe("https://example.com/image.jpg");
 
       expect(result.alternates.canonical).toBe(SITE_URL + "/test-path");
     });
 
-    it("should generate correct metadata with default fallbacks", () => {
+    it("omits social images when no image is provided", () => {
       const result = generatePageMetadata({
         title: "Default Page",
         description: "Default Description",
@@ -51,8 +46,9 @@ describe("SEO Utilities", () => {
       });
 
       expect(result.openGraph.type).toBe("website");
-      expect(result.openGraph.images[0].url).toBe(DEFAULT_OG_IMAGE);
-      expect(result.twitter.images[0]).toBe(DEFAULT_OG_IMAGE);
+      expect(result.openGraph.images).toBeUndefined();
+      expect(result.twitter.card).toBe("summary");
+      expect(result.twitter.images).toBeUndefined();
       expect(result.openGraph.publishedTime).toBeUndefined();
       expect(result.openGraph.modifiedTime).toBeUndefined();
     });

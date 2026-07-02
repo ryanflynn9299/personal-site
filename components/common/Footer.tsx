@@ -147,7 +147,7 @@ export function Footer() {
                   <li key={link.name}>
                     <a
                       href={link.href}
-                      className="text-slate-400 hover:text-sky-300"
+                      className="rounded text-slate-400 hover:text-sky-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
                     >
                       <span className="sr-only">{link.name}</span>
                       <link.icon className="h-6 w-6" />

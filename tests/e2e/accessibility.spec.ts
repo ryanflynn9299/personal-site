@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 
 test.describe("Accessibility", () => {
-  const pages = ["/", "/about", "/blog", "/contact"];
+  const pages = ["/", "/about", "/blog", "/contact", "/vitae", "/policies"];
 
   for (const pagePath of pages) {
     test(`${pagePath} has proper heading hierarchy`, async ({ page }) => {

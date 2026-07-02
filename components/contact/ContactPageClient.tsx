@@ -137,7 +137,7 @@ export function ContactPageClient({
           </div>
           <div className="space-y-4">
             <a
-              href="mailto:ryan.flyn001@gmail.com"
+              href="mailto:ryan.flynn001@gmail.com"
               className="group flex items-center gap-4 rounded-lg bg-slate-800 p-4 transition-colors hover:bg-slate-700"
             >
               <Mail className="h-8 w-8 text-sky-300" />

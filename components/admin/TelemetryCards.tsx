@@ -1,46 +1,52 @@
 "use client";
 
-import { LucideIcon, Server, Globe, Database, BarChart3 } from "lucide-react";
+import { Globe, Database, BarChart3, Server } from "lucide-react";
+
+const TELEMETRY_PLACEHOLDERS = [
+  {
+    title: "Site Traffic",
+    value: "—",
+    unit: "Not connected",
+    trend: "Matomo pending",
+    icon: Globe,
+    color: "cyan" as const,
+  },
+  {
+    title: "Core Database",
+    value: "—",
+    unit: "Not connected",
+    trend: "Directus pending",
+    icon: Database,
+    color: "emerald" as const,
+  },
+  {
+    title: "Analytics Node",
+    value: "—",
+    unit: "Not connected",
+    trend: "Awaiting setup",
+    icon: BarChart3,
+    color: "purple" as const,
+  },
+  {
+    title: "Server Latency",
+    value: "—",
+    unit: "Not connected",
+    trend: "No live probe",
+    icon: Server,
+    color: "amber" as const,
+  },
+];
 
 /**
  * Telemetry Cards Component
- * Shows high-level site stats and status.
+ * Honest placeholders until Matomo / live metrics are wired.
  */
 export function TelemetryCards() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <TelemetryCard
-        title="Site Traffic"
-        value="4.2k"
-        unit="Hits / 24h"
-        trend="+12%"
-        icon={Globe}
-        color="cyan"
-      />
-      <TelemetryCard
-        title="Core Database"
-        value="98.4%"
-        unit="Uptime"
-        trend="Nominal"
-        icon={Database}
-        color="emerald"
-      />
-      <TelemetryCard
-        title="Analytics Node"
-        value="Active"
-        unit="Telemetry"
-        trend="Synced"
-        icon={BarChart3}
-        color="purple"
-      />
-      <TelemetryCard
-        title="Server Latency"
-        value="24ms"
-        unit="Avg RTT"
-        trend="-2ms"
-        icon={Server}
-        color="amber"
-      />
+      {TELEMETRY_PLACEHOLDERS.map((card) => (
+        <TelemetryCard key={card.title} {...card} />
+      ))}
     </div>
   );
 }
@@ -50,7 +56,7 @@ interface TelemetryCardProps {
   value: string;
   unit: string;
   trend: string;
-  icon: LucideIcon;
+  icon: typeof Globe;
   color: "cyan" | "emerald" | "purple" | "amber";
 }
 
@@ -82,19 +88,15 @@ function TelemetryCard({
 
       <div className="relative space-y-1">
         <div className="flex items-baseline gap-2">
-          <span className="font-heading text-3xl font-bold tracking-tight text-white">
+          <span className="font-heading text-3xl font-bold tracking-tight text-slate-400">
             {value}
           </span>
-          <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+          <span className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">
             {unit}
           </span>
         </div>
-        <div
-          className={`text-[10px] font-bold uppercase flex items-center gap-1.5 ${trend.includes("+") ? "text-emerald-500" : trend === "Nominal" ? "text-sky-400" : "text-slate-500"}`}
-        >
-          <div
-            className={`w-1.5 h-1.5 rounded-full ${trend.includes("+") ? "bg-emerald-500 animate-pulse" : trend === "Nominal" ? "bg-sky-400" : "bg-slate-500"} `}
-          />
+        <div className="text-[10px] font-bold uppercase flex items-center gap-1.5 text-slate-600">
+          <div className="w-1.5 h-1.5 rounded-full bg-slate-600" />
           {trend}
         </div>
       </div>

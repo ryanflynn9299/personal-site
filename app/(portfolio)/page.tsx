@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { HeroSection } from "@/components/sections/HeroSection";
 import { FinalCTA } from "@/components/sections/FinalCTA";
 import { ActiveHomeSections } from "@/components/sections/ActiveHomeSections";
 import { generatePageMetadata } from "@/lib/site/seo";
+import { BlogHighlightSkeleton } from "@/components/skeletons/BlogHighlightSkeleton";
 
 // Import all sections to pass them as Server Components
 import { AboutMe } from "@/components/sections/AboutMe";
@@ -32,7 +34,11 @@ export default async function HomePage() {
         projectCarousel={<ProjectCarousel />}
         standardTechStack={<TechStack3 />}
         animatedTechStack={<TechStack4 />}
-        blogHighlight={<BlogHighlight />}
+        blogHighlight={
+          <Suspense fallback={<BlogHighlightSkeleton />}>
+            <BlogHighlight />
+          </Suspense>
+        }
       />
 
       <FinalCTA />

@@ -337,23 +337,17 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
 // ---------------------------------------------------------------------------
 
 /**
- * Resolves the chronological previous and next posts relative to a given post.
- * Used for blog post navigation (prev/next arrows).
- *
- * @param currentPostDate - ISO date string of the current post
- * @param currentPostId - Unique ID (used for tie-breaking same-date posts)
+ * Resolves chronological prev/next posts from an already-fetched post list.
  */
-export async function getAdjacentPosts(
+export function resolveAdjacentPosts(
+  posts: Post[],
   currentPostDate: string,
   currentPostId: string
-): Promise<{ prev: Post | null; next: Post | null }> {
-  const { status, posts } = await getPublishedPosts();
-
-  if (status === "error" || !posts || posts.length === 0) {
+): { prev: Post | null; next: Post | null } {
+  if (!posts || posts.length === 0) {
     return { prev: null, next: null };
   }
 
-  // Sort descending by date, then by ID for tie-breaking
   const sortedPosts = [...posts].sort((a, b) => {
     const timeDiff =
       new Date(b.publish_date).getTime() - new Date(a.publish_date).getTime();
@@ -368,9 +362,6 @@ export async function getAdjacentPosts(
     return { prev: null, next: null };
   }
 
-  // Array is descending (newest first):
-  // - "previous" (older) = next index in array
-  // - "next" (newer) = previous index in array
   const prevPost =
     currentIndex < sortedPosts.length - 1
       ? sortedPosts[currentIndex + 1]
@@ -378,6 +369,22 @@ export async function getAdjacentPosts(
   const nextPost = currentIndex > 0 ? sortedPosts[currentIndex - 1] : null;
 
   return { prev: prevPost, next: nextPost };
+}
+
+/**
+ * Fetches published posts and resolves prev/next for a given post.
+ */
+export async function getAdjacentPosts(
+  currentPostDate: string,
+  currentPostId: string
+): Promise<{ prev: Post | null; next: Post | null }> {
+  const { status, posts } = await getPublishedPosts();
+
+  if (status === "error" || !posts || posts.length === 0) {
+    return { prev: null, next: null };
+  }
+
+  return resolveAdjacentPosts(posts, currentPostDate, currentPostId);
 }
 
 // ---------------------------------------------------------------------------

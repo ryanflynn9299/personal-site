@@ -17,7 +17,9 @@ export { SITE_VERSION } from "./version";
 export const SITE_DESCRIPTION =
   "The personal portfolio and blog of Ryan Flynn, a passionate software engineer and tech enthusiast.";
 export const SITE_AUTHOR = "Ryan Flynn";
-export const DEFAULT_OG_IMAGE = `${SITE_URL}/images/og-default.png`; // You may want to create this
+
+/** Site identity asset for JSON-LD publisher logo (no dedicated OG image). */
+export const SITE_IDENTITY_IMAGE = `${SITE_URL}/apple-touch-icon.svg`;
 
 // Social media profiles (update these with your actual profiles)
 export const SOCIAL_PROFILES = {
@@ -25,6 +27,33 @@ export const SOCIAL_PROFILES = {
   github: "https://github.com", // Update with your GitHub username
   linkedin: "https://linkedin.com", // Update with your LinkedIn profile
 };
+
+function buildSocialMetadata(image: string | undefined, alt: string) {
+  if (!image) {
+    return {
+      twitter: {
+        card: "summary" as const,
+      },
+    };
+  }
+
+  return {
+    openGraph: {
+      images: [
+        {
+          url: image,
+          width: 1200,
+          height: 630,
+          alt,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image" as const,
+      images: [image],
+    },
+  };
+}
 
 // Default metadata for pages
 export const defaultMetadata = {
@@ -46,10 +75,7 @@ export const defaultMetadata = {
   authors: [{ name: SITE_AUTHOR }],
   creator: SITE_AUTHOR,
   publisher: SITE_AUTHOR,
-  applicationName: SITE_NAME, // App name for PWA and mobile
-  // Note: viewport, themeColor, and colorScheme are now exported separately
-  // via the viewport export in app/layout.tsx
-  // Format detection - disable automatic detection of phone numbers, addresses, etc.
+  applicationName: SITE_NAME,
   formatDetection: {
     telephone: false,
     date: false,
@@ -57,8 +83,6 @@ export const defaultMetadata = {
     email: false,
     url: false,
   },
-  // Icons configuration - Next.js App Router will use app/icon.png and app/apple-icon.png
-  // These should be created as files, but we can also reference public icons
   icons: {
     icon: [
       { url: "/favicon.ico", sizes: "any" },
@@ -69,8 +93,6 @@ export const defaultMetadata = {
     ],
     shortcut: "/favicon.ico",
   },
-  // Manifest for PWA (if you create app/manifest.ts)
-  // manifest: "/manifest.json", // Will be created as app/manifest.ts
   openGraph: {
     type: "website",
     locale: "en_US",
@@ -78,20 +100,11 @@ export const defaultMetadata = {
     siteName: SITE_NAME,
     title: `${SITE_NAME} | Software Engineer & Tech Enthusiast`,
     description: SITE_DESCRIPTION,
-    images: [
-      {
-        url: DEFAULT_OG_IMAGE,
-        width: 1200,
-        height: 630,
-        alt: SITE_NAME,
-      },
-    ],
   },
   twitter: {
-    card: "summary_large_image",
+    card: "summary" as const,
     title: `${SITE_NAME} | Software Engineer & Tech Enthusiast`,
     description: SITE_DESCRIPTION,
-    images: [DEFAULT_OG_IMAGE],
     creator: SOCIAL_PROFILES.twitter,
   },
   robots: {
@@ -108,14 +121,14 @@ export const defaultMetadata = {
   alternates: {
     canonical: SITE_URL,
   },
-  // Referrer policy for privacy
   referrer: "origin-when-cross-origin" as const,
-  // Category for content classification
   category: "portfolio",
 };
 
 /**
- * Helper function to generate page-specific metadata
+ * Helper function to generate page-specific metadata.
+ * Social images are included only when an explicit `image` is provided —
+ * there is no site-wide default OG image.
  */
 export function generatePageMetadata({
   title,
@@ -135,7 +148,7 @@ export function generatePageMetadata({
   modifiedTime?: string;
 }) {
   const url = `${SITE_URL}${path}`;
-  const ogImage = image || DEFAULT_OG_IMAGE;
+  const social = buildSocialMetadata(image, title);
 
   return {
     title,
@@ -145,23 +158,15 @@ export function generatePageMetadata({
       description,
       url,
       siteName: SITE_NAME,
-      images: [
-        {
-          url: ogImage,
-          width: 1200,
-          height: 630,
-          alt: title,
-        },
-      ],
       type,
       ...(publishedTime && { publishedTime }),
       ...(modifiedTime && { modifiedTime }),
+      ...social.openGraph,
     },
     twitter: {
-      card: "summary_large_image",
       title,
       description,
-      images: [ogImage],
+      ...social.twitter,
     },
     alternates: {
       canonical: url,

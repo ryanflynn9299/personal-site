@@ -1,7 +1,7 @@
 import {
   getPostBySlug,
   getPublishedPosts,
-  getAdjacentPosts,
+  resolveAdjacentPosts,
   isDirectusConfigured,
 } from "@/lib/services/directus";
 import { notFound } from "next/navigation";
@@ -82,7 +82,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       }),
     },
     twitter: {
-      card: "summary_large_image",
+      card: imageUrl ? "summary_large_image" : "summary",
       title: post.title,
       description: post.summary || post.title,
       ...(imageUrl && { images: [imageUrl] }),
@@ -121,7 +121,11 @@ export default async function BlogPostPage({ params }: Props) {
     );
   }
 
-  const post = await getPostBySlug((await params).slug);
+  const slug = (await params).slug;
+  const [post, postsResult] = await Promise.all([
+    getPostBySlug(slug),
+    getPublishedPosts(),
+  ]);
 
   if (!post) {
     notFound();
@@ -144,8 +148,12 @@ export default async function BlogPostPage({ params }: Props) {
       ? `${config.directus.publicUrl}/assets/${post.feature_image.id}`
       : null;
 
-  const { prev, next } = await getAdjacentPosts(post.publish_date, post.id);
-  const { posts: allPosts } = await getPublishedPosts();
+  const { posts: allPosts } = postsResult;
+  const { prev, next } = resolveAdjacentPosts(
+    allPosts,
+    post.publish_date,
+    post.id
+  );
   const resolvedAuthor = resolveAuthor(post.author);
   const authorContext = buildAuthorContext(allPosts, resolvedAuthor, {
     currentPostId: post.id,

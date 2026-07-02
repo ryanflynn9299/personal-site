@@ -41,15 +41,17 @@ export function EmailStatusIndicatorWithStatus({
 
   return (
     <div className="relative inline-flex items-center">
-      <div
-        className="flex items-center justify-center cursor-help"
-        role="status"
+      <button
+        type="button"
+        className="flex items-center justify-center cursor-help rounded bg-transparent p-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
         aria-label={tooltipText}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
+        onFocus={() => setIsHovered(true)}
+        onBlur={() => setIsHovered(false)}
       >
-        <AlertCircle className="h-4 w-4 text-amber-400" />
-      </div>
+        <AlertCircle className="h-4 w-4 text-amber-400" aria-hidden="true" />
+      </button>
 
       {/* Tooltip */}
       {isHovered && (
