@@ -62,3 +62,6 @@ next-env.d.ts
 
 # npm (project uses pnpm)
 package-lock.json
+
+# playwright blob reports (CI reporter artifacts)
+/blob-report/
