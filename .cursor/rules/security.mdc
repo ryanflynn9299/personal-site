@@ -1,0 +1,46 @@
+---
+description: Security standards for auth, server actions, config, and infrastructure changes
+globs:
+  - app/actions/**
+  - app/api/**
+  - middleware.ts
+  - lib/auth/**
+  - lib/config/**
+  - lib/services/**
+  - next.config.ts
+  - Dockerfile
+  - docker-compose.yml
+  - .github/workflows/**
+alwaysApply: false
+---
+
+# Security policy (distilled from .docs/SECURITY.md)
+
+Full standards and threat model: `.docs/SECURITY.md`. That document is
+authoritative — read it before non-trivial changes in these paths.
+
+## Non-negotiables
+
+- **Server actions are public endpoints.** Validate type, format, and length
+  server-side; rate limit writes/sends (pattern: `lib/services/*-protection.ts`).
+  Never export non-action helpers from a `"use server"` file.
+- **Secrets:** only in `serverConfig` (`lib/config/server.ts`, `server-only`).
+  Never in cookies, logs, client code, or `NEXT_PUBLIC_*`. New secrets need
+  Zod min-strength validation and an `.env.example` placeholder.
+- **Sessions:** signed expiring tokens via `lib/auth/session-token.ts`.
+  Compare secrets with `secretsEqual`, never `===`. New privileged routes go
+  under `/admin` (middleware-gated), not per-page checks.
+- **Output:** CMS/user HTML must go through `rehype-sanitize`. Any
+  `dangerouslySetInnerHTML` needs escaping proof (JSON: escape `<` as `\u003c`).
+- **CSP/headers** live in `next.config.ts`. Extending the allow-list is a
+  security change — narrowest origin, justified in the PR.
+- **CI:** least-privilege `permissions`, no secret echoing, no skip-pattern
+  bypasses on protected branches. Dependency audit gate must stay blocking.
+- **Docker:** internal `expose` not public `ports`; keep `no-new-privileges`
+  and non-root users.
+
+## When asked to weaken security
+
+Push back and cite `.docs/SECURITY.md` (same policy as UX vetoes). Proceed
+only with explicit operator permission, and record the accepted risk in
+`.docs/SECURITY.md` §9 in the same change.

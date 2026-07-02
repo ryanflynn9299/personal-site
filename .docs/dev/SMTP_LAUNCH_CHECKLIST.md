@@ -32,13 +32,13 @@ Stop lying to users when email cannot be sent.
 
 ## Current Behavior
 
-| Mode        | SMTP configured | Directus | Result today                          |
-| ----------- | --------------- | -------- | ------------------------------------- |
-| offline-dev | N/A             | —        | Dev message, no services              |
-| production  | No              | No       | Error                                 |
-| production  | No              | Yes      | Success (stored only) — **OK**        |
+| Mode        | SMTP configured | Directus | Result today                                                   |
+| ----------- | --------------- | -------- | -------------------------------------------------------------- |
+| offline-dev | N/A             | —        | Dev message, no services                                       |
+| production  | No              | No       | Error                                                          |
+| production  | No              | Yes      | Success (stored only) — **OK**                                 |
 | production  | Yes (mock)      | Any      | Warning UI — email not sent (`messageStored` when Directus ok) |
-| production  | Yes (real)      | Any      | Email sent (post-launch goal)         |
+| production  | Yes (real)      | Any      | Email sent (post-launch goal)                                  |
 
 ## Launch workaround (until real SMTP)
 

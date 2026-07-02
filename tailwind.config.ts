@@ -82,11 +82,21 @@ const config: Config = {
       }),
       animation: {
         shimmer: "shimmer 2s linear infinite",
+        "fade-in": "fade-in 0.7s ease-out both",
+        "fade-in-scale": "fade-in-scale 0.5s ease-out both",
       },
       keyframes: {
         shimmer: {
           "0%": { transform: "translateX(-100%)" },
           "100%": { transform: "translateX(100%)" },
+        },
+        "fade-in": {
+          from: { opacity: "0" },
+          to: { opacity: "1" },
+        },
+        "fade-in-scale": {
+          from: { opacity: "0", transform: "scale(0.9)" },
+          to: { opacity: "1", transform: "scale(1)" },
         },
       },
     },

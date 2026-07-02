@@ -4,21 +4,9 @@ import * as emailService from "@/lib/services/email-service";
 import * as directusService from "@/lib/services/directus";
 import { resetContactRateLimitForTests } from "@/lib/services/contact-protection";
 
-// Mock logger to avoid console output during tests
-vi.mock("@/lib/dev-tooling/logger", () => {
-  const mockLogger = {
-    info: vi.fn(),
-    warn: vi.fn(),
-    error: vi.fn(),
-    debug: vi.fn(),
-  };
-  return {
-    createLogger: vi.fn(() => mockLogger),
-    log: mockLogger,
-    prodLog: mockLogger,
-    devLog: mockLogger,
-    default: mockLogger,
-  };
+vi.mock("@/lib/dev-tooling/logger", async () => {
+  const { loggerModuleMock } = await import("../mocks/logger");
+  return loggerModuleMock;
 });
 
 // Mock the email service module to avoid delays in tests
@@ -35,56 +23,8 @@ vi.mock("@/lib/services/email-service", () => ({
 
 // Mock the config module to allow it to be dynamic for tests
 vi.mock("@/lib/config", async () => {
-  const actual =
-    await vi.importActual<typeof import("@/lib/config")>("@/lib/config");
-  return {
-    ...actual,
-    config: {
-      ...actual.config,
-      get runtimeMode() {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        return (process.env.RUNTIME_MODE as any) || actual.config.runtimeMode;
-      },
-    },
-    runtime: {
-      get mode() {
-        return process.env.RUNTIME_MODE || "offline-dev";
-      },
-      get isProduction() {
-        return process.env.RUNTIME_MODE === "production";
-      },
-      get isDevelopment() {
-        return (
-          process.env.RUNTIME_MODE === "live-dev" ||
-          process.env.RUNTIME_MODE === "offline-dev"
-        );
-      },
-      get isLiveDev() {
-        return process.env.RUNTIME_MODE === "live-dev";
-      },
-      get isOfflineDev() {
-        return process.env.RUNTIME_MODE === "offline-dev";
-      },
-      get isTest() {
-        return process.env.RUNTIME_MODE === "test";
-      },
-      get connectToServices() {
-        return (
-          process.env.RUNTIME_MODE === "production" ||
-          process.env.RUNTIME_MODE === "live-dev"
-        );
-      },
-      get treatServiceErrorsAsReal() {
-        return (
-          process.env.RUNTIME_MODE === "production" ||
-          process.env.RUNTIME_MODE === "live-dev"
-        );
-      },
-      get previewFeatures() {
-        return process.env.ENABLE_PREVIEW_FEATURES === "true";
-      },
-    },
-  };
+  const { createDynamicConfigMock } = await import("../mocks/config");
+  return createDynamicConfigMock();
 });
 
 // Mock the delay function to ensure no delays in tests
@@ -92,8 +32,8 @@ vi.mock("@/lib/dev-tooling/delay", () => ({
   delay: vi.fn().mockResolvedValue(undefined),
 }));
 
-vi.mock("@/lib/services/contact-client-ip", () => ({
-  getContactClientIp: vi.fn().mockResolvedValue("127.0.0.1"),
+vi.mock("@/lib/services/client-ip", () => ({
+  getClientIp: vi.fn().mockResolvedValue("127.0.0.1"),
 }));
 
 vi.mock("@/lib/services/directus", () => ({
@@ -131,6 +71,18 @@ describe("submitContactForm", () => {
 
     expect(result.success).toBe(false);
     expect(result.error).toBe("All fields are required");
+  });
+
+  it("rejects oversized input", async () => {
+    const formData = new FormData();
+    formData.set("name", "John Doe");
+    formData.set("email", "test@example.com");
+    formData.set("message", "a".repeat(5001));
+
+    const result = await submitContactForm(formData);
+
+    expect(result.success).toBe(false);
+    expect(result.error).toContain("too long");
   });
 
   it("validates email format", async () => {

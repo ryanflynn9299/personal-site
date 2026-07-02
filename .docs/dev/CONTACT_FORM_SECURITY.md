@@ -16,12 +16,14 @@ The contact form uses server-side protections against spam and abuse. Client-sid
 - **Limit:** 5 submissions per IP per 15 minutes
 - **Scope:** In-memory per server process (same pattern as `/api/health`)
 - **Response:** `"Too many messages sent recently. Please try again later."`
-- **IP resolution:** `x-forwarded-for` (first hop) or `x-real-ip` via `lib/services/contact-client-ip.ts`
+- **IP resolution:** `x-forwarded-for` (first hop) or `x-real-ip` via `lib/services/client-ip.ts`
 - **Implementation:** `lib/services/contact-protection.ts` → `checkContactRateLimit()`
 
 ### 3. Server-side validation
 
-- Required fields, email format check
+- Required fields, email format check, trimmed inputs
+- Length limits enforced server-side (name 100, email 254, message 5000 —
+  constants in `lib/constants/contact.ts`, mirrored as `maxLength` in the UI)
 - HTML escaping for email body content (`escapeHtml` in `app/actions/contact.ts`)
 
 ### 4. Mode-aware behavior
@@ -62,4 +64,5 @@ pnpm run test tests/integration/contact-action.test.ts
 | `app/actions/contact.ts`                   | Server action orchestration      |
 | `components/contact/ContactPageClient.tsx` | Honeypot markup                  |
 | `lib/services/contact-protection.ts`       | Honeypot + rate limit logic      |
-| `lib/services/contact-client-ip.ts`        | IP extraction for server actions |
+| `lib/services/client-ip.ts`                | IP extraction for server actions |
+| `lib/constants/contact.ts`                 | Honeypot field + length limits   |

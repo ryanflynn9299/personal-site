@@ -32,6 +32,8 @@ services:
         - NEXT_PUBLIC_MATOMO_URL=${NEXT_PUBLIC_MATOMO_URL}
         - NEXT_PUBLIC_MATOMO_SITE_ID=${NEXT_PUBLIC_MATOMO_SITE_ID}
     restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
     expose:
       # Expose port 3000 internally to the backend-net network
       - "3000"
@@ -81,9 +83,13 @@ services:
 
   # 2. Backend Service (Directus)
   ps-directus:
-    image: directus/directus:latest # You could pin this to a specific version
+    # SECURITY TODO: pin to a specific version (e.g. directus/directus:11.x.y)
+    # so upgrades are deliberate and reproducible — see .docs/SECURITY.md
+    image: directus/directus:latest
     container_name: ps-directus
     restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
     expose:
       # Expose port 8055 internally to the backend-net network
       - "8055"
@@ -105,8 +111,13 @@ services:
       - PUBLIC_URL=${DIRECTUS_PUBLIC_URL}
       # --- Added from old file for production ---
       - EXTENSIONS_PATH=/directus/extensions
-      - CORS_ENABLED=true
-      - CORS_ORIGIN=true # Allows origins based on PUBLIC_URL
+      # CORS is disabled by default: the frontend talks to Directus
+      # server-side only, and assets are proxied through next/image.
+      # If a browser client ever needs the Directus API directly, set
+      # DIRECTUS_CORS_ENABLED=true — CORS_ORIGIN is then locked to the
+      # site origin instead of reflecting any origin.
+      - CORS_ENABLED=${DIRECTUS_CORS_ENABLED:-false}
+      - CORS_ORIGIN=${NEXT_PUBLIC_SITE_URL}
       - CORS_ALLOWED_HEADERS=Content-Type,Authorization
     networks:
       - backend-net
@@ -130,6 +141,8 @@ services:
     image: postgres:15-alpine # Using lightweight alpine image
     container_name: ps-database
     restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
     volumes:
       - db-data:/var/lib/postgresql/data
       # --- ADDED THIS LINE ---
@@ -158,7 +171,7 @@ services:
   # ps-sync:
   #   container_name: ps-sync
   #   build:
-  #     context: ./sync-service
+  #     context: ./infrastructure/sync-service
   #     dockerfile: Dockerfile
   #   restart: unless-stopped
   #   # NO depends_on - this service runs independently
@@ -199,12 +212,14 @@ services:
     image: matomo:latest
     container_name: ps-matomo
     restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
     expose:
       - "8181" # Matomo runs on port 8181 internally
     volumes:
       - matomo-app-data:/var/www/html
       # Mount custom Apache ports config to change Listen from 80 to 8181
-      - ./matomo-config/apache-port-8181.conf:/etc/apache2/ports.conf:ro
+      - ./infrastructure/matomo-config/apache-port-8181.conf:/etc/apache2/ports.conf:ro
     environment:
       - MATOMO_DATABASE_ADAPTER=mysql
       - MATOMO_DATABASE_HOST=ps-matomo-db
@@ -229,6 +244,8 @@ services:
     image: mariadb:10
     container_name: ps-matomo-db
     restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
     volumes:
       - matomo-db-data:/var/lib/mysql
     environment:

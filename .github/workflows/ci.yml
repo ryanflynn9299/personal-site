@@ -13,6 +13,10 @@ on:
         default: true
         type: boolean
 
+# Least-privilege token for all jobs (no job needs write access)
+permissions:
+  contents: read
+
 env:
   # Site URL - Required for Next.js build and SEO
   NEXT_PUBLIC_SITE_URL: "https://www.ryanflynn.org"
@@ -73,7 +77,12 @@ jobs:
           COMMIT_MSG_UPPER=$(echo "$COMMIT_MSG" | tr '[:lower:]' '[:upper:]')
 
           # Check for skip patterns
-          if echo "$COMMIT_MSG_UPPER" | grep -qE '\[SKIP CI\]|\[CI SKIP\]'; then
+          # SECURITY: skip patterns are ignored on protected branches so that
+          # nothing can reach main/master without the full pipeline running.
+          if [ "$BRANCH" == "main" ] || [ "$BRANCH" == "master" ]; then
+            echo "skip-all=false" >> $GITHUB_OUTPUT
+            echo "✅ Protected branch: skip patterns are ignored"
+          elif echo "$COMMIT_MSG_UPPER" | grep -qE '\[SKIP CI\]|\[CI SKIP\]'; then
             echo "skip-all=true" >> $GITHUB_OUTPUT
             echo "⚠️ Skipping entire CI pipeline due to [skip ci] in commit message"
           else
@@ -164,6 +173,34 @@ jobs:
 
       - name: Run TypeScript type check
         run: pnpm run type-check
+
+  dependency-audit:
+    name: Dependency Audit
+    runs-on: ubuntu-latest
+    needs: check-commit-message
+    if: needs.check-commit-message.outputs.skip-all != 'true'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 10.0.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "pnpm"
+
+      # Production dependencies must have no known vulnerabilities of any
+      # severity; dev dependencies are allowed below the high threshold.
+      - name: Audit production dependencies
+        run: pnpm audit --prod
+
+      - name: Audit all dependencies (high+)
+        run: pnpm audit --audit-level=high
 
   unit-tests:
     name: Unit Tests

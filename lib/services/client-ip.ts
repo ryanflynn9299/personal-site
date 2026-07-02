@@ -2,8 +2,9 @@ import { headers } from "next/headers";
 
 /**
  * Resolves the client IP from proxy headers for server actions.
+ * Returns "unknown" when no proxy headers are present (e.g. local dev).
  */
-export async function getContactClientIp(): Promise<string> {
+export async function getClientIp(): Promise<string> {
   const headerStore = await headers();
   const forwarded = headerStore.get("x-forwarded-for");
   if (forwarded) {

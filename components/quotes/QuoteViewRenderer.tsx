@@ -1,13 +1,57 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useEffect } from "react";
 import { useQuoteViewStore } from "./store/useQuoteViewStore";
 import type { Quote } from "@/app/(portfolio)/quotes/config";
-import { MissionControlView } from "./normal/mission-control/MissionControlView";
-import { TesseractView } from "./normal/tesseract/TesseractView";
-import { ConstellationView } from "./constellation/constellation/ConstellationView";
-import { SolarSystemView } from "./constellation/solar-system/SolarSystemView";
-import { HexArrayView } from "./constellation/hex-array/HexArrayView";
+
+function ViewLoadingFallback() {
+  return (
+    <div className="flex h-64 items-center justify-center text-slate-400">
+      Loading view…
+    </div>
+  );
+}
+
+const MissionControlView = dynamic(
+  () =>
+    import("./normal/mission-control/MissionControlView").then((mod) => ({
+      default: mod.MissionControlView,
+    })),
+  { loading: () => <ViewLoadingFallback /> }
+);
+
+const TesseractView = dynamic(
+  () =>
+    import("./normal/tesseract/TesseractView").then((mod) => ({
+      default: mod.TesseractView,
+    })),
+  { loading: () => <ViewLoadingFallback />, ssr: false }
+);
+
+const ConstellationView = dynamic(
+  () =>
+    import("./constellation/constellation/ConstellationView").then((mod) => ({
+      default: mod.ConstellationView,
+    })),
+  { loading: () => <ViewLoadingFallback />, ssr: false }
+);
+
+const SolarSystemView = dynamic(
+  () =>
+    import("./constellation/solar-system/SolarSystemView").then((mod) => ({
+      default: mod.SolarSystemView,
+    })),
+  { loading: () => <ViewLoadingFallback />, ssr: false }
+);
+
+const HexArrayView = dynamic(
+  () =>
+    import("./constellation/hex-array/HexArrayView").then((mod) => ({
+      default: mod.HexArrayView,
+    })),
+  { loading: () => <ViewLoadingFallback />, ssr: false }
+);
 
 interface QuoteViewRendererProps {
   quotes: Quote[];

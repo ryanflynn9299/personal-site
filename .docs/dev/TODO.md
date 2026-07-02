@@ -12,7 +12,11 @@ _Start here — see also [RELEASE_READINESS.md](./RELEASE_READINESS.md) for the 
 
 ### Before Launch — operator (home server / deploy day)
 
-- [ ] **Configure Tailscale for admin access** (see [ADMIN_ACCESS.md](./ADMIN_ACCESS.md))
+- [ ] **DECIDED — Admin is Tailscale-only: unlist `/admin` from the public domain.**
+      Remove/never add the NPM route for `/admin`; access via Tailscale
+      IP/MagicDNS only; set `ADMIN_REQUIRE_TAILSCALE=true` as backstop;
+      verify from an off-tailnet network that the public URL dead-ends at
+      the proxy. Full checklist: [ADMIN_ACCESS.md](./ADMIN_ACCESS.md)
 - [ ] **Lock down Directus + Matomo admin** at reverse proxy (not public internet)
 - [ ] **Complete Matomo launch tasks** (see [MATOMO_LAUNCH_CHECKLIST.md](./MATOMO_LAUNCH_CHECKLIST.md))
 - [ ] **Production `.env` + Docker rebuild + smoke test** (see [RELEASE_READINESS.md](./RELEASE_READINESS.md))
@@ -39,6 +43,8 @@ _Start here — see also [RELEASE_READINESS.md](./RELEASE_READINESS.md) for the 
 
 ### First promote after launch
 
+- [ ] **Consolidate `BlogHighlight` inline `PostCard`** — `components/sections/BlogHighlight.tsx` defines a private `PostCard` that duplicates `components/blog/PostCard.tsx` (different markup, no reading time, untested). Review whether to reuse the shared component with a `variant="compact"` prop or extract a shared base. _Added during code health pass — awaiting operator review._
+- [ ] **Matomo typed `window._paq` globals** — replace `(window as any)._paq` in `components/matomo/Matomo.tsx` with a `types/matomo.d.ts` ambient declaration. See PR notes for tradeoffs before implementing.
 - [ ] **Implement real SMTP email delivery** (see [SMTP_LAUNCH_CHECKLIST.md](./SMTP_LAUNCH_CHECKLIST.md))
 - [ ] Enable SEO for blogs in `lib/site/seo.ts` (`ENABLE_BLOG_SEO`) when content is ready
 - [ ] add coverage check to main branch

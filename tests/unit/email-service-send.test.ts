@@ -1,17 +1,8 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 
-vi.mock("@/lib/dev-tooling/logger", () => {
-  const mockLogger = {
-    info: vi.fn(),
-    warn: vi.fn(),
-    error: vi.fn(),
-    debug: vi.fn(),
-  };
-  return {
-    createLogger: vi.fn(() => mockLogger),
-    log: mockLogger,
-    devLog: mockLogger,
-  };
+vi.mock("@/lib/dev-tooling/logger", async () => {
+  const { loggerModuleMock } = await import("../mocks/logger");
+  return loggerModuleMock;
 });
 
 vi.mock("@/lib/dev-tooling/delay", () => ({

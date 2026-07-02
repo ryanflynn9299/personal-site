@@ -22,9 +22,10 @@ export function Entity({
   onHoverEnd,
 }: EntityProps) {
   return (
-    <div
+    <button
+      type="button"
       key={entity.id}
-      className="absolute cursor-pointer z-20"
+      className="absolute cursor-pointer z-20 border-0 bg-transparent p-0"
       style={{
         left: position.x,
         top: position.y,
@@ -34,6 +35,7 @@ export function Entity({
       onClick={() => onClick(entity)}
       onMouseEnter={onHover}
       onMouseLeave={onHoverEnd}
+      aria-label={`View quote from ${entity.name}`}
     >
       {/* Planet visual - z-10 ensures it's above background */}
       <motion.div
@@ -47,6 +49,6 @@ export function Entity({
       >
         <EntityShape entity={entity} isSelected={isSelected} />
       </motion.div>
-    </div>
+    </button>
   );
 }

@@ -32,8 +32,8 @@ test.describe("Policies Page", () => {
   test("user can switch tabs successfully", async ({ page }) => {
     await page.goto("/policies");
 
-    // Find all tabs
-    const tabs = page.locator('nav[role="tablist"] button[role="tab"]');
+    // Find all tabs (container is a div[role="tablist"] since the jsx-a11y pass)
+    const tabs = page.locator('[role="tablist"] button[role="tab"]');
 
     await expect(tabs).toHaveCount(2);
 
@@ -61,7 +61,7 @@ test.describe("Policies Page", () => {
     await page.goto("/policies");
 
     // Focus the first tab
-    const tabs = page.locator('nav[role="tablist"] button[role="tab"]');
+    const tabs = page.locator('[role="tablist"] button[role="tab"]');
     await tabs.first().focus();
 
     // Press ArrowDown to switch tab

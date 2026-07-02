@@ -175,17 +175,17 @@ The sync service automatically pulls code from GitHub. Use these commands to con
 
 ```bash
 # Check sync status
-./sync-service/control.sh status
+./infrastructure/sync-service/control.sh status
 
 # Pause sync (with optional reason)
-./sync-service/control.sh pause "Database migration"
-./sync-service/control.sh pause "Maintenance window"
+./infrastructure/sync-service/control.sh pause "Database migration"
+./infrastructure/sync-service/control.sh pause "Maintenance window"
 
 # Resume sync
-./sync-service/control.sh resume
+./infrastructure/sync-service/control.sh resume
 
 # View sync logs
-./sync-service/control.sh logs
+./infrastructure/sync-service/control.sh logs
 ```
 
 ### Direct Docker Commands
@@ -211,7 +211,7 @@ docker compose ps ps-sync
 
 ```bash
 # Generate webhook secrets (if using webhook mode)
-./sync-service/generate-secrets.sh
+./infrastructure/sync-service/generate-secrets.sh
 
 # Or manually generate
 openssl rand -hex 32  # For WEBHOOK_SECRET
@@ -579,7 +579,7 @@ docker system prune -a --volumes
 
 ```bash
 # Generate secrets for sync service
-./sync-service/generate-secrets.sh
+./infrastructure/sync-service/generate-secrets.sh
 
 # Generate random secret
 openssl rand -hex 32
@@ -675,10 +675,10 @@ npm run build
 
 ```bash
 # 1. Check if paused
-./sync-service/control.sh status
+./infrastructure/sync-service/control.sh status
 
 # 2. View logs
-./sync-service/control.sh logs
+./infrastructure/sync-service/control.sh logs
 
 # 3. Restart service
 docker compose restart ps-sync
@@ -747,7 +747,7 @@ git push
 
 ```bash
 # 1. Pause sync service
-./sync-service/control.sh pause "Maintenance: $(date)"
+./infrastructure/sync-service/control.sh pause "Maintenance: $(date)"
 
 # 2. Stop services (if needed)
 docker compose stop ps-frontend ps-directus
@@ -759,7 +759,7 @@ docker compose stop ps-frontend ps-directus
 docker compose start
 
 # 5. Resume sync
-./sync-service/control.sh resume
+./infrastructure/sync-service/control.sh resume
 ```
 
 ---
@@ -769,7 +769,7 @@ docker compose start
 - **Project README**: `/README.md` - Full project documentation
 - **Architecture Docs**: `/.docs/ARCHITECTURE_REVIEW.md`
 - **Component Docs**: `/.docs/COMPONENT_ARCHITECTURE.md`
-- **Sync Service Docs**: `/sync-service/README.md`
+- **Sync Service Docs**: `infrastructure/sync-service/README.md`
 
 ---
 
@@ -808,9 +808,9 @@ docker compose logs -f         # View logs
 docker compose ps              # View status
 
 # Sync Service
-./sync-service/control.sh status   # Check sync status
-./sync-service/control.sh pause    # Pause sync
-./sync-service/control.sh resume   # Resume sync
+./infrastructure/sync-service/control.sh status   # Check sync status
+./infrastructure/sync-service/control.sh pause    # Pause sync
+./infrastructure/sync-service/control.sh resume   # Resume sync
 
 # Git
 git status                     # Check status

@@ -7,9 +7,75 @@ import type { NextConfig } from "next";
 //   enabled: process.env.ANALYZE === "true",
 // });
 
+// ---------------------------------------------------------------------------
+// Security Headers (see .docs/SECURITY.md)
+// ---------------------------------------------------------------------------
+
+const isDev = process.env.NODE_ENV !== "production";
+
+/** Extracts a valid origin from an env URL, ignoring placeholders. */
+function envOrigin(value: string | undefined): string | null {
+  if (!value || value === "DISABLED" || value.includes("your-")) {
+    return null;
+  }
+  try {
+    return new URL(value).origin;
+  } catch {
+    return null;
+  }
+}
+
+const matomoOrigin = envOrigin(process.env.NEXT_PUBLIC_MATOMO_URL);
+const directusOrigin = envOrigin(process.env.NEXT_PUBLIC_DIRECTUS_URL);
+
+/**
+ * Content Security Policy.
+ *
+ * - `unsafe-inline` script/style is required by Next.js App Router inline
+ *   bootstrapping and Tailwind/Framer Motion inline styles (no nonce setup).
+ * - `unsafe-eval` and `ws:` are dev-only (Turbopack/React Refresh + HMR).
+ * - Matomo and Directus origins are added only when configured.
+ */
+const contentSecurityPolicy = [
+  `default-src 'self'`,
+  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}${matomoOrigin ? ` ${matomoOrigin}` : ""}`,
+  `style-src 'self' 'unsafe-inline'`,
+  `img-src 'self' data: blob: https://placehold.co https://images.unsplash.com${directusOrigin ? ` ${directusOrigin}` : ""}${matomoOrigin ? ` ${matomoOrigin}` : ""}`,
+  `font-src 'self' data:`,
+  `connect-src 'self'${isDev ? " ws:" : ""}${matomoOrigin ? ` ${matomoOrigin}` : ""}${directusOrigin ? ` ${directusOrigin}` : ""}`,
+  `worker-src 'self' blob:`,
+  `object-src 'none'`,
+  `base-uri 'self'`,
+  `form-action 'self'`,
+  `frame-ancestors 'none'`,
+].join("; ");
+
+const securityHeaders = [
+  { key: "Content-Security-Policy", value: contentSecurityPolicy },
+  { key: "X-Content-Type-Options", value: "nosniff" },
+  { key: "X-Frame-Options", value: "DENY" },
+  { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+  {
+    key: "Permissions-Policy",
+    value: "camera=(), microphone=(), geolocation=()",
+  },
+  // HSTS is only meaningful over HTTPS; browsers ignore it on plain HTTP.
+  ...(isDev
+    ? []
+    : [
+        {
+          key: "Strict-Transport-Security",
+          value: "max-age=63072000; includeSubDomains",
+        },
+      ]),
+];
+
 const nextConfig: NextConfig = {
   // 1. This is the fix for your Docker build error
   output: "standalone",
+
+  // Do not advertise the framework in response headers
+  poweredByHeader: false,
 
   // Turbopack Configuration
   // Turbopack is the default bundler in Next.js 16 for development
@@ -26,6 +92,15 @@ const nextConfig: NextConfig = {
   // In Next.js 16, this is a top-level property
   turbopack: {
     root: ".",
+  },
+
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: securityHeaders,
+      },
+    ];
   },
 
   images: {

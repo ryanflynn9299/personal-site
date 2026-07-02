@@ -2,58 +2,9 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { EmailStatusIndicatorWithStatus } from "@/components/contact/EmailStatusIndicator";
 
-// Mock the config module to allow it to be dynamic for tests
 vi.mock("@/lib/config", async () => {
-  const actual =
-    await vi.importActual<typeof import("@/lib/config")>("@/lib/config");
-  return {
-    ...actual,
-    config: {
-      ...actual.config,
-      get runtimeMode() {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        return (process.env.RUNTIME_MODE as any) || actual.config.runtimeMode;
-      },
-    },
-    runtime: {
-      get mode() {
-        return process.env.RUNTIME_MODE || "offline-dev";
-      },
-      get isProduction() {
-        return process.env.RUNTIME_MODE === "production";
-      },
-      get isDevelopment() {
-        return (
-          process.env.RUNTIME_MODE === "live-dev" ||
-          process.env.RUNTIME_MODE === "offline-dev"
-        );
-      },
-      get isLiveDev() {
-        return process.env.RUNTIME_MODE === "live-dev";
-      },
-      get isOfflineDev() {
-        return process.env.RUNTIME_MODE === "offline-dev";
-      },
-      get isTest() {
-        return process.env.RUNTIME_MODE === "test";
-      },
-      get connectToServices() {
-        return (
-          process.env.RUNTIME_MODE === "production" ||
-          process.env.RUNTIME_MODE === "live-dev"
-        );
-      },
-      get treatServiceErrorsAsReal() {
-        return (
-          process.env.RUNTIME_MODE === "production" ||
-          process.env.RUNTIME_MODE === "live-dev"
-        );
-      },
-      get previewFeatures() {
-        return process.env.ENABLE_PREVIEW_FEATURES === "true";
-      },
-    },
-  };
+  const { createDynamicConfigMock } = await import("../mocks/config");
+  return createDynamicConfigMock();
 });
 
 describe("EmailStatusIndicatorWithStatus", () => {

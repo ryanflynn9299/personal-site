@@ -209,9 +209,12 @@ function removeUndefinedRecursive(value: unknown): unknown {
 }
 
 /**
- * Formats JSON-LD for HTML output with proper indentation
- * Uses modern JSON.stringify with proper formatting
+ * Formats JSON-LD for HTML output with proper indentation.
+ *
+ * Escapes `<` as `\u003c` so CMS-controlled strings containing `</script>`
+ * cannot break out of the inline script context (classic JSON-LD XSS).
+ * The escaped form parses back to the same string with JSON.parse.
  */
 function formatJsonLd(data: unknown): string {
-  return JSON.stringify(data, null, 2);
+  return JSON.stringify(data, null, 2).replace(/</g, "\\u003c");
 }

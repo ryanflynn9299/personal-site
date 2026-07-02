@@ -56,7 +56,6 @@ export default function LoginPage() {
                   name="password"
                   type="password"
                   required
-                  autoFocus
                   placeholder="••••••••"
                   className="w-full rounded-xl border border-slate-700 bg-slate-900/50 px-12 py-3.5 text-sm text-white placeholder:text-slate-600 focus:border-sky-500/50 focus:outline-none focus:ring-1 focus:ring-sky-500/50 transition-all"
                 />
