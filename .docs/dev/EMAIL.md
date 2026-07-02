@@ -1,6 +1,6 @@
 # Email & Contact Form Delivery
 
-Single source of truth for contact-form email delivery: current behavior, the launch posture, and the path to real SMTP. (This doc absorbed the former `SMTP_LAUNCH_CHECKLIST.md` and the decision record from `CONTACT_FORM_OPTIONS.md` — both in git history.)
+Single source of truth for contact-form email delivery: current behavior, the launch posture, and the path to real SMTP. (This doc absorbed the former `SMTP_LAUNCH_CHECKLIST.md`; the full option analysis lives in [features/CONTACT_FORM_OPTIONS.md](../features/CONTACT_FORM_OPTIONS.md).)
 
 Contact-form **security** (honeypot, rate limiting, validation) is documented separately in [CONTACT_FORM_SECURITY.md](./CONTACT_FORM_SECURITY.md).
 
@@ -40,7 +40,7 @@ ContactPageClient → app/actions/contact.ts (validate, rate limit)
                     └→ lib/services/email-service.ts (send — mock, pending)
 ```
 
-Options considered (full analysis in git history: `CONTACT_FORM_OPTIONS.md`):
+Options considered (full analysis: [features/CONTACT_FORM_OPTIONS.md](../features/CONTACT_FORM_OPTIONS.md)):
 
 | Option                                    | Verdict                                                                                                                                                         |
 | ----------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |

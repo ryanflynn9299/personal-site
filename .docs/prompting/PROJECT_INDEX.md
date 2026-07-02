@@ -93,6 +93,15 @@ One doc per topic. If information seems missing, check the topic doc before crea
 | **SEO & metadata**                       | `.docs/dev/SEO.md`                          |
 | **Code health reviews**                  | `.docs/dev/CODE_HEALTH_SCORECARD.md`        |
 
+### Future features & decision records (`.docs/features/`)
+
+Design docs and option analyses for features not yet implemented. Not authoritative for current behavior.
+
+| Topic                                     | Doc                                          |
+| :---------------------------------------- | :------------------------------------------- |
+| **SMS notifications (Twilio)**            | `.docs/features/TWILIO_SMS_NOTIFICATIONS.md` |
+| **Contact form delivery option analysis** | `.docs/features/CONTACT_FORM_OPTIONS.md`     |
+
 ## 6. AI Infrastructure
 
 | Artifact           | Path                               | Purpose                                      |

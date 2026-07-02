@@ -67,4 +67,4 @@ None required for the pipeline to pass. Optional: `CODECOV_TOKEN` enables covera
 - **Action versions:** review `actions/*` and `pnpm/action-setup` pins occasionally; the Playwright container tag must match the installed `@playwright/test` version.
 - **Flaky E2E:** follow the protocol in [TESTING_STRATEGY.md](../TESTING_STRATEGY.md) § Flakiness.
 - **Audit failures:** a new CVE fails `dependency-audit` — patch via update or same-major `pnpm.overrides`; never silence the gate ([SECURITY.md](../SECURITY.md) §4).
-- **Future work (tracked in [TODO.md](./TODO.md)):** CD pipeline, coverage gate on `main`, failure notifications (e.g. Twilio SMS — a drafted setup guide exists in git history as `.docs/dev/TWILIO_SMS_NOTIFICATIONS.md`).
+- **Future work (tracked in [TODO.md](./TODO.md)):** CD pipeline, coverage gate on `main`, failure notifications (e.g. Twilio SMS — design doc: [features/TWILIO_SMS_NOTIFICATIONS.md](../features/TWILIO_SMS_NOTIFICATIONS.md)).
