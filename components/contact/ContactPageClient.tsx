@@ -15,7 +15,12 @@ import { Button } from "@/components/primitives/Button";
 import { submitContactForm } from "@/app/actions/contact";
 import { EmailStatusIndicatorWithStatus } from "@/components/contact/EmailStatusIndicator";
 import { FunCounter } from "@/components/contact/FunCounter";
-import { CONTACT_HONEYPOT_FIELD } from "@/lib/constants/contact";
+import {
+  CONTACT_HONEYPOT_FIELD,
+  CONTACT_MAX_NAME_LENGTH,
+  CONTACT_MAX_EMAIL_LENGTH,
+  CONTACT_MAX_MESSAGE_LENGTH,
+} from "@/lib/constants/contact";
 import type { FormState, SavedFormData, ContactPageClientProps } from "@/types";
 
 const initialState: FormState = { success: false };
@@ -238,6 +243,7 @@ export function ContactPageClient({
                   name="name"
                   id="name"
                   required
+                  maxLength={CONTACT_MAX_NAME_LENGTH}
                   placeholder="Your Name"
                   className="w-full rounded-md border-slate-600 bg-slate-700 px-4 py-2 text-slate-200 ring-offset-slate-900 transition-colors focus:border-sky-300 focus:ring-2 focus:ring-sky-300"
                 />
@@ -251,6 +257,7 @@ export function ContactPageClient({
                   name="email"
                   id="email"
                   required
+                  maxLength={CONTACT_MAX_EMAIL_LENGTH}
                   placeholder="Your Email"
                   className="w-full rounded-md border-slate-600 bg-slate-700 px-4 py-2 text-slate-200 ring-offset-slate-900 transition-colors focus:border-sky-300 focus:ring-2 focus:ring-sky-300"
                 />
@@ -264,6 +271,7 @@ export function ContactPageClient({
                   id="message"
                   required
                   rows={5}
+                  maxLength={CONTACT_MAX_MESSAGE_LENGTH}
                   placeholder="Your Message"
                   className="w-full rounded-md border-slate-600 bg-slate-700 px-4 py-2 text-slate-200 ring-offset-slate-900 transition-colors focus:border-sky-300 focus:ring-2 focus:ring-sky-300"
                 />

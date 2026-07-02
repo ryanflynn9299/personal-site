@@ -32,8 +32,8 @@ vi.mock("@/lib/dev-tooling/delay", () => ({
   delay: vi.fn().mockResolvedValue(undefined),
 }));
 
-vi.mock("@/lib/services/contact-client-ip", () => ({
-  getContactClientIp: vi.fn().mockResolvedValue("127.0.0.1"),
+vi.mock("@/lib/services/client-ip", () => ({
+  getClientIp: vi.fn().mockResolvedValue("127.0.0.1"),
 }));
 
 vi.mock("@/lib/services/directus", () => ({
@@ -71,6 +71,18 @@ describe("submitContactForm", () => {
 
     expect(result.success).toBe(false);
     expect(result.error).toBe("All fields are required");
+  });
+
+  it("rejects oversized input", async () => {
+    const formData = new FormData();
+    formData.set("name", "John Doe");
+    formData.set("email", "test@example.com");
+    formData.set("message", "a".repeat(5001));
+
+    const result = await submitContactForm(formData);
+
+    expect(result.success).toBe(false);
+    expect(result.error).toContain("too long");
   });
 
   it("validates email format", async () => {

@@ -59,6 +59,8 @@ This document serves as the definitive map for identifying the core configuratio
 | **Directus CMS**     | `lib/services/directus/index.ts`     | Entry point for all CMS data fetching and transforms.        |
 | **Email Service**    | `lib/services/email-service.ts`      | Logic for transactional emails and contact form submissions. |
 | **Contact Security** | `lib/services/contact-protection.ts` | Honeypot and rate limiting for contact form.                 |
+| **Login Security**   | `lib/services/login-protection.ts`   | Failed-attempt rate limiting for admin login.                |
+| **Admin Sessions**   | `lib/auth/session-token.ts`          | Signed, expiring admin session tokens (HMAC, edge-safe).     |
 | **Admin Middleware** | `middleware.ts`                      | Route protection for `/admin` and preview routes.            |
 
 ## 5. Core Documentation (Strategy)
@@ -75,7 +77,8 @@ This document serves as the definitive map for identifying the core configuratio
 | **Author profiles**   | `.docs/dev/AUTHOR_PROFILES.md`              |
 | **Matomo Launch**     | `.docs/dev/MATOMO_LAUNCH_CHECKLIST.md`      |
 | **SMTP Launch**       | `.docs/dev/SMTP_LAUNCH_CHECKLIST.md`        |
-| **Security**          | `.docs/SECURITY_HEALTH_CHECK.md`            |
+| **Security**          | `.docs/SECURITY.md`                         |
+| **Health Endpoint**   | `.docs/SECURITY_HEALTH_CHECK.md`            |
 | **Code Health**       | `.docs/dev/CODE_HEALTH_SCORECARD.md`        |
 
 ## 6. AI Infrastructure

@@ -12,7 +12,11 @@ _Start here — see also [RELEASE_READINESS.md](./RELEASE_READINESS.md) for the 
 
 ### Before Launch — operator (home server / deploy day)
 
-- [ ] **Configure Tailscale for admin access** (see [ADMIN_ACCESS.md](./ADMIN_ACCESS.md))
+- [ ] **DECIDED — Admin is Tailscale-only: unlist `/admin` from the public domain.**
+      Remove/never add the NPM route for `/admin`; access via Tailscale
+      IP/MagicDNS only; set `ADMIN_REQUIRE_TAILSCALE=true` as backstop;
+      verify from an off-tailnet network that the public URL dead-ends at
+      the proxy. Full checklist: [ADMIN_ACCESS.md](./ADMIN_ACCESS.md)
 - [ ] **Lock down Directus + Matomo admin** at reverse proxy (not public internet)
 - [ ] **Complete Matomo launch tasks** (see [MATOMO_LAUNCH_CHECKLIST.md](./MATOMO_LAUNCH_CHECKLIST.md))
 - [ ] **Production `.env` + Docker rebuild + smoke test** (see [RELEASE_READINESS.md](./RELEASE_READINESS.md))
