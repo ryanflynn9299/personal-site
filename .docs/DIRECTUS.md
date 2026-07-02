@@ -34,7 +34,71 @@ Contact form submissions.
 
 ### `counters` (proposed)
 
-For site metrics / feature usage. Fields: `id`, `key` (unique string), `value` (integer), `metadata` (JSON), `date_updated`. Not yet implemented — the "connect counter to database" TODO tracks it.
+For site metrics / feature usage.
+
+| Field          | Type     | Required | Notes              |
+| -------------- | -------- | -------- | ------------------ |
+| `id`           | uuid     | yes      |                    |
+| `key`          | string   | yes      | Unique string key  |
+| `value`        | integer  | yes      | Current count      |
+| `metadata`     | json     | no       | Arbitrary metadata |
+| `date_updated` | datetime | no       | Auto-updated       |
+
+**Service layer:** `getCounterByKey`, `incrementCounterByKey` in `lib/services/directus/counters.ts`.  
+**Consumer:** `app/actions/counter.ts` → contact-page fun counter (`FUN_COUNTER_KEY`).
+
+### `authors` (proposed)
+
+Dedicated author profiles; `blogs.author` will become M2O → `authors`.
+
+| Field        | Type   | Required | Notes                                        |
+| ------------ | ------ | -------- | -------------------------------------------- |
+| `id`         | uuid   | yes      |                                              |
+| `status`     | enum   | yes      | `published` / `draft`                        |
+| `slug`       | string | yes      | URL-safe key, unique                         |
+| `first_name` | string | yes      |                                              |
+| `last_name`  | string | yes      |                                              |
+| `emoji`      | string | yes      | Single emoji identity marker                 |
+| `accent`     | string | no       | One of `AuthorAccentKey` in `types/index.ts` |
+| `role`       | string | no       | e.g. "Software Engineer"                     |
+| `bio_short`  | text   | no       | Short bio for popup/footer                   |
+
+**Service layer:** `getPublishedAuthors`, `getAuthorBySlug` in `lib/services/directus/authors.ts`.  
+**Fallback:** `data/authors.ts` until collection is populated — see [AUTHOR_PROFILES.md](./dev/AUTHOR_PROFILES.md).
+
+### `blog_tags` (proposed)
+
+Normalized tag taxonomy. Posts still use inline `blogs.blog_tags` strings until M2M migration.
+
+| Field         | Type   | Required | Notes                 |
+| ------------- | ------ | -------- | --------------------- |
+| `id`          | uuid   | yes      |                       |
+| `status`      | enum   | yes      | `published` / `draft` |
+| `slug`        | string | yes      | Unique URL key        |
+| `label`       | string | yes      | Display name          |
+| `description` | text   | no       | Optional blurb        |
+| `color`       | string | no       | Optional accent token |
+| `sort`        | int    | no       | Nav ordering          |
+
+**Service layer:** `getPublishedTags`, `getTagBySlug`, `getPostsByTagSlug` in `lib/services/directus/blog-tags.ts`.  
+**UI:** Handler only — tag routes not implemented yet.
+
+### `blog_series` (proposed)
+
+Post series / collections. Requires `blogs.series` M2O + `blogs.series_order` for membership.
+
+| Field         | Type   | Required | Notes                 |
+| ------------- | ------ | -------- | --------------------- |
+| `id`          | uuid   | yes      |                       |
+| `status`      | enum   | yes      | `published` / `draft` |
+| `slug`        | string | yes      | Unique URL key        |
+| `title`       | string | yes      | Series title          |
+| `description` | text   | no       | Series intro          |
+| `cover_image` | file   | no       | Optional hero image   |
+| `sort_order`  | int    | no       | Listing order         |
+
+**Service layer:** `getPublishedSeries`, `getSeriesBySlug`, `getPostsInSeries` in `lib/services/directus/blog-series.ts`.  
+**UI:** Handler only — series routes not implemented yet.
 
 ---
 
@@ -91,8 +155,14 @@ lib/services/directus/
 ├── index.ts          # Barrel re-export — the ONLY public import path
 ├── client.ts         # SDK client init, config checks, asset URLs
 ├── errors.ts         # Error classification (pure utility, no deps)
+├── query-context.ts  # Shared guards and logging for query modules
+├── constants.ts      # Collection keys (e.g. FUN_COUNTER_KEY)
 ├── blogs.ts          # Blog queries (published posts, by slug, adjacent)
-├── contact.ts        # Contact message writes
+├── contact.ts        # Contact message read/write
+├── counters.ts       # Counter read/increment
+├── authors.ts        # Author profile queries
+├── blog-tags.ts      # Blog tag taxonomy queries
+├── blog-series.ts    # Blog series queries
 └── transforms.ts     # Raw Directus → frontend type converters (internal)
 ```
 
@@ -104,9 +174,10 @@ The SDK's generics are complex and version-sensitive, so the client is typed as 
 
 - `DirectusBlogPost` — raw `blogs` row
 - `DirectusContactMessage` — raw `contact_messages` row
+- `DirectusCounter`, `DirectusAuthor`, `DirectusBlogTag`, `DirectusBlogSeries`
 - `DirectusSchema` — collection name → row type map
 
-The UI consumes the clean `Post` type from `types/index.ts`; `transforms.ts` bridges raw → clean.
+The UI consumes clean types from `types/index.ts` (`Post`, `SiteCounter`, `BlogTag`, etc.); `transforms.ts` bridges raw → clean.
 
 ### Query options
 

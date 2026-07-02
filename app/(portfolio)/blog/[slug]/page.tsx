@@ -15,7 +15,7 @@ import { config, runtime } from "@/lib/config";
 import { isFeatureEnabled } from "@/lib/dev-tooling/features";
 import { BlogPostArticle } from "@/components/blog/BlogPostArticle";
 import { estimateReadingTimeMinutes, formatReadingTime } from "@/lib/utils";
-import { resolveAuthor, buildAuthorContext } from "@/lib/site/authors";
+import { resolveAuthorForPost, buildAuthorContext } from "@/lib/site/authors";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -146,7 +146,7 @@ export default async function BlogPostPage({ params }: Props) {
 
   const { prev, next } = await getAdjacentPosts(post.publish_date, post.id);
   const { posts: allPosts } = await getPublishedPosts();
-  const resolvedAuthor = resolveAuthor(post.author);
+  const resolvedAuthor = await resolveAuthorForPost(post.author);
   const authorContext = buildAuthorContext(allPosts, resolvedAuthor, {
     currentPostId: post.id,
     recentLimit: 3,
