@@ -3,92 +3,125 @@
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, Sparkles, Layers } from "lucide-react";
+import { ChevronDown, Sparkles } from "lucide-react";
 import { useQuoteViewStore } from "@/components/quotes/store/useQuoteViewStore";
 import { useDevControlsStore } from "./store/useDevControlsStore";
 import { runtime } from "@/lib/config";
-import type {
-  NormalVariant,
-  ConstellationVariant,
-} from "@/app/(portfolio)/quotes/config";
+import { shouldShowVariantSection } from "@/lib/dev-tooling/dev-controls-utils";
+
+type ControlsComponentType = React.ComponentType;
+
+interface RouteControlsConfig {
+  Controls: ControlsComponentType;
+  title: string;
+}
+
+function getRouteControlsConfig(pathname: string): RouteControlsConfig | null {
+  if (pathname === "/quotes") {
+    return { Controls: QuotesControls, title: "View Controls" };
+  }
+  if (pathname === "/") {
+    return { Controls: HomePageControls, title: "Home Controls" };
+  }
+  if (pathname === "/about") {
+    return { Controls: AboutPageControls, title: "About Page Controls" };
+  }
+  return null;
+}
+
+/**
+ * Whether the current route has dev controls with at least one visible section.
+ * Used by FloatingUtilityDock to avoid showing an empty dock shell.
+ */
+export function hasDevControlsForPathname(pathname: string): boolean {
+  const config = getRouteControlsConfig(pathname);
+  if (!config) {
+    return false;
+  }
+
+  switch (pathname) {
+    case "/":
+      return false;
+    case "/about":
+      return true;
+    case "/quotes":
+      return true;
+    default:
+      return false;
+  }
+}
+
+interface DevControlsProps {
+  /** When true, parent dock handles fixed positioning. */
+  embedded?: boolean;
+}
 
 /**
  * Global Dev Controls Component
  *
  * Route-aware component that shows different controls based on the current page.
- * Available on all pages for testing and development features.
- * Features collapsible functionality with premium glassmorphic styling.
+ * Sections with only one variant option are omitted; if nothing remains, the
+ * component renders nothing.
  */
-export function DevControls() {
+export function DevControls({ embedded = false }: DevControlsProps) {
   const pathname = usePathname();
   const { showDevControls } = useDevControlsStore();
   const [mounted, setMounted] = useState(false);
-  // Default to true so it is hidden on load
   const [isCollapsed, setIsCollapsed] = useState(true);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // Only show if dev mode UI is enabled, not in test mode, and showDevControls is true
+  const routeConfig = getRouteControlsConfig(pathname);
+
   if (
     !mounted ||
     !runtime.previewFeatures ||
     runtime.isTest ||
-    !showDevControls
+    !showDevControls ||
+    !routeConfig ||
+    !hasDevControlsForPathname(pathname)
   ) {
     return null;
   }
 
-  // Route-specific controls
-  let ControlsComponent: React.ComponentType | null = null;
-  let title = "";
-
-  if (pathname === "/quotes") {
-    ControlsComponent = QuotesControls;
-    title = "View Controls";
-  } else if (pathname === "/") {
-    ControlsComponent = HomePageControls;
-    title = "Home Controls";
-  } else if (pathname === "/about") {
-    ControlsComponent = AboutPageControls;
-    title = "About Page Controls";
-  }
-
-  // No controls for this route
-  if (!ControlsComponent) {
-    return null;
-  }
+  const { Controls, title } = routeConfig;
 
   return (
     <CollapsibleControls
       isCollapsed={isCollapsed}
       onToggle={() => setIsCollapsed(!isCollapsed)}
       title={title}
+      embedded={embedded}
     >
-      <ControlsComponent />
+      <Controls />
     </CollapsibleControls>
   );
 }
 
-/**
- * Collapsible Controls Wrapper
- * Provides premium collapse/expand functionality with fluid glassmorphism
- */
+interface PageControlsProps {
+  onEmpty?: () => void;
+}
+
 function CollapsibleControls({
   isCollapsed,
   onToggle,
   title,
+  embedded,
   children,
 }: {
   isCollapsed: boolean;
   onToggle: () => void;
   title: string;
+  embedded?: boolean;
   children: React.ReactNode;
 }) {
   return (
     <motion.div
-      className="fixed bottom-6 right-6 z-50 w-[300px]"
+      className={
+        embedded ? "w-[300px]" : "fixed bottom-6 right-6 z-50 w-[300px]"
+      }
       initial={false}
       layout
       style={{
@@ -104,12 +137,10 @@ function CollapsibleControls({
           duration: 0.3,
         }}
       >
-        {/* Subtle accent gradient peeking from the top edge */}
         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-slate-500/50 to-transparent" />
 
         <AnimatePresence mode="popLayout" initial={false}>
           {isCollapsed ? (
-            // Collapsed state: Elegant floating action bar
             <motion.div
               key="collapsed"
               initial={{ opacity: 0 }}
@@ -139,7 +170,6 @@ function CollapsibleControls({
               </button>
             </motion.div>
           ) : (
-            // Expanded state: Premium controls panel
             <motion.div
               key="expanded"
               initial={{ opacity: 0 }}
@@ -192,9 +222,6 @@ function CollapsibleControls({
   );
 }
 
-/**
- * Aesthetic Button for Control Selections
- */
 function VariantButton({
   active,
   onClick,
@@ -218,9 +245,6 @@ function VariantButton({
   );
 }
 
-/**
- * Section Label Component
- */
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
     <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-slate-500/80 font-inter">
@@ -229,10 +253,50 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
   );
 }
 
-/**
- * Quotes Page Controls
- */
-function QuotesControls() {
+function ControlsVariantSection<T extends string>({
+  label,
+  options,
+  value,
+  onChange,
+  formatLabel = (v) => v.replace(/_/g, " "),
+}: {
+  label: string;
+  options: readonly T[];
+  value: T;
+  onChange: (value: T) => void;
+  formatLabel?: (value: T) => string;
+}) {
+  if (!shouldShowVariantSection(options.length)) {
+    return null;
+  }
+
+  return (
+    <div>
+      <SectionLabel>{label}</SectionLabel>
+      <div className="flex flex-col gap-2">
+        {options.map((option) => (
+          <VariantButton
+            key={option}
+            active={value === option}
+            onClick={() => onChange(option)}
+          >
+            <span className="capitalize">{formatLabel(option)}</span>
+          </VariantButton>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function useNotifyWhenEmpty(hasVisibleSections: boolean, onEmpty?: () => void) {
+  useEffect(() => {
+    if (!hasVisibleSections) {
+      onEmpty?.();
+    }
+  }, [hasVisibleSections, onEmpty]);
+}
+
+function QuotesControls({ onEmpty }: PageControlsProps) {
   const {
     viewMode,
     activeNormalVariant,
@@ -252,9 +316,21 @@ function QuotesControls() {
     viewMode === "constellation" &&
     activeConstellationVariant === "solar_system";
 
+  const hasVisibleSections =
+    shouldShowVariantSection(2) ||
+    (viewMode === "normal" && shouldShowVariantSection(2)) ||
+    (viewMode === "constellation" && shouldShowVariantSection(3)) ||
+    isHexArraySelected ||
+    isSolarSystemSelected;
+
+  useNotifyWhenEmpty(hasVisibleSections, onEmpty);
+
+  if (!hasVisibleSections) {
+    return null;
+  }
+
   return (
     <div className="w-full space-y-5">
-      {/* Mode Toggle */}
       <div>
         <SectionLabel>Rendering Mode</SectionLabel>
         <div className="grid grid-cols-2 gap-2">
@@ -273,53 +349,28 @@ function QuotesControls() {
         </div>
       </div>
 
-      {/* Normal Variants */}
       {viewMode === "normal" && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-          <SectionLabel>Normal Architecture</SectionLabel>
-          <div className="flex flex-col gap-2">
-            {(["mission_control", "tesseract"] as NormalVariant[]).map(
-              (variant) => (
-                <VariantButton
-                  key={variant}
-                  active={activeNormalVariant === variant}
-                  onClick={() => setActiveNormalVariant(variant)}
-                >
-                  <span className="capitalize">
-                    {variant.replace("_", " ")}
-                  </span>
-                </VariantButton>
-              )
-            )}
-          </div>
+          <ControlsVariantSection
+            label="Normal Architecture"
+            options={["mission_control", "tesseract"] as const}
+            value={activeNormalVariant}
+            onChange={setActiveNormalVariant}
+          />
         </motion.div>
       )}
 
-      {/* Constellation Variants */}
       {viewMode === "constellation" && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-          <SectionLabel>Constellation Topology</SectionLabel>
-          <div className="flex flex-col gap-2">
-            {(
-              [
-                "constellation",
-                "solar_system",
-                "hex_array",
-              ] as ConstellationVariant[]
-            ).map((variant) => (
-              <VariantButton
-                key={variant}
-                active={activeConstellationVariant === variant}
-                onClick={() => setActiveConstellationVariant(variant)}
-              >
-                <span className="capitalize">{variant.replace("_", " ")}</span>
-              </VariantButton>
-            ))}
-          </div>
+          <ControlsVariantSection
+            label="Constellation Topology"
+            options={["constellation", "solar_system", "hex_array"] as const}
+            value={activeConstellationVariant}
+            onChange={setActiveConstellationVariant}
+          />
         </motion.div>
       )}
 
-      {/* Hex Surge Controls */}
       {isHexArraySelected && (
         <motion.div
           initial={{ opacity: 0, height: 0 }}
@@ -355,7 +406,6 @@ function QuotesControls() {
         </motion.div>
       )}
 
-      {/* Comet Trigger Controls */}
       {isSolarSystemSelected && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
           <button
@@ -370,112 +420,74 @@ function QuotesControls() {
   );
 }
 
-/**
- * Formatting util for camelCase rendering
- */
 const formatVariantName = (variant: string) => {
   const spaced = variant.replace(/([A-Z])/g, " $1").trim();
   return spaced.charAt(0).toUpperCase() + spaced.slice(1);
 };
 
-/**
- * Home Page Controls
- */
-function HomePageControls() {
+function HomePageControls({ onEmpty }: PageControlsProps) {
   const {
     selectedAboutMe,
     selectedProjects,
-    isTechStackPremium,
     selectedBlogHighlight,
     setSelectedAboutMe,
     setSelectedProjects,
-    setTechStackPremium,
     setSelectedBlogHighlight,
   } = useDevControlsStore();
 
+  const aboutOptions = ["aboutMe"] as const;
+  const projectOptions = ["projectCarousel"] as const;
+  const blogOptions = ["blogHighlight"] as const;
+
+  const sections = [
+    shouldShowVariantSection(aboutOptions.length) ? (
+      <ControlsVariantSection
+        key="about"
+        label="About Me Module"
+        options={aboutOptions}
+        value={selectedAboutMe}
+        onChange={setSelectedAboutMe}
+        formatLabel={formatVariantName}
+      />
+    ) : null,
+    shouldShowVariantSection(projectOptions.length) ? (
+      <ControlsVariantSection
+        key="projects"
+        label="Projects Showcase"
+        options={projectOptions}
+        value={selectedProjects}
+        onChange={setSelectedProjects}
+        formatLabel={formatVariantName}
+      />
+    ) : null,
+    shouldShowVariantSection(blogOptions.length) ? (
+      <ControlsVariantSection
+        key="blog"
+        label="Blog Highlighting"
+        options={blogOptions}
+        value={selectedBlogHighlight}
+        onChange={setSelectedBlogHighlight}
+        formatLabel={formatVariantName}
+      />
+    ) : null,
+  ].filter(Boolean);
+
+  const hasVisibleSections = sections.length > 0;
+
+  useNotifyWhenEmpty(hasVisibleSections, onEmpty);
+
+  if (!hasVisibleSections) {
+    return null;
+  }
+
   return (
     <div className="w-full max-h-[65vh] overflow-y-auto pr-1 space-y-6">
-      {/* About Me Section */}
-      <div>
-        <SectionLabel>About Me Module</SectionLabel>
-        <div className="flex flex-col gap-2">
-          {(["aboutMe"] as const).map((variant) => (
-            <VariantButton
-              key={variant}
-              active={selectedAboutMe === variant}
-              onClick={() => setSelectedAboutMe(variant)}
-            >
-              {formatVariantName(variant)}
-            </VariantButton>
-          ))}
-        </div>
-      </div>
-
-      {/* Projects Section */}
-      <div>
-        <SectionLabel>Projects Showcase</SectionLabel>
-        <div className="flex flex-col gap-2">
-          {(["projectCarousel"] as const).map((variant) => (
-            <VariantButton
-              key={variant}
-              active={selectedProjects === variant}
-              onClick={() => setSelectedProjects(variant)}
-            >
-              {formatVariantName(variant)}
-            </VariantButton>
-          ))}
-        </div>
-      </div>
-
-      {/* Tech Stack Section */}
-      <div>
-        <div className="flex items-center justify-between gap-3 p-3 rounded-xl border border-white/10 bg-white/5">
-          <div className="flex items-center gap-2">
-            <Layers
-              className={`h-4 w-4 ${isTechStackPremium ? "text-sky-400" : "text-slate-500"}`}
-            />
-            <span className="text-xs font-medium text-slate-300">
-              Animated (v4)
-            </span>
-          </div>
-          <button
-            onClick={() => setTechStackPremium(!isTechStackPremium)}
-            className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors ${
-              isTechStackPremium ? "bg-sky-600" : "bg-slate-700"
-            }`}
-          >
-            <span
-              className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform ${
-                isTechStackPremium ? "translate-x-5" : "translate-x-0.5"
-              }`}
-            />
-          </button>
-        </div>
-      </div>
-
-      {/* Blog Highlight Section */}
-      <div>
-        <SectionLabel>Blog Highlighting</SectionLabel>
-        <div className="flex flex-col gap-2">
-          {(["blogHighlight"] as const).map((variant) => (
-            <VariantButton
-              key={variant}
-              active={selectedBlogHighlight === variant}
-              onClick={() => setSelectedBlogHighlight(variant)}
-            >
-              {formatVariantName(variant)}
-            </VariantButton>
-          ))}
-        </div>
-      </div>
+      {sections}
     </div>
   );
 }
 
-/**
- * About Page Controls
- */
-function AboutPageControls() {
+function AboutPageControls({ onEmpty }: PageControlsProps) {
   const {
     selectedAboutValuesGrid,
     setSelectedAboutValuesGrid,
@@ -483,39 +495,36 @@ function AboutPageControls() {
     setSelectedAboutCTA,
   } = useDevControlsStore();
 
+  const sections = [
+    <ControlsVariantSection
+      key="values"
+      label="Values Grid Styling"
+      options={["valuesGridFlat", "valuesGridPremium"] as const}
+      value={selectedAboutValuesGrid}
+      onChange={setSelectedAboutValuesGrid}
+      formatLabel={formatVariantName}
+    />,
+    <ControlsVariantSection
+      key="cta"
+      label="CTA Styling"
+      options={["ctaPremium", "ctaFlat"] as const}
+      value={selectedAboutCTA}
+      onChange={setSelectedAboutCTA}
+      formatLabel={formatVariantName}
+    />,
+  ].filter(Boolean);
+
+  const hasVisibleSections = sections.length > 0;
+
+  useNotifyWhenEmpty(hasVisibleSections, onEmpty);
+
+  if (!hasVisibleSections) {
+    return null;
+  }
+
   return (
     <div className="w-full max-h-[65vh] overflow-y-auto pr-1 space-y-6">
-      {/* Values Grid Section */}
-      <div>
-        <SectionLabel>Values Grid Styling</SectionLabel>
-        <div className="flex flex-col gap-2">
-          {(["valuesGridFlat", "valuesGridPremium"] as const).map((variant) => (
-            <VariantButton
-              key={variant}
-              active={selectedAboutValuesGrid === variant}
-              onClick={() => setSelectedAboutValuesGrid(variant)}
-            >
-              {formatVariantName(variant)}
-            </VariantButton>
-          ))}
-        </div>
-      </div>
-
-      {/* CTA Section */}
-      <div>
-        <SectionLabel>CTA Styling</SectionLabel>
-        <div className="flex flex-col gap-2">
-          {(["ctaPremium", "ctaFlat"] as const).map((variant) => (
-            <VariantButton
-              key={variant}
-              active={selectedAboutCTA === variant}
-              onClick={() => setSelectedAboutCTA(variant)}
-            >
-              {formatVariantName(variant)}
-            </VariantButton>
-          ))}
-        </div>
-      </div>
+      {sections}
     </div>
   );
 }
