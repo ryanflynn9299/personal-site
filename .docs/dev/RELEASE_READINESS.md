@@ -65,6 +65,8 @@ Blocked in production unless `ENABLE_PREVIEW_FEATURES=true`:
 
 - `/quotes`
 - `/projects-cabinet`
+- `/preview/under-construction` (dev harness for `UnderConstructionPage`)
+- `/preview/trigger-error` (dev harness for `app/error.tsx`)
 
 Footer nav already hides these links in production.
 

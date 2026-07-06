@@ -23,7 +23,12 @@ const PUBLIC_ROUTES = [
 ];
 
 // Preview-only pages blocked in production (see middleware.ts)
-const PREVIEW_ONLY_ROUTES = ["/quotes", "/projects-cabinet"];
+const PREVIEW_ONLY_ROUTES = [
+  "/quotes",
+  "/projects-cabinet",
+  "/preview/under-construction",
+  "/preview/trigger-error",
+];
 
 // Routes that should redirect (301/302/307/308) to another location
 const REDIRECT_ROUTES = [

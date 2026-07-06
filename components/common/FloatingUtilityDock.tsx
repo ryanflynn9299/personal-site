@@ -22,7 +22,7 @@ export function FloatingUtilityDock() {
   const [dockMinimized, setDockMinimized] = useState(false);
   const backToTopVisible = useBackToTopVisible();
   const devControlsActive =
-    runtime.isDevelopment && hasDevControlsForPathname(pathname);
+    runtime.previewFeatures && hasDevControlsForPathname(pathname);
 
   if (!devControlsActive) {
     return <BackToTop />;

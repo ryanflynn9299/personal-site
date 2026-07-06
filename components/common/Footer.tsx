@@ -2,6 +2,10 @@ import Link from "next/link";
 import { Github, Linkedin, Twitter } from "lucide-react";
 import { runtime } from "@/lib/config";
 import { SITE_VERSION } from "@/lib/site/seo";
+import {
+  PREVIEW_PROJECTS_CABINET_ROUTE,
+  PREVIEW_UNDER_CONSTRUCTION_ROUTE,
+} from "@/lib/dev-tooling/preview-routes";
 
 const socialLinks = [
   {
@@ -24,6 +28,12 @@ const footerNav = [
   { name: "About", href: "/about", is_active: true, devOnly: false },
   { name: "Blog", href: "/blog", is_active: true, devOnly: false },
   { name: "Quotes", href: "/quotes", is_active: true, devOnly: true },
+  {
+    name: "Under Construction",
+    href: PREVIEW_UNDER_CONSTRUCTION_ROUTE,
+    is_active: true,
+    devOnly: true,
+  },
   { name: "Vitae", href: "/vitae", is_active: true, devOnly: false },
   { name: "Contact", href: "/contact", is_active: true, devOnly: false },
   // Example for future extensibility
@@ -101,7 +111,7 @@ export function Footer() {
                 {runtime.previewFeatures && (
                   <li>
                     <Link
-                      href="/projects-cabinet"
+                      href={PREVIEW_PROJECTS_CABINET_ROUTE}
                       className="flex items-center gap-2 text-base text-slate-300 hover:text-sky-300"
                     >
                       <span>Project Cabinet</span>

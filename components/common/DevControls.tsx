@@ -1,13 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, Sparkles } from "lucide-react";
+import { ChevronDown, Sparkles, AlertTriangle } from "lucide-react";
 import { useQuoteViewStore } from "@/components/quotes/store/useQuoteViewStore";
 import { useDevControlsStore } from "./store/useDevControlsStore";
 import { runtime } from "@/lib/config";
 import { shouldShowVariantSection } from "@/lib/dev-tooling/dev-controls-utils";
+import { PREVIEW_TRIGGER_ERROR_ROUTE } from "@/lib/dev-tooling/preview-routes";
 
 type ControlsComponentType = React.ComponentType;
 
@@ -30,25 +31,11 @@ function getRouteControlsConfig(pathname: string): RouteControlsConfig | null {
 }
 
 /**
- * Whether the current route has dev controls with at least one visible section.
- * Used by FloatingUtilityDock to avoid showing an empty dock shell.
+ * Whether dev controls should appear on this route.
+ * Diagnostics are available on all public routes when preview features are on.
  */
 export function hasDevControlsForPathname(pathname: string): boolean {
-  const config = getRouteControlsConfig(pathname);
-  if (!config) {
-    return false;
-  }
-
-  switch (pathname) {
-    case "/":
-      return false;
-    case "/about":
-      return true;
-    case "/quotes":
-      return true;
-    default:
-      return false;
-  }
+  return !pathname.startsWith("/admin");
 }
 
 interface DevControlsProps {
@@ -74,19 +61,17 @@ export function DevControls({ embedded = false }: DevControlsProps) {
   }, []);
 
   const routeConfig = getRouteControlsConfig(pathname);
+  const title = routeConfig?.title ?? "Dev Controls";
 
   if (
     !mounted ||
     !runtime.previewFeatures ||
     runtime.isTest ||
     !showDevControls ||
-    !routeConfig ||
     !hasDevControlsForPathname(pathname)
   ) {
     return null;
   }
-
-  const { Controls, title } = routeConfig;
 
   return (
     <CollapsibleControls
@@ -95,8 +80,42 @@ export function DevControls({ embedded = false }: DevControlsProps) {
       title={title}
       embedded={embedded}
     >
-      <Controls />
+      <DevControlsContent pathname={pathname} />
     </CollapsibleControls>
+  );
+}
+
+function DevControlsContent({ pathname }: { pathname: string }) {
+  const routeConfig = getRouteControlsConfig(pathname);
+  const RouteControls = routeConfig?.Controls;
+
+  return (
+    <div className="w-full max-h-[65vh] overflow-y-auto pr-1 space-y-6">
+      <DiagnosticsControls />
+      {RouteControls && <RouteControls />}
+    </div>
+  );
+}
+
+function DiagnosticsControls() {
+  const router = useRouter();
+
+  return (
+    <div className="rounded-xl border border-amber-500/20 bg-amber-500/5 p-3">
+      <SectionLabel>Diagnostics</SectionLabel>
+      <button
+        type="button"
+        onClick={() => router.push(PREVIEW_TRIGGER_ERROR_ROUTE)}
+        className="flex w-full items-center justify-center gap-2 rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-xs font-semibold text-amber-200 transition-all hover:bg-amber-500/20 active:scale-[0.98] font-inter"
+      >
+        <AlertTriangle className="h-3.5 w-3.5" aria-hidden="true" />
+        Trigger error page
+      </button>
+      <p className="mt-2 text-[10px] leading-relaxed text-slate-500">
+        Opens a dev-only route that crashes on purpose. Retype the URL or pick a
+        new page to continue normally.
+      </p>
+    </div>
   );
 }
 
