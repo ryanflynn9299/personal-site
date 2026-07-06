@@ -5,10 +5,7 @@ import {
   SESSION_COOKIE_NAME,
   verifySessionToken,
 } from "@/lib/auth/session-token";
-import {
-  isPreviewOnlyPathname,
-  PREVIEW_ONLY_ROUTES,
-} from "@/lib/dev-tooling/preview-routes";
+import { isPreviewOnlyPathname } from "@/lib/dev-tooling/preview-routes";
 
 const ADMIN_LOGIN_PATH = "/admin/dashboard/login";
 
@@ -96,8 +93,16 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
+  // Must be a static literal — see PREVIEW_MIDDLEWARE_MATCHERS in preview-routes.ts
   matcher: [
     "/admin/:path*",
-    ...PREVIEW_ONLY_ROUTES.flatMap((route) => [route, `${route}/:path*`]),
+    "/quotes",
+    "/quotes/:path*",
+    "/projects-cabinet",
+    "/projects-cabinet/:path*",
+    "/preview/under-construction",
+    "/preview/under-construction/:path*",
+    "/preview/trigger-error",
+    "/preview/trigger-error/:path*",
   ],
 };
