@@ -44,9 +44,15 @@ describe("middleware", () => {
     vi.stubEnv("ENABLE_PREVIEW_FEATURES", "false");
 
     const middleware = await loadMiddleware();
-    const response = await middleware(createRequest("/quotes"));
 
-    expect(response.status).toBe(404);
+    for (const route of [
+      "/quotes",
+      "/preview/under-construction",
+      "/preview/trigger-error",
+    ]) {
+      const response = await middleware(createRequest(route));
+      expect(response.status).toBe(404);
+    }
   });
 
   it("allows preview routes when ENABLE_PREVIEW_FEATURES is true", async () => {

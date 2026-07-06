@@ -4,10 +4,11 @@ test.describe("Error Pages", () => {
   test("displays 404 page for non-existent routes", async ({ page }) => {
     await page.goto("/this-page-does-not-exist-12345");
 
-    // Should show 404 message
+    await expect(page.getByText("404")).toBeVisible();
+    await expect(page.getByText(/lost in space/i)).toBeVisible();
     await expect(
-      page.getByText(/not found|404|page doesn't exist/i)
-    ).toBeVisible();
+      page.getByText(/oops! something went wrong/i)
+    ).not.toBeVisible();
   });
 
   test("404 page has navigation back to home", async ({ page }) => {
@@ -38,10 +39,8 @@ test.describe("Error Pages", () => {
   test("deeply nested non-existent route shows 404", async ({ page }) => {
     await page.goto("/this/is/a/deeply/nested/non-existent/route");
 
-    // Should show 404 message
-    await expect(
-      page.getByText(/not found|404|page doesn't exist/i)
-    ).toBeVisible();
+    await expect(page.getByText("404")).toBeVisible();
+    await expect(page.getByText(/lost in space/i)).toBeVisible();
   });
 });
 

@@ -5,11 +5,12 @@ import {
   SESSION_COOKIE_NAME,
   verifySessionToken,
 } from "@/lib/auth/session-token";
+import {
+  isPreviewOnlyPathname,
+  PREVIEW_ONLY_ROUTES,
+} from "@/lib/dev-tooling/preview-routes";
 
 const ADMIN_LOGIN_PATH = "/admin/dashboard/login";
-
-/** Preview-only routes — blocked in production unless ENABLE_PREVIEW_FEATURES=true */
-const PREVIEW_ONLY_ROUTES = ["/quotes", "/projects-cabinet"];
 
 function isProductionDeployment(): boolean {
   const mode = process.env.RUNTIME_MODE;
@@ -56,9 +57,7 @@ export async function middleware(request: NextRequest) {
   if (
     isProductionDeployment() &&
     !previewFeaturesEnabled() &&
-    PREVIEW_ONLY_ROUTES.some(
-      (route) => pathname === route || pathname.startsWith(`${route}/`)
-    )
+    isPreviewOnlyPathname(pathname)
   ) {
     return new NextResponse(null, { status: 404 });
   }
@@ -99,9 +98,6 @@ export async function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     "/admin/:path*",
-    "/quotes/:path*",
-    "/quotes",
-    "/projects-cabinet/:path*",
-    "/projects-cabinet",
+    ...PREVIEW_ONLY_ROUTES.flatMap((route) => [route, `${route}/:path*`]),
   ],
 };

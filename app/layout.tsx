@@ -7,8 +7,7 @@ import React from "react";
 import { ToastProvider } from "@/context/ToastContext";
 import { MatomoProvider } from "@/components/matomo/MatomoProvider";
 import { DevModeIndicator } from "@/components/common/DevModeIndicator";
-import { DevControls } from "@/components/common/DevControls";
-import { BackToTop } from "@/components/common/BackToTop";
+import { FloatingUtilityDock } from "@/components/common/FloatingUtilityDock";
 import { utils } from "@/constants/theme";
 import { runtime } from "@/lib/config";
 
@@ -84,8 +83,7 @@ export default function RootLayout({
               {children}
             </main>
             <Footer />
-            {runtime.isDevelopment && <DevControls />}
-            <BackToTop />
+            <FloatingUtilityDock />
           </div>
         </ToastProvider>
       </body>
