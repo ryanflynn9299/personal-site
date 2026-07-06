@@ -25,7 +25,9 @@ test.describe("Preview trigger error route", () => {
     "Trigger error preview is dev-only; set ENABLE_PREVIEW_FEATURES=true"
   );
 
-  test("shows error boundary, then recovers on navigation", async ({ page }) => {
+  test("shows error boundary, then recovers on navigation", async ({
+    page,
+  }) => {
     await page.goto("/preview/trigger-error");
 
     await expect(

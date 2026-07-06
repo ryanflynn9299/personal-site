@@ -6,6 +6,7 @@ import {
 import { hasDevControlsForPathname } from "@/components/common/DevControls";
 import {
   isPreviewOnlyPathname,
+  PREVIEW_MIDDLEWARE_MATCHERS,
   PREVIEW_ONLY_ROUTES,
   PREVIEW_UNDER_CONSTRUCTION_ROUTE,
   PREVIEW_TRIGGER_ERROR_ROUTE,
@@ -46,5 +47,11 @@ describe("preview-routes", () => {
     expect(isPreviewOnlyPathname(PREVIEW_UNDER_CONSTRUCTION_ROUTE)).toBe(true);
     expect(isPreviewOnlyPathname(PREVIEW_TRIGGER_ERROR_ROUTE)).toBe(true);
     expect(isPreviewOnlyPathname("/blog")).toBe(false);
+  });
+
+  it("keeps middleware matchers aligned with preview routes", () => {
+    for (const route of PREVIEW_ONLY_ROUTES) {
+      expect(PREVIEW_MIDDLEWARE_MATCHERS).toContain(route);
+    }
   });
 });

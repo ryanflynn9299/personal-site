@@ -27,3 +27,19 @@ export function isPreviewOnlyPathname(pathname: string): boolean {
     (route) => pathname === route || pathname.startsWith(`${route}/`)
   );
 }
+
+/**
+ * Middleware matcher entries for preview routes.
+ * Next.js requires `middleware.config.matcher` to be fully static — no spreads
+ * or computed arrays. Keep in sync with PREVIEW_ONLY_ROUTES.
+ */
+export const PREVIEW_MIDDLEWARE_MATCHERS = [
+  "/quotes",
+  "/quotes/:path*",
+  "/projects-cabinet",
+  "/projects-cabinet/:path*",
+  "/preview/under-construction",
+  "/preview/under-construction/:path*",
+  "/preview/trigger-error",
+  "/preview/trigger-error/:path*",
+] as const;
