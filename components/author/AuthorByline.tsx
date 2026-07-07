@@ -1,6 +1,8 @@
 "use client";
 
 import { AuthorLink } from "@/components/author/AuthorLink";
+import { blogSpacing } from "@/lib/blog/spacing";
+import { cn } from "@/lib/utils";
 
 interface AuthorBylineProps {
   formattedDate: string;
@@ -14,7 +16,12 @@ export function AuthorByline({
   readingTime,
 }: AuthorBylineProps) {
   return (
-    <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-slate-400">
+    <div
+      className={cn(
+        blogSpacing.groupTight,
+        "flex flex-wrap items-center gap-x-4 gap-y-2 text-slate-400"
+      )}
+    >
       <AuthorLink />
       <span aria-hidden="true">&bull;</span>
       <time dateTime={publishDate}>{formattedDate}</time>

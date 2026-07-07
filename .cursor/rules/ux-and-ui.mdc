@@ -24,7 +24,8 @@ Explain the UX principle violated and offer a compliant design.
 
 - Server `page.tsx` exports metadata and renders `*PageClient` — see ARCHITECTURE.md
 - Reuse primitives in `components/primitives/` before inventing new controls
-- Preserve cohesive visual language (space theme, existing Tailwind patterns)
+- **Before styling:** read `.docs/dev/DESIGN.md` (guidance), then the feature doc for the area you touch. Match sibling components; avoid generic patterns that contradict the surrounding view
+- **Long-form / markdown UI:** follow `.docs/dev/MARKDOWN_CONTENT.md` (shared pipeline, hydration-safe heading IDs). Nested headings need a visible outline framework — not bare margin offsets (DESIGN.md § Hierarchical outlines)
 - Forms: validate early, show honest outcomes, recover gracefully (retry / go back)
 
 ## Honest system state

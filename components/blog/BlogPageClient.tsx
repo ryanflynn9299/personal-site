@@ -6,12 +6,14 @@ import { useState, useEffect, useRef, useTransition } from "react";
 import Link from "next/link";
 import { Command } from "cmdk";
 import { Post } from "@/types";
+import { blogSpacing } from "@/lib/blog/spacing";
 import { PostCard } from "@/components/blog/PostCard";
 import { SearchButton } from "@/components/blog/SearchButton";
 import { FileText } from "lucide-react";
 import { Dialog } from "radix-ui";
 import { ServiceUnavailable } from "@/components/common/ServiceUnavailable";
 import { trackBlogSearch } from "@/components/matomo/Matomo";
+import { cn } from "@/lib/utils";
 
 interface BlogPageClientProps {
   status: "success" | "error";
@@ -95,7 +97,9 @@ export function BlogPageClient({
     // If successful but no posts, show the "no posts" message
     if (posts.length === 0) {
       return (
-        <p className="mt-12 text-center text-slate-400">
+        <p
+          className={cn(blogSpacing.regionMajor, "text-center text-slate-400")}
+        >
           No posts found. Check back soon!
         </p>
       );
@@ -103,15 +107,31 @@ export function BlogPageClient({
 
     // If successful and there are posts, render the grid
     return (
-      <div className="mt-12 flex flex-col gap-12">
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+      <div
+        className={cn(
+          blogSpacing.regionMajor,
+          "flex flex-col",
+          blogSpacing.peerGapXl
+        )}
+      >
+        <div
+          className={cn(
+            "grid md:grid-cols-2 lg:grid-cols-3",
+            blogSpacing.peerGapLg
+          )}
+        >
           {posts.map((post) => (
             <PostCard key={post.id} post={post} />
           ))}
         </div>
 
         {totalPages > 1 && (
-          <div className="flex items-center justify-center gap-4 pt-4 border-t border-slate-800/50">
+          <div
+            className={cn(
+              "flex items-center justify-center gap-4",
+              blogSpacing.sectionBreakSoft
+            )}
+          >
             {currentPage > 1 ? (
               <Link
                 href={`/blog?page=${currentPage - 1}`}
@@ -153,8 +173,14 @@ export function BlogPageClient({
     // Use a React Fragment to wrap the page content and dialog
     <>
       <div className={open ? "content-blur" : "transition-all duration-300"}>
-        <div className="container mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-          <div className="flex flex-col gap-4">
+        <div
+          className={cn(
+            "container mx-auto max-w-7xl",
+            blogSpacing.pagePaddingX,
+            blogSpacing.pagePaddingY
+          )}
+        >
+          <div className={cn("flex flex-col", blogSpacing.groupStack)}>
             <div className="flex flex-row flex-nowrap items-center justify-between gap-4">
               <h1 className="font-heading shrink-0 text-4xl font-bold text-slate-50">
                 Blog
@@ -162,8 +188,9 @@ export function BlogPageClient({
               <SearchButton onClick={() => setOpen(true)} />
             </div>
             <p className="text-lg text-slate-300">
-              Welcome to my digital journal. Here I share my thoughts,
-              learnings, and explorations in the world of technology.
+              Technical articles, personal essays, and the occasional tangent. I
+              write when something&apos;s worth putting somewhere more durable
+              than a notes app—not on a schedule, and not always about code.
             </p>
           </div>
 

@@ -132,3 +132,43 @@ Day-to-day work uses **§5 Verification Workflow** (`pnpm run validate`, `pnpm r
 3. Save the review log to `logs/code-health-YYYY-MM-DD.md` and pick up to three actions for the next quarter (or add them to [TODO.md](../dev/TODO.md)).
 
 The audit script reports objective signals (boundary violations, test pass rate, lint suppressions, etc.). The scorecard adds human judgment on test efficacy, UX, and change safety — things automation cannot score fairly on every PR.
+
+## 8. Content UI & feature rework
+
+When reworking a user-facing feature (blog, policies, forms, long prose):
+
+### Documentation
+
+| Kind                     | Where                                                  | Content                                                           |
+| ------------------------ | ------------------------------------------------------ | ----------------------------------------------------------------- |
+| **Guidance**             | `DESIGN.md`, `AI_GUARDRAILS.md`                        | Principles only — no routes, component names, or token file paths |
+| **Feature**              | `.docs/dev/{FEATURE}.md`                               | Behavior, tokens, files, tests for that area                      |
+| **Shared cross-feature** | e.g. [MARKDOWN_CONTENT.md](../dev/MARKDOWN_CONTENT.md) | Pipeline used by multiple surfaces                                |
+
+Update docs in the **same change** as behavior. Tag feature docs with `**Type:** Feature` at the top.
+
+### Code structure (first-principles pass)
+
+1. **Extract shared logic** when a second surface needs the same behavior (e.g. `lib/markdown/` for blog + policies).
+2. **Shell + presentation** — parsing/format in a thin renderer; theme and element map in colocated components.
+3. **Tokens in `lib/{feature}/`** — spacing, outline, colors as named exports; no magic numbers in JSX.
+4. **Tests that earn their keep** — happy-path behavior + one regression test for bugs you actually hit (e.g. hydration ID drift, rerender stability).
+
+### Markdown client components
+
+See [MARKDOWN_CONTENT.md](../dev/MARKDOWN_CONTENT.md). Non-negotiables:
+
+- Pre-compute headings; assign IDs via ref-reset consumer — never a mutable `let index` inside `useMemo` component factories.
+- Shared sanitize plugins from `lib/markdown/plugins.ts`.
+- Component test: render → rerender → assert heading `id`s unchanged.
+
+### UI iteration on hierarchy
+
+If nested headings “look random,” check in order:
+
+1. Is depth visible (guides/connectors), or only `ml-*`?
+2. Are structure lines neutral and accent rails separate?
+3. Are depth steps equal on a grid?
+4. Is decoration restrained on professional long-form content?
+
+Do not add symbols or animation as a first fix — establish the outline framework first.

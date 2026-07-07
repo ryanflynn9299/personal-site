@@ -2,6 +2,44 @@ import { Post } from "@/types";
 
 export const dummyPosts: Post[] = [
   {
+    id: "uuid-dummy-toc-smoke",
+    status: "published",
+    title: "Table of Contents Smoke Test",
+    summary:
+      "Fixture post for exercising blog table-of-contents rendering in offline dev. Intentionally dull; not for production CMS.",
+    author: { first_name: "Ryan", last_name: "Flynn" },
+    slug: "toc-smoke-test",
+    publish_date: "2026-03-01T10:00:00.000Z",
+    feature_image: null,
+    content: `
+# Table of Contents Smoke Test
+
+Fixture content for local smoke tests. This post exists so developers can verify heading extraction, anchor links, and ToC collapse behavior without hunting for a long article in Directus.
+
+## Setup
+
+Enable the \`offlineDummyBlogs\` feature flag and open this slug in the dev server. The table of contents should appear above the article body.
+
+## Expected behavior
+
+The ToC lists h2–h4 headings from markdown. Page-level h1 titles are excluded because they duplicate the post heading.
+
+### Heading levels
+
+Nested headings should indent under their parent in the nav. Scroll-spy highlighting should track the section in view as you move through the page.
+
+## Long-scroll check
+
+Add enough sections and paragraphs to require scrolling on a laptop viewport. Confirm the ToC remains usable and that anchor jumps land on the correct heading.
+
+## Cleanup
+
+When Directus is available, prefer real posts for manual QA. Keep this fixture updated if ToC eligibility rules change (minimum heading count, supported formats, etc.).
+    `,
+    content_format: "markdown",
+    tags: ["Fixture", "Testing", "Blog"],
+  },
+  {
     id: "uuid-dummy-1",
     status: "published",
     title: "Understanding React Server Components in Next.js 13+",

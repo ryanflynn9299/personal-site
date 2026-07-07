@@ -168,7 +168,7 @@ export function Footer() {
             </div>
           </div>
         </div>
-        <div className="mt-8 border-t border-slate-700 pt-8 grid grid-cols-1 items-center gap-4 sm:grid-cols-3">
+        <div className="mt-8 grid grid-cols-1 items-center gap-4 border-t border-slate-700 pt-8 sm:grid-cols-3">
           <div className="hidden sm:block" />
           <p className="text-sm text-slate-500 text-center">
             &copy; {new Date().getFullYear()} Ryan Flynn. All rights reserved.

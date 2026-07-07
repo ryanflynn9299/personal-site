@@ -10,14 +10,16 @@ Canonical policy for human maintainers and AI assistants. Cursor rules in `.curs
 
 ### Authority
 
-| Layer            | Location                                    | Role                                          |
-| ---------------- | ------------------------------------------- | --------------------------------------------- |
-| Index            | `.docs/prompting/PROJECT_INDEX.md`          | Where to find single sources of truth         |
-| Policy           | This file                                   | How AI should decide and push back            |
-| Architecture     | `.docs/ARCHITECTURE.md`                     | Directory layout, naming, server/client split |
-| Product / launch | `.docs/dev/TODO.md`, `RELEASE_READINESS.md` | What ships when                               |
-| Domain           | `.docs/dev/*.md`, `.docs/*.md`              | Security, SMTP, Matomo, testing, etc.         |
-| Pitfalls         | `.docs/prompting/DEVELOPMENT_GUIDELINES.md` | Repo-specific mistakes to avoid               |
+| Layer            | Location                                    | Role                                                                    |
+| ---------------- | ------------------------------------------- | ----------------------------------------------------------------------- |
+| Index            | `.docs/prompting/PROJECT_INDEX.md`          | Where to find single sources of truth; **guidance vs feature** taxonomy |
+| Policy           | This file                                   | How AI should decide and push back                                      |
+| Architecture     | `.docs/ARCHITECTURE.md`                     | Directory layout, naming, server/client split                           |
+| Product / launch | `.docs/dev/TODO.md`, `RELEASE_READINESS.md` | What ships when                                                         |
+| Domain           | `.docs/dev/*.md`, `.docs/*.md`              | Security, SMTP, Matomo, testing, etc.                                   |
+| Pitfalls         | `.docs/prompting/DEVELOPMENT_GUIDELINES.md` | Repo-specific mistakes to avoid                                         |
+
+**Guidance vs feature:** Broad principles (UX, architecture, testing strategy) live in **guidance** docs and must not name specific product features or component directives. **Feature** docs own behavior for one area (blog, author profiles, themed surfaces, CMS wiring). See [PROJECT_INDEX.md](./PROJECT_INDEX.md) § Documentation classification.
 
 Consult docs **before** inventing patterns. The codebase is the second source of truth — read surrounding files and match them.
 
@@ -97,6 +99,7 @@ Examples aligned with this project:
 - Contact form must not claim email sent when it was not (`.docs/dev/EMAIL.md`).
 - Destructive actions need confirmation; long operations need loading state.
 - Errors should be actionable, not generic blame on the user.
+- Visual/layout work must follow `.docs/dev/DESIGN.md` (guidance) and the **feature doc** for the area being changed — see [PROJECT_INDEX.md](./PROJECT_INDEX.md) § Documentation classification.
 
 ---
 
@@ -128,14 +131,16 @@ The primary agent **owns integration**: reconcile subagent output with docs, run
 
 ## 7. Infrastructure map
 
-| Artifact                                    | Purpose                                   |
-| ------------------------------------------- | ----------------------------------------- |
-| `AGENTS.md`                                 | Root entry for all AI tools               |
-| `.cursorrules`                              | Legacy pointer to modern rules            |
-| `.cursor/rules/*.mdc`                       | Cursor project rules (scoped + always-on) |
-| `.docs/prompting/AI_GUARDRAILS.md`          | This file — full policy                   |
-| `.docs/prompting/PROJECT_INDEX.md`          | Doc and code map                          |
-| `.docs/prompting/DEVELOPMENT_GUIDELINES.md` | Implementation pitfalls                   |
+| Artifact                                    | Purpose                                    |
+| ------------------------------------------- | ------------------------------------------ |
+| `AGENTS.md`                                 | Root entry for all AI tools                |
+| `.cursorrules`                              | Legacy pointer to modern rules             |
+| `.cursor/rules/*.mdc`                       | Cursor project rules (scoped + always-on)  |
+| `.docs/prompting/AI_GUARDRAILS.md`          | This file — full policy                    |
+| `.docs/prompting/PROJECT_INDEX.md`          | Doc and code map                           |
+| `.docs/prompting/DEVELOPMENT_GUIDELINES.md` | Implementation pitfalls                    |
+| `.docs/dev/DESIGN.md`                       | Design guidance (UX, UI, theme principles) |
+| `.docs/dev/THEMED_SURFACES.md`              | Themed UI inventory (feature)              |
 
 ### Cursor rules index
 

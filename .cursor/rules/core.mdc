@@ -9,7 +9,8 @@ alwaysApply: true
 Before product, architecture, design, or style decisions:
 
 1. Read `.docs/prompting/PROJECT_INDEX.md` and the topic doc it points to.
-2. Follow documented patterns unless you can **prove** a better approach.
+2. For UI/visual work, read `.docs/dev/DESIGN.md` (guidance), then the feature doc for that area ([PROJECT_INDEX.md](../prompting/PROJECT_INDEX.md)). Match sibling components on the same page.
+3. Follow documented patterns unless you can **prove** a better approach.
 
 **Override policy (docs too restrictive):** implement the better path, explain why in the PR/summary, and **update the relevant `.docs/` file in the same change**. Do not silently diverge.
 

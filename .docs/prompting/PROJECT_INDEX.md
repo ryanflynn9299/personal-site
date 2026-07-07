@@ -63,35 +63,60 @@ This document serves as the definitive map for identifying the core configuratio
 | **Admin Sessions**   | `lib/auth/session-token.ts`          | Signed, expiring admin session tokens (HMAC, edge-safe).     |
 | **Admin Middleware** | `middleware.ts`                      | Route protection for `/admin` and preview routes.            |
 
-## 5. Core Documentation (Strategy)
+## 5. Documentation classification
+
+Every doc in `.docs/` is either **guidance** (broad, generally applicable) or **feature** (specific behavior, surfaces, or integrations). Guidance docs must not name particular product features, routes, or component directives — those belong in feature docs.
+
+| Kind                  | Purpose                                                             | Examples                                                                                 |
+| --------------------- | ------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| **Guidance**          | Principles, architecture, policy, process — applies across the repo | `DESIGN.md`, `ARCHITECTURE.md`, `AI_GUARDRAILS.md`, `TESTING_STRATEGY.md`, `SECURITY.md` |
+| **Feature**           | How one area works — UI, API, config, themed surfaces               | `BLOG.md`, `AUTHOR_PROFILES.md`, `THEMED_SURFACES.md`, `DIRECTUS.md`, `EMAIL.md`         |
+| **Future / decision** | Not yet authoritative                                               | `.docs/features/*`                                                                       |
+
+**UI work:** read guidance ([DESIGN.md](../dev/DESIGN.md), [AI_GUARDRAILS.md](./AI_GUARDRAILS.md)) then the feature doc for the area you touch ([PROJECT_INDEX](#6-documentation-index) below).
+
+---
+
+## 6. Documentation index
 
 One doc per topic. If information seems missing, check the topic doc before creating a new file.
 
-| Topic                                    | Source of Truth                             |
-| :--------------------------------------- | :------------------------------------------ |
-| **AI policy**                            | `.docs/prompting/AI_GUARDRAILS.md`          |
-| **Dev pitfalls / prompting**             | `.docs/prompting/DEVELOPMENT_GUIDELINES.md` |
-| **Architecture & file layout**           | `.docs/ARCHITECTURE.md`                     |
-| **Developer onboarding + commands**      | `.docs/dev/DEVELOPMENT.md`                  |
-| **Environment variables (+ migration)**  | `.docs/dev/ENV_VARIABLES.md`                |
-| **Testing (unit + E2E)**                 | `.docs/TESTING_STRATEGY.md`                 |
-| **CI pipeline**                          | `.docs/dev/CI_PIPELINE.md`                  |
-| **Release readiness + branches**         | `.docs/dev/RELEASE_READINESS.md`            |
-| **Versioning**                           | `.docs/dev/VERSIONING.md`                   |
-| **Active TODOs**                         | `.docs/dev/TODO.md`                         |
-| **Security posture & standards**         | `.docs/SECURITY.md`                         |
-| **Health endpoint security**             | `.docs/SECURITY_HEALTH_CHECK.md`            |
-| **SVG security**                         | `.docs/dev/SECURITY_SVG.md`                 |
-| **Admin access (Tailscale-only)**        | `.docs/dev/ADMIN_ACCESS.md`                 |
-| **Directus CMS + service layer**         | `.docs/DIRECTUS.md`                         |
-| **Blog (pagination, search, ToC)**       | `.docs/dev/BLOG.md`                         |
-| **Author profiles**                      | `.docs/dev/AUTHOR_PROFILES.md`              |
-| **Contact form security**                | `.docs/dev/CONTACT_FORM_SECURITY.md`        |
-| **Email delivery (current + SMTP plan)** | `.docs/dev/EMAIL.md`                        |
-| **Self-hosted email setup**              | `.docs/dev/SELF_HOSTED_EMAIL_SETUP.md`      |
-| **Analytics (Matomo, incl. launch)**     | `.docs/ANALYTICS.md`                        |
-| **SEO & metadata**                       | `.docs/dev/SEO.md`                          |
-| **Code health reviews**                  | `.docs/dev/CODE_HEALTH_SCORECARD.md`        |
+### Guidance
+
+| Topic                               | Source of Truth                             |
+| :---------------------------------- | :------------------------------------------ |
+| **AI policy**                       | `.docs/prompting/AI_GUARDRAILS.md`          |
+| **Dev pitfalls / prompting**        | `.docs/prompting/DEVELOPMENT_GUIDELINES.md` |
+| **Architecture & file layout**      | `.docs/ARCHITECTURE.md`                     |
+| **Design (UX, UI, theme)**          | `.docs/dev/DESIGN.md`                       |
+| **Developer onboarding + commands** | `.docs/dev/DEVELOPMENT.md`                  |
+| **Testing (unit + E2E)**            | `.docs/TESTING_STRATEGY.md`                 |
+| **Security posture & standards**    | `.docs/SECURITY.md`                         |
+| **CI pipeline**                     | `.docs/dev/CI_PIPELINE.md`                  |
+| **Release readiness + branches**    | `.docs/dev/RELEASE_READINESS.md`            |
+| **Versioning**                      | `.docs/dev/VERSIONING.md`                   |
+| **Active TODOs**                    | `.docs/dev/TODO.md`                         |
+| **Code health reviews**             | `.docs/dev/CODE_HEALTH_SCORECARD.md`        |
+
+### Feature & integration
+
+| Topic                                      | Source of Truth                        |
+| :----------------------------------------- | :------------------------------------- |
+| **Environment variables (+ migration)**    | `.docs/dev/ENV_VARIABLES.md`           |
+| **Health endpoint security**               | `.docs/SECURITY_HEALTH_CHECK.md`       |
+| **SVG security**                           | `.docs/dev/SECURITY_SVG.md`            |
+| **Admin access (Tailscale-only)**          | `.docs/dev/ADMIN_ACCESS.md`            |
+| **Directus CMS + service layer**           | `.docs/DIRECTUS.md`                    |
+| **Blog (pagination, search, ToC, crumbs)** | `.docs/dev/BLOG.md`                    |
+| **Markdown content (shared pipeline)**     | `.docs/dev/MARKDOWN_CONTENT.md`        |
+| **Policies (legal docs viewer)**           | `.docs/dev/POLICIES.md`                |
+| **Themed UI surfaces (inventory)**         | `.docs/dev/THEMED_SURFACES.md`         |
+| **Author profiles**                        | `.docs/dev/AUTHOR_PROFILES.md`         |
+| **Contact form security**                  | `.docs/dev/CONTACT_FORM_SECURITY.md`   |
+| **Email delivery (current + SMTP plan)**   | `.docs/dev/EMAIL.md`                   |
+| **Self-hosted email setup**                | `.docs/dev/SELF_HOSTED_EMAIL_SETUP.md` |
+| **Analytics (Matomo, incl. launch)**       | `.docs/ANALYTICS.md`                   |
+| **SEO & metadata**                         | `.docs/dev/SEO.md`                     |
 
 ### Future features & decision records (`.docs/features/`)
 
@@ -102,7 +127,7 @@ Design docs and option analyses for features not yet implemented. Not authoritat
 | **SMS notifications (Twilio)**            | `.docs/features/TWILIO_SMS_NOTIFICATIONS.md` |
 | **Contact form delivery option analysis** | `.docs/features/CONTACT_FORM_OPTIONS.md`     |
 
-## 6. AI Infrastructure
+## 7. AI Infrastructure
 
 | Artifact           | Path                               | Purpose                                      |
 | :----------------- | :--------------------------------- | :------------------------------------------- |
@@ -111,7 +136,7 @@ Design docs and option analyses for features not yet implemented. Not authoritat
 | **Cursor rules**   | `.cursor/rules/*.mdc`              | Scoped guardrails (core, testing, UX, tools) |
 | **Full AI policy** | `.docs/prompting/AI_GUARDRAILS.md` | Docs authority, pushback, UX, testing        |
 
-## 7. Testing Infrastructure
+## 8. Testing Infrastructure
 
 | Type                 | Directory / Config                            |
 | :------------------- | :-------------------------------------------- |

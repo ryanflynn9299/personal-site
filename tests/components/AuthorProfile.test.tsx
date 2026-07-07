@@ -89,7 +89,7 @@ describe("AuthorPostFooter", () => {
     await user.click(screen.getByRole("button", { name: "About the author" }));
 
     expect(screen.getByRole("dialog")).toBeInTheDocument();
-    expect(screen.getByText("📚 Recent writing")).toBeInTheDocument();
+    expect(screen.getByText("Recent writing")).toBeInTheDocument();
   });
 
   it("omits bio excerpt when bio_short is missing", () => {
@@ -144,9 +144,9 @@ describe("AuthorPopup edge cases", () => {
 
     await user.click(screen.getByRole("button", { name: "About the author" }));
 
-    expect(screen.queryByText(/📝/)).not.toBeInTheDocument();
-    expect(screen.queryByText(/🏷️/)).not.toBeInTheDocument();
-    expect(screen.queryByText("📚 Recent writing")).not.toBeInTheDocument();
+    expect(screen.queryByText(/post/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/topic/)).not.toBeInTheDocument();
+    expect(screen.queryByText("Recent writing")).not.toBeInTheDocument();
   });
 
   it("shows singular post count copy", async () => {
@@ -165,6 +165,6 @@ describe("AuthorPopup edge cases", () => {
     await user.click(screen.getByRole("button", { name: "About the author" }));
 
     expect(screen.getByText(/1 post/)).toBeInTheDocument();
-    expect(screen.queryByText(/🏷️/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/topic/)).not.toBeInTheDocument();
   });
 });

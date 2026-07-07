@@ -3,8 +3,10 @@
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
-import { PseudoMarkdownRenderer } from "@/components/policies/PseudoMarkdownRenderer";
+import { PolicyContentRenderer } from "@/components/policies/PolicyContentRenderer";
 import { getPolicyColorTheme } from "@/lib/policy-utils/policy-colors";
+import { policySpacing } from "@/lib/policies/spacing";
+import { cn } from "@/lib/utils";
 import type { PolicyMetadata } from "@/types/policies";
 
 // Ensure Tailwind generates these classes: text-purple-400 text-sky-400 bg-purple-600/20 bg-sky-600/20 border-purple-500/50 border-sky-500/50
@@ -119,16 +121,35 @@ export function PoliciesPage({ policies, initialTab }: PoliciesPageProps) {
       </div>
 
       {/* Main Content */}
-      <div className="relative z-10 container mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <div className="flex flex-col lg:flex-row gap-6 min-h-[calc(100vh-12rem)] lg:h-[calc(100vh-12rem)]">
+      <div
+        className={cn(
+          "relative z-10 container mx-auto max-w-7xl",
+          policySpacing.pagePaddingX,
+          policySpacing.pagePaddingY
+        )}
+      >
+        <div
+          className={cn(
+            "flex min-h-[calc(100vh-12rem)] flex-col lg:h-[calc(100vh-12rem)] lg:flex-row",
+            policySpacing.layoutGap
+          )}
+        >
           {/* Left Column - Tab Navigation */}
           <aside className="lg:w-64 flex-shrink-0">
             <div className="lg:sticky lg:top-8">
-              <h2 className="font-heading text-xl font-bold text-slate-50 mb-4">
+              <h2
+                className={cn(
+                  "font-heading text-xl font-bold text-slate-50",
+                  policySpacing.sidebarTitleToTabs
+                )}
+              >
                 Policies
               </h2>
               <div
-                className="flex flex-row lg:flex-col gap-2 overflow-x-auto lg:overflow-visible pb-2 lg:pb-0"
+                className={cn(
+                  "flex flex-row overflow-x-auto pb-2 lg:flex-col lg:overflow-visible lg:pb-0",
+                  policySpacing.tabGap
+                )}
                 role="tablist"
                 aria-label="Policy documents"
               >
@@ -174,13 +195,23 @@ export function PoliciesPage({ policies, initialTab }: PoliciesPageProps) {
 
           {/* Right Column - Document Viewer */}
           <main className="flex-1 min-w-0 flex flex-col min-h-0">
-            <div className="pseudo-markdown-editor flex-1 bg-slate-800/60 backdrop-blur-sm rounded-lg border border-slate-700/50 shadow-2xl overflow-hidden flex flex-col min-h-0">
+            <div className="policy-document-panel flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border border-slate-700/50 bg-slate-800/60 shadow-2xl backdrop-blur-sm">
               {/* Document Header */}
-              <header className="border-b border-slate-700/50 px-6 py-4 bg-slate-800/80">
+              <header
+                className={cn(
+                  "border-b border-slate-700/50 bg-slate-800/80",
+                  policySpacing.documentHeaderPadding
+                )}
+              >
                 <h1 className="font-sans text-2xl font-bold text-slate-50">
                   {activePolicy.metadata.title}
                 </h1>
-                <p className="font-sans text-sm text-slate-400 mt-1">
+                <p
+                  className={cn(
+                    "font-sans text-sm text-slate-400",
+                    policySpacing.documentMetaTop
+                  )}
+                >
                   Last Updated: {activePolicy.metadata.lastUpdated}
                 </p>
               </header>
@@ -188,7 +219,10 @@ export function PoliciesPage({ policies, initialTab }: PoliciesPageProps) {
               {/* Document Content */}
               <div
                 ref={contentRef}
-                className="flex-1 overflow-y-auto px-6 py-8"
+                className={cn(
+                  "min-h-0 flex-1 overflow-y-auto",
+                  policySpacing.documentHeaderToBody
+                )}
                 id={`policy-content-${activePolicyId}`}
                 role="tabpanel"
                 aria-labelledby={`policy-tab-${activePolicyId}`}
@@ -202,9 +236,9 @@ export function PoliciesPage({ policies, initialTab }: PoliciesPageProps) {
                     transition={{ duration: 0.3 }}
                     className="document-transition"
                   >
-                    <PseudoMarkdownRenderer
+                    <PolicyContentRenderer
                       content={activePolicy.content}
-                      themeColor={activeTheme}
+                      theme={activeTheme}
                     />
                   </motion.div>
                 </AnimatePresence>

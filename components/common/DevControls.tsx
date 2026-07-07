@@ -27,6 +27,9 @@ function getRouteControlsConfig(pathname: string): RouteControlsConfig | null {
   if (pathname === "/about") {
     return { Controls: AboutPageControls, title: "About Page Controls" };
   }
+  if (pathname === "/vitae") {
+    return { Controls: VitaePageControls, title: "Vitae Controls" };
+  }
   return null;
 }
 
@@ -41,6 +44,8 @@ export function hasDevControlsForPathname(pathname: string): boolean {
 interface DevControlsProps {
   /** When true, parent dock handles fixed positioning. */
   embedded?: boolean;
+  /** When true, renders as a segment inside FloatingUtilityDock (no outer chrome). */
+  embeddedInDock?: boolean;
 }
 
 /**
@@ -50,7 +55,10 @@ interface DevControlsProps {
  * Sections with only one variant option are omitted; if nothing remains, the
  * component renders nothing.
  */
-export function DevControls({ embedded = false }: DevControlsProps) {
+export function DevControls({
+  embedded = false,
+  embeddedInDock = false,
+}: DevControlsProps) {
   const pathname = usePathname();
   const { showDevControls } = useDevControlsStore();
   const [mounted, setMounted] = useState(false);
@@ -79,6 +87,7 @@ export function DevControls({ embedded = false }: DevControlsProps) {
       onToggle={() => setIsCollapsed(!isCollapsed)}
       title={title}
       embedded={embedded}
+      embeddedInDock={embeddedInDock}
     >
       <DevControlsContent pathname={pathname} />
     </CollapsibleControls>
@@ -123,19 +132,96 @@ interface PageControlsProps {
   onEmpty?: () => void;
 }
 
+function ControlsExpandedHeader({
+  title,
+  onToggle,
+}: {
+  title: string;
+  onToggle: () => void;
+}) {
+  return (
+    <div className="mb-5 flex items-center justify-between border-b border-white/10 pb-3">
+      <div className="flex items-center gap-2">
+        <div className="flex h-6 w-6 items-center justify-center rounded-md border border-white/10 bg-gradient-to-br from-slate-700/50 to-slate-800/50 shadow-sm">
+          <Sparkles className="h-3 w-3 text-sky-300" />
+        </div>
+        <h3 className="mt-0.5 font-inter text-sm font-semibold uppercase tracking-wide text-slate-100">
+          {title}
+        </h3>
+      </div>
+
+      <button
+        type="button"
+        onClick={onToggle}
+        className="rounded-full bg-slate-800/50 p-1.5 text-slate-400 transition-all hover:bg-slate-700 hover:text-white"
+        aria-label="Collapse controls"
+      >
+        <ChevronDown className="h-4 w-4" />
+      </button>
+    </div>
+  );
+}
+
 function CollapsibleControls({
   isCollapsed,
   onToggle,
   title,
   embedded,
+  embeddedInDock,
   children,
 }: {
   isCollapsed: boolean;
   onToggle: () => void;
   title: string;
   embedded?: boolean;
+  embeddedInDock?: boolean;
   children: React.ReactNode;
 }) {
+  if (embeddedInDock) {
+    return (
+      <div className="relative h-14 w-[300px] shrink-0">
+        <AnimatePresence initial={false}>
+          {!isCollapsed && (
+            <motion.div
+              key="dock-controls-panel"
+              initial={{ opacity: 0, y: 8, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 8, scale: 0.98 }}
+              transition={{ type: "spring", stiffness: 420, damping: 34 }}
+              className="absolute bottom-[calc(100%+0.5rem)] right-0 z-20 w-[300px] max-w-[calc(100vw-2rem)] overflow-hidden rounded-2xl border border-white/10 bg-black/60 p-6 shadow-2xl ring-1 ring-white/5 backdrop-blur-xl"
+            >
+              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-slate-500/50 to-transparent" />
+              <ControlsExpandedHeader title={title} onToggle={onToggle} />
+              {children}
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <button
+          type="button"
+          onClick={onToggle}
+          aria-expanded={!isCollapsed}
+          aria-label={isCollapsed ? "Expand controls" : "Collapse controls"}
+          className="group flex h-14 w-full items-center justify-between px-5 transition-colors"
+        >
+          <div className="flex items-center gap-2 text-slate-300 transition-colors group-hover:text-white">
+            <Sparkles className="h-4 w-4 text-sky-400 transition-colors group-hover:text-sky-300" />
+            <span className="font-inter text-xs font-medium tracking-wide">
+              {title}
+            </span>
+          </div>
+          <span className="rounded-full bg-white/5 p-1 transition-colors group-hover:bg-white/10">
+            <ChevronDown
+              className={`h-4 w-4 text-slate-400 transition-transform group-hover:text-white ${isCollapsed ? "rotate-180" : ""}`}
+            />
+          </span>
+        </button>
+      </div>
+    );
+  }
+
+  const collapsedPadding = "0.75rem 1.25rem";
+
   return (
     <motion.div
       className={
@@ -149,7 +235,7 @@ function CollapsibleControls({
     >
       <motion.div
         layout
-        className="w-full relative overflow-hidden rounded-2xl border border-white/10 bg-black/60 backdrop-blur-xl shadow-2xl ring-1 ring-white/5"
+        className="relative w-full overflow-hidden rounded-2xl border border-white/10 bg-black/60 shadow-2xl ring-1 ring-white/5 backdrop-blur-xl"
         animate={{ scale: 1 }}
         transition={{
           layout: { type: "spring", stiffness: 400, damping: 30 },
@@ -163,25 +249,26 @@ function CollapsibleControls({
             <motion.div
               key="collapsed"
               initial={{ opacity: 0 }}
-              animate={{ opacity: 1, padding: "0.75rem 1.25rem" }}
+              animate={{ opacity: 1, padding: collapsedPadding }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
             >
               <button
+                type="button"
                 onClick={onToggle}
                 className="group flex w-full items-center justify-between transition-all"
                 aria-label="Expand controls"
                 style={{ pointerEvents: "auto" }}
               >
-                <div className="flex items-center gap-2 text-slate-300 group-hover:text-white transition-colors">
-                  <Sparkles className="h-4 w-4 text-sky-400 group-hover:text-sky-300 transition-colors" />
-                  <span className="text-xs font-medium font-inter tracking-wide">
+                <div className="flex items-center gap-2 text-slate-300 transition-colors group-hover:text-white">
+                  <Sparkles className="h-4 w-4 text-sky-400 transition-colors group-hover:text-sky-300" />
+                  <span className="font-inter text-xs font-medium tracking-wide">
                     {title}
                   </span>
                 </div>
                 <motion.div
                   animate={{ rotate: 180 }}
-                  className="rounded-full bg-white/5 p-1 group-hover:bg-white/10 transition-colors"
+                  className="rounded-full bg-white/5 p-1 transition-colors group-hover:bg-white/10"
                   transition={{ type: "spring", stiffness: 400, damping: 25 }}
                 >
                   <ChevronDown className="h-4 w-4 text-slate-400 group-hover:text-white" />
@@ -200,29 +287,8 @@ function CollapsibleControls({
                 initial={{ y: -10, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.1 }}
-                className="mb-5 flex items-center justify-between border-b border-white/10 pb-3"
               >
-                <div className="flex items-center gap-2">
-                  <div className="flex h-6 w-6 items-center justify-center rounded-md bg-gradient-to-br from-slate-700/50 to-slate-800/50 shadow-sm border border-white/10">
-                    <Sparkles className="h-3 w-3 text-sky-300" />
-                  </div>
-                  <h3 className="text-sm font-semibold text-slate-100 font-inter tracking-wide uppercase mt-0.5">
-                    {title}
-                  </h3>
-                </div>
-
-                <button
-                  onClick={onToggle}
-                  className="rounded-full bg-slate-800/50 p-1.5 text-slate-400 transition-all hover:bg-slate-700 hover:text-white"
-                  aria-label="Collapse controls"
-                >
-                  <motion.div
-                    animate={{ rotate: 0 }}
-                    transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                  >
-                    <ChevronDown className="h-4 w-4" />
-                  </motion.div>
-                </button>
+                <ControlsExpandedHeader title={title} onToggle={onToggle} />
               </motion.div>
 
               <motion.div
@@ -544,6 +610,37 @@ function AboutPageControls({ onEmpty }: PageControlsProps) {
   return (
     <div className="w-full max-h-[65vh] overflow-y-auto pr-1 space-y-6">
       {sections}
+    </div>
+  );
+}
+
+function VitaePageControls() {
+  const { vitaeTwinkleFastMode, setVitaeTwinkleFastMode } =
+    useDevControlsStore();
+
+  return (
+    <div className="rounded-xl border border-violet-500/20 bg-violet-500/5 p-3">
+      <SectionLabel>Timeline twinkle</SectionLabel>
+      <div className="flex items-center justify-between gap-3 rounded-lg border border-white/5 bg-white/5 px-3 py-2">
+        <label
+          htmlFor="vitae-twinkle-fast"
+          className="cursor-pointer text-xs font-medium text-slate-300 font-inter"
+        >
+          Fast twinkle mode
+        </label>
+        <input
+          type="checkbox"
+          id="vitae-twinkle-fast"
+          checked={vitaeTwinkleFastMode}
+          onChange={(event) => setVitaeTwinkleFastMode(event.target.checked)}
+          className="h-4 w-4 cursor-pointer rounded border-slate-600 bg-black/50 text-violet-500 focus:ring-violet-500/50"
+        />
+      </div>
+      <p className="mt-2 text-[10px] leading-relaxed text-slate-500">
+        Off: one random planet bullet twinkles every 14–34s. On: every 0.7–2.2s
+        for ad-hoc testing. Timing lives in{" "}
+        <code className="text-slate-400">lib/vitae/twinkle.ts</code>.
+      </p>
     </div>
   );
 }

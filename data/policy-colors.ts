@@ -1,7 +1,6 @@
 // Policy color themes data
 
 import type { PolicyColorTheme } from "@/types/policies";
-import { sky, purple } from "@/constants/theme";
 
 export const colorThemes: Record<string, PolicyColorTheme> = {
   "privacy-policy": {
@@ -17,8 +16,6 @@ export const colorThemes: Record<string, PolicyColorTheme> = {
     codeBorder: "border-sky-500/30",
     blockquoteBorder: "border-sky-500/50",
     constellation: "text-sky-400/50",
-    linkColor: sky[400], // sky-400
-    linkHoverColor: sky[300], // sky-300
   },
   "terms-of-service": {
     text: "text-purple-400",
@@ -33,8 +30,6 @@ export const colorThemes: Record<string, PolicyColorTheme> = {
     codeBorder: "border-purple-500/30",
     blockquoteBorder: "border-purple-500/50",
     constellation: "text-purple-400/50",
-    linkColor: purple[400], // purple-400
-    linkHoverColor: purple[300], // purple-300
   },
   // Future policies can use these colors:
   // rose-500, amber-400, teal-400, indigo-400, lime-400, fuchsia-500, emerald-500

@@ -10,7 +10,7 @@ describe("getPolicyColorTheme", () => {
     expect(theme).toBeDefined();
     expect(theme.text).toBe("text-sky-400");
     expect(theme.icon).toBe("text-sky-400");
-    expect(theme.linkColor).toBe("#38bdf8");
+    expect(theme.link).toBe("text-sky-400");
   });
 
   it("returns terms-of-service theme for terms-of-service id", () => {
@@ -18,7 +18,7 @@ describe("getPolicyColorTheme", () => {
     expect(theme).toBeDefined();
     expect(theme.text).toBe("text-purple-400");
     expect(theme.icon).toBe("text-purple-400");
-    expect(theme.linkColor).toBe("#a78bfa");
+    expect(theme.link).toBe("text-purple-400");
   });
 
   it("returns default theme (privacy-policy) for unknown policy id", () => {
@@ -43,8 +43,6 @@ describe("getPolicyColorTheme", () => {
     expect(theme.codeBorder).toBeDefined();
     expect(theme.blockquoteBorder).toBeDefined();
     expect(theme.constellation).toBeDefined();
-    expect(theme.linkColor).toBeDefined();
-    expect(theme.linkHoverColor).toBeDefined();
   });
 });
 

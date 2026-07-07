@@ -1,18 +1,20 @@
 "use client";
 
 import Image from "next/image";
-import React, { useMemo } from "react";
+import { useMemo, useRef, type MutableRefObject } from "react";
 import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import rehypeRaw from "rehype-raw";
-import rehypeSanitize from "rehype-sanitize";
 import { formatPlaintext } from "@/lib/policy-utils/plaintext-formatter";
 import {
   extractHeadings,
   resolveContentFormat,
   type ContentFormat,
-  type TocHeading,
-} from "@/lib/blog/toc";
+} from "@/lib/markdown/headings";
+import { createHeadingIdConsumer } from "@/lib/markdown/heading-ids";
+import {
+  markdownRehypePlugins,
+  markdownRemarkPlugins,
+} from "@/lib/markdown/plugins";
+import type { DocumentHeading } from "@/lib/markdown/headings";
 
 export type { ContentFormat };
 
@@ -22,17 +24,11 @@ interface BlogContentRendererProps {
   className?: string;
 }
 
-function createHeadingComponents(headings: TocHeading[]) {
-  let queueIndex = 0;
-
-  const consumeId = (level: 2 | 3 | 4): string | undefined => {
-    if (queueIndex < headings.length && headings[queueIndex].level === level) {
-      const id = headings[queueIndex].id;
-      queueIndex += 1;
-      return id;
-    }
-    return undefined;
-  };
+function createHeadingComponents(
+  headings: DocumentHeading[],
+  headingIndexRef: MutableRefObject<number>
+) {
+  const consumeId = createHeadingIdConsumer(headings, headingIndexRef);
 
   return {
     h1: ({ children }: { children?: React.ReactNode }) => (
@@ -42,7 +38,7 @@ function createHeadingComponents(headings: TocHeading[]) {
     ),
     h2: ({ children }: { children?: React.ReactNode }) => (
       <h2
-        id={consumeId(2)}
+        id={consumeId()}
         className="font-heading text-3xl font-semibold text-slate-100 mb-3 mt-8 scroll-mt-28"
       >
         {children}
@@ -50,7 +46,7 @@ function createHeadingComponents(headings: TocHeading[]) {
     ),
     h3: ({ children }: { children?: React.ReactNode }) => (
       <h3
-        id={consumeId(3)}
+        id={consumeId()}
         className="font-heading text-2xl font-semibold text-slate-200 mb-2 mt-6 scroll-mt-28"
       >
         {children}
@@ -58,7 +54,7 @@ function createHeadingComponents(headings: TocHeading[]) {
     ),
     h4: ({ children }: { children?: React.ReactNode }) => (
       <h4
-        id={consumeId(4)}
+        id={consumeId()}
         className="font-heading text-xl font-semibold text-slate-200 mb-2 mt-4 scroll-mt-28"
       >
         {children}
@@ -143,13 +139,16 @@ export function BlogContentRenderer({
   format = "auto",
   className = "",
 }: BlogContentRendererProps) {
+  const headingIndexRef = useRef(0);
+  headingIndexRef.current = 0;
+
   const actualFormat = resolveContentFormat(content, format);
   const headings = useMemo(
     () => extractHeadings(content, format),
     [content, format]
   );
   const markdownComponents = useMemo(
-    () => createHeadingComponents(headings),
+    () => createHeadingComponents(headings, headingIndexRef),
     [headings]
   );
 
@@ -157,8 +156,8 @@ export function BlogContentRenderer({
     return (
       <div className={`prose prose-invert max-w-none ${className}`}>
         <ReactMarkdown
-          remarkPlugins={[remarkGfm]}
-          rehypePlugins={[rehypeRaw, rehypeSanitize]}
+          remarkPlugins={markdownRemarkPlugins}
+          rehypePlugins={markdownRehypePlugins}
           components={markdownComponents}
         >
           {content}
@@ -171,7 +170,7 @@ export function BlogContentRenderer({
     return (
       <div className={`prose prose-invert max-w-none ${className}`}>
         <ReactMarkdown
-          rehypePlugins={[rehypeRaw, rehypeSanitize]}
+          rehypePlugins={markdownRehypePlugins}
           components={markdownComponents}
         >
           {content}

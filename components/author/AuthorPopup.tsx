@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { X } from "lucide-react";
+import { Mail, X } from "lucide-react";
 import { Dialog } from "radix-ui";
 import { Button } from "@/components/primitives/Button";
 import { AuthorIdentity } from "@/components/author/AuthorIdentity";
@@ -10,8 +10,8 @@ import {
   formatAuthorPostCount,
   formatAuthorTopicCount,
 } from "@/lib/site/authors";
-import { getBlogPostUrl } from "@/lib/utils";
 import { hexToRgba } from "@/constants/theme";
+import { cn, getBlogPostUrl } from "@/lib/utils";
 
 function formatPostDate(isoDate: string): string {
   return new Date(isoDate).toLocaleDateString("en-US", {
@@ -48,7 +48,7 @@ export function AuthorPopup() {
             <Dialog.Close asChild>
               <button
                 type="button"
-                className="rounded-md p-2 text-slate-400 transition-colors hover:bg-slate-800 hover:text-slate-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-500"
+                className="border-0 bg-transparent p-2 text-slate-400 shadow-none transition-colors hover:bg-transparent hover:text-slate-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-500"
                 aria-label="Close author profile"
               >
                 <X className="h-5 w-5" />
@@ -72,20 +72,35 @@ export function AuthorPopup() {
             </p>
           )}
 
-          {showStats && (
-            <p className="mt-4 text-sm text-slate-400">
-              {postCountLabel && <span>📝 {postCountLabel}</span>}
-              {postCountLabel && topicCountLabel && (
-                <span aria-hidden="true"> · </span>
-              )}
-              {topicCountLabel && <span>🏷️ {topicCountLabel}</span>}
-            </p>
-          )}
+          <div
+            className={cn(
+              "mt-4 flex items-center gap-4 text-sm",
+              showStats ? "justify-between" : "justify-end"
+            )}
+          >
+            {showStats && (
+              <p className="text-slate-400">
+                {postCountLabel && <span>{postCountLabel}</span>}
+                {postCountLabel && topicCountLabel && (
+                  <span aria-hidden="true"> · </span>
+                )}
+                {topicCountLabel && <span>{topicCountLabel}</span>}
+              </p>
+            )}
+            <Link
+              href="/about"
+              onClick={() => setOpen(false)}
+              className="shrink-0 font-medium transition-colors hover:underline"
+              style={{ color: author.accent_hex }}
+            >
+              More about me →
+            </Link>
+          </div>
 
           {showRecentPosts && (
             <div className="mt-6">
               <h3 className="text-sm font-medium text-slate-300">
-                📚 Recent writing
+                Recent writing
               </h3>
               <ul className="mt-3 space-y-2">
                 {context.recent_posts.map((recentPost) => (
@@ -133,33 +148,30 @@ export function AuthorPopup() {
                 className="font-medium transition-colors hover:underline"
                 style={{ color: author.accent_hex }}
               >
-                Browse the blog →
+                Browse the blog
               </Link>
             </p>
           )}
 
-          <div className="mt-6 flex flex-wrap items-center gap-4 border-t border-slate-700 pt-5">
-            <Link
-              href="/about"
-              onClick={() => setOpen(false)}
-              className="text-sm font-medium transition-colors hover:underline"
-              style={{ color: author.accent_hex }}
-            >
-              More about me →
-            </Link>
+          <div className="mt-6 flex items-center justify-between gap-4 border-t border-slate-700 pt-5">
             <Link
               href="/contact"
               onClick={() => setOpen(false)}
-              className="text-sm text-slate-400 transition-colors hover:text-slate-200"
+              className="inline-flex items-center gap-2 text-sm text-slate-400 transition-colors hover:text-slate-200 hover:underline"
             >
-              Get in touch →
+              <Mail
+                className="h-4 w-4 shrink-0"
+                style={{ color: author.accent_hex }}
+                aria-hidden="true"
+              />
+              Get in touch
             </Link>
             <Dialog.Close asChild>
               <Button
                 type="button"
                 variant="outline"
                 size="sm"
-                className="ml-auto"
+                className="shrink-0"
               >
                 Close
               </Button>

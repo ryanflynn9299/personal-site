@@ -258,11 +258,13 @@
   }
 }
 
-.pseudo-markdown-editor {
+.pseudo-markdown-editor,
+.policy-document-panel {
   transition: all 0.3s ease;
 }
 
-.pseudo-markdown-editor:hover {
+.pseudo-markdown-editor:hover,
+.policy-document-panel:hover {
   border-color: rgba(148, 163, 184, 0.4);
 }
 
@@ -322,12 +324,54 @@
   }
 }
 
-.pseudo-markdown-editor a svg {
+/* Vitae timeline — rare one-shot twinkle on a random planet bullet */
+@keyframes vitae-twinkle-inner {
+  0%,
+  100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  42% {
+    transform: scale(1.22);
+    filter: brightness(1.55);
+  }
+}
+
+@keyframes vitae-twinkle-ring {
+  0%,
+  100% {
+    opacity: 1;
+    filter: brightness(1);
+  }
+  42% {
+    opacity: 1;
+    filter: brightness(1.25);
+  }
+}
+
+.vitae-bullet-dot.is-twinkling .vitae-bullet-inner {
+  animation: vitae-twinkle-inner 420ms ease-out;
+}
+
+.vitae-bullet-dot.is-twinkling .vitae-bullet-ring {
+  animation: vitae-twinkle-ring 420ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vitae-bullet-dot.is-twinkling .vitae-bullet-inner,
+  .vitae-bullet-dot.is-twinkling .vitae-bullet-ring {
+    animation: none;
+  }
+}
+
+.pseudo-markdown-editor a svg,
+.policy-document-panel a svg {
   filter: drop-shadow(0 0 2px currentColor);
   transition: filter 0.2s ease;
 }
 
-.pseudo-markdown-editor a:hover svg {
+.pseudo-markdown-editor a:hover svg,
+.policy-document-panel a:hover svg {
   filter: drop-shadow(0 0 6px currentColor);
 }
 

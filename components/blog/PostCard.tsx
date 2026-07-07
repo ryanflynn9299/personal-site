@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Calendar, Clock } from "lucide-react";
 import { Post } from "@/types";
+import { blogSpacing } from "@/lib/blog/spacing";
 import {
   estimateReadingTimeMinutes,
   formatReadingTime,
@@ -25,10 +26,10 @@ interface PostCardInstanceStyle {
 const POST_CARD_INSTANCES: Record<PostCardInstance, PostCardInstanceStyle> = {
   default: {
     link: "group flex flex-col overflow-hidden rounded-lg border border-slate-700 bg-slate-800 transition-all hover:border-sky-400 hover:shadow-lg hover:shadow-sky-900/20",
-    body: "flex flex-1 flex-col p-6",
+    body: `flex flex-1 flex-col ${blogSpacing.cardBodyPadding}`,
     title:
       "font-heading text-xl font-semibold text-slate-50 transition-colors group-hover:text-sky-300",
-    summary: "mt-3 flex-grow text-slate-300",
+    summary: `${blogSpacing.cardTitleToSummary} flex-grow text-slate-300`,
   },
 };
 
@@ -82,7 +83,12 @@ export function PostCard({
       <div className={styles.body}>
         <TitleTag className={styles.title}>{post.title}</TitleTag>
         <p className={styles.summary}>{post.summary}</p>
-        <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-slate-400">
+        <div
+          className={cn(
+            blogSpacing.cardSummaryToMeta,
+            "flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-slate-400"
+          )}
+        >
           <span className="inline-flex items-center">
             <Calendar className="mr-2 h-4 w-4" />
             <time dateTime={post.publish_date}>{formattedDate}</time>

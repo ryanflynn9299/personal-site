@@ -14,9 +14,6 @@ export type PolicyColorTheme = {
   codeBorder: string; // border-{color}-500/30
   blockquoteBorder: string; // border-{color}-500/50
   constellation: string; // text-{color}-400/50
-  // CSS variable values for dynamic hover states
-  linkColor: string; // CSS color value for links
-  linkHoverColor: string; // CSS color value for link hover
 };
 
 export interface PolicyMetadata {

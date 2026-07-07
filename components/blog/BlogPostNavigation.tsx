@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Post } from "@/types";
+import { blogSpacing } from "@/lib/blog/spacing";
+import { cn } from "@/lib/utils";
 
 interface BlogPostNavigationProps {
   prev: Post | null;
@@ -13,7 +15,12 @@ export function BlogPostNavigation({ prev, next }: BlogPostNavigationProps) {
   }
 
   return (
-    <nav className="mt-16 flex flex-col justify-between gap-6 border-t border-slate-700 pt-8 sm:flex-row sm:items-center sm:gap-4 lg:mx-auto">
+    <nav
+      className={cn(
+        blogSpacing.sectionBreak,
+        "flex flex-col justify-between gap-6 sm:flex-row sm:items-center sm:gap-4 lg:mx-auto"
+      )}
+    >
       {/* Previous Post */}
       <div className="flex-1">
         {prev && (

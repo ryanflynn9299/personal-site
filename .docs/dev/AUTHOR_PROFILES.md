@@ -1,9 +1,10 @@
 # Author Profiles: Design & Data Spec
 
+**Type:** Feature — author popup, byline, and post-footer card  
 **Status:** Approved — v1 implemented  
 **Last updated:** 2026-07-01
 
-Single source of truth for the blog author popup and post-footer card. This feature adds lightweight author context on blog posts — **not** a dedicated author page, **not** a quotes/legal/404-style experience.
+Single source of truth for the blog author popup and post-footer card. Design **principles** live in [DESIGN.md](./DESIGN.md); this doc is authoritative for author-profile implementation.
 
 ---
 
@@ -48,7 +49,7 @@ Replace plain "By Ryan Flynn" text with a subtle trigger:
 
 - Looks like inline metadata (`text-slate-400`), not a primary button.
 - Accent color on hover (author's assigned accent).
-- Optional leading emoji: `✨ Ryan Flynn`
+- Plain text: `By Ryan Flynn` — no leading emoji (emoji stays in popup/footer identity only).
 - `aria-haspopup="dialog"`; opens popup.
 
 ### 2.2 Author popup (primary)
@@ -60,10 +61,9 @@ Compact Radix `Dialog` — same interaction family as blog search (`BlogPageClie
 1. **Identity row** — emoji (large), display name, optional role subtitle
 2. **Gradient divider** — `via-slate-700` (portfolio standard)
 3. **Bio** — `bio_short` only; 1–3 lines, `text-slate-300`
-4. **Stats** (when computable) — e.g. `3 posts · 2 topics` with emoji prefixes
+4. **Stats row** (when computable) — e.g. `3 posts · 2 topics` on the left; **More about me →** (`/about`, author accent) aligned right on the same line. When stats are omitted, the about link still sits on that row, right-aligned.
 5. **Recent writing** — up to 3 post links (title + date); mini card rows
-6. **Actions** — text links styled with author accent: "More about me →" (`/about`), optional "Get in touch →" (`/contact`)
-7. **Close** — outline `Button` or Esc / backdrop
+6. **Footer** — **Get in touch** (`/contact`) bottom-left with mail icon in author accent; outline **Close** opposite. Esc, backdrop, and borderless ✕ also dismiss.
 
 **Panel styling:**
 
@@ -80,14 +80,15 @@ Placed **after** article content, **before** `BlogPostNavigation`.
 
 ```
 ┌────────────────────────────────────────────────────────┐
-│  ✨   Written by Ryan Flynn                            │
-│       Software engineer. Short bio excerpt…            │
-│                              [ About the author ]      │
+│  ✨   Written by                    [ About the author ] │
+│       Ryan Flynn                                         │
+│       Software engineer. Short bio excerpt…              │
 └────────────────────────────────────────────────────────┘
 ```
 
 - Container: `rounded-lg border border-slate-700 bg-slate-800/50 p-6`
-- Left: emoji in accent-tinted circle (`border` + `bg-{accent}/10`)
+- Left: emoji in accent-tinted circle (`border` + `bg-{accent}/10`), spanning the content column
+- CTA sits on the **identity row** (aligned with the author name), not vertically centered against the bio — keeps the action grouped with "who wrote this" (Law of Proximity)
 - Right: CTA opens the same popup as the header link
 - No avatar in v1
 
@@ -142,13 +143,13 @@ Add `ruby` to `accents` in `constants/theme.ts` when implementing (alias for ros
 
 ### 3.5 Emoji in UI copy (v1)
 
-Light emoji use in labels — portfolio tone, not admin dashboard:
+**Profile emoji only** in modal and footer identity (`AuthorIdentity`, `AuthorLink`). Decorative emoji in stats, section headings, and body copy are discouraged—they rarely add clarity and clash with the portfolio tone.
 
-| Location               | Example                                               |
-| ---------------------- | ----------------------------------------------------- |
-| Stats row              | `📝 12 posts · 🏷️ 8 topics`                           |
-| Recent section heading | `📚 Recent writing`                                   |
-| Footer card            | emoji in identity circle only (no emoji spam in body) |
+| Location               | Guidance                               |
+| ---------------------- | -------------------------------------- |
+| Stats row              | Plain text, e.g. `12 posts · 8 topics` |
+| Recent section heading | `Recent writing` (no prefix emoji)     |
+| Footer card            | Emoji in identity circle only          |
 
 Avoid emoji in buttons that already have clear text labels.
 

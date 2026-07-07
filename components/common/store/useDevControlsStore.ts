@@ -55,8 +55,18 @@ interface DevUIState {
   setShowDevControls: (show: boolean) => void;
 }
 
+// Vitae page controls
+interface VitaePageState {
+  vitaeTwinkleFastMode: boolean;
+  setVitaeTwinkleFastMode: (enabled: boolean) => void;
+}
+
 // Combined dev controls state
-interface DevControlsState extends HomePageState, QuoteViewState, DevUIState {}
+interface DevControlsState
+  extends HomePageState,
+    QuoteViewState,
+    DevUIState,
+    VitaePageState {}
 
 // Storage key for localStorage
 const STORAGE_KEY = "dev-controls-state";
@@ -120,6 +130,11 @@ export const useDevControlsStore = create<DevControlsState>()(
       setHexSurgeEnabled: (enabled) => set({ hexSurgeEnabled: enabled }),
       setHexSurgeTriggerCallback: (callback) =>
         set({ hexSurgeTriggerCallback: callback }),
+
+      // Vitae page state
+      vitaeTwinkleFastMode: false,
+      setVitaeTwinkleFastMode: (enabled) =>
+        set({ vitaeTwinkleFastMode: enabled }),
     }),
     {
       name: STORAGE_KEY,
@@ -136,6 +151,7 @@ export const useDevControlsStore = create<DevControlsState>()(
         activeNormalVariant: state.activeNormalVariant,
         activeConstellationVariant: state.activeConstellationVariant,
         hexSurgeEnabled: state.hexSurgeEnabled,
+        vitaeTwinkleFastMode: state.vitaeTwinkleFastMode,
       }),
     }
   )
