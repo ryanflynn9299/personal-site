@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
 import { ContactPageClient } from "@/components/contact/ContactPageClient";
-import { isEmailServiceConfigured } from "@/lib/services/email-service";
+import { runtime } from "@/lib/config";
+import {
+  getContactMailtoHref,
+  getContactUnavailableMessage,
+} from "@/lib/site/contact";
+import { getContactDeliveryStatus } from "@/lib/site/contact.server";
 import { generatePageMetadata } from "@/lib/site/seo";
 
 export const metadata: Metadata = generatePageMetadata({
@@ -11,8 +16,19 @@ export const metadata: Metadata = generatePageMetadata({
 });
 
 export default function ContactPage() {
-  // Check email service availability on the server
-  const emailServiceAvailable = isEmailServiceConfigured();
+  const deliveryStatus = getContactDeliveryStatus();
+  const unavailableMessage = getContactUnavailableMessage(deliveryStatus);
+  const isFormDisabled =
+    !deliveryStatus.canAcceptSubmissions && !runtime.isOfflineDev;
 
-  return <ContactPageClient emailServiceAvailable={emailServiceAvailable} />;
+  return (
+    <ContactPageClient
+      contactEmail={deliveryStatus.contactEmail}
+      mailtoHref={getContactMailtoHref()}
+      emailServiceAvailable={deliveryStatus.emailServiceAvailable}
+      canAcceptSubmissions={deliveryStatus.canAcceptSubmissions}
+      isFormDisabled={isFormDisabled}
+      unavailableMessage={unavailableMessage}
+    />
+  );
 }

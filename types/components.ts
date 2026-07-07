@@ -29,10 +29,12 @@ export interface AnimatedTextProps {
 
 // ContactPageClient types
 export interface ContactPageClientProps {
-  /**
-   * Whether the email service is configured and available
-   */
+  contactEmail: string | null;
+  mailtoHref: string | null;
   emailServiceAvailable: boolean;
+  canAcceptSubmissions: boolean;
+  isFormDisabled: boolean;
+  unavailableMessage: string;
 }
 
 // MagicBento component types
