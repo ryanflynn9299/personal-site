@@ -6,6 +6,8 @@ import type { AuthorContext, Post, ResolvedAuthorProfile } from "@/types";
 import { BlogContentRenderer } from "@/components/blog/BlogContentRenderer";
 import { BlogTableOfContents } from "@/components/blog/BlogTableOfContents";
 import { BlogPostNavigation } from "@/components/blog/BlogPostNavigation";
+import { BlogPostBreadcrumbs } from "@/components/blog/BlogPostBreadcrumbs";
+import { buildBlogPostBreadcrumbs } from "@/lib/blog/breadcrumbs";
 import { evaluateToc } from "@/lib/blog/toc";
 import { AuthorDialogProvider } from "@/components/author/AuthorDialogContext";
 import { AuthorByline } from "@/components/author/AuthorByline";
@@ -36,11 +38,13 @@ export function BlogPostArticle({
     () => evaluateToc(post.content, post.content_format || "auto"),
     [post.content, post.content_format]
   );
+  const breadcrumbs = useMemo(() => buildBlogPostBreadcrumbs(post), [post]);
 
   return (
     <AuthorDialogProvider author={author} context={authorContext}>
       <article className="container mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
         <header className="text-left">
+          <BlogPostBreadcrumbs items={breadcrumbs} />
           <h1 className="font-heading text-4xl font-bold text-slate-50 md:text-5xl">
             {post.title}
           </h1>
