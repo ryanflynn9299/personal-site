@@ -135,23 +135,12 @@ describe("ContactPageClient", () => {
     expect(
       screen.getByText(/contact form is temporarily unavailable/i)
     ).toBeInTheDocument();
-    expect(screen.getByPlaceholderText("Your Name")).toBeDisabled();
-    expect(screen.getByPlaceholderText("Your Email")).toBeDisabled();
-    expect(screen.getByPlaceholderText("Your Message")).toBeDisabled();
+
+    const fieldset = document.querySelector("fieldset");
+    expect(fieldset).toBeDisabled();
     expect(
       screen.getByRole("button", { name: /send message/i })
     ).toBeDisabled();
-  });
-
-  it("shows fallback when contact email is not configured", () => {
-    renderContact({
-      contactEmail: null,
-      mailtoHref: null,
-    });
-
-    expect(
-      screen.getByText(/direct email is not configured/i)
-    ).toBeInTheDocument();
   });
 
   it("displays email service status indicator", () => {

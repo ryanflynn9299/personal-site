@@ -132,13 +132,7 @@ export function ContactPageClient({
             </p>
           </div>
           <div className="space-y-4">
-            {contactEmail && mailtoHref ? (
-              <ContactEmailCard email={contactEmail} mailtoHref={mailtoHref} />
-            ) : (
-              <div className="rounded-lg bg-slate-800 p-4 text-sm text-slate-400">
-                Direct email is not configured for this environment.
-              </div>
-            )}
+            <ContactEmailCard email={contactEmail} mailtoHref={mailtoHref} />
             <a
               href="https://www.linkedin.com/in/ryan-flynn04/"
               target="_blank"
@@ -224,78 +218,80 @@ export function ContactPageClient({
               action={formAction}
               className="mt-4 space-y-4"
             >
-              <div>
-                <label htmlFor="name" className="sr-only">
-                  Name
-                </label>
-                <input
-                  type="text"
-                  name="name"
-                  id="name"
-                  required
-                  disabled={isFormDisabled}
-                  maxLength={CONTACT_MAX_NAME_LENGTH}
-                  placeholder="Your Name"
-                  className={`w-full rounded-md border-slate-600 bg-slate-700 px-4 py-2 text-slate-200 ring-offset-slate-900 transition-colors focus:border-sky-300 focus:ring-2 focus:ring-sky-300 ${disabledFieldClassName}`}
-                />
-              </div>
-              <div>
-                <label htmlFor="email" className="sr-only">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  name="email"
-                  id="email"
-                  required
-                  disabled={isFormDisabled}
-                  maxLength={CONTACT_MAX_EMAIL_LENGTH}
-                  placeholder="Your Email"
-                  className={`w-full rounded-md border-slate-600 bg-slate-700 px-4 py-2 text-slate-200 ring-offset-slate-900 transition-colors focus:border-sky-300 focus:ring-2 focus:ring-sky-300 ${disabledFieldClassName}`}
-                />
-              </div>
-              <div>
-                <label htmlFor="message" className="sr-only">
-                  Message
-                </label>
-                <textarea
-                  name="message"
-                  id="message"
-                  required
-                  disabled={isFormDisabled}
-                  rows={5}
-                  maxLength={CONTACT_MAX_MESSAGE_LENGTH}
-                  placeholder="Your Message"
-                  className={`w-full rounded-md border-slate-600 bg-slate-700 px-4 py-2 text-slate-200 ring-offset-slate-900 transition-colors focus:border-sky-300 focus:ring-2 focus:ring-sky-300 ${disabledFieldClassName}`}
-                />
-              </div>
-              <div
-                className="absolute left-[-9999px] h-0 w-0 overflow-hidden"
-                aria-hidden="true"
+              <fieldset
+                disabled={isFormDisabled}
+                className="space-y-4 border-0 p-0 m-0 min-w-0"
               >
-                <label htmlFor={CONTACT_HONEYPOT_FIELD}>Website</label>
-                <input
-                  type="text"
-                  name={CONTACT_HONEYPOT_FIELD}
-                  id={CONTACT_HONEYPOT_FIELD}
-                  tabIndex={-1}
-                  autoComplete="off"
-                />
-              </div>
-              <div className="flex items-center justify-between">
-                <div className="text-sm">
-                  {state.error && (
-                    <p
-                      role="alert"
-                      className="flex items-center gap-2 text-red-400"
-                    >
-                      <AlertTriangle className="h-4 w-4" />
-                      {state.error}
-                    </p>
-                  )}
+                <div>
+                  <label htmlFor="name" className="sr-only">
+                    Name
+                  </label>
+                  <input
+                    type="text"
+                    name="name"
+                    id="name"
+                    required
+                    maxLength={CONTACT_MAX_NAME_LENGTH}
+                    placeholder="Your Name"
+                    className={`w-full rounded-md border-slate-600 bg-slate-700 px-4 py-2 text-slate-200 ring-offset-slate-900 transition-colors focus:border-sky-300 focus:ring-2 focus:ring-sky-300 ${disabledFieldClassName}`}
+                  />
                 </div>
-                <SubmitButton disabled={isFormDisabled} />
-              </div>
+                <div>
+                  <label htmlFor="email" className="sr-only">
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    name="email"
+                    id="email"
+                    required
+                    maxLength={CONTACT_MAX_EMAIL_LENGTH}
+                    placeholder="Your Email"
+                    className={`w-full rounded-md border-slate-600 bg-slate-700 px-4 py-2 text-slate-200 ring-offset-slate-900 transition-colors focus:border-sky-300 focus:ring-2 focus:ring-sky-300 ${disabledFieldClassName}`}
+                  />
+                </div>
+                <div>
+                  <label htmlFor="message" className="sr-only">
+                    Message
+                  </label>
+                  <textarea
+                    name="message"
+                    id="message"
+                    required
+                    rows={5}
+                    maxLength={CONTACT_MAX_MESSAGE_LENGTH}
+                    placeholder="Your Message"
+                    className={`w-full rounded-md border-slate-600 bg-slate-700 px-4 py-2 text-slate-200 ring-offset-slate-900 transition-colors focus:border-sky-300 focus:ring-2 focus:ring-sky-300 ${disabledFieldClassName}`}
+                  />
+                </div>
+                <div
+                  className="absolute left-[-9999px] h-0 w-0 overflow-hidden"
+                  aria-hidden="true"
+                >
+                  <label htmlFor={CONTACT_HONEYPOT_FIELD}>Website</label>
+                  <input
+                    type="text"
+                    name={CONTACT_HONEYPOT_FIELD}
+                    id={CONTACT_HONEYPOT_FIELD}
+                    tabIndex={-1}
+                    autoComplete="off"
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="text-sm">
+                    {state.error && (
+                      <p
+                        role="alert"
+                        className="flex items-center gap-2 text-red-400"
+                      >
+                        <AlertTriangle className="h-4 w-4" />
+                        {state.error}
+                      </p>
+                    )}
+                  </div>
+                  <SubmitButton disabled={isFormDisabled} />
+                </div>
+              </fieldset>
             </form>
           )}
         </div>

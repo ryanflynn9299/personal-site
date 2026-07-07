@@ -58,7 +58,7 @@ export const publicConfigSchema = z.object({
   runtimeMode: z.enum(runtimeModes),
   previewFeatures: z.boolean(),
   siteUrl: z.string().default("http://localhost:3000"),
-  contactEmail: z.string().optional(),
+  contactEmail: z.string().default("ryan.flynn001@gmail.com"),
   logPrettyPrint: z.boolean(),
 
   directus: z.object({
@@ -86,7 +86,8 @@ export function parsePublicConfig(): PublicConfig {
     previewFeatures:
       process.env.ENABLE_PREVIEW_FEATURES === "true" || mode === "offline-dev",
     siteUrl: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
-    contactEmail: process.env.NEXT_PUBLIC_CONTACT_EMAIL || undefined,
+    contactEmail:
+      process.env.NEXT_PUBLIC_CONTACT_EMAIL || "ryan.flynn001@gmail.com",
     logPrettyPrint: process.env.LOG_PRETTY_PRINT === "true",
 
     directus: {

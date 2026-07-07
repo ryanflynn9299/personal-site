@@ -29,8 +29,8 @@ export interface AnimatedTextProps {
 
 // ContactPageClient types
 export interface ContactPageClientProps {
-  contactEmail: string | null;
-  mailtoHref: string | null;
+  contactEmail: string;
+  mailtoHref: string;
   emailServiceAvailable: boolean;
   canAcceptSubmissions: boolean;
   isFormDisabled: boolean;

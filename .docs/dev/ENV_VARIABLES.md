@@ -35,13 +35,13 @@ Set via `RUNTIME_MODE` (auto-detected if unset):
 
 ### Application Runtime
 
-| Variable                    | Scope  | Default                 | Description                                  |
-| --------------------------- | ------ | ----------------------- | -------------------------------------------- |
-| `RUNTIME_MODE`              | Server | `offline-dev`           | Application runtime mode                     |
-| `ENABLE_PREVIEW_FEATURES`   | Server | Mode-dependent          | Show unreleased UI features                  |
-| `NEXT_PUBLIC_SITE_URL`      | Public | `http://localhost:3000` | Canonical site URL                           |
-| `NEXT_PUBLIC_CONTACT_EMAIL` | Public | —                       | Public contact email (mailto, copy, display) |
-| `LOG_PRETTY_PRINT`          | Server | `false`                 | Enable pino-pretty log output                |
+| Variable                    | Scope  | Default                   | Description                                  |
+| --------------------------- | ------ | ------------------------- | -------------------------------------------- |
+| `RUNTIME_MODE`              | Server | `offline-dev`             | Application runtime mode                     |
+| `ENABLE_PREVIEW_FEATURES`   | Server | Mode-dependent            | Show unreleased UI features                  |
+| `NEXT_PUBLIC_SITE_URL`      | Public | `http://localhost:3000`   | Canonical site URL                           |
+| `NEXT_PUBLIC_CONTACT_EMAIL` | Public | `ryan.flynn001@gmail.com` | Public contact email (mailto, copy, display) |
+| `LOG_PRETTY_PRINT`          | Server | `false`                   | Enable pino-pretty log output                |
 
 ### Directus CMS
 

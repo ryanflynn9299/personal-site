@@ -18,8 +18,9 @@ export const metadata: Metadata = generatePageMetadata({
 export default function ContactPage() {
   const deliveryStatus = getContactDeliveryStatus();
   const unavailableMessage = getContactUnavailableMessage(deliveryStatus);
-  const isFormDisabled =
-    !deliveryStatus.canAcceptSubmissions && !runtime.isOfflineDev;
+  const messagingReady =
+    deliveryStatus.directusAvailable || deliveryStatus.emailServiceAvailable;
+  const isFormDisabled = runtime.connectToServices && !messagingReady;
 
   return (
     <ContactPageClient

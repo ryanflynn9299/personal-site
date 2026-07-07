@@ -1,20 +1,19 @@
 import { Button } from "@/components/primitives/Button";
 import Link from "next/link";
-import { AboutImagePanel } from "@/components/about/AboutImagePanel";
+import Image from "next/image";
 
 export function AboutMe() {
   return (
     <section className="py-16 md:py-24 border-t border-slate-800">
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 items-center gap-12 md:grid-cols-2 md:gap-16">
-          <div className="relative order-first md:order-last">
-            <AboutImagePanel
+          <div className="relative order-first md:order-last motion-safe:animate-fade-in-scale">
+            <Image
               src="/images/6858504.png"
               alt="Ryan Flynn, software engineer"
               width={500}
               height={500}
-              priority
-              className="shadow-2xl shadow-slate-950/50"
+              className="rounded-lg object-cover shadow-2xl shadow-slate-950/50"
             />
           </div>
 

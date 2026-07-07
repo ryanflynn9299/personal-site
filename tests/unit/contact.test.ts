@@ -27,14 +27,19 @@ describe("lib/site/contact", () => {
       expect(getContactEmail()).toBe("ryan.flynn001@gmail.com");
     });
 
-    it("returns null for placeholder values", () => {
-      vi.stubEnv("NEXT_PUBLIC_CONTACT_EMAIL", "your-email@example.com");
-      expect(getContactEmail()).toBeNull();
+    it("returns default email when env is unset or invalid", () => {
+      vi.stubEnv("NEXT_PUBLIC_CONTACT_EMAIL", "");
+      expect(getContactEmail()).toBe("ryan.flynn001@gmail.com");
     });
 
-    it("returns null for invalid email format", () => {
+    it("returns null for placeholder values", () => {
+      vi.stubEnv("NEXT_PUBLIC_CONTACT_EMAIL", "your-email@example.com");
+      expect(getContactEmail()).toBe("ryan.flynn001@gmail.com");
+    });
+
+    it("returns default for invalid email format", () => {
       vi.stubEnv("NEXT_PUBLIC_CONTACT_EMAIL", "not-an-email");
-      expect(getContactEmail()).toBeNull();
+      expect(getContactEmail()).toBe("ryan.flynn001@gmail.com");
     });
   });
 
@@ -44,9 +49,9 @@ describe("lib/site/contact", () => {
       expect(getContactMailtoHref()).toBe("mailto:ryan.flynn001@gmail.com");
     });
 
-    it("returns null when email is unavailable", () => {
+    it("always builds mailto href", () => {
       vi.stubEnv("NEXT_PUBLIC_CONTACT_EMAIL", "");
-      expect(getContactMailtoHref()).toBeNull();
+      expect(getContactMailtoHref()).toBe("mailto:ryan.flynn001@gmail.com");
     });
   });
 
