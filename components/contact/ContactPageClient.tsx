@@ -4,7 +4,6 @@ import { useActionState, useState, useRef, useEffect } from "react";
 import { useFormStatus } from "react-dom";
 import { motion } from "framer-motion";
 import {
-  Mail,
   Linkedin,
   Loader,
   CheckCircle,
@@ -14,6 +13,8 @@ import {
 import { Button } from "@/components/primitives/Button";
 import { submitContactForm } from "@/app/actions/contact";
 import { EmailStatusIndicatorWithStatus } from "@/components/contact/EmailStatusIndicator";
+import { ContactEmailCard } from "@/components/contact/ContactEmailCard";
+import { ContactFormUnavailableNotice } from "@/components/contact/ContactFormUnavailableNotice";
 import { FunCounter } from "@/components/contact/FunCounter";
 import {
   CONTACT_HONEYPOT_FIELD,
@@ -25,16 +26,14 @@ import type { FormState, SavedFormData, ContactPageClientProps } from "@/types";
 
 const initialState: FormState = { success: false };
 
-/**
- * Submit button component that uses useFormStatus to track form state
- * This is a React 19 pattern that automatically tracks form submission status
- * useFormStatus must be used within a form element
- */
-function SubmitButton() {
+const disabledFieldClassName =
+  "disabled:cursor-not-allowed disabled:opacity-60 disabled:bg-slate-800";
+
+function SubmitButton({ disabled }: { disabled?: boolean }) {
   const { pending } = useFormStatus();
 
   return (
-    <Button type="submit" disabled={pending}>
+    <Button type="submit" disabled={disabled || pending}>
       {pending && <Loader className="mr-2 h-4 w-4 animate-spin" />}
       {pending ? "Sending..." : "Send Message"}
     </Button>
@@ -42,9 +41,13 @@ function SubmitButton() {
 }
 
 export function ContactPageClient({
+  contactEmail,
+  mailtoHref,
   emailServiceAvailable,
+  canAcceptSubmissions,
+  isFormDisabled,
+  unavailableMessage,
 }: ContactPageClientProps) {
-  // Store form data to restore when "Go back" is clicked
   const [savedFormData, setSavedFormData] = useState<SavedFormData | null>(
     null
   );
@@ -52,12 +55,8 @@ export function ContactPageClient({
   const formRef = useRef<HTMLFormElement>(null);
   const [formKey, setFormKey] = useState(0);
 
-  // React 19: useActionState for form state management
-  // The action receives (prevState, formData) as parameters
-  // useFormStatus in SubmitButton automatically tracks pending state
   const [state, formAction] = useActionState<FormState, FormData>(
     async (prevState: FormState, formData: FormData) => {
-      // Save form data before submission
       const name = formData.get("name") as string;
       const email = formData.get("email") as string;
       const message = formData.get("message") as string;
@@ -65,8 +64,6 @@ export function ContactPageClient({
 
       const result = await submitContactForm(formData);
 
-      // Only hide form if submission was successful (even if email wasn't sent)
-      // Keep form visible if there's an error so user can see and fix it
       if (result.success) {
         setShowForm(false);
       }
@@ -76,15 +73,11 @@ export function ContactPageClient({
     initialState
   );
 
-  // Handle "Go back" button click
   const handleGoBack = () => {
-    // Reset to show form again
     setShowForm(true);
-    // Increment form key to force re-render
     setFormKey((prev) => prev + 1);
   };
 
-  // Restore form values when form is shown again
   useEffect(() => {
     if (showForm && savedFormData && formRef.current) {
       const nameInput =
@@ -106,6 +99,10 @@ export function ContactPageClient({
     }
   }, [showForm, formKey, savedFormData]);
 
+  const showUnavailableNotice =
+    Boolean(unavailableMessage) &&
+    (isFormDisabled || !canAcceptSubmissions || !emailServiceAvailable);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -124,7 +121,6 @@ export function ContactPageClient({
       </header>
 
       <div className="mt-16 grid grid-cols-1 gap-16 md:grid-cols-2">
-        {/* Left Pane: Direct Contact Info */}
         <div className="space-y-8">
           <div>
             <h2 className="font-heading text-2xl font-semibold text-slate-100">
@@ -136,20 +132,13 @@ export function ContactPageClient({
             </p>
           </div>
           <div className="space-y-4">
-            <a
-              href="mailto:ryan.flyn001@gmail.com"
-              className="group flex items-center gap-4 rounded-lg bg-slate-800 p-4 transition-colors hover:bg-slate-700"
-            >
-              <Mail className="h-8 w-8 text-sky-300" />
-              <div>
-                <h3 className="font-semibold text-slate-100 group-hover:text-sky-300">
-                  Email
-                </h3>
-                <p className="text-sm text-slate-400">
-                  ryan.flynn001@gmail.com
-                </p>
+            {contactEmail && mailtoHref ? (
+              <ContactEmailCard email={contactEmail} mailtoHref={mailtoHref} />
+            ) : (
+              <div className="rounded-lg bg-slate-800 p-4 text-sm text-slate-400">
+                Direct email is not configured for this environment.
               </div>
-            </a>
+            )}
             <a
               href="https://www.linkedin.com/in/ryan-flynn04/"
               target="_blank"
@@ -171,7 +160,6 @@ export function ContactPageClient({
           <FunCounter />
         </div>
 
-        {/* Right Pane: Contact Form */}
         <div>
           <div className="flex items-center gap-2">
             <h2 className="font-heading text-2xl font-semibold text-slate-100">
@@ -181,9 +169,13 @@ export function ContactPageClient({
               emailServiceAvailable={emailServiceAvailable}
             />
           </div>
+
+          {showUnavailableNotice && unavailableMessage && (
+            <ContactFormUnavailableNotice message={unavailableMessage} />
+          )}
+
           {!showForm && state.success ? (
             state.emailSent ? (
-              // Email was sent successfully - green success UI
               <div className="mt-4 flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-green-500 bg-slate-800 p-12 text-center">
                 <CheckCircle className="h-12 w-12 text-green-500" />
                 <h3 className="mt-4 font-semibold text-slate-50">
@@ -195,7 +187,6 @@ export function ContactPageClient({
                 </p>
               </div>
             ) : state.messageStored ? (
-              // Stored in Directus but email could not be sent
               <div className="mt-4 flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-amber-500 bg-slate-800 p-12 text-center">
                 <AlertTriangle className="h-12 w-12 text-amber-500" />
                 <h3 className="mt-4 font-semibold text-slate-50">
@@ -207,7 +198,6 @@ export function ContactPageClient({
                 </p>
               </div>
             ) : (
-              // Email service unavailable and message not stored
               <div className="mt-4 flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-amber-500 bg-slate-800 p-12 text-center">
                 <AlertTriangle className="h-12 w-12 text-amber-500" />
                 <h3 className="mt-4 font-semibold text-slate-50">
@@ -243,9 +233,10 @@ export function ContactPageClient({
                   name="name"
                   id="name"
                   required
+                  disabled={isFormDisabled}
                   maxLength={CONTACT_MAX_NAME_LENGTH}
                   placeholder="Your Name"
-                  className="w-full rounded-md border-slate-600 bg-slate-700 px-4 py-2 text-slate-200 ring-offset-slate-900 transition-colors focus:border-sky-300 focus:ring-2 focus:ring-sky-300"
+                  className={`w-full rounded-md border-slate-600 bg-slate-700 px-4 py-2 text-slate-200 ring-offset-slate-900 transition-colors focus:border-sky-300 focus:ring-2 focus:ring-sky-300 ${disabledFieldClassName}`}
                 />
               </div>
               <div>
@@ -257,9 +248,10 @@ export function ContactPageClient({
                   name="email"
                   id="email"
                   required
+                  disabled={isFormDisabled}
                   maxLength={CONTACT_MAX_EMAIL_LENGTH}
                   placeholder="Your Email"
-                  className="w-full rounded-md border-slate-600 bg-slate-700 px-4 py-2 text-slate-200 ring-offset-slate-900 transition-colors focus:border-sky-300 focus:ring-2 focus:ring-sky-300"
+                  className={`w-full rounded-md border-slate-600 bg-slate-700 px-4 py-2 text-slate-200 ring-offset-slate-900 transition-colors focus:border-sky-300 focus:ring-2 focus:ring-sky-300 ${disabledFieldClassName}`}
                 />
               </div>
               <div>
@@ -270,13 +262,13 @@ export function ContactPageClient({
                   name="message"
                   id="message"
                   required
+                  disabled={isFormDisabled}
                   rows={5}
                   maxLength={CONTACT_MAX_MESSAGE_LENGTH}
                   placeholder="Your Message"
-                  className="w-full rounded-md border-slate-600 bg-slate-700 px-4 py-2 text-slate-200 ring-offset-slate-900 transition-colors focus:border-sky-300 focus:ring-2 focus:ring-sky-300"
+                  className={`w-full rounded-md border-slate-600 bg-slate-700 px-4 py-2 text-slate-200 ring-offset-slate-900 transition-colors focus:border-sky-300 focus:ring-2 focus:ring-sky-300 ${disabledFieldClassName}`}
                 />
               </div>
-              {/* Honeypot — hidden from users, filled by bots */}
               <div
                 className="absolute left-[-9999px] h-0 w-0 overflow-hidden"
                 aria-hidden="true"
@@ -302,7 +294,7 @@ export function ContactPageClient({
                     </p>
                   )}
                 </div>
-                <SubmitButton />
+                <SubmitButton disabled={isFormDisabled} />
               </div>
             </form>
           )}

@@ -9,7 +9,7 @@ _Start here — see also [RELEASE_READINESS.md](./RELEASE_READINESS.md) for the 
 - [x] **Contact form: warn when SMTP unavailable** — never report mock success in production; show honest warning UI if email cannot be sent (see [EMAIL.md](./EMAIL.md))
 - [ ] Ensure responsive design works on mobile devices (manual sign-off)
 - [x] Remove unused components and rename, archive out of use
-- [ ] **Fix contact page `mailto:` typo** — `href` is `ryan.flyn001@gmail.com` but displayed text is `ryan.flynn001@gmail.com` (`components/contact/ContactPageClient.tsx`); test asserts the wrong href (`tests/components/ContactPageClient.test.tsx`)
+- [x] **Fix contact page `mailto:` typo** — single `NEXT_PUBLIC_CONTACT_EMAIL` via `lib/site/contact.ts`; mailto, copy, and display use the same address
 
 ### Before Launch — operator (home server / deploy day)
 
@@ -99,21 +99,21 @@ _Start here — see also [RELEASE_READINESS.md](./RELEASE_READINESS.md) for the 
 
 _Incomplete implementations found in source — not all are launch blockers._
 
-| Severity | Location | Gap |
-| -------- | -------- | --- |
-| Blocker (post-launch email) | `lib/services/email-service.ts` | SMTP `sendEmail()` mock; refuses send in production |
-| Blocker (feature) | `app/actions/counter.ts` | Random counter; no Directus `counters` collection |
-| Important | `components/admin/TelemetryCards.tsx` | Hardcoded fake metrics ("4.2k Hits", "98.4% Uptime") |
-| Important | `app/(admin)/admin/dashboard/page.tsx` | Subspace Messages not wired to Directus |
-| Important | `public/images/og-default.png` | File missing; `DEFAULT_OG_IMAGE` references broken URL |
-| Important | `lib/site/seo.ts` | `SOCIAL_PROFILES` are bare domain roots without handles |
-| Minor | `lib/site/seo.ts` | `ENABLE_BLOG_SEO = false` (intentional until content ready) |
-| Minor | `components/sections/AboutMe.tsx` | Bio text marked `TODO: revise this text` |
-| Minor | `components/common/Header.tsx` | Brand icon is lucide `Atom` placeholder; custom SVG TODO |
-| Minor | `components/matomo/Matomo.tsx` | `(window as any)._paq`; no `types/matomo.d.ts` |
-| Minor | `app/manifest.ts` | PNG PWA icons commented out; `app/icon.png` / `app/apple-icon.png` missing |
-| Minor | `lib/dev-tooling/features.ts` | `offlineDummyBlogs`, `valuesGridRedesign`, `techStackPremium` still `dev-only` |
-| Ops (deploy day) | Operator checklist | Tailscale admin, Matomo install, production `.env` — see [RELEASE_READINESS.md](./RELEASE_READINESS.md) |
+| Severity                    | Location                               | Gap                                                                                                     |
+| --------------------------- | -------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| Blocker (post-launch email) | `lib/services/email-service.ts`        | SMTP `sendEmail()` mock; refuses send in production                                                     |
+| Blocker (feature)           | `app/actions/counter.ts`               | Random counter; no Directus `counters` collection                                                       |
+| Important                   | `components/admin/TelemetryCards.tsx`  | Hardcoded fake metrics ("4.2k Hits", "98.4% Uptime")                                                    |
+| Important                   | `app/(admin)/admin/dashboard/page.tsx` | Subspace Messages not wired to Directus                                                                 |
+| Important                   | `public/images/og-default.png`         | File missing; `DEFAULT_OG_IMAGE` references broken URL                                                  |
+| Important                   | `lib/site/seo.ts`                      | `SOCIAL_PROFILES` are bare domain roots without handles                                                 |
+| Minor                       | `lib/site/seo.ts`                      | `ENABLE_BLOG_SEO = false` (intentional until content ready)                                             |
+| Minor                       | `components/sections/AboutMe.tsx`      | Bio text marked `TODO: revise this text`                                                                |
+| Minor                       | `components/common/Header.tsx`         | Brand icon is lucide `Atom` placeholder; custom SVG TODO                                                |
+| Minor                       | `components/matomo/Matomo.tsx`         | `(window as any)._paq`; no `types/matomo.d.ts`                                                          |
+| Minor                       | `app/manifest.ts`                      | PNG PWA icons commented out; `app/icon.png` / `app/apple-icon.png` missing                              |
+| Minor                       | `lib/dev-tooling/features.ts`          | `offlineDummyBlogs`, `valuesGridRedesign`, `techStackPremium` still `dev-only`                          |
+| Ops (deploy day)            | Operator checklist                     | Tailscale admin, Matomo install, production `.env` — see [RELEASE_READINESS.md](./RELEASE_READINESS.md) |
 
 ---
 
@@ -123,45 +123,45 @@ _High-impact UX, a11y, SEO, and test polish — ordered by priority._
 
 ### High priority
 
-| Area | Task | File(s) | Effort |
-| ---- | ---- | ------- | ------ |
-| Bug | Fix `mailto:` href typo + test assertion | `ContactPageClient.tsx`, `ContactPageClient.test.tsx` | Small |
-| SEO | Create `public/images/og-default.png` (1200×630) | `lib/site/seo.ts`, `public/images/` | Small |
-| SEO | Fill in real social profile URLs | `lib/site/seo.ts`, `components/common/Footer.tsx` | Small |
-| UX | Add `app/error.tsx` and `app/global-error.tsx` branded boundaries | `app/` | Small |
-| UX / perf | Parallelize blog post Directus fetches; avoid double `getPublishedPosts` | `app/(portfolio)/blog/[slug]/page.tsx` | Medium |
-| UX | Add `loading.tsx` skeletons for `/blog` and `/blog/[slug]` | `app/(portfolio)/blog/` | Medium |
-| a11y | Remove `role="dialog"` from mobile `<nav>` in Header | `components/common/Header.tsx` | Small |
+| Area      | Task                                                                     | File(s)                                           | Effort |
+| --------- | ------------------------------------------------------------------------ | ------------------------------------------------- | ------ |
+| Bug       | ~~Fix `mailto:` href typo + test assertion~~                             | `lib/site/contact.ts`, `ContactPageClient.tsx`    | Done   |
+| SEO       | Create `public/images/og-default.png` (1200×630)                         | `lib/site/seo.ts`, `public/images/`               | Small  |
+| SEO       | Fill in real social profile URLs                                         | `lib/site/seo.ts`, `components/common/Footer.tsx` | Small  |
+| UX        | Add `app/error.tsx` and `app/global-error.tsx` branded boundaries        | `app/`                                            | Small  |
+| UX / perf | Parallelize blog post Directus fetches; avoid double `getPublishedPosts` | `app/(portfolio)/blog/[slug]/page.tsx`            | Medium |
+| UX        | Add `loading.tsx` skeletons for `/blog` and `/blog/[slug]`               | `app/(portfolio)/blog/`                           | Medium |
+| a11y      | Remove `role="dialog"` from mobile `<nav>` in Header                     | `components/common/Header.tsx`                    | Small  |
 
 ### Medium priority
 
-| Area | Task | File(s) | Effort |
-| ---- | ---- | ------- | ------ |
-| a11y | Add `aria-current="page"` to active nav links | `components/common/Header.tsx` | Small |
-| a11y | `AnimatedText`: `aria-label` on h1, hide child spans, respect `prefers-reduced-motion` | `components/primitives/misc/AnimatedText.tsx` | Small |
-| a11y | Toast dismiss button `aria-label` + `aria-live="polite"` on container | `components/primitives/Toast.tsx`, `context/ToastContext.tsx` | Small |
-| a11y | `EmailStatusIndicator` tooltip keyboard-accessible (`onFocus`/`onBlur`) | `components/contact/EmailStatusIndicator.tsx` | Small |
-| a11y | Footer social links: `focus-visible:ring` | `components/common/Footer.tsx` | Small |
-| UX / a11y | Blog search `Dialog.Title` has empty content — use `sr-only` title | `components/blog/BlogPageClient.tsx` | Small |
-| Admin UX | Replace fake telemetry with "—" / "Not connected" until Matomo wired | `components/admin/TelemetryCards.tsx` | Small |
-| Tests | Add `/vitae`, `/policies` to E2E accessibility page list | `tests/e2e/accessibility.spec.ts` | Small |
-| Tests | Component tests for `BlogPageClient` error / empty / grid branches | `tests/components/` | Small |
-| SEO | Remove `/privacy` and `/terms` redirect URLs from sitemap | `app/sitemap.ts` | Small |
-| Docs | Move floating TODO comment from About page to this file | `components/about/AboutPageClient.tsx` | Small |
+| Area      | Task                                                                                   | File(s)                                                       | Effort |
+| --------- | -------------------------------------------------------------------------------------- | ------------------------------------------------------------- | ------ |
+| a11y      | Add `aria-current="page"` to active nav links                                          | `components/common/Header.tsx`                                | Small  |
+| a11y      | `AnimatedText`: `aria-label` on h1, hide child spans, respect `prefers-reduced-motion` | `components/primitives/misc/AnimatedText.tsx`                 | Small  |
+| a11y      | Toast dismiss button `aria-label` + `aria-live="polite"` on container                  | `components/primitives/Toast.tsx`, `context/ToastContext.tsx` | Small  |
+| a11y      | `EmailStatusIndicator` tooltip keyboard-accessible (`onFocus`/`onBlur`)                | `components/contact/EmailStatusIndicator.tsx`                 | Small  |
+| a11y      | Footer social links: `focus-visible:ring`                                              | `components/common/Footer.tsx`                                | Small  |
+| UX / a11y | Blog search `Dialog.Title` has empty content — use `sr-only` title                     | `components/blog/BlogPageClient.tsx`                          | Small  |
+| Admin UX  | Replace fake telemetry with "—" / "Not connected" until Matomo wired                   | `components/admin/TelemetryCards.tsx`                         | Small  |
+| Tests     | Add `/vitae`, `/policies` to E2E accessibility page list                               | `tests/e2e/accessibility.spec.ts`                             | Small  |
+| Tests     | Component tests for `BlogPageClient` error / empty / grid branches                     | `tests/components/`                                           | Small  |
+| SEO       | Remove `/privacy` and `/terms` redirect URLs from sitemap                              | `app/sitemap.ts`                                              | Small  |
+| Docs      | Move floating TODO comment from About page to this file                                | `components/about/AboutPageClient.tsx`                        | Small  |
 
 ### Low priority
 
-| Area | Task | File(s) | Effort |
-| ---- | ---- | ------- | ------ |
-| a11y | Make contact form labels visually visible (not only `sr-only`) | `components/contact/ContactPageClient.tsx` | Small |
-| UX | Enrich blog empty state (icon, styled container, optional CTA) | `components/blog/BlogPageClient.tsx` | Small |
-| SEO | Use stable `lastModified` in sitemap (not `new Date()` every build) | `app/sitemap.ts` | Small |
-| SEO | Consider `ENABLE_BLOG_SEO` as env var for toggle without redeploy | `lib/site/seo.ts` | Small |
-| Code | Remove commented-out SVG code in `Header.tsx` | `components/common/Header.tsx` | Small |
-| Code | Extract inline map callback types in vitae page | `app/(portfolio)/vitae/page.tsx` | Small |
-| Tests | Toast a11y regression tests (`aria-live`, dismiss label) | `tests/components/Toast.test.tsx` | Small |
-| Tests | E2E: blog post prev/next nav, author byline, reading time | `tests/e2e/blog.spec.ts` | Small |
-| Tests | 404 page structural assertions | `tests/e2e/error-pages.spec.ts` | Small |
+| Area  | Task                                                                | File(s)                                    | Effort |
+| ----- | ------------------------------------------------------------------- | ------------------------------------------ | ------ |
+| a11y  | Make contact form labels visually visible (not only `sr-only`)      | `components/contact/ContactPageClient.tsx` | Small  |
+| UX    | Enrich blog empty state (icon, styled container, optional CTA)      | `components/blog/BlogPageClient.tsx`       | Small  |
+| SEO   | Use stable `lastModified` in sitemap (not `new Date()` every build) | `app/sitemap.ts`                           | Small  |
+| SEO   | Consider `ENABLE_BLOG_SEO` as env var for toggle without redeploy   | `lib/site/seo.ts`                          | Small  |
+| Code  | Remove commented-out SVG code in `Header.tsx`                       | `components/common/Header.tsx`             | Small  |
+| Code  | Extract inline map callback types in vitae page                     | `app/(portfolio)/vitae/page.tsx`           | Small  |
+| Tests | Toast a11y regression tests (`aria-live`, dismiss label)            | `tests/components/Toast.test.tsx`          | Small  |
+| Tests | E2E: blog post prev/next nav, author byline, reading time           | `tests/e2e/blog.spec.ts`                   | Small  |
+| Tests | 404 page structural assertions                                      | `tests/e2e/error-pages.spec.ts`            | Small  |
 
 ---
 
@@ -204,7 +204,7 @@ _Items from topic docs that should be tracked here._
 ## 🐛 Bug Fixes
 
 - [x] UNABLE_TO_GET_ISSUER_CERT_LOCALLY (SSL certificate issue)
-- [ ] Contact page `mailto:` href typo (see polish backlog — high priority)
+- [x] Contact page `mailto:` href typo — fixed via `NEXT_PUBLIC_CONTACT_EMAIL` SSOT
 
 ---
 

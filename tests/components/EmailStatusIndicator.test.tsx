@@ -9,7 +9,6 @@ vi.mock("@/lib/config", async () => {
 
 describe("EmailStatusIndicatorWithStatus", () => {
   beforeEach(() => {
-    // Reset modules to ensure env object is recreated with new env vars
     vi.resetModules();
   });
 
@@ -26,38 +25,32 @@ describe("EmailStatusIndicatorWithStatus", () => {
 
   it("renders indicator when email service is unavailable", () => {
     render(<EmailStatusIndicatorWithStatus emailServiceAvailable={false} />);
-    const indicator = screen.getByRole("status");
-    expect(indicator).toBeInTheDocument();
+    expect(screen.getByRole("status")).toBeInTheDocument();
   });
 
   it("shows alert icon when email service is unavailable", () => {
     render(<EmailStatusIndicatorWithStatus emailServiceAvailable={false} />);
-    // AlertCircle icon should be present with amber color
-    const icon = document.querySelector(".text-amber-400");
-    expect(icon).toBeInTheDocument();
+    expect(document.querySelector(".text-amber-400")).toBeInTheDocument();
   });
 
   it("has accessible aria-label", () => {
     render(<EmailStatusIndicatorWithStatus emailServiceAvailable={false} />);
     const indicator = screen.getByRole("status");
     expect(indicator).toHaveAttribute("aria-label");
-    expect(indicator.getAttribute("aria-label")).toContain("Email");
+    expect(indicator.getAttribute("aria-label")).toContain("messaging");
   });
 
   it("shows tooltip on hover", () => {
     render(<EmailStatusIndicatorWithStatus emailServiceAvailable={false} />);
     const indicator = screen.getByRole("status");
 
-    // Initially tooltip should not be visible
-    expect(screen.queryByText(/Email service/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/messaging/i)).not.toBeInTheDocument();
 
-    // Hover to show tooltip
     fireEvent.mouseEnter(indicator);
-    expect(screen.getByText(/Email service/)).toBeInTheDocument();
+    expect(screen.getByText(/messaging/i)).toBeInTheDocument();
 
-    // Mouse leave to hide tooltip
     fireEvent.mouseLeave(indicator);
-    expect(screen.queryByText(/Email service/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/messaging/i)).not.toBeInTheDocument();
   });
 
   it("shows offline-dev message in offline-dev mode", () => {
@@ -66,42 +59,39 @@ describe("EmailStatusIndicatorWithStatus", () => {
     vi.resetModules();
 
     render(<EmailStatusIndicatorWithStatus emailServiceAvailable={false} />);
-    const indicator = screen.getByRole("status");
-    fireEvent.mouseEnter(indicator);
+    fireEvent.mouseEnter(screen.getByRole("status"));
 
-    expect(screen.getByText(/offline dev mode/)).toBeInTheDocument();
+    expect(screen.getByText(/Development mode/i)).toBeInTheDocument();
   });
 
-  it("shows development message in live-dev mode", () => {
+  it("shows development message in live-dev mode without env names", () => {
     vi.stubEnv("RUNTIME_MODE", "live-dev");
     vi.stubEnv("NODE_ENV", "development");
     vi.resetModules();
 
     render(<EmailStatusIndicatorWithStatus emailServiceAvailable={false} />);
-    const indicator = screen.getByRole("status");
-    fireEvent.mouseEnter(indicator);
+    fireEvent.mouseEnter(screen.getByRole("status"));
 
-    expect(screen.getByText(/SMTP environment variables/)).toBeInTheDocument();
+    expect(
+      screen.getByText(/not configured in this environment/i)
+    ).toBeInTheDocument();
+    expect(screen.queryByText(/SMTP/i)).not.toBeInTheDocument();
   });
 
-  it("shows production message in production mode", () => {
+  it("shows production message without internal configuration detail", () => {
     vi.stubEnv("RUNTIME_MODE", "production");
     vi.stubEnv("NODE_ENV", "production");
     vi.resetModules();
 
     render(<EmailStatusIndicatorWithStatus emailServiceAvailable={false} />);
-    const indicator = screen.getByRole("status");
-    fireEvent.mouseEnter(indicator);
+    fireEvent.mouseEnter(screen.getByRole("status"));
 
-    // In production, the message indicates service is unavailable
-    expect(
-      screen.getByText(/Email service is currently unavailable/)
-    ).toBeInTheDocument();
+    expect(screen.getByText(/temporarily unavailable/i)).toBeInTheDocument();
+    expect(screen.queryByText(/SMTP/i)).not.toBeInTheDocument();
   });
 
   it("has cursor-help class for accessibility", () => {
     render(<EmailStatusIndicatorWithStatus emailServiceAvailable={false} />);
-    const indicator = screen.getByRole("status");
-    expect(indicator).toHaveClass("cursor-help");
+    expect(screen.getByRole("status")).toHaveClass("cursor-help");
   });
 });

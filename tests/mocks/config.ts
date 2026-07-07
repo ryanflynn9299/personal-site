@@ -37,6 +37,9 @@ export async function createDynamicConfigMock() {
         actual.config.runtimeMode
       );
     },
+    get contactEmail() {
+      return process.env.NEXT_PUBLIC_CONTACT_EMAIL;
+    },
   };
 
   const mockedRuntime = {
