@@ -1,47 +1,56 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { incrementCounter } from "@/app/actions/counter";
 
+vi.mock("@/lib/services/directus", () => ({
+  incrementCounterByKey: vi.fn(),
+  FUN_COUNTER_KEY: "contact-fun-counter",
+}));
+
 describe("incrementCounter", () => {
   beforeEach(() => {
-    vi.useFakeTimers();
+    vi.clearAllMocks();
   });
 
   afterEach(() => {
-    vi.useRealTimers();
+    vi.resetModules();
   });
 
-  it("returns a number between 1000 and 9999", async () => {
-    const promise = incrementCounter();
-    await vi.runAllTimersAsync();
-    const result = await promise;
+  it("returns success with value when Directus increments", async () => {
+    const { incrementCounterByKey } = await import("@/lib/services/directus");
+    vi.mocked(incrementCounterByKey).mockResolvedValueOnce({
+      status: "success",
+      counter: {
+        id: "1",
+        key: "contact-fun-counter",
+        value: 42,
+        metadata: null,
+        updated_at: "2026-01-01T00:00:00.000Z",
+      },
+    });
 
-    expect(result).toBeGreaterThanOrEqual(1000);
-    expect(result).toBeLessThan(10000);
-    expect(Number.isInteger(result)).toBe(true);
+    const result = await incrementCounter();
+    expect(result).toEqual({ status: "success", value: 42 });
   });
 
-  it("simulates delay before returning", async () => {
-    const promise = incrementCounter();
+  it("returns error with null value when Directus is unavailable", async () => {
+    const { incrementCounterByKey } = await import("@/lib/services/directus");
+    vi.mocked(incrementCounterByKey).mockResolvedValueOnce({
+      status: "error",
+      counter: null,
+    });
 
-    // Advance timers to trigger the delay
-    await vi.advanceTimersByTimeAsync(300);
-    const result = await promise;
-
-    expect(result).toBeGreaterThanOrEqual(1000);
-    expect(result).toBeLessThan(10000);
+    const result = await incrementCounter();
+    expect(result).toEqual({ status: "error", value: null });
   });
 
-  it("returns different values on multiple calls", async () => {
-    const promise1 = incrementCounter();
-    const promise2 = incrementCounter();
-    const promise3 = incrementCounter();
+  it("returns error when increment succeeds but counter row is missing", async () => {
+    const { incrementCounterByKey } = await import("@/lib/services/directus");
+    vi.mocked(incrementCounterByKey).mockResolvedValueOnce({
+      status: "success",
+      counter: null,
+    });
 
-    await vi.runAllTimersAsync();
-
-    const results = await Promise.all([promise1, promise2, promise3]);
-
-    // At least one should be different (very high probability)
-    const uniqueResults = new Set(results);
-    expect(uniqueResults.size).toBeGreaterThan(1);
+    const result = await incrementCounter();
+    expect(result).toEqual({ status: "error", value: null });
   });
 });

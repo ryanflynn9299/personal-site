@@ -65,14 +65,19 @@ function resolveAccent(
   return getAuthorAccentFromSlug(slug);
 }
 
-function mergeProfile(partial: PostAuthor, slug: string): AuthorProfile {
+function mergeProfile(
+  partial: PostAuthor,
+  slug: string,
+  directusProfile?: AuthorProfile | null
+): AuthorProfile {
   const staticProfile = authorProfiles[slug];
+  const base = directusProfile ?? staticProfile;
 
-  if (staticProfile) {
+  if (base) {
     return {
-      ...staticProfile,
-      first_name: partial.first_name.trim() || staticProfile.first_name,
-      last_name: partial.last_name.trim() || staticProfile.last_name,
+      ...base,
+      first_name: partial.first_name.trim() || base.first_name,
+      last_name: partial.last_name.trim() || base.last_name,
     };
   }
 
@@ -87,10 +92,14 @@ function mergeProfile(partial: PostAuthor, slug: string): AuthorProfile {
 
 /**
  * Resolves CMS author names into a full profile with accent and display name.
+ * Optional `directusProfile` merges Directus `authors` collection data when available.
  */
-export function resolveAuthor(partial: PostAuthor): ResolvedAuthorProfile {
+export function resolveAuthor(
+  partial: PostAuthor,
+  directusProfile?: AuthorProfile | null
+): ResolvedAuthorProfile {
   const slug = authorNameToSlug(partial.first_name, partial.last_name);
-  const profile = mergeProfile(partial, slug);
+  const profile = mergeProfile(partial, slug, directusProfile);
   const accent = resolveAccent(slug, profile.accent);
 
   return {
@@ -103,6 +112,18 @@ export function resolveAuthor(partial: PostAuthor): ResolvedAuthorProfile {
     accent,
     accent_hex: getAuthorAccentHex(accent),
   };
+}
+
+/**
+ * Resolves an author for a blog post, preferring Directus `authors` when configured.
+ */
+export async function resolveAuthorForPost(
+  partial: PostAuthor
+): Promise<ResolvedAuthorProfile> {
+  const slug = authorNameToSlug(partial.first_name, partial.last_name);
+  const { getAuthorBySlug } = await import("@/lib/services/directus");
+  const { author } = await getAuthorBySlug(slug);
+  return resolveAuthor(partial, author);
 }
 
 export function postsByAuthor(

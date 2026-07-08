@@ -1,7 +1,8 @@
 import { AdminHeader } from "@/components/admin/AdminHeader";
 import { TelemetryCards } from "@/components/admin/TelemetryCards";
 import { ControlConsole } from "@/components/admin/ControlConsole";
-import { MessageSquare, LayoutDashboard, Settings } from "lucide-react";
+import { SubspaceMessagesPanel } from "@/components/admin/SubspaceMessagesPanel";
+import { LayoutDashboard, Settings } from "lucide-react";
 
 export default function DashboardPage() {
   return (
@@ -13,26 +14,7 @@ export default function DashboardPage() {
       <main className="flex-grow flex flex-col md:flex-row gap-8 p-8 overflow-hidden">
         {/* Left Column: Communications */}
         <section className="w-full md:w-[320px] flex flex-col gap-8">
-          <div className="flex-1 flex flex-col gap-4 border border-white/10 rounded-2xl bg-slate-800/40 backdrop-blur-md overflow-hidden">
-            <div className="px-5 py-3 border-b border-white/5 bg-white/5 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <MessageSquare className="h-4 w-4 text-sky-400" />
-                <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-200">
-                  Subspace Messages
-                </h3>
-              </div>
-            </div>
-            <div className="flex-1 flex items-center justify-center text-center p-8">
-              <div className="space-y-3">
-                <p className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">
-                  No Incoming Signals
-                </p>
-                <div className="h-1 w-20 bg-slate-800 mx-auto rounded-full overflow-hidden">
-                  <div className="h-full w-1/3 bg-sky-500/20 animate-[loading_2s_infinite]" />
-                </div>
-              </div>
-            </div>
-          </div>
+          <SubspaceMessagesPanel />
         </section>
 
         {/* Center Column: Global Telemetry */}

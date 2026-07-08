@@ -22,6 +22,10 @@ export interface DirectusBlogPost {
   content: string;
   feature_image: { id: number; filename: string } | null;
   blog_tags: string[];
+  /** M2O → `blog_series` (optional until schema migration). */
+  series?: { slug: string; title?: string } | string | null;
+  /** Position within a series (optional). */
+  series_order?: number | null;
   author: {
     first_name: string;
     last_name: string;
@@ -41,10 +45,66 @@ export interface DirectusContactMessage {
 }
 
 /**
+ * Raw shape of a row in the `counters` collection.
+ */
+export interface DirectusCounter {
+  id: string;
+  key: string;
+  value: number;
+  metadata: Record<string, unknown> | null;
+  date_updated?: string;
+}
+
+/**
+ * Raw shape of a row in the `authors` collection.
+ */
+export interface DirectusAuthor {
+  id: string;
+  status: "published" | "draft";
+  slug: string;
+  first_name: string;
+  last_name: string;
+  emoji: string;
+  accent: string | null;
+  role: string | null;
+  bio_short: string | null;
+}
+
+/**
+ * Raw shape of a row in the `blog_tags` collection.
+ */
+export interface DirectusBlogTag {
+  id: string;
+  status: "published" | "draft";
+  slug: string;
+  label: string;
+  description: string | null;
+  color: string | null;
+  sort: number | null;
+}
+
+/**
+ * Raw shape of a row in the `blog_series` collection.
+ */
+export interface DirectusBlogSeries {
+  id: string;
+  status: "published" | "draft";
+  slug: string;
+  title: string;
+  description: string | null;
+  cover_image: { id: number; filename: string } | null;
+  sort_order: number | null;
+}
+
+/**
  * Top-level Directus schema mapping collection names to their row types.
  * Used to type the SDK client at the initialization boundary.
  */
 export interface DirectusSchema {
   blogs: DirectusBlogPost[];
   contact_messages: DirectusContactMessage[];
+  counters: DirectusCounter[];
+  authors: DirectusAuthor[];
+  blog_tags: DirectusBlogTag[];
+  blog_series: DirectusBlogSeries[];
 }

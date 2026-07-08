@@ -72,3 +72,42 @@ export interface AuthorContext {
   top_tags: string[];
   recent_posts: AuthorPostSummary[];
 }
+
+/** Frontend-facing counter row from the `counters` collection. */
+export interface SiteCounter {
+  id: string;
+  key: string;
+  value: number;
+  metadata: Record<string, unknown> | null;
+  updated_at: string;
+}
+
+/** Admin-facing contact message (read from Directus). */
+export interface ContactMessage {
+  id: string;
+  name: string;
+  email: string;
+  message: string;
+  status: "new" | "read" | "archived";
+  created_at: string;
+}
+
+/** Frontend-facing blog tag from the `blog_tags` collection. */
+export interface BlogTag {
+  id: string;
+  slug: string;
+  label: string;
+  description: string;
+  color: string | null;
+  sort: number;
+}
+
+/** Frontend-facing blog series from the `blog_series` collection. */
+export interface BlogSeries {
+  id: string;
+  slug: string;
+  title: string;
+  description: string;
+  sort_order: number;
+  cover_image: { id: number; filename: string } | null;
+}

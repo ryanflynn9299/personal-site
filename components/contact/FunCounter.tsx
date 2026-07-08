@@ -45,20 +45,23 @@ export function FunCounter() {
     setMessage(null);
 
     try {
-      // Call the server action to increment counter
-      const newCount = await incrementCounter();
-      setCount(newCount);
-      setHasClicked(true);
+      const result = await incrementCounter();
+      if (result.status === "success" && result.value !== null) {
+        setCount(result.value);
+        setHasClicked(true);
 
-      // Store in sessionStorage
-      if (typeof window !== "undefined") {
-        sessionStorage.setItem(SESSION_STORAGE_KEY, "true");
+        if (typeof window !== "undefined") {
+          sessionStorage.setItem(SESSION_STORAGE_KEY, "true");
+        }
+
+        const randomMessage =
+          QUIRKY_MESSAGES[Math.floor(Math.random() * QUIRKY_MESSAGES.length)];
+        setMessage(randomMessage);
+      } else {
+        setMessage(
+          "Counter unavailable right now — the database may not be connected yet."
+        );
       }
-
-      // Show a random quirky message
-      const randomMessage =
-        QUIRKY_MESSAGES[Math.floor(Math.random() * QUIRKY_MESSAGES.length)];
-      setMessage(randomMessage);
     } catch {
       if (process.env.NODE_ENV === "development") {
         console.error("Failed to increment counter");

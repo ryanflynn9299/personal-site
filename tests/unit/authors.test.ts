@@ -57,6 +57,26 @@ describe("resolveAuthor", () => {
     expect(author.bio_short).toBeUndefined();
   });
 
+  it("prefers Directus profile fields over static fallback when provided", () => {
+    const author = resolveAuthor(
+      { first_name: "Ryan", last_name: "Flynn" },
+      {
+        id: "directus-id",
+        slug: "ryan-flynn",
+        first_name: "Ryan",
+        last_name: "Flynn",
+        emoji: "🚀",
+        accent: "cyan",
+        role: "From Directus",
+        bio_short: "Directus bio",
+      }
+    );
+    expect(author.emoji).toBe("🚀");
+    expect(author.accent).toBe("cyan");
+    expect(author.role).toBe("From Directus");
+    expect(author.bio_short).toBe("Directus bio");
+  });
+
   it("formats display name when last name is empty", () => {
     expect(formatAuthorDisplayName("Gemini", "")).toBe("Gemini");
   });
